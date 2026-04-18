@@ -172,7 +172,7 @@
         <h3 class="modal-title" id="paymentApplyTitle">新增付款申请</h3>
         <button class="modal-close" id="btnClosePaymentApply" aria-label="关闭">×</button>
       </div>
-      <div class="modal-body" style="grid-template-columns:1fr 1fr;">
+      <div class="modal-body">
         <div class="field full">
           <label for="paWaybill">关联运单号</label>
           <select id="paWaybill" aria-label="关联运单号，仅可选已签收且未付款"></select>
@@ -229,7 +229,7 @@
         <h3 class="modal-title" id="paymentDetailTitle">付款申请详情</h3>
         <button class="modal-close" id="btnClosePaymentDetail" aria-label="关闭">×</button>
       </div>
-      <div class="modal-body" style="grid-template-columns:1fr 1fr;">
+      <div class="modal-body">
         <div class="field"><label>申请单号</label><div id="pdNo" class="detail-cell"></div></div>
         <div class="field"><label>关联运单号</label><div id="pdWaybill" class="detail-cell"></div></div>
         <div class="field"><label>承运商</label><div id="pdCarrier" class="detail-cell"></div></div>
@@ -299,33 +299,6 @@
         YD20260302088: { status: "已签收", location: "天津滨海仓", paymentStatus: "待付款", carrier: "远达运输集团", contractPrice: 6500 },
         YD20260303156: { status: "在途", location: "苏州园区高速口", paymentStatus: "待付款", carrier: "联程供应链科技", contractPrice: 18200 }
       };
-
-      // modal 样式
-      if (!document.getElementById("paymentModalStyle")) {
-        var st = document.createElement("style");
-        st.id = "paymentModalStyle";
-        st.textContent =
-          ".modal-mask{position:fixed;inset:0;background:rgba(6,20,40,0.5);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;}"+
-          ".modal-mask.show{display:flex;}"+
-          ".modal{width:min(900px,96vw);background:#fff;border:1px solid #dbe6f3;border-radius:12px;box-shadow:0 18px 46px rgba(9,24,45,0.28);overflow:hidden;}"+
-          ".modal-header{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #e8eef7;}"+
-          ".modal-title{margin:0;font-size:17px;color:#1f3551;}"+
-          ".modal-close{border:none;background:transparent;cursor:pointer;font-size:22px;line-height:1;color:#6a819f;}"+
-          ".modal-body{padding:14px;display:grid;gap:12px 14px;}"+
-          ".field.full{grid-column:1/-1;}"+
-          ".field label{display:block;margin:0 0 6px;font-size:13px;color:#516a87;}"+
-          ".field input,.field select,.field textarea{width:100%;height:34px;border:1px solid #d7e1ee;border-radius:6px;padding:0 10px;font-size:14px;color:#223a55;background:#fff;}"+
-          ".field textarea{height:88px;padding:8px 10px;resize:vertical;}"+
-          ".help{font-size:12px;color:#7d8ea2;margin-top:4px;}"+
-          ".detail-cell{height:34px;display:flex;align-items:center;padding:0 10px;border:1px solid #d7e1ee;border-radius:6px;background:#fff;color:#2a3d56;}"+
-          ".detail-pre{margin:0;border:1px solid #d7e1ee;border-radius:6px;padding:10px;background:#fff;white-space:pre-wrap;word-break:break-word;line-height:1.55;color:#2a3d56;font-size:13px;max-height:200px;overflow:auto;}"+
-          ".modal-footer{height:54px;border-top:1px solid #e8eef7;display:flex;align-items:center;justify-content:space-between;padding:0 14px;}"+
-          ".footer-tip{font-size:12px;color:#7b8fa7;}"+
-          ".footer-actions{display:flex;gap:8px;}"+
-          ".btn{border:1px solid #d7e1ee;background:#fff;color:#2b4664;border-radius:6px;padding:7px 14px;font-size:14px;cursor:pointer;}"+
-          ".btn-primary{background:#1890ff;color:#fff;border-color:#1890ff;}";
-        document.head.appendChild(st);
-      }
 
       function fmtDate(d) {
         var y = d.getFullYear();

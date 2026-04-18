@@ -17,7 +17,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT_NAMES = ("demo-all-pages-interactive.html", "demo-interactive-single.html")
-EXCLUDE = set(OUT_NAMES) | {"demo-all-in-one.html"}
+# 与壳层同目录的外置数据脚本（避免 100MB+ 全塞进 .html 导致 file:// 长时间无首屏）
+DEMO_DATA_JS = "demo-inline-pages.data.js"
+# index.html 是离线总入口壳层本身，打进 iframe 会壳套壳，禁止进入 pages_map
+EXCLUDE = set(OUT_NAMES) | {"demo-all-in-one.html", DEMO_DATA_JS, "index.html"}
 # 优先 index.html（与日常编辑一致）；勿把输出文件 demo-all-pages-interactive.html 当模板，否则二次构建会吃旧产物
 SHELL_TEMPLATE_CANDIDATES = (
     "index.html",
@@ -356,15 +359,6 @@ def build_pages_map(base: Path) -> dict[str, str]:
         pages["index-portal-screen-alt-packed.html"] = alt
         pages["index.html?view=portal"] = alt
 
-    idx = pages.get("index.html")
-    if idx:
-        pages["index.html"] = (
-            '<script>var __DEMO_FORCE_LOGIN__ = true;</script>\n' + idx
-        )
-        if not alt:
-            pages["index.html?view=portal"] = (
-                '<script>var __DEMO_FORCE_PORTAL__ = true;</script>\n' + idx
-            )
     return pages
 
 
@@ -401,7 +395,7 @@ def dedupe_inline_data_urls(pages: dict[str, str]) -> tuple[dict[str, str], list
 
 # 左侧列表与 iframe 内点击映射（与 demo-all-in-one 一致并补充）
 DEMO_META = [
-    {"title": "登录（账号密码）", "file": "index.html", "group": "core"},
+    {"title": "登录（账号密码）", "file": "demo-login-placeholder.html", "group": "core"},
     {"title": "首页", "file": "index-portal-screen-alt.html", "group": "core"},
     {"title": "驾驶舱", "file": "cockpit.html", "group": "core"},
     {"title": "模块首页（旧）", "file": "module-home.html", "group": "other"},
@@ -432,7 +426,6 @@ DEMO_META = [
     {"title": "发货管理", "file": "proc-shipment.html", "group": "purchase"},
     {"title": "项目公司验收", "file": "proc-quality-accept.html", "group": "purchase"},
     {"title": "采购汇总报表", "file": "purchase-summary-report.html", "group": "purchase"},
-    {"title": "库存台账", "file": "warehouse-stock-ledger.html", "group": "warehouse"},
     {"title": "出入库记录", "file": "warehouse-io-ledger.html", "group": "warehouse"},
     {"title": "物流台账", "file": "logistics-ledger.html", "group": "logistics"},
     {"title": "资产台账", "file": "asset-ledger.html", "group": "asset"},
@@ -449,203 +442,9 @@ DEMO_META = [
     {"title": "系统管理聚合", "file": "system-admin-hub.html", "group": "other"},
 ]
 
-# 与 js/sidebar-actions.js 中 SIDEBAR_ACTION_HREF 完全一致（iframe 捕获阶段 actionToFile→navigateByFile 依赖此表）
-SIDEBAR_ACTION_FOR_DEMO = {
-    "asset-personal": "assets-personal.html",
-    "asset-dept": "assets-department.html",
-    "asset-company": "assets-company.html",
-    "asset-transfer-manage": "asset-transfer-management.html",
-    "asset-nature-change-manage": "asset-nature-change-management.html",
-    "asset-inventory-manage": "asset-inventory-management.html",
-    "task-center": "my-tasks-prototype-list.html?scene=todo",
-    "task-approval": "my-tasks-prototype-list.html?scene=todo",
-    "task-mine": "my-tasks-prototype-list.html?scene=initiated",
-    "task-track": "my-tasks-prototype-list.html?scene=todo",
-    "task-initiated": "my-tasks-prototype-list.html?scene=initiated",
-    "task-todo": "my-tasks-todo.html",
-    "task-done": "my-tasks-done.html",
-    "task-cc": "my-tasks-cc.html",
-    "home-portal": "index-portal-screen-alt.html",
-    "home-system": "index-portal-screen-alt.html",
-    "go-cockpit": "cockpit.html",
-    "go-cockpit-copy": "cockpit.html",
-    "go-app-hub": "index-portal-screen-alt.html",
-    "go-cockpit-kpi": "cockpit.html",
-    "go-cockpit-map": "cockpit.html",
-    "logistics-integration": "logistics-tracking.html",
-    "purchase-accept-confirm": "receipt-inbound.html",
-    "purchase-plan-manage": "purchase-plan-management.html",
-    "purchase-plan-table": "purchase-plan-table.html",
-    "purchase-order-demand": "order-demand-management.html",
-    "purchase-sourcing": "material-procurement-hub.html?tab=m4",
-    "purchase-contract-mgmt": "contract-management.html",
-    "purchase-bid": "material-procurement-hub.html?tab=m7",
-    "purchase-pay": "material-procurement-hub.html?tab=m8",
-    "purchase-return-exchange": "material-procurement-hub.html?tab=m9",
-    "purchase-quality-accept": "material-procurement-hub.html?tab=m10",
-    "purchase-material-info-manage": "purchase-material-info-management.html",
-    "purchase-supplier": "material-procurement-hub.html?tab=m5",
-    "purchase-order": "material-procurement-hub.html?tab=m3",
-    "purchase-apply": "procurement-application.html",
-    "purchase-nonbid-review": "purchase-pm-nonbid.html",
-    "purchase-plan-approval": "purchase-pm-plan.html",
-    "purchase-longterm-use-approval": "purchase-pm-longterm-result.html",
-    "purchase-reapply": "purchase-pm-repurchase.html",
-    "purchase-file-review-minutes": "purchase-pm-minutes.html",
-    "purchase-bid-committee-review": "purchase-pm-bid.html",
-    "purchase-terminate-approval": "purchase-pm-terminate.html",
-    "purchase-group-plan-approval": "purchase-pm-group-plan.html",
-    "purchase-under15-review": "purchase-pm-under15.html",
-    "purchase-monthly-bid-plan": "purchase-pm-monthly-bid.html",
-    "purchase-monthly-nonbid-plan": "purchase-pm-monthly-nonbid.html",
-    "purchase-result-notice-nonbid": "purchase-pm-notice-nonbid.html",
-    "purchase-longterm-use-manage": "purchase-pm-longterm-use.html",
-    "purchase-plan": "purchase-management-hub.html?tab=p6",
-    "purchase-bid-pm": "purchase-management-hub.html?tab=p7",
-    "purchase-order-pm": "purchase-management-hub.html?tab=p8",
-    "purchase-supplier-pm": "purchase-management-hub.html?tab=p8",
-    "purchase-contract": "purchase-management-hub.html?tab=p8",
-    "purchase-receipt": "proc-acceptance-inbound.html",
-    "purchase-settlement": "proc-use-approval.html",
-    "proc-acceptance-inbound": "proc-acceptance-inbound.html",
-    "proc-use-approval": "proc-use-approval.html",
-    "proc-sales-contract": "proc-sales-contract.html",
-    "proc-shipment": "proc-shipment.html",
-    "proc-quality-accept": "proc-quality-accept.html",
-    "proc-project-accept": "proc-project-accept.html",
-    "purchase-data-maintain": "purchase-pm-data-maintain.html",
-    "purchase-archive-catalog": "purchase-pm-archive.html",
-    "material-catalog": "base-data-material-ledger.html",
-    "material-price": "base-data-material-ledger.html",
-    "material-ledger": "purchase-ledger.html?tab=material",
-    "purchase-ledger": "purchase-ledger.html",
-    "cargo-ledger": "purchase-ledger.html?tab=cargo",
-    "purchase-summary-report": "purchase-summary-report.html",
-    "logistics-carrier": "carrier-management.html",
-    "logistics-contract": "logistics-contract.html",
-    "logistics-track": "logistics-tracking.html",
-    "logistics-pay": "logistics-payment.html",
-    "logistics-waybill": "logistics-tracking.html",
-    "logistics-sign": "logistics-tracking.html",
-    "logistics-dispatch": "logistics-contract.html",
-    "logistics-ledger": "logistics-ledger.html",
-    "slot": "slot-management.html",
-    "receive": "receipt-inbound.html",
-    "scan": "scan-pick.html",
-    "inventory-check": "inventory-check.html",
-    "stock": "inventory-management.html",
-    "maintenance": "warehouse-maintenance.html",
-    "idle": "idle-materials.html",
-    "warehouse": "warehouse.html",
-    "warehouse-checkin": "receipt-inbound.html",
-    "warehouse-checkout": "inventory-management.html",
-    "warehouse-transfer": "inventory-management.html",
-    "warehouse-stock-ledger": "warehouse-stock-ledger.html",
-    "warehouse-io-ledger": "warehouse-io-ledger.html",
-    "retired-apply-main": "retire-scrap-application.html",
-    "retired-brand": "retired-prototype-list.html?scene=brand",
-    "retired-model": "retired-prototype-list.html?scene=model",
-    "retired-line": "retired-prototype-list.html?scene=line",
-    "retired-wind": "retired-prototype-list.html?scene=wind",
-    "retired-requisition": "retired-prototype-list.html?scene=requisition",
-    "retired-project": "retired-prototype-list.html?scene=project",
-    "retired-big-small-reuse": "big-small-reuse.html",
-    "retired-transfer": "goods-transfer-out.html",
-    "performance-board": "performance-hub.html?tab=login",
-    "performance-kpi": "performance-hub.html?tab=flow",
-    "performance-rule": "performance-hub.html?tab=flow",
-    "performance-login-frequency": "performance-hub.html?tab=login",
-    "performance-flow-frequency": "performance-hub.html?tab=flow",
-    "notice-bid": "notice-bid-fixed.html",
-    "notice-nonbid": "notice-prototype-list.html?scene=nonbid",
-    "notice-system": "notice-hub.html?tab=nonbid",
-    "notice-company": "notice-hub.html?tab=nonbid",
-    "notice-policy": "notice-hub.html?tab=nonbid",
-    "notice-training": "notice-hub.html?tab=nonbid",
-    "notice-ops": "notice-hub.html?tab=nonbid",
-    "biz-overview": "integrated-business-hub.html?tab=fin",
-    "biz-center": "procurement-application.html",
-    "biz-process": "integrated-business-hub.html?tab=flow",
-    "biz-collab": "carrier-management.html",
-    "biz-finance": "integrated-business-hub.html?tab=fin",
-    "biz-repair": "integrated-business-hub.html?tab=rep",
-    "biz-transfer": "integrated-business-hub.html?tab=adj",
-    "biz-emergency": "integrated-business-hub.html?tab=emg",
-    "biz-standard": "biz-standard-list.html",
-    "biz-process-design": "integrated-business-hub.html?tab=flow",
-    "biz-claim": "integrated-business-hub.html?tab=claim",
-    "biz-domestic-substitute": "integrated-business-hub.html?tab=dom",
-    "biz-expert": "integrated-business-hub.html?tab=exp",
-    "data-ledger": "base-data-material-ledger.html",
-    "data-stock": "inventory-management.html",
-    "data-report": "subpage-template.html",
-    "data-audit": "equipment-evaluation.html",
-    "data-master": "base-data-material-ledger.html",
-    "data-quality": "equipment-evaluation.html",
-    "data-base": "base-data-material-ledger.html",
-    "data-supplier": "base-data-material-ledger.html?tab=supplier",
-    "data-product": "base-data-material-ledger.html?tab=product",
-    "data-personnel": "base-data-material-ledger.html?tab=personnel",
-    "data-department": "base-data-material-ledger.html?tab=department",
-    "data-company": "base-data-material-ledger.html?tab=company",
-    "data-station": "base-data-material-ledger.html?tab=station",
-    "data-dict": "base-data-material-ledger.html?tab=dict",
-    "data-carrier": "base-data-material-ledger.html?tab=carrier",
-    "data-rate-tax": "base-data-material-ledger.html?tab=rateTax",
-    "data-code-rule": "base-data-material-ledger.html?tab=codeRule",
-    "data-catalog": "base-data-material-ledger.html?tab=product",
-    "asset-ledger": "asset-ledger.html",
-    "data-code": "data-code-fixed.html",
-    "data-model": "equipment-evaluation.html",
-    "data-decision": "cockpit-analytics.html",
-    "data-contract": "data-contract-fixed.html",
-    "tool-template": "subpage-template.html",
-    "tool-demo": "demo-all-pages-interactive.html",
-    "tool-api": "system-prototype-list.html?scene=client",
-    "dev-admin-monitor": "subpage-template.html",
-    "dev-task-dispatch": "subpage-template.html",
-    "dev-plus-home": "subpage-template.html",
-    "setting-profile": "index-portal-screen-alt.html",
-    "setting-security": "index-portal-screen-alt.html",
-    "setting-theme": "index-portal-screen-alt.html",
-    "setting-login": "index-portal-screen-alt.html",
-    "setting-password": "index-portal-screen-alt.html",
-    "setting-user": "system-prototype-list.html?scene=user",
-    "setting-department": "system-prototype-list.html?scene=dept",
-    "setting-permission": "system-prototype-list.html?scene=post",
-    "system-user": "system-prototype-list.html?scene=user",
-    "system-role": "system-prototype-list.html?scene=role",
-    "system-codegen": "system-prototype-list.html?scene=codegen",
-    "system-menu": "system-prototype-list.html?scene=menu",
-    "system-department": "system-prototype-list.html?scene=dept",
-    "system-position": "system-prototype-list.html?scene=post",
-    "system-dict": "system-prototype-list.html?scene=dict",
-    "system-params": "system-prototype-list.html?scene=params",
-    "system-notice": "system-prototype-list.html?scene=notice",
-    "system-file": "system-prototype-list.html?scene=file",
-    "system-client": "system-prototype-list.html?scene=client",
-    "system-log": "system-prototype-list.html?scene=notice",
-    "oa-integration": "oa-flow-center.html?tab=sso",
-    "oa-flow-style": "oa-flow-center.html?tab=style",
-    "flow-print-pdf": "oa-flow-center.html?tab=print",
-    "flow-return-withdraw": "oa-flow-center.html?tab=return",
-    "flow-notify": "oa-flow-center.html?tab=notify",
-    "finance-export": "oa-flow-center.html?tab=export",
-    "dev-online-user": "devtools-prototype-list.html?scene=onlineUser",
-    "dev-tenant": "devtools-prototype-list.html?scene=tenant",
-    "dev-tenant-package": "devtools-prototype-list.html?scene=tenantPackage",
-    "dev-model-manage": "devtools-prototype-list.html?scene=modelManage",
-    "dev-process-define": "devtools-prototype-list.html?scene=processDefine",
-    "dev-test-form": "devtools-prototype-list.html?scene=testForm",
-    "dev-test-tree": "devtools-prototype-list.html?scene=testTree",
-    "dev-flow-category": "devtools-prototype-list.html?scene=flowCategory",
-    "dev-leave": "devtools-prototype-list.html?scene=leave",
-    "dev-flow-instance": "devtools-prototype-list.html?scene=flowInstance",
-    "dev-pending-task": "devtools-prototype-list.html?scene=pendingTask",
-    "dev-cache-monitor": "devtools-prototype-list.html?scene=cacheMonitor",
-    "dev-form-manage": "devtools-prototype-list.html?scene=formManage",
-}
-
+# 与 js/sidebar-actions.js 中 SIDEBAR_ACTION_HREF 一致；侧栏映射以 sidebar-action-href.json 为准（可由 node 从 sidebar-actions.js 导出）
+_SIDEBAR_ACTION_HREF_JSON = Path(__file__).resolve().parent / "sidebar-action-href.json"
+SIDEBAR_ACTION_FOR_DEMO = json.loads(_SIDEBAR_ACTION_HREF_JSON.read_text(encoding="utf-8"))
 # 无 data-action 时按按钮文案兜底（normalizeLabel 后匹配）
 DEMO_LABEL_TO_FILE = {
     "首页": "index-portal-screen-alt.html",
@@ -744,7 +543,6 @@ DEMO_LABEL_TO_FILE = {
     "发货管理": "proc-shipment.html",
     "货物质量验收": "proc-quality-accept.html",
     "项目公司验收": "proc-quality-accept.html",
-    "库存台账": "warehouse-stock-ledger.html",
     "出入库记录": "warehouse-io-ledger.html",
     "物流台账": "logistics-ledger.html",
     "资产台账": "asset-ledger.html",
@@ -812,7 +610,7 @@ DEMO_LABEL_TO_FILE = {
     "个人设置": "index-portal-screen-alt.html",
     "安全设置": "index-portal-screen-alt.html",
     "主题设置": "index-portal-screen-alt.html",
-    "登录": "index.html",
+    "登录": "demo-login-placeholder.html",
     "密码管理": "index-portal-screen-alt.html",
     "人员管理": "system-prototype-list.html?scene=user",
     "公司部门管理": "system-prototype-list.html?scene=dept",
@@ -884,7 +682,7 @@ def build_shell_script() -> str:
       st.id = "demoShellCollapseStyle";
       st.textContent =
         "body.demo-shell-collapsed .shell{{grid-template-columns:0 1fr !important;}}" +
-        "body.demo-shell-collapsed .sidebar{{width:0 !important;padding:0 !important;border-right:0 !important;overflow:hidden !important;opacity:0;}}" +
+        "body.demo-shell-collapsed .sidebar{{width:0 !important;padding:0 !important;border-right:0 !important;overflow:hidden !important;opacity:0;visibility:hidden;pointer-events:none;}}" +
         "body.demo-shell-collapsed .main{{min-width:0;}}";
       document.head.appendChild(st);
     }}
@@ -914,8 +712,7 @@ def build_shell_script() -> str:
         actionsBar.insertBefore(btnShell, btnPrev);
       }}
       if (btnShell) btnShell.addEventListener("click", toggleDemoShellCollapsed);
-      // 默认展开侧栏，避免首次进入出现窄条/怪异滚动条
-      document.body.classList.remove("demo-shell-collapsed");
+      /* 默认收拢「离线演示总入口」侧栏，主区全宽；需要时点顶栏「显示侧栏」 */
       syncDemoShellCollapsedUi();
     }})();
 
@@ -1037,6 +834,18 @@ def build_shell_script() -> str:
       return candidates;
     }}
 
+    /** 含 #fragment 的 href 追加 pageSub 时必须插在 ? 与 # 之间，否则整段落入 hash，壳层解析与 switchTo 注入会失效 */
+    function demoAppendPageSubBeforeHash(href, label) {{
+      if (!href || !label) return href;
+      var s = String(href);
+      if (s.indexOf("pageSub=") >= 0) return href;
+      var hashIdx = s.indexOf("#");
+      var base = hashIdx >= 0 ? s.slice(0, hashIdx) : s;
+      var frag = hashIdx >= 0 ? s.slice(hashIdx) : "";
+      var sep = base.indexOf("?") >= 0 ? "&" : "?";
+      return base + sep + "pageSub=" + encodeURIComponent(String(label).trim()) + frag;
+    }}
+
     window.__demoOpenPage = function (href) {{
       if (!href) return false;
       var key = String(href).split("#")[0].trim();
@@ -1072,7 +881,7 @@ def build_shell_script() -> str:
       for (var ci = 0; ci < candidates.length; ci++) {{
         var c = candidates[ci];
         if (c && fileToIndex.hasOwnProperty(c)) {{
-          switchTo(fileToIndex[c]);
+          switchTo(fileToIndex[c], href);
           return true;
         }}
       }}
@@ -1125,7 +934,7 @@ def build_shell_script() -> str:
       for (var ci = 0; ci < candidates.length; ci++) {{
         var f = candidates[ci];
         if (f && fileToIndex.hasOwnProperty(f)) {{
-          switchTo(fileToIndex[f]);
+          switchTo(fileToIndex[f], raw);
         return true;
         }}
       }}
@@ -1231,7 +1040,7 @@ def build_shell_script() -> str:
           file = actionToFile[action];
           var dl = el.getAttribute && el.getAttribute("data-label");
           if (dl && String(dl).trim() && file.indexOf("pageSub=") < 0) {{
-            file = file + (file.indexOf("?") >= 0 ? "&" : "?") + "pageSub=" + encodeURIComponent(String(dl).trim());
+            file = demoAppendPageSubBeforeHash(file, String(dl).trim());
           }}
         }}
 
@@ -1267,7 +1076,7 @@ def build_shell_script() -> str:
     var demoUseSrcdocOnly = true;
     var demoLoadingSafetyTimer = null;
 
-    function switchTo(index) {{
+    function switchTo(index, optFullHref) {{
       if (index < 0 || index >= pagesList.length) return;
       var prevIndex = currentIndex;
       currentIndex = index;
@@ -1415,9 +1224,9 @@ def build_shell_script() -> str:
       }}
 
       /* 单次 rAF：让壳层先绘制「加载中」，再 expand（双 rAF 在低配机上体感偏慢） */
-      requestAnimationFrame(function () {{
-        var html = getExpandedHtmlForFile(item.file, raw);
-        assignIframeHtml(html);
+        requestAnimationFrame(function () {{
+          var html = getExpandedHtmlForFile(item.file, raw);
+          assignIframeHtml(html);
       }});
     }}
 
@@ -1440,19 +1249,31 @@ def build_shell_script() -> str:
       tryBindDemoIframeNav();
     }});
 
-    switchTo(0);
+    /* 让壳层顶栏/侧栏先完成绘制，再注入首屏 iframe，减轻「整页卡死无响应」体感 */
+    setTimeout(function () {{ switchTo(0); }}, 0);
   }})();
   </script>
 """
 
 
+def write_demo_data_js(path: Path, pages_map: dict, inline_assets: list) -> None:
+    """独立 .js 文件赋值 window.__DEMO_PAGES__，便于浏览器先渲染壳层再执行大数据。"""
+    pages_raw = json.dumps(pages_map, ensure_ascii=False, separators=(",", ":"))
+    assets_raw = json.dumps(inline_assets, ensure_ascii=False, separators=(",", ":"))
+    body = (
+        "/* map-demo auto-generated UTF-8 — build_demo_single_html.py */\n"
+        "window.__DEMO_PAGES__ = "
+        + pages_raw
+        + ";\nwindow.__DEMO_INLINE_ASSETS__ = "
+        + assets_raw
+        + ";\n"
+    )
+    path.write_text(body, encoding="utf-8")
+
+
 def main() -> None:
     pages_map = build_pages_map(ROOT)
     pages_map, inline_assets = dedupe_inline_data_urls(pages_map)
-    pages_json = json.dumps(pages_map, ensure_ascii=False)
-    pages_json = escape_json_for_html_script(pages_json)
-    assets_json = json.dumps(inline_assets, ensure_ascii=False)
-    assets_json = escape_json_for_html_script(assets_json)
     shell_path = None
     for name in SHELL_TEMPLATE_CANDIDATES:
         cand = ROOT / name
@@ -1516,11 +1337,23 @@ def main() -> None:
         '<iframe id="demoFrame" src="about:blank"',
     )
 
-    script_body = (
-        build_shell_script()
-        .replace("__EMBED_PAGES_JSON__", pages_json)
-        .replace("__EMBED_ASSETS_JSON__", assets_json)
+    # 壳层以 index.html 为准；大数据写入同目录 .data.js，避免单文件 HTML 含 100MB 脚本拖垮 file:// 首屏
+    data_path = ROOT / DEMO_DATA_JS
+    write_demo_data_js(data_path, pages_map, inline_assets)
+    external_loader = (
+        f'<script src="{DEMO_DATA_JS}" charset="utf-8"></script>\n  <script>\n  '
     )
+    shell, n_inject = re.subn(
+        r"<script>\s*var __DEMO_PAGES__\s*=\s*[^;]+;\s*\n\s*var __DEMO_INLINE_ASSETS__\s*=\s*[^;]+;\s*",
+        external_loader,
+        shell,
+        count=1,
+    )
+    if n_inject != 1:
+        raise RuntimeError(
+            "Inject failed: index.html must start shell script with "
+            "'var __DEMO_PAGES__ = …; var __DEMO_INLINE_ASSETS__ = …;'"
+        )
 
     # 可选：隐藏左侧说明文案，仅保留可点击目录；并将顶栏改成紧凑模式（仅当前页面+按钮）
     compact_css = (
@@ -1545,40 +1378,36 @@ def main() -> None:
             1,
         )
 
-    start = shell.find('  <script>\n    (function () {\n      var pages = [')
-    if start == -1:
-        m = re.search(r"<script>\s*var __DEMO_PAGES__\s*=", shell)
-        if m:
-            start = m.start()
-    if start == -1:
-        m = re.search(r"<script>\s*var pages\s*=", shell)
-        if m:
-            start = m.start()
-    end = shell.find("</script>", start) if start != -1 else -1
-    if start != -1 and end != -1:
-        tail = shell[end + len("</script>") :]
-        out = shell[:start] + script_body + "\n" + tail
-    else:
-        # 容错：历史文件可能已损坏（缺失 </script>），按脚本起点截断并重建收尾
-        marker = "  <script>\n  var __DEMO_PAGES__ ="
-        cut = shell.find(marker)
-        if cut == -1:
-            cut = start if start != -1 else len(shell)
-        head = shell[:cut]
-        # 确保基础壳标签闭合
-        if "</body>" not in head:
-            if "</main>" not in head:
-                head += "\n    </main>\n  </div>\n"
-            elif "</div>" not in head[-200:]:
-                head += "\n  </div>\n"
-            head += "\n"
-            out = head + script_body + "\n</body>\n</html>\n"
-        else:
-            out = head.replace("</body>", script_body + "\n</body>", 1)
+    action_json = json.dumps(
+        SIDEBAR_ACTION_FOR_DEMO, ensure_ascii=False, separators=(",", ":")
+    )
+
+    def inject_action_to_file(html: str) -> str:
+        new, n = re.subn(
+            r"(    var actionToFile = )\{[\s\S]*?\}(;\s*\n    var labelToFile)",
+            lambda m: m.group(1) + action_json + m.group(2),
+            html,
+            count=1,
+        )
+        if n != 1:
+            raise RuntimeError(
+                "Inject failed: var actionToFile = {...}; must precede var labelToFile"
+            )
+        return new
+
+    shell = inject_action_to_file(shell)
+    index_html_path = ROOT / "index.html"
+    if index_html_path.exists():
+        idx_src = index_html_path.read_text(encoding="utf-8")
+        if "var actionToFile" in idx_src and "var labelToFile" in idx_src:
+            index_html_path.write_text(inject_action_to_file(idx_src), encoding="utf-8")
+
+    out = shell
     for name in OUT_NAMES:
         out_path = ROOT / name
         out_path.write_text(out, encoding="utf-8")
         print(f"Wrote {out_path} ({len(out):,} bytes)")
+    print(f"Wrote {data_path} ({data_path.stat().st_size:,} bytes)")
 
 
 if __name__ == "__main__":

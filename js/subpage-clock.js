@@ -510,9 +510,7 @@
           '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
           '<button type="button" class="warehouse-secondary-link" data-action="idle" data-label="闲置物资">闲置物资</button>' +
           '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-          '<button type="button" class="warehouse-secondary-link" data-action="warehouse" data-label="仓库管理">仓库管理</button>' +
-          '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-          '<button type="button" class="warehouse-secondary-link" data-action="warehouse-stock-ledger" data-label="库存台账">库存台账</button>'
+          '<button type="button" class="warehouse-secondary-link" data-action="warehouse" data-label="仓库管理">仓库管理</button>'
       },
       retired: {
         text: '物资出库与处置',
@@ -1055,6 +1053,128 @@
     }
   }
 
+  /**
+   * 子页顶通栏面包屑：首页 / 模块 / 当前页（与侧栏 nav-item--module-active + document.title 一致）
+   */
+  function guessBreadcrumbModule(file) {
+    if (!file) return "";
+    var f = file.toLowerCase();
+    if (f === "purchase-plan-approval-handle.html") return "我的任务";
+    if (f.indexOf("my-tasks") === 0) return "我的任务";
+    if (f.indexOf("scrap-identification") >= 0 || f.indexOf("retire") === 0 || f.indexOf("retired-") === 0 || f === "big-small-reuse.html" || f === "goods-transfer-out.html")
+      return "物资出库与处置";
+    if (f.indexOf("assets-") === 0 || f.indexOf("asset-") === 0 || f === "equipment-evaluation.html") return "我的资产";
+    if (f.indexOf("carrier-") === 0 || f.indexOf("logistics-") === 0) return "物流管理";
+    if (
+      f === "warehouse.html" ||
+      f === "receipt-inbound.html" ||
+      f === "scan-pick.html" ||
+      f === "slot-management.html" ||
+      f === "inventory-check.html" ||
+      f === "warehouse-maintenance.html" ||
+      f === "inventory-management.html" ||
+      f === "idle-materials.html" ||
+      f.indexOf("warehouse-io-ledger") === 0 ||
+      f.indexOf("warehouse-stock-ledger") === 0
+    )
+      return "仓储管理";
+    if (
+      f.indexOf("purchase-") === 0 ||
+      f === "order-demand-management.html" ||
+      f === "contract-management.html" ||
+      f === "cargo-ledger.html" ||
+      f === "procurement-application.html" ||
+      f.indexOf("material-procurement") === 0 ||
+      f.indexOf("purchase-management-hub") === 0 ||
+      f.indexOf("proc-") === 0 ||
+      f.indexOf("purchase-material") === 0 ||
+      f.indexOf("purchase-plan") === 0 ||
+      f === "purchase-ledger.html" ||
+      f.indexOf("purchase-summary") === 0 ||
+      f.indexOf("purchase-prototype") === 0
+    )
+      return "采购管理";
+    if (f.indexOf("base-data") === 0 || f.indexOf("data-code") === 0 || f.indexOf("data-contract") === 0 || f.indexOf("data-supplier") === 0 || f.indexOf("data-base") === 0 || f.indexOf("data-prototype") === 0)
+      return "数据管理";
+    if (f.indexOf("notice-") === 0 || f.indexOf("notice-hub") === 0 || f.indexOf("notice-prototype") === 0) return "公告管理";
+    if (f.indexOf("performance-hub") === 0) return "绩效考核";
+    if (f.indexOf("integrated-business") === 0 || f.indexOf("biz-standard") === 0) return "综合业务管理";
+    if (f.indexOf("cockpit-analytics") === 0 || f.indexOf("cockpit-hub") === 0) return "驾驶舱";
+    if (f.indexOf("system-") === 0 || f.indexOf("devtools") === 0 || f.indexOf("oa-flow") === 0 || f.indexOf("system-admin-hub") === 0) return "系统管理";
+    return "";
+  }
+
+  function installSubpageBreadcrumb() {
+    try {
+      var body = document.body;
+      if (!body || body.getAttribute("data-breadcrumb") === "none") return;
+      if (!body.classList.contains("page-subpage")) return;
+      if (!body.classList.contains("page-source-navbar")) return;
+
+      var main = document.querySelector(".main-scroll");
+      if (!main) return;
+      if (main.querySelector(".apm-breadcrumb, nav.subpage-breadcrumb")) return;
+
+      var path = "";
+      try {
+        path = (location.pathname || "").split("/").pop() || "";
+      } catch (ePath) {}
+      var file = (path.split("?")[0] || "").toLowerCase();
+      if (
+        file === "index-portal-screen-alt.html" ||
+        file === "demo-login-placeholder.html" ||
+        file === "module-home.html" ||
+        file === "index.html"
+      )
+        return;
+
+      var inner = main.querySelector(".carrier-main-inner, .apm-wrap");
+      var host = inner || main;
+      if (host !== main && host.querySelector(".apm-breadcrumb, nav.subpage-breadcrumb")) return;
+
+      var mod = "";
+      var act = document.querySelector(".sidebar .nav-item--module-active .nav-label");
+      if (act) mod = (act.textContent || "").replace(/\s+/g, " ").trim();
+      if (!mod) mod = guessBreadcrumbModule(file);
+      if (!mod) mod = "业务功能";
+
+      var pageLabel = "";
+      var tm = document.title.match(/^(.+?)(\s*[-–]\s*)/);
+      if (tm) pageLabel = tm[1].trim();
+      else pageLabel = (document.title || "").split(/[-–]/)[0].trim();
+      if (!pageLabel) pageLabel = "当前页";
+
+      var nav = document.createElement("nav");
+      nav.className = "subpage-breadcrumb";
+      nav.setAttribute("aria-label", "面包屑");
+
+      var a = document.createElement("a");
+      a.href = "index-portal-screen-alt.html";
+      a.textContent = "首页";
+      nav.appendChild(a);
+
+      function sep() {
+        var s = document.createElement("span");
+        s.className = "sep";
+        s.textContent = "/";
+        return s;
+      }
+      function spanText(t) {
+        var s = document.createElement("span");
+        s.textContent = t;
+        return s;
+      }
+
+      nav.appendChild(sep());
+      nav.appendChild(spanText(mod));
+      nav.appendChild(sep());
+      nav.appendChild(spanText(pageLabel));
+
+      if (inner) inner.insertBefore(nav, inner.firstChild);
+      else main.insertBefore(nav, main.firstChild);
+    } catch (eBc) {}
+  }
+
   tickClock();
   setInterval(tickClock, 1000);
   installOrgAccessBridge();
@@ -1063,4 +1183,5 @@
   installMasterNavInteractions();
   installShellQuickActions();
   installGlobalTaskReminder();
+  installSubpageBreadcrumb();
 })();

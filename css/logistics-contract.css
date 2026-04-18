@@ -20,3 +20,131 @@
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
+
+/* 合同详情 / 编辑 / 删除弹窗（壳层见 css/modal-system.css） */
+#contractDetailMask .modal,
+#contractFormMask .modal {
+  width: min(900px, 96vw);
+}
+#contractDeleteMask {
+  z-index: 10060;
+}
+#contractDetailMask .modal-body .field,
+#contractFormMask .modal-body .field {
+  margin-bottom: 0;
+}
+#contractDetailMask .modal-body,
+#contractFormMask .modal-body {
+  display: grid;
+  gap: 12px 14px;
+}
+.modal-body.contract-detail-body {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.modal-body.contract-form-body {
+  grid-template-columns: 1fr 1fr;
+}
+#contractFormMask .field.full {
+  grid-column: 1 / -1;
+}
+.contract-detail-span3 {
+  grid-column: 1 / -1;
+}
+.modal-body .field label {
+  display: block;
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: #516a87;
+}
+.modal-body .field input,
+.modal-body .field select,
+.modal-body .field textarea {
+  width: 100%;
+  height: 34px;
+  border: 1px solid #d7e1ee;
+  border-radius: 6px;
+  padding: 0 10px;
+  font-size: 14px;
+  color: #223a55;
+  background: #fff;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.field input.contract-contractno-readonly[readonly] {
+  background: #f5f7fa;
+  border-color: #e8ecf2;
+  color: #5c6b7a;
+  cursor: default;
+}
+.modal-body .field textarea {
+  height: 88px;
+  padding: 8px 10px;
+  resize: vertical;
+}
+.modal-body .help {
+  font-size: 12px;
+  color: #7d8ea2;
+  margin-top: 4px;
+}
+.contract-readonly {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid #e8ecf2;
+  border-radius: 6px;
+  background: #f5f7fa;
+  color: #2a3d56;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+.contract-readonly--multiline {
+  min-height: 34px;
+  align-items: flex-start;
+  padding: 8px 10px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.contract-detail-attachments {
+  border: 1px dashed #c5cdd9;
+  border-radius: 6px;
+  padding: 10px;
+  background: #fafbfc;
+  min-height: 52px;
+  color: #2b4664;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+.contract-detail-clauses {
+  margin: 0;
+  border: 1px solid #e8ecf2;
+  border-radius: 6px;
+  padding: 10px;
+  background: #f5f7fa;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.55;
+  color: #2a3d56;
+  font-size: 13px;
+  max-height: 220px;
+  overflow: auto;
+  box-sizing: border-box;
+}
+.modal-footer .footer-tip {
+  font-size: 12px;
+  color: #7b8fa7;
+}
+.modal-footer .footer-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.btn-contract-delete {
+  background: #ff4d4f !important;
+  border-color: #ff4d4f !important;
+  color: #fff !important;
+}
+.btn-contract-delete:hover {
+  filter: brightness(1.05);
+}

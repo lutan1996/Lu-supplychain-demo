@@ -47,22 +47,22 @@
     .wh-ops a:hover { opacity: .85; }
     .cell-num { font-variant-numeric: tabular-nums; font-weight: 500; color: #1f2d3d; }
 
-    /* 报废申请详情弹窗（参考设计稿） */
+    /* 报废申请详情弹窗（与其它页统一白底标题栏） */
     #viewModalMask .modal--scrap-detail {
       width: min(960px, 98vw);
-      border-radius: 8px;
-      border: 1px solid #b3d4fc;
-      box-shadow: 0 12px 40px rgba(9, 40, 90, 0.22);
+      border-radius: 10px;
+      border: 1px solid #e8ecf0;
+      box-shadow: 0 12px 40px rgba(15, 35, 70, 0.14);
     }
     #viewModalMask .scrap-detail-header {
-      height: 48px;
+      min-height: 48px;
       padding: 0 16px;
-      background: linear-gradient(180deg, #1890ff 0%, #1677ff 100%);
-      border-bottom: none;
+      background: #fff;
+      border-bottom: 1px solid #f0f2f5;
       align-items: center;
     }
     #viewModalMask .scrap-detail-header .modal-title {
-      color: #fff;
+      color: #1f3551;
       font-size: 16px;
       font-weight: 600;
     }
@@ -72,38 +72,47 @@
       gap: 10px;
     }
     #viewModalMask .btn-scrap-progress {
-      border: 1px solid #389e0d;
-      background: #73d13d;
-      color: #1f1f1f;
-      border-radius: 4px;
+      border: 1px solid #d9d9d9;
+      background: #fff;
+      color: rgba(0, 0, 0, 0.85);
+      border-radius: 6px;
       padding: 5px 14px;
       font-size: 13px;
       font-weight: 500;
       cursor: pointer;
     }
-    #viewModalMask .btn-scrap-progress:hover { filter: brightness(1.05); }
+    #viewModalMask .btn-scrap-progress:hover {
+      border-color: #1890ff;
+      color: #1890ff;
+    }
     #viewModalMask .btn-scrap-approve,
     #viewModalMask .btn-scrap-reject {
-      border: 1px solid #d46b08;
-      background: #ffa940;
-      color: #1f1f1f;
-      border-radius: 4px;
+      border: 1px solid #d9d9d9;
+      background: #fff;
+      color: rgba(0, 0, 0, 0.85);
+      border-radius: 6px;
       padding: 5px 14px;
       font-size: 13px;
       font-weight: 500;
       cursor: pointer;
     }
     #viewModalMask .btn-scrap-approve:hover,
-    #viewModalMask .btn-scrap-reject:hover { filter: brightness(1.05); }
+    #viewModalMask .btn-scrap-reject:hover {
+      border-color: #1890ff;
+      color: #1890ff;
+    }
     #viewModalMask .scrap-detail-close {
-      color: #fff !important;
+      color: #8c9aad !important;
       font-size: 22px;
       line-height: 1;
-      padding: 0 4px;
+      padding: 4px 8px;
+      border-radius: 4px;
       margin-left: 4px;
-      opacity: 0.95;
     }
-    #viewModalMask .scrap-detail-close:hover { opacity: 1; }
+    #viewModalMask .scrap-detail-close:hover {
+      color: #1f3551 !important;
+      background: #f5f7fa;
+    }
     #viewModalMask .scrap-detail-body {
       padding: 0;
       display: block;
@@ -182,91 +191,58 @@
     #viewModalMask .scrap-detail-extra .ex-row { margin-bottom: 8px; }
     #viewModalMask .scrap-detail-extra .ex-row b { color: #595959; }
     #viewModalMask .scrap-detail-footer {
-      border-top: 1px solid #e8e8e8;
-      background: #fafafa;
+      border-top: 1px solid #f0f2f5;
+      background: #fafbfd;
       justify-content: flex-end;
     }
 
-    .modal-mask {
-      position: fixed;
-      inset: 0;
-      background: rgba(6, 20, 40, 0.5);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      padding: 20px;
-    }
-    .modal-mask.show { display: flex; }
-    .modal {
+    /* 报废申请编辑弹窗：双列表单（壳层见 css/modal-system.css） */
+    #applyModalMask .modal {
       width: min(820px, 96vw);
-      background: #fff;
-      border: 1px solid #dbe6f3;
-      border-radius: 12px;
-      box-shadow: 0 18px 46px rgba(9, 24, 45, 0.28);
-      overflow: hidden;
     }
-    .modal-header {
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 14px;
-      border-bottom: 1px solid #e8eef7;
+    #applyModalMask .modal-body .field {
+      margin-bottom: 0;
     }
-    .modal-title { margin: 0; font-size: 17px; color: #1f3551; }
-    .modal-close {
-      border: none; background: transparent; cursor: pointer; font-size: 22px; color: #6a819f;
-    }
-    .modal-body {
-      padding: 14px;
+    #applyModalMask .modal-body {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px 14px;
     }
-    .field.full { grid-column: 1 / -1; }
-    .field label {
-      display: block; margin: 0 0 6px; font-size: 13px; color: #516a87;
+    #applyModalMask .field.full {
+      grid-column: 1 / -1;
     }
-    .field input, .field select, .field textarea {
+    #applyModalMask .field label {
+      display: block;
+      margin: 0 0 6px;
+      font-size: 13px;
+      color: #516a87;
+    }
+    #applyModalMask .field input,
+    #applyModalMask .field select,
+    #applyModalMask .field textarea {
       width: 100%;
       height: 34px;
-      border: 1px solid #d7e1ee;
+      border: 1px solid #d9d9d9;
       border-radius: 6px;
       padding: 0 10px;
       font-size: 14px;
       color: #223a55;
       background: #fff;
+      font-family: inherit;
+      box-sizing: border-box;
     }
-    .field textarea {
-      height: 84px; padding: 8px 10px; resize: vertical;
+    #applyModalMask .field textarea {
+      height: 84px;
+      padding: 8px 10px;
+      resize: vertical;
     }
-    .hint { margin-top: 4px; font-size: 12px; color: #7f92a8; }
-    .modal-footer {
-      height: 54px;
-      border-top: 1px solid #e8eef7;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 8px;
-      padding: 0 14px;
-    }
-    .btn {
-      border: 1px solid #d7e1ee;
-      background: #fff;
-      color: #2b4664;
-      border-radius: 6px;
-      padding: 7px 14px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .btn-primary {
-      background: #1890ff;
-      color: #fff;
-      border-color: #1890ff;
+    .hint {
+      margin-top: 4px;
+      font-size: 12px;
+      color: #7f92a8;
     }
     .apply-tip {
-      margin: 0 14px 10px;
+      margin: 0 0 10px;
       padding: 8px 10px;
       border-radius: 6px;
       background: #f5f5f5;

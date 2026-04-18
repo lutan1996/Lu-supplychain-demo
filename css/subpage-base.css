@@ -1,3 +1,4 @@
+@import url("modal-system.css");
 /**
  * 子菜单业务页共用样式（自 warehouse.html 抽取）
  * 页面 body 请使用 class="page-subpage"（可选兼容 page-warehouse）
@@ -40,9 +41,21 @@ body.page-warehouse {
   max-height: 100dvh;
   overflow: hidden;
 }
-/* 子功能页主内容区顶栏标题（与侧栏/页签重复），统一不展示 */
+/* 主内容区顶部页面大标题（与侧栏/主导航重复），统一不展示 */
+body.page-source-navbar .main-scroll h1.carrier-page-title,
+body.page-source-navbar .main-scroll h1.asset-page-title,
+body.page-source-navbar .main-scroll h1.subpage-title,
+body.page-source-navbar .main-scroll h1.dt-title,
+body.page-source-navbar .main-scroll h1.gto-page-title,
+body.page-source-navbar .main-scroll h1.ai-title,
+body.page-source-navbar .main-scroll h1.at-title,
+body.page-source-navbar .main-scroll h1.an-title,
 body.page-subpage .carrier-page-title,
 body.page-subpage h2.wh-title {
+  display: none !important;
+}
+/* 部分页用 Tailwind 工具类作为顶栏 h1 */
+body.page-source-navbar .main-scroll h1.text-2xl {
   display: none !important;
 }
 .page-bg {
@@ -399,6 +412,31 @@ a.warehouse-secondary-link {
   overflow: auto;
   position: relative;
   z-index: 1;
+}
+
+/* 子页顶通栏面包屑（与 css/asset-portal-pages.css .apm-breadcrumb 视觉一致；由 js/subpage-clock.js 注入） */
+nav.subpage-breadcrumb {
+  font-size: 13px;
+  color: #8c8c8c;
+  margin: 0 0 12px;
+  line-height: 1.5;
+  flex-shrink: 0;
+}
+nav.subpage-breadcrumb a {
+  color: #8c8c8c;
+  text-decoration: none;
+}
+nav.subpage-breadcrumb a:hover {
+  color: #1890ff;
+}
+nav.subpage-breadcrumb .sep {
+  margin: 0 6px;
+  color: #bfbfbf;
+}
+/* 无 carrier-inner、面包屑与 wh-title 对齐留白 */
+.main-scroll > nav.subpage-breadcrumb:first-child {
+  padding: 4px 20px 0;
+  margin-bottom: 8px;
 }
 .wh-title {
   font-size: 18px;

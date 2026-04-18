@@ -3,26 +3,171 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>财务价值管理</title>
+  <title>财务价值管理 - 新能源物资供应链管理系统</title>
+  <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
   <link rel="stylesheet" href="css/subpage-base.css" />
   <link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/asset-portal-pages.css" />
 </head>
-<body class="page-source-navbar page-subpage">
+<body class="page-source-navbar page-subpage page-logistics page-asset-portal">
+  <div class="page-bg" aria-hidden="true"></div>
   <div class="app">
-    <header class="header"><div class="header-left"><button class="header-hamburger"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="header-logo" href="#"><img src="assets/logo-chenergy.png" width="220" height="40" alt="" /></a><div class="header-source-brand"><p>新能源供应链管理系统</p></div></div><div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar">用</div></div></header>
-    <div class="layout"><aside class="sidebar"><div class="nav-item nav-item--module-active"><span class="nav-label">我的资产</span></div></aside><main class="main-scroll"><div class="subpage-panel">
-      <h1 class="subpage-title">财务价值管理（XQ-040）</h1>
-      <div class="subpage-toolbar"><input class="subpage-search" id="q" placeholder="资产编号/资产名称" /><button class="btn btn-primary" id="btnQuery">查询</button><button class="btn" id="btnExport">导出</button></div>
-      <div class="subpage-table-wrap"><table class="subpage-table"><thead><tr><th>资产编号</th><th>资产名称</th><th>原值</th><th>净值</th><th>使用年限</th><th>折旧率</th><th>保管部门</th><th>状态变化</th></tr></thead><tbody id="tb">
-        <tr><td>GD-2026-0001</td><td>主齿轮箱检测仪</td><td>32500</td><td>28750</td><td>2</td><td>11.5%</td><td>华北运维部</td><td>本月折旧 -312.50</td></tr>
-        <tr><td>GD-2025-0088</td><td>叶片红外检测仪</td><td>86000</td><td>73100</td><td>3</td><td>15.0%</td><td>经营发展中心</td><td>状态变更：在用→闲置</td></tr>
-      </tbody></table></div>
-    </div></main></div>
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#"><img src="assets/logo-chenergy.png" width="220" height="40" alt="" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item nav-item--module-active" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <div class="nav-item" title="驾驶舱"><span class="nav-label">驾驶舱</span></div>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <div class="nav-item" title="物流管理"><span class="nav-label">物流管理</span></div>
+        <div class="nav-item" title="仓储管理"><span class="nav-label">仓储管理</span></div>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="apm-wrap">
+          <nav class="apm-breadcrumb" aria-label="面包屑">
+            <a href="index-portal-screen-alt.html">首页</a><span class="sep">/</span><span>价值管理</span><span class="sep">/</span><span>财务价值管理</span>
+          </nav>
+
+          <section class="apm-card">
+            <div class="apm-card-head">
+              <h1 class="apm-page-title">财务价值管理</h1>
+              <p class="apm-page-meta">XQ-040 · 资产原值 / 净值 / 折旧与部门维度查询（演示数据）</p>
+            </div>
+
+            <div class="apm-tabs" role="tablist">
+              <button type="button" class="apm-tab is-active" data-tab="all">全部</button>
+              <button type="button" class="apm-tab" data-tab="draft">待提交</button>
+              <button type="button" class="apm-tab" data-tab="review">审批中</button>
+              <button type="button" class="apm-tab" data-tab="pass">已通过</button>
+              <button type="button" class="apm-tab" data-tab="reject">已驳回</button>
+            </div>
+
+            <div class="apm-toolbar">
+              <div class="apm-field">
+                <label for="qKw">关键词</label>
+                <input id="qKw" class="apm-input apm-input--wide" type="search" placeholder="资产编号 / 资产名称" />
+              </div>
+              <div class="apm-field">
+                <label for="qDept">部门</label>
+                <select id="qDept" class="apm-select">
+                  <option value="">全部部门</option>
+                  <option>华北运维部</option>
+                  <option>经营发展中心</option>
+                  <option>生产技术部</option>
+                </select>
+              </div>
+              <div class="apm-toolbar-actions">
+                <button type="button" class="apm-btn apm-btn--primary" id="btnQuery"><i class="fa-solid fa-magnifying-glass"></i> 查询</button>
+                <button type="button" class="apm-btn apm-btn--default" id="btnReset">重置</button>
+                <button type="button" class="apm-btn apm-btn--default" id="btnExport"><i class="fa-solid fa-file-export"></i> 导出</button>
+                <button type="button" class="apm-btn apm-btn--success" id="btnAdd"><i class="fa-solid fa-plus"></i> 新增</button>
+              </div>
+            </div>
+
+            <div class="apm-table-wrap">
+              <table class="apm-table">
+                <thead>
+                  <tr>
+                    <th style="width:120px;">资产编号</th>
+                    <th style="min-width:140px;">资产名称</th>
+                    <th class="cell-num">原值(元)</th>
+                    <th class="cell-num">净值(元)</th>
+                    <th class="cell-num">使用年限</th>
+                    <th class="cell-num">折旧率</th>
+                    <th style="min-width:100px;">保管部门</th>
+                    <th style="min-width:88px;">状态</th>
+                    <th style="min-width:180px;">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="tbBody">
+                  <tr>
+                    <td>GD-2026-0001</td>
+                    <td>主齿轮箱检测仪</td>
+                    <td class="cell-num">32,500.00</td>
+                    <td class="cell-num">28,750.00</td>
+                    <td class="cell-num">2</td>
+                    <td class="cell-num">11.5%</td>
+                    <td>华北运维部</td>
+                    <td><span class="apm-tag apm-tag--processing">审批中</span></td>
+                    <td><a class="apm-link" href="#">查看</a><a class="apm-link" href="#">编辑</a><a class="apm-link" href="#">打印</a></td>
+                  </tr>
+                  <tr>
+                    <td>GD-2025-0088</td>
+                    <td>叶片红外检测仪</td>
+                    <td class="cell-num">86,000.00</td>
+                    <td class="cell-num">73,100.00</td>
+                    <td class="cell-num">3</td>
+                    <td class="cell-num">15.0%</td>
+                    <td>经营发展中心</td>
+                    <td><span class="apm-tag apm-tag--success">已通过</span></td>
+                    <td><a class="apm-link" href="#">查看</a><a class="apm-link" href="#">编辑</a><a class="apm-link" href="#">打印</a></td>
+                  </tr>
+                  <tr>
+                    <td>GD-2025-0155</td>
+                    <td>液压扭矩站</td>
+                    <td class="cell-num">41,200.00</td>
+                    <td class="cell-num">36,800.00</td>
+                    <td class="cell-num">4</td>
+                    <td class="cell-num">10.7%</td>
+                    <td>生产技术部</td>
+                    <td><span class="apm-tag apm-tag--error">已驳回</span></td>
+                    <td><a class="apm-link" href="#">查看</a><a class="apm-link" href="#">编辑</a><a class="apm-link" href="#">打印</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="apm-pagination-bar">
+              <span>共 <strong>3</strong> 条</span>
+              <span>每页 10 条</span>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
   </div>
-  <script src="js/sidebar-actions.js"></script><script src="js/subpage-feature-title.js"></script><script src="js/subpage-clock.js"></script>
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
   <script>
-    document.getElementById("btnQuery").addEventListener("click", function(){ alert("已按条件查询（演示）"); });
-    document.getElementById("btnExport").addEventListener("click", function(){ alert("已导出财务价值数据（演示）"); });
+    (function () {
+      document.querySelectorAll(".apm-tab").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".apm-tab").forEach(function (b) { b.classList.remove("is-active"); });
+          btn.classList.add("is-active");
+        });
+      });
+      document.getElementById("btnQuery").addEventListener("click", function () {
+        alert("已按条件查询（演示）");
+      });
+      document.getElementById("btnReset").addEventListener("click", function () {
+        document.getElementById("qKw").value = "";
+        document.getElementById("qDept").value = "";
+      });
+      document.getElementById("btnExport").addEventListener("click", function () {
+        alert("已导出财务价值数据（演示）");
+      });
+      document.getElementById("btnAdd").addEventListener("click", function () {
+        alert("打开新增表单（演示）");
+      });
+    })();
   </script>
 </body>
 </html>

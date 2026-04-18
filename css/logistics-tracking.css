@@ -92,3 +92,40 @@
 .carrier-table .cell-updated-at {
   white-space: nowrap;
 }
+
+/* 状态更新弹窗：表单栅格（壳层见 css/modal-system.css） */
+#trackStatusModal .modal {
+  width: min(900px, 96vw);
+}
+#trackStatusModal .modal-body .field {
+  margin-bottom: 0;
+}
+#trackStatusModal .modal-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px 14px;
+}
+#trackStatusModal .modal-footer {
+  justify-content: space-between;
+}
+.track-ts-readonly {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid #e8ecf2;
+  border-radius: 6px;
+  background: #f5f7fa;
+  color: #2a3d56;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+.modal-footer .footer-tip {
+  font-size: 12px;
+  color: #7b8fa7;
+}
+.modal-footer .footer-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}

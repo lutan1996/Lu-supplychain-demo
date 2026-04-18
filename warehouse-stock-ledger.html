@@ -1,10 +1,285 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>库存台账</title><link rel="stylesheet" href="css/subpage-base.css" /><link rel="stylesheet" href="css/source-navbar-header.css" /></head>
-<body class="page-source-navbar page-subpage">
-  <div class="app"><header class="header"><div class="header-left"><button class="header-hamburger"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="header-logo" href="#"><img src="assets/logo-chenergy.png" width="220" height="40" alt="" /></a><div class="header-source-brand"><p>新能源供应链管理系统</p></div></div><div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar">用</div></div></header>
-    <div class="layout"><aside class="sidebar"><div class="nav-item"><span class="nav-label">仓储管理</span></div></aside><main class="main-scroll"><div class="subpage-panel"><h1 class="subpage-title">库存台账</h1><div class="subpage-table-wrap"><table class="subpage-table"><thead><tr><th>物资编号</th><th>物资名称</th><th>规格/型号</th><th>入库数量</th><th>出库数量</th><th>剩余数量</th><th>存放仓库</th><th>存放货架</th><th>入库时间</th></tr></thead><tbody><tr><td>MZ-2201</td><td>液压扳手</td><td>HB-50</td><td>150</td><td>52</td><td>98</td><td>华北中心仓</td><td>A-03-12</td><td>2026-04-02</td></tr></tbody></table></div></div></main></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>库存台账 - 新能源物资供应链管理系统</title>
+  <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/warehouse-stock-ledger.css" />
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit.html" title="驾驶舱"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html" title="物流管理"><span class="nav-label">物流管理</span></a>
+        <div class="nav-item nav-item--module-active" title="仓储管理"><span class="nav-label">仓储管理</span></div>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+
+      <main class="main-scroll">
+        <div class="carrier-main-inner wsl-wrap">
+          <h1 class="carrier-page-title">库存台账</h1>
+
+          <div class="wsl-card">
+            <h2 class="wsl-section-title">库存台账管理</h2>
+
+            <div class="wsl-kpis">
+              <div class="wsl-kpi">
+                <div class="k">物资 SKU 数</div>
+                <div class="v" id="kpiSku">128</div>
+              </div>
+              <div class="wsl-kpi">
+                <div class="k">库存合计（件）</div>
+                <div class="v" id="kpiQty">12,560</div>
+              </div>
+              <div class="wsl-kpi">
+                <div class="k">低库存预警</div>
+                <div class="v warn" id="kpiWarn">3</div>
+              </div>
+              <div class="wsl-kpi">
+                <div class="k">覆盖仓库</div>
+                <div class="v" id="kpiWh">6</div>
+              </div>
+            </div>
+
+            <div class="wsl-filters">
+              <div class="f">
+                <label for="fKeyword">物资编号 / 名称</label>
+                <input id="fKeyword" type="search" placeholder="支持模糊查询" autocomplete="off" />
+              </div>
+              <div class="f">
+                <label for="fWarehouse">存放仓库</label>
+                <select id="fWarehouse">
+                  <option value="">全部仓库</option>
+                  <option>华北中心仓</option>
+                  <option>华东备件仓</option>
+                  <option>华南周转仓</option>
+                </select>
+              </div>
+              <div class="f">
+                <label for="fShelf">存放货架</label>
+                <input id="fShelf" placeholder="如 A-03-12" />
+              </div>
+              <div class="f range">
+                <label>入库日期范围</label>
+                <input id="fDateFrom" type="date" />
+                <span>—</span>
+                <input id="fDateTo" type="date" />
+              </div>
+              <div class="f">
+                <label for="fStatus">库存状态</label>
+                <select id="fStatus">
+                  <option value="">全部</option>
+                  <option value="ok">正常</option>
+                  <option value="low">偏低</option>
+                  <option value="zero">零库存</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="wsl-toolbar">
+              <button type="button" class="wsl-btn-search" id="btnSearch">搜索</button>
+              <button type="button" class="wsl-btn-ghost" id="btnReset">重置</button>
+              <button type="button" class="wsl-btn-green" id="btnExport"><i class="fa-solid fa-file-export"></i> 导出</button>
+              <button type="button" class="wsl-btn-ghost" id="btnRemind">提醒补货</button>
+            </div>
+
+            <div class="wsl-table-wrap">
+              <table class="wsl-table" id="ledgerTable">
+                <thead>
+                  <tr>
+                    <th style="width:48px;">序号</th>
+                    <th>物资编号</th>
+                    <th>物资名称</th>
+                    <th>规格/型号</th>
+                    <th class="cell-num">入库数量</th>
+                    <th class="cell-num">出库数量</th>
+                    <th class="cell-num">剩余数量</th>
+                    <th>存放仓库</th>
+                    <th>存放货架</th>
+                    <th>入库时间</th>
+                    <th class="cell-center" style="min-width:88px;">库存状态</th>
+                    <th style="min-width:120px;">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="ledgerBody"></tbody>
+              </table>
+            </div>
+
+            <div class="wsl-pagination">
+              <span id="ledgerTotal">共 0 条</span>
+              <div class="wsl-page-btns">
+                <button type="button" id="pagePrev" aria-label="上一页">&lt;</button>
+                <button type="button" class="is-current" id="pageNum">1</button>
+                <button type="button" id="pageNext" aria-label="下一页">&gt;</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
   </div>
-  <script src="js/sidebar-actions.js"></script><script src="js/subpage-feature-title.js"></script><script src="js/subpage-clock.js"></script>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var rows = [
+        { no: "MZ-2201", name: "液压扳手", spec: "HB-50", in: 150, out: 52, rem: 98, wh: "华北中心仓", shelf: "A-03-12", date: "2026-04-02", st: "ok" },
+        { no: "MZ-3108", name: "高强度螺栓组", spec: "M24×80", in: 2000, out: 1850, rem: 150, wh: "华北中心仓", shelf: "B-01-04", date: "2026-03-28", st: "ok" },
+        { no: "MZ-1044", name: "轴承单元", spec: "NU-318", in: 48, out: 46, rem: 2, wh: "华东备件仓", shelf: "C-02-08", date: "2026-04-10", st: "low" },
+        { no: "MZ-5520", name: "冷却液", spec: "CL-5L", in: 120, out: 120, rem: 0, wh: "华南周转仓", shelf: "D-04-01", date: "2026-03-15", st: "zero" },
+        { no: "MZ-8801", name: "绝缘手套", spec: "10kV", in: 80, out: 35, rem: 45, wh: "华东备件仓", shelf: "A-11-02", date: "2026-04-12", st: "ok" }
+      ];
+
+      var pageSize = 10;
+      var page = 1;
+      var filtered = rows.slice();
+
+      function tagHtml(st) {
+        if (st === "low") return '<span class="tag-stock tag-stock--low">偏低</span>';
+        if (st === "zero") return '<span class="tag-stock tag-stock--zero">零库存</span>';
+        return '<span class="tag-stock tag-stock--ok">正常</span>';
+      }
+
+      function fmtNum(n) {
+        return Number(n).toLocaleString("zh-CN");
+      }
+
+      function applyFilter() {
+        var kw = (document.getElementById("fKeyword").value || "").trim().toLowerCase();
+        var wh = document.getElementById("fWarehouse").value;
+        var shelf = (document.getElementById("fShelf").value || "").trim().toLowerCase();
+        var df = document.getElementById("fDateFrom").value;
+        var dt = document.getElementById("fDateTo").value;
+        var st = document.getElementById("fStatus").value;
+
+        filtered = rows.filter(function (r) {
+          if (kw && r.no.toLowerCase().indexOf(kw) === -1 && r.name.toLowerCase().indexOf(kw) === -1) return false;
+          if (wh && r.wh !== wh) return false;
+          if (shelf && r.shelf.toLowerCase().indexOf(shelf) === -1) return false;
+          if (st && r.st !== st) return false;
+          if (df && r.date < df) return false;
+          if (dt && r.date > dt) return false;
+          return true;
+        });
+        page = 1;
+        render();
+      }
+
+      function render() {
+        var tbody = document.getElementById("ledgerBody");
+        var total = filtered.length;
+        var pages = Math.max(1, Math.ceil(total / pageSize));
+        if (page > pages) page = pages;
+        var start = (page - 1) * pageSize;
+        var slice = filtered.slice(start, start + pageSize);
+
+        tbody.innerHTML = slice
+          .map(function (r, i) {
+            var idx = start + i + 1;
+            return (
+              "<tr>" +
+              "<td>" + idx + "</td>" +
+              "<td>" + r.no + "</td>" +
+              "<td>" + r.name + "</td>" +
+              "<td>" + r.spec + "</td>" +
+              '<td class="cell-num">' + fmtNum(r.in) + "</td>" +
+              '<td class="cell-num">' + fmtNum(r.out) + "</td>" +
+              '<td class="cell-num">' + fmtNum(r.rem) + "</td>" +
+              "<td>" + r.wh + "</td>" +
+              "<td>" + r.shelf + "</td>" +
+              "<td>" + r.date + "</td>" +
+              '<td class="cell-center">' + tagHtml(r.st) + "</td>" +
+              '<td class="wsl-ops"><a href="#">查看</a><a href="#">流水</a></td>' +
+              "</tr>"
+            );
+          })
+          .join("");
+
+        document.getElementById("ledgerTotal").textContent = "共 " + total + " 条";
+        document.getElementById("pageNum").textContent = String(page);
+        document.getElementById("pagePrev").disabled = page <= 1;
+        document.getElementById("pageNext").disabled = page >= pages;
+      }
+
+      document.getElementById("btnSearch").addEventListener("click", applyFilter);
+      document.getElementById("btnReset").addEventListener("click", function () {
+        document.getElementById("fKeyword").value = "";
+        document.getElementById("fWarehouse").value = "";
+        document.getElementById("fShelf").value = "";
+        document.getElementById("fDateFrom").value = "";
+        document.getElementById("fDateTo").value = "";
+        document.getElementById("fStatus").value = "";
+        filtered = rows.slice();
+        page = 1;
+        render();
+      });
+      document.getElementById("btnExport").addEventListener("click", function () {
+        if (typeof showActionModal === "function") {
+          showActionModal("导出", "演示环境：已生成导出任务（模拟）。");
+        } else {
+          alert("演示：导出任务已提交。");
+        }
+      });
+      document.getElementById("btnRemind").addEventListener("click", function () {
+        if (typeof showActionModal === "function") {
+          showActionModal("提醒补货", "已向对应仓库保管员发送低库存提醒（演示）。");
+        } else {
+          alert("演示：提醒已发送。");
+        }
+      });
+
+      document.getElementById("pagePrev").addEventListener("click", function () {
+        if (page > 1) {
+          page--;
+          render();
+        }
+      });
+      document.getElementById("pageNext").addEventListener("click", function () {
+        var pages = Math.max(1, Math.ceil(filtered.length / pageSize));
+        if (page < pages) {
+          page++;
+          render();
+        }
+      });
+
+      render();
+    })();
+  </script>
 </body>
 </html>

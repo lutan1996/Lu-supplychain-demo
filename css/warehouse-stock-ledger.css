@@ -1,0 +1,303 @@
+/**
+ * 库存台账页：对齐报废计划管理 — 浅灰底、白卡片、KPI、筛选栅格、表格与分页
+ */
+.wsl-wrap {
+  background: #f0f2f5;
+  min-height: 100%;
+  padding: 12px 16px 20px;
+  box-sizing: border-box;
+}
+
+.wsl-card {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 2px 8px rgba(0, 0, 0, 0.04);
+  padding: 16px 18px 18px;
+}
+
+.wsl-section-title {
+  margin: 0 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* KPI 四宫格（与 plan-stats 同构） */
+.wsl-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin-bottom: 14px;
+  border: 1px solid #e6edf7;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+.wsl-kpi {
+  padding: 12px 16px;
+  border-right: 1px solid #f0f0f0;
+  min-height: 72px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.wsl-kpi:last-child {
+  border-right: none;
+}
+.wsl-kpi .k {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+.wsl-kpi .v {
+  font-size: 22px;
+  line-height: 1.15;
+  font-weight: 700;
+  color: #0f172a;
+  font-variant-numeric: tabular-nums;
+}
+.wsl-kpi .v.warn {
+  color: #d48806;
+}
+.wsl-kpi .v.danger {
+  color: #cf1322;
+}
+
+/* 筛选区 */
+.wsl-filters {
+  border: 1px solid #e6edf7;
+  border-radius: 8px;
+  background: #fbfdff;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+  align-items: end;
+}
+.wsl-filters .f label {
+  display: block;
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+.wsl-filters .f input,
+.wsl-filters .f select {
+  width: 100%;
+  height: 30px;
+  border: 1px solid #dbe6f3;
+  border-radius: 4px;
+  padding: 0 8px;
+  font-size: 12px;
+  background: #fff;
+  color: #334155;
+  box-sizing: border-box;
+}
+.wsl-filters .f.range {
+  display: grid;
+  grid-template-columns: 1fr 14px 1fr;
+  align-items: end;
+  gap: 4px;
+}
+.wsl-filters .f.range > label {
+  grid-column: 1 / -1;
+}
+.wsl-filters .f.range span {
+  text-align: center;
+  color: #94a3b8;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+/* 工具栏按钮：搜索深灰、其余描边 */
+.wsl-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.wsl-btn-search {
+  height: 32px;
+  padding: 0 16px;
+  font-size: 13px;
+  border: 1px solid #595959;
+  background: #595959;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.wsl-btn-search:hover {
+  background: #434343;
+  border-color: #434343;
+}
+.wsl-btn-ghost {
+  height: 32px;
+  padding: 0 14px;
+  font-size: 13px;
+  border: 1px solid #d9d9d9;
+  background: #fff;
+  color: rgba(0, 0, 0, 0.85);
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+}
+.wsl-btn-ghost:hover {
+  border-color: #1890ff;
+  color: #1890ff;
+}
+.wsl-btn-green {
+  height: 32px;
+  padding: 0 14px;
+  font-size: 13px;
+  border: 1px solid #52c41a;
+  background: #52c41a;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.wsl-btn-green:hover {
+  background: #73d13d;
+  border-color: #73d13d;
+}
+
+/* 表格容器 */
+.wsl-table-wrap {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  overflow: auto;
+  background: #fff;
+}
+.wsl-table {
+  width: 100%;
+  min-width: 1100px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.wsl-table thead th {
+  background: #fafafa;
+  color: #262626;
+  font-weight: 600;
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  white-space: nowrap;
+}
+.wsl-table tbody td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #262626;
+  vertical-align: middle;
+}
+.wsl-table tbody tr:hover td {
+  background: #fafafa;
+}
+.wsl-table .cell-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: #1f2937;
+}
+.wsl-table .cell-center {
+  text-align: center;
+}
+
+/* 状态标签 */
+.tag-stock {
+  display: inline-block;
+  padding: 2px 10px;
+  line-height: 1.35;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+.tag-stock--ok {
+  background: #f6ffed;
+  border-color: #b7eb8f;
+  color: #389e0d;
+}
+.tag-stock--low {
+  background: #fff7e6;
+  border-color: #ffd591;
+  color: #d48806;
+}
+.tag-stock--zero {
+  background: #fff1f0;
+  border-color: #ffa39e;
+  color: #cf1322;
+}
+
+.wsl-ops a {
+  color: #1890ff;
+  text-decoration: none;
+  font-size: 13px;
+  margin-right: 8px;
+}
+.wsl-ops a:hover {
+  color: #40a9ff;
+}
+
+/* 分页 */
+.wsl-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 4px;
+  font-size: 13px;
+  color: #595959;
+}
+.wsl-page-btns {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.wsl-page-btns button {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid #d9d9d9;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+}
+.wsl-page-btns button:hover:not(:disabled) {
+  border-color: #1890ff;
+  color: #1890ff;
+}
+.wsl-page-btns button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.wsl-page-btns button.is-current {
+  border-color: #1890ff;
+  color: #1890ff;
+  font-weight: 600;
+}
+
+@media (max-width: 1100px) {
+  .wsl-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .wsl-kpi {
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .wsl-kpi:nth-child(2n) {
+    border-right: none;
+  }
+  .wsl-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

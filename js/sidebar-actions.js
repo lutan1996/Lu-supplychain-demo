@@ -15,10 +15,10 @@
     "task-approval": "my-tasks-prototype-list.html?scene=todo",
     "task-mine": "my-tasks-prototype-list.html?scene=initiated",
     "task-track": "my-tasks-prototype-list.html?scene=todo",
-    "task-initiated": "index-portal-screen-alt.html#bizTasks=initiated",
-    "task-todo": "index-portal-screen-alt.html#bizTasks=todo",
-    "task-done": "index-portal-screen-alt.html#bizTasks=done",
-    "task-cc": "index-portal-screen-alt.html#bizTasks=cc",
+    "task-initiated": "my-tasks-prototype-list.html?scene=initiated",
+    "task-todo": "my-tasks-prototype-list.html?scene=todo",
+    "task-done": "my-tasks-prototype-list.html?scene=done",
+    "task-cc": "my-tasks-prototype-list.html?scene=cc",
     "home-portal": "index-portal-screen-alt.html",
     "home-system": "index-portal-screen-alt.html",
     // 驾驶舱：统一单页 cockpit.html（集团/省级/首页入口都指向此页）
@@ -99,7 +99,6 @@
     "warehouse-checkin": "receipt-inbound.html",
     "warehouse-checkout": "inventory-management.html",
     "warehouse-transfer": "inventory-management.html",
-    "warehouse-stock-ledger": "warehouse-stock-ledger.html",
     "warehouse-io-ledger": "warehouse-io-ledger.html",
     // 退役及废旧
     "retired-apply-main": "retire-scrap-application.html",
@@ -154,6 +153,12 @@
     "data-carrier": "base-data-material-ledger.html?tab=carrier",
     "data-rate-tax": "base-data-material-ledger.html?tab=rateTax",
     "data-code-rule": "base-data-material-ledger.html?tab=codeRule",
+    /* cockpit / subpage-clock 蓝框「数据」子项：与离线壳 actionToFile 一致 */
+    "data-catalog": "base-data-material-ledger.html?tab=product",
+    "data-code": "data-code-fixed.html",
+    "data-contract": "data-contract-fixed.html",
+    "data-decision": "cockpit-analytics.html",
+    "data-model": "equipment-evaluation.html",
     "asset-ledger": "asset-ledger.html",
     "asset-value-manage": "asset-value-management.html",
     "asset-scrap-identify": "scrap-identification-approval.html",
@@ -444,18 +449,29 @@
       }
 
       /*
-       * 离线总演示：iframe 内优先 postMessage 给父壳（map-demo-nav），
-       * 避免 blob/file 跨源时无法调用 parent.__demoOpenPage，或误走 location.href 导致完全不跳转。
+       * 离线总演示（srcdoc 与父页同源）：优先同步调用父壳 __demoOpenPage，跳转立即生效。
+       * postMessage 作兜底（blob URL / file 跨源等无法读 parent 时）。
        */
       if (inIframe) {
-        if (postMessageDemoNav(href)) return true;
         var shellIf = resolveDemoShell();
-        if (shellIf) {
-          var openedIf = shellIf.__demoOpenPage(href);
-          if (openedIf === true) return true;
-          if (openedIf === false) return false;
-          return true;
+        if (shellIf && typeof shellIf.__demoOpenPage === "function") {
+          try {
+            var openedIf = shellIf.__demoOpenPage(href);
+            if (openedIf === true) return true;
+            /* false：壳层 pages 未收录该文件时，子 iframe 直接跳转，避免蓝框点击无反应 */
+            if (openedIf === false) {
+              try {
+                window.location.href = href;
+                return true;
+              } catch (eLoc) {}
+            }
+          } catch (eOpen) {}
         }
+        if (postMessageDemoNav(href)) return true;
+        try {
+          window.location.href = href;
+          return true;
+        } catch (eLoc2) {}
         return false;
       }
 

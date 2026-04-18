@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>登录 · 新能源供应链管理系统</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+      color: rgba(0, 0, 0, 0.85);
+      min-height: 100%;
+      box-sizing: border-box;
+      background: #1a2238;
+    }
+    /* 用 img 铺底：iframe/srcdoc 内 CSS url(assets/…) 常无法解析，打包脚本会把 img[src] 内联为 data: URL */
+    .login-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      background: #1a2238;
+    }
+    .login-bg-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      display: block;
+    }
+    .login-bg-shade {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(105deg, rgba(8, 14, 32, 0.55) 0%, rgba(12, 20, 42, 0.42) 42%, rgba(255, 120, 40, 0.12) 100%),
+        linear-gradient(180deg, rgba(6, 12, 28, 0.35) 0%, rgba(10, 18, 36, 0.5) 100%);
+    }
+    .wrap {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 420px;
+      padding: 24px 20px;
+      box-sizing: border-box;
+    }
+    .card {
+      padding: 32px 28px 28px;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.06);
+    }
+    .brand {
+      text-align: center;
+      margin-bottom: 26px;
+    }
+    .brand h1 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.88);
+      letter-spacing: 0.02em;
+    }
+    .brand p {
+      margin: 0;
+      font-size: 13px;
+      color: #8c8c8c;
+    }
+    .field {
+      margin-bottom: 16px;
+    }
+    .field label {
+      display: block;
+      font-size: 13px;
+      color: #595959;
+      margin-bottom: 6px;
+    }
+    .field input {
+      width: 100%;
+      box-sizing: border-box;
+      height: 40px;
+      padding: 0 12px;
+      border-radius: 4px;
+      border: 1px solid #d9d9d9;
+      background: #fff;
+      color: rgba(0, 0, 0, 0.88);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .field input::placeholder {
+      color: #bfbfbf;
+    }
+    .field input:hover {
+      border-color: #40a9ff;
+    }
+    .field input:focus {
+      border-color: #1890ff;
+      box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.15);
+    }
+    .captcha-row {
+      display: flex;
+      align-items: stretch;
+      gap: 10px;
+    }
+    .captcha-row input {
+      flex: 1;
+      min-width: 0;
+    }
+    .captcha-q {
+      flex: 0 0 auto;
+      min-width: 120px;
+      height: 40px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: #1f3551;
+      background: #f5f5f5;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      user-select: none;
+    }
+    .captcha-refresh {
+      flex: 0 0 auto;
+      padding: 0 10px;
+      height: 40px;
+      border: 1px solid #d9d9d9;
+      background: #fff;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #1890ff;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .captcha-refresh:hover {
+      border-color: #1890ff;
+    }
+    .field-error {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #ff4d4f;
+      display: none;
+    }
+    .field-error.is-visible {
+      display: block;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      font-size: 12px;
+      color: #8c8c8c;
+    }
+    .row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      user-select: none;
+      color: #595959;
+    }
+    .row input[type="checkbox"] {
+      accent-color: #1890ff;
+    }
+    .btn {
+      width: 100%;
+      height: 40px;
+      border: none;
+      border-radius: 4px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      background: #1890ff;
+      color: #fff;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.04);
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: #40a9ff;
+    }
+    .btn:active {
+      background: #096dd9;
+    }
+    .hint {
+      margin-top: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+      color: #8c8c8c;
+      text-align: center;
+    }
+    .skip {
+      display: block;
+      margin-top: 16px;
+      text-align: center;
+      font-size: 13px;
+      color: #1890ff;
+      text-decoration: none;
+    }
+    .skip:hover {
+      color: #40a9ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-bg" aria-hidden="true">
+    <img class="login-bg-photo" src="assets/login-bg.png" alt="" decoding="async" />
+    <div class="login-bg-shade"></div>
+  </div>
+  <div class="wrap">
+    <div class="card">
+      <div class="brand">
+        <h1>用户登录</h1>
+        <p>新能源供应链管理系统 · 离线演示</p>
+      </div>
+      <form id="loginForm" autocomplete="on">
+        <div class="field">
+          <label for="username">账号</label>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            placeholder="请输入账号"
+            value="demo"
+            autocomplete="username"
+          />
+        </div>
+        <div class="field">
+          <label for="password">密码</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="请输入密码"
+            value="demo"
+            autocomplete="current-password"
+          />
+        </div>
+        <div class="field">
+          <label for="captchaInput">验证码</label>
+          <div class="captcha-row">
+            <span class="captcha-q" id="captchaQuestion" aria-live="polite"></span>
+            <input
+              id="captchaInput"
+              name="captcha"
+              type="text"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              maxlength="4"
+              placeholder="请输入结果"
+              autocomplete="off"
+              aria-describedby="captchaErr"
+            />
+            <button type="button" class="captcha-refresh" id="captchaRefresh" title="换一张">换一张</button>
+          </div>
+          <p class="field-error" id="captchaErr" role="alert">计算结果不正确，请重试</p>
+        </div>
+        <div class="row">
+          <label><input type="checkbox" id="remember" checked /> 记住账号</label>
+          <span>演示任意账号均可登录</span>
+        </div>
+        <button type="submit" class="btn">登 录</button>
+      </form>
+      <p class="hint">
+        本页仅用于离线原型演示；不会向服务器发送真实凭据。登录后进入门户首页。
+      </p>
+      <a class="skip" id="skipLink" href="index-portal-screen-alt.html">跳过登录，直接进入门户 →</a>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var PORTAL = "index-portal-screen-alt.html";
+      var capA = 1;
+      var capB = 1;
+      var capOp = "+";
+
+      function expectedAnswer() {
+        return capOp === "+" ? capA + capB : capA - capB;
+      }
+
+      function refreshCaptcha() {
+        capOp = Math.random() < 0.5 ? "+" : "-";
+        capA = 1 + Math.floor(Math.random() * 18);
+        capB = 1 + Math.floor(Math.random() * 18);
+        if (capOp === "-" && capB > capA) {
+          var t = capA;
+          capA = capB;
+          capB = t;
+        }
+        var q = document.getElementById("captchaQuestion");
+        if (q) {
+          q.textContent = capOp === "+" ? capA + " + " + capB + " =" : capA + " − " + capB + " =";
+        }
+        var input = document.getElementById("captchaInput");
+        if (input) {
+          input.value = "";
+          input.focus();
+        }
+        var err = document.getElementById("captchaErr");
+        if (err) err.classList.remove("is-visible");
+      }
+
+      function markLoggedIn() {
+        try {
+          sessionStorage.setItem("portalLoggedIn_v1", "1");
+        } catch (e) {}
+      }
+      function goPortal() {
+        markLoggedIn();
+        if (typeof window.__demoGo === "function") {
+          window.__demoGo(PORTAL);
+        } else {
+          window.location.href = PORTAL;
+        }
+      }
+
+      refreshCaptcha();
+      var btnRef = document.getElementById("captchaRefresh");
+      if (btnRef) btnRef.addEventListener("click", refreshCaptcha);
+
+      var form = document.getElementById("loginForm");
+      if (form) {
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          var raw = (document.getElementById("captchaInput") && document.getElementById("captchaInput").value) || "";
+          var n = parseInt(raw.trim(), 10);
+          var err = document.getElementById("captchaErr");
+          if (!/^\d+$/.test(raw.trim()) || n !== expectedAnswer()) {
+            if (err) err.classList.add("is-visible");
+            refreshCaptcha();
+            return;
+          }
+          if (err) err.classList.remove("is-visible");
+          goPortal();
+        });
+      }
+      var skip = document.getElementById("skipLink");
+      if (skip) {
+        skip.addEventListener("click", function (e) {
+          e.preventDefault();
+          goPortal();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

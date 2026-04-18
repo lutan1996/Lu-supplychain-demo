@@ -761,37 +761,6 @@
         openModal("add");
       });
 
-      // ====== Modal 基础样式（为保证与其它页面一致，内联定义） ======
-      (function ensureModalCss() {
-        // 如果其它页面已经提供了 modal 样式，这里不会重复插入（避免覆盖）。
-        // 但当前 carrier-management.html 没有引入对应 modal 样式，因此补齐。
-        if (document.getElementById("carrierModalStyle")) return;
-        var st = document.createElement("style");
-        st.id = "carrierModalStyle";
-        st.textContent =
-          ".modal-mask{position:fixed;inset:0;background:rgba(6,20,40,0.5);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;}"+
-          ".modal-mask.show{display:flex;}"+
-          ".modal{width:min(900px,96vw);background:#fff;border-radius:12px;border:1px solid #dbe6f3;box-shadow:0 18px 46px rgba(9,24,45,0.28);overflow:hidden;}"+
-          ".modal-header{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #e8eef7;}"+
-          ".modal-title{margin:0;font-size:17px;color:#1f3551;}"+
-          ".modal-close{border:none;background:transparent;cursor:pointer;font-size:22px;line-height:1;color:#6a819f;}"+
-          ".modal-body{padding:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px 14px;}"+
-          ".field.full{grid-column:1/-1;}"+
-          ".field label{display:block;margin:0 0 6px;font-size:13px;color:#516a87;}"+
-          ".field input,.field select,.field textarea{width:100%;height:34px;border:1px solid #d7e1ee;border-radius:6px;padding:0 10px;font-size:14px;color:#223a55;background:#fff;}"+
-          ".detail-readonly{min-height:34px;display:flex;align-items:center;border:1px solid #d7e1ee;border-radius:6px;padding:6px 10px;background:#fff;color:#223a55;line-height:1.5;}"+
-          ".detail-readonly--multiline{align-items:flex-start;white-space:pre-wrap;word-break:break-word;}"+
-          ".confirm-text{font-size:13px;color:#2a3d56;line-height:1.7;padding:2px 0;}"+
-          ".field textarea{height:88px;padding:8px 10px;resize:vertical;}"+
-          ".help{font-size:12px;color:#7d8ea2;margin-top:4px;}"+
-          ".modal-footer{height:54px;border-top:1px solid #e8eef7;display:flex;align-items:center;justify-content:space-between;padding:0 14px;}"+
-          ".footer-tip{font-size:12px;color:#7b8fa7;}"+
-          ".footer-actions{display:flex;gap:8px;}"+
-          ".btn{border:1px solid #d7e1ee;background:#fff;color:#2b4664;border-radius:6px;padding:7px 14px;font-size:14px;cursor:pointer;}"+
-          ".btn-primary{background:#1890ff;color:#fff;border-color:#1890ff;}";
-        document.head.appendChild(st);
-      })();
-
       renderTable();
     })();
   </script>

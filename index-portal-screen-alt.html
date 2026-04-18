@@ -1093,8 +1093,18 @@
       }
 
       function syncBizTasksFromHash() {
+        var key = null;
         var m = /^#bizTasks=(initiated|todo|done|cc)$/.exec(location.hash);
-        if (!m) return;
+        if (m) key = m[1];
+        /* 离线演示壳 iframe 使用 srcdoc 时子文档无 URL hash，由父页注入 window.__DEMO_BIZ_TASKS__ */
+        if (
+          !key &&
+          typeof window.__DEMO_BIZ_TASKS__ === "string" &&
+          /^(initiated|todo|done|cc)$/.test(window.__DEMO_BIZ_TASKS__)
+        ) {
+          key = window.__DEMO_BIZ_TASKS__;
+        }
+        if (!key) return;
         tabs.forEach(function (t) {
           t.classList.remove("is-active");
           t.setAttribute("aria-selected", "false");
@@ -1104,7 +1114,7 @@
           tasksBtn.classList.add("is-active");
           tasksBtn.setAttribute("aria-selected", "true");
         }
-        showTasksPaneWithFilter(m[1]);
+        showTasksPaneWithFilter(key);
       }
 
       tabs.forEach(function (btn) {
