@@ -729,6 +729,28 @@
       panel.setAttribute('aria-hidden', 'false');
     }
 
+    /** 已从系统管理蓝条移除：若浏览器缓存了旧版 rowHtml，仍可能注入这些 data-action，统一剥掉 */
+    function stripDiscontinuedSecondaryActions(row) {
+      if (!row) return;
+      var BAD = {
+        "oa-integration": 1,
+        "oa-flow-style": 1,
+        "flow-print-pdf": 1,
+        "flow-return-withdraw": 1,
+        "flow-notify": 1,
+        "finance-export": 1
+      };
+      row.querySelectorAll("[data-action]").forEach(function (btn) {
+        var a = btn.getAttribute("data-action");
+        if (!BAD[a]) return;
+        var prev = btn.previousElementSibling;
+        var next = btn.nextElementSibling;
+        if (prev && prev.classList && prev.classList.contains("warehouse-secondary-pipe")) prev.remove();
+        if (next && next.classList && next.classList.contains("warehouse-secondary-pipe")) next.remove();
+        btn.remove();
+      });
+    }
+
     function bindPanelActions(panel) {
       if (!panel) return;
       panel.querySelectorAll('[data-action]').forEach(function (btn) {
@@ -815,6 +837,7 @@
           var rowEl = resolveSecondaryRow();
           if (rowEl && mod.rowHtml) {
             rowEl.innerHTML = applyRoleAclToRowHtml(mod.rowHtml);
+            stripDiscontinuedSecondaryActions(rowEl);
             bindPanelActions(secondaryPanel);
           }
           openPanel(secondaryPanel);
@@ -876,6 +899,7 @@
       'inventory-check.html': 'warehouse',
       'warehouse-maintenance.html': 'warehouse',
       'inventory-management.html': 'warehouse',
+      'warehouse-stock-ledger.html': 'warehouse',
       'idle-materials.html': 'warehouse',
       'retire-scrap-application.html': 'retired',
       'equipment-evaluation.html': 'retired',
@@ -996,13 +1020,13 @@
     if (document.getElementById("globalTaskReminder")) return;
     if (!document.body) return;
     try {
-      if (window.localStorage && localStorage.getItem("mapDemo_taskReminderDismissed_v1") === "1") return;
+      if (window.localStorage && localStorage.getItem("mapDemo_taskReminderDismissed_v3") === "1") return;
     } catch (eLs) {}
     if (!document.getElementById("globalTaskReminderStyle")) {
       var st = document.createElement("style");
       st.id = "globalTaskReminderStyle";
       st.textContent =
-        ".global-task-reminder{position:fixed;right:18px;bottom:18px;z-index:10030;width:min(360px,92vw);background:#fff;border:1px solid #dbe6f3;border-radius:10px;box-shadow:0 14px 36px rgba(10,28,52,.24);}" +
+        ".global-task-reminder{position:fixed;right:18px;bottom:18px;z-index:2147483000;width:min(360px,92vw);background:#fff;border:1px solid #dbe6f3;border-radius:10px;box-shadow:0 14px 36px rgba(10,28,52,.24);pointer-events:auto;}" +
         ".global-task-reminder.is-hide{display:none !important;}" +
         ".global-task-reminder__head{height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;border-bottom:1px solid #eef3fa;background:linear-gradient(180deg,#f7fbff 0%,#fff 100%);border-radius:10px 10px 0 0;}" +
         ".global-task-reminder__title{font-size:14px;color:#1f3551;font-weight:600;}" +
@@ -1057,7 +1081,7 @@
       closeBtn.addEventListener("click", function () {
         box.classList.add("is-hide");
         try {
-          localStorage.setItem("mapDemo_taskReminderDismissed_v1", "1");
+          localStorage.setItem("mapDemo_taskReminderDismissed_v3", "1");
         } catch (e2) {}
       });
     }
