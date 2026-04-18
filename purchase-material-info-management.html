@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>物资采购信息管理 - 新能源物资供应链管理系统</title>
+  <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-toolbar.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    body.page-purchase-info .main-scroll { background: #f5f7fa; }
+    .pmim-wrap { padding: 14px 16px 20px; }
+    .pmim-title { margin: 0; padding: 16px 20px 10px; font-size: 20px; font-weight: 700; color: #1f1f1f; background: #fff; border-bottom: 1px solid #e8e8e8; }
+    .pmim-stats {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .pmim-stat {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .pmim-stat-label { font-size: 12px; color: #666; }
+    .pmim-stat-value { margin-top: 4px; font-size: 22px; font-weight: 700; color: #1890ff; }
+
+    .pmim-panel {
+      margin-top: 10px;
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .pmim-tabs {
+      display: flex;
+      gap: 0;
+      padding: 0 12px;
+      border-bottom: 1px solid #e8e8e8;
+      background: #fafafa;
+    }
+    .pmim-tab {
+      border: none;
+      background: transparent;
+      height: 38px;
+      padding: 0 16px;
+      font-size: 13px;
+      color: #595959;
+      cursor: pointer;
+      position: relative;
+    }
+    .pmim-tab.is-active { color: #1677ff; font-weight: 700; }
+    .pmim-tab.is-active::after {
+      content: "";
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 0;
+      height: 2px;
+      background: #1677ff;
+      border-radius: 2px;
+    }
+    .pmim-filters {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px 12px;
+      padding: 12px 16px 8px;
+    }
+    .pmim-date-range { display: grid; grid-template-columns: 1fr 16px 1fr; gap: 6px; align-items: center; }
+    .pmim-date-range span { text-align: center; color: #999; font-size: 12px; }
+    .pmim-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px 12px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .pmim-sync-trail {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: #666;
+    }
+    .pmim-btn {
+      height: 32px;
+      border-radius: 4px;
+      border: 1px solid #d9d9d9;
+      background: #fff;
+      color: #333;
+      padding: 0 14px;
+      cursor: pointer;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pmim-btn--primary { background: #1890ff; border-color: #1890ff; color: #fff; }
+    .pmim-btn--green { background: #52c41a; border-color: #52c41a; color: #fff; }
+    .pmim-btn--orange { background: #fa8c16; border-color: #fa8c16; color: #fff; }
+    .pmim-btn:hover { opacity: 0.9; }
+
+    .pmim-table-wrap { overflow: auto; padding: 0 16px 10px; }
+    .pmim-table {
+      width: 100%;
+      min-width: 1480px;
+      border-collapse: collapse;
+      font-size: 12px;
+      table-layout: fixed;
+    }
+    .pmim-table th, .pmim-table td {
+      border: 1px solid #e8e8e8;
+      padding: 8px 8px;
+      text-align: left;
+      vertical-align: middle;
+      background: #fff;
+      word-break: break-word;
+    }
+    .pmim-table th {
+      background: #f5f5f5;
+      color: #333;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      white-space: nowrap;
+    }
+    .pmim-table .sticky-col {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background: #fff;
+    }
+    .pmim-table .sticky-col-2 {
+      position: sticky;
+      left: 60px;
+      z-index: 1;
+      background: #fff;
+    }
+    .pmim-table .sticky-col-3 {
+      position: sticky;
+      left: 180px;
+      z-index: 1;
+      background: #fff;
+    }
+    .pmim-table th.sticky-col,
+    .pmim-table th.sticky-col-2,
+    .pmim-table th.sticky-col-3 {
+      z-index: 3;
+      background: #f5f5f5;
+    }
+    .pmim-link { color: #1677ff; text-decoration: none; cursor: pointer; }
+    .pmim-link:hover { text-decoration: underline; }
+    .pmim-op { display: inline-flex; gap: 6px; }
+    .pmim-op-btn {
+      border: 1px solid #91caff;
+      background: #e6f4ff;
+      color: #0958d9;
+      border-radius: 4px;
+      height: 24px;
+      padding: 0 8px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .pmim-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      user-select: none;
+    }
+    .pmim-tag--production { background: #e6f4ff; border-color: #91caff; color: #0958d9; }
+    .pmim-tag--office { background: #f6ffed; border-color: #b7eb8f; color: #389e0d; }
+    .pmim-tag--sales { background: #f9f0ff; border-color: #d3adf7; color: #531dab; }
+    .pmim-inbound--ok { color: #389e0d; font-weight: 600; }
+    .pmim-inbound--todo { color: #d48806; font-weight: 600; }
+
+    .pmim-summary {
+      margin: 0 16px 12px;
+      border: 1px solid #d9e5ff;
+      background: #f7fbff;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #333;
+      display: grid;
+      gap: 6px;
+    }
+    .pmim-summary-line { display: flex; flex-wrap: wrap; gap: 16px; }
+
+    .pmim-custom-select { position: relative; }
+    .pmim-custom-trigger {
+      width: 100%;
+      height: 32px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      background: #fff;
+      padding: 0 10px;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    .pmim-custom-menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      z-index: 10;
+      background: #fff;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+      overflow: hidden;
+    }
+    .pmim-custom-menu.show { display: block; }
+    .pmim-custom-option {
+      border: none;
+      width: 100%;
+      background: #fff;
+      text-align: left;
+      padding: 8px 10px;
+      cursor: pointer;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .pmim-custom-option:last-child { border-bottom: none; }
+    .pmim-custom-option:hover { background: #f5faff; }
+    .pmim-custom-main { display: block; font-size: 13px; color: #333; }
+    .pmim-custom-sub { display: block; margin-top: 2px; font-size: 11px; color: #8c8c8c; }
+
+    .pmim-modal-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .pmim-modal-mask.show { display: flex; }
+    .pmim-modal {
+      width: min(920px, 100%);
+      max-height: 90vh;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .pmim-modal.pmim-modal--narrow { width: min(640px, 100%); }
+    .pmim-modal-head, .pmim-modal-foot {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .pmim-modal-foot {
+      border-bottom: none;
+      border-top: 1px solid #f0f0f0;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .pmim-modal-title { margin: 0; font-size: 16px; }
+    .pmim-modal-close {
+      border: none;
+      background: transparent;
+      font-size: 22px;
+      color: #8c8c8c;
+      cursor: pointer;
+    }
+    .pmim-modal-body { padding: 14px 16px; overflow: auto; }
+    .pmim-modal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px 12px;
+    }
+    .pmim-tip {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #666;
+      background: #f6ffed;
+      border: 1px dashed #b7eb8f;
+      border-radius: 6px;
+      padding: 6px 8px;
+    }
+    .pmim-def-block { font-size: 13px; color: #333; line-height: 1.7; }
+    .pmim-def-title { font-weight: 700; color: #003a8c; margin: 8px 0 2px; }
+    .pmim-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px 12px;
+      font-size: 13px;
+      color: #333;
+    }
+    .pmim-detail-grid .full { grid-column: 1 / -1; }
+
+    @media (max-width: 1080px) {
+      .pmim-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .pmim-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 768px) {
+      .pmim-filters { grid-template-columns: 1fr; }
+      .pmim-table thead { display: none; }
+      .pmim-table, .pmim-table tbody, .pmim-table tr, .pmim-table td { display: block; width: 100%; }
+      .pmim-table tr { border: 1px solid #e8e8e8; margin-bottom: 8px; border-radius: 6px; overflow: hidden; }
+      .pmim-table td { border: none; border-bottom: 1px solid #f0f0f0; padding: 8px 10px; }
+      .pmim-table td:last-child { border-bottom: none; }
+      .pmim-table td::before { content: attr(data-label) "："; color: #888; font-size: 12px; }
+      .pmim-table .sticky-col, .pmim-table .sticky-col-2, .pmim-table .sticky-col-3 { position: static; }
+      .pmim-modal-grid, .pmim-detail-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-purchase-info">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <div class="nav-item" data-nav="cockpit" title="驾驶舱"><span class="nav-label">驾驶舱</span></div>
+        <div class="nav-item nav-item--module-active" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <div class="nav-item" title="物流管理"><span class="nav-label">物流管理</span></div>
+        <div class="nav-item" title="仓储管理"><span class="nav-label">仓储管理</span></div>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+
+      <main class="main-scroll">
+        <div class="pmim-wrap">
+          <section class="pmim-stats" id="pmimStats"></section>
+
+          <section class="pmim-panel">
+            <div class="pmim-tabs">
+              <button type="button" class="pmim-tab is-active" data-tab="all">全部记录</button>
+              <button type="button" class="pmim-tab" data-tab="production">生产类</button>
+              <button type="button" class="pmim-tab" data-tab="office">办公类</button>
+              <button type="button" class="pmim-tab" data-tab="sales">销售类</button>
+              <button type="button" class="pmim-tab" data-tab="newMonth">本月新增</button>
+            </div>
+
+            <div class="pmim-filters">
+              <div class="wh-field">
+                <label for="fContract">合同编号</label>
+                <input id="fContract" type="text" placeholder="请输入合同编号" />
+              </div>
+              <div class="wh-field">
+                <label for="fMaterial">物资名称</label>
+                <input id="fMaterial" type="text" placeholder="请输入物资名称" />
+              </div>
+              <div class="wh-field">
+                <label for="fDept">采购部门</label>
+                <input id="fDept" type="text" placeholder="请输入采购部门" />
+              </div>
+              <div class="wh-field">
+                <label>物资类别</label>
+                <div class="pmim-custom-select" id="categorySelect">
+                  <button type="button" class="pmim-custom-trigger" id="categoryTrigger">全部类别 <i class="fa-solid fa-angle-down"></i></button>
+                  <div class="pmim-custom-menu" id="categoryMenu">
+                    <button type="button" class="pmim-custom-option" data-value="">
+                      <span class="pmim-custom-main">全部类别</span>
+                    </button>
+                    <button type="button" class="pmim-custom-option" data-value="生产类">
+                      <span class="pmim-custom-main">🔵 生产类</span>
+                      <span class="pmim-custom-sub">用于生产运营的物资</span>
+                    </button>
+                    <button type="button" class="pmim-custom-option" data-value="办公类">
+                      <span class="pmim-custom-main">🟢 办公类</span>
+                      <span class="pmim-custom-sub">用于日常办公的物资</span>
+                    </button>
+                    <button type="button" class="pmim-custom-option" data-value="销售类">
+                      <span class="pmim-custom-main">🟣 销售类</span>
+                      <span class="pmim-custom-sub">用于对外销售的存货</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="wh-field">
+                <label>采购日期范围</label>
+                <div class="pmim-date-range">
+                  <input id="fDateStart" type="date" />
+                  <span>至</span>
+                  <input id="fDateEnd" type="date" />
+                </div>
+              </div>
+            </div>
+
+            <div class="pmim-actions">
+              <button type="button" class="pmim-btn pmim-btn--primary" id="btnSearch"><i class="fa-solid fa-magnifying-glass"></i> 搜索</button>
+              <button type="button" class="pmim-btn" id="btnReset"><i class="fa-solid fa-arrow-rotate-left"></i> 重置</button>
+              <button type="button" class="pmim-btn pmim-btn--green" id="btnAdd"><i class="fa-solid fa-plus"></i> 新增/编辑采购信息</button>
+              <button type="button" class="pmim-btn pmim-btn--orange" id="btnExport"><i class="fa-solid fa-file-export"></i> 导出Excel</button>
+              <button type="button" class="pmim-btn" id="btnDef"><i class="fa-solid fa-circle-info"></i> 查看定义</button>
+              <div class="pmim-sync-trail">
+                <span id="pmimUpdatedAt">最后更新时间：--</span>
+                <button type="button" class="pmim-btn" id="btnRefreshTime"><i class="fa-solid fa-rotate-right"></i> 手动刷新</button>
+              </div>
+            </div>
+
+            <div class="pmim-table-wrap">
+              <table class="pmim-table">
+                <thead>
+                  <tr>
+                    <th class="sticky-col" style="width:60px">序号</th>
+                    <th class="sticky-col-2" style="width:120px">合同编号</th>
+                    <th class="sticky-col-3" style="width:140px">合同名称</th>
+                    <th style="width:100px">采购部门</th>
+                    <th style="width:150px">物资名称</th>
+                    <th style="width:100px">规格型号</th>
+                    <th style="width:120px">供应商</th>
+                    <th style="width:120px">子合同编号</th>
+                    <th style="width:100px">是否同一框架</th>
+                    <th style="width:120px">物资类别</th>
+                    <th style="width:100px">采购单价(含税)</th>
+                    <th style="width:100px">采购总价(含税)</th>
+                    <th style="width:100px">税率</th>
+                    <th style="width:90px">入库状态</th>
+                    <th style="width:80px">采购数量</th>
+                    <th style="width:150px">备注</th>
+                    <th style="width:100px">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="pmimBody"></tbody>
+              </table>
+            </div>
+
+            <div class="pmim-summary" id="pmimSummary"></div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="pmim-modal-mask" id="defMask" aria-hidden="true">
+    <div class="pmim-modal pmim-modal--narrow">
+      <div class="pmim-modal-head">
+        <h3 class="pmim-modal-title">物资类别定义说明</h3>
+        <button type="button" class="pmim-modal-close" data-close>×</button>
+      </div>
+      <div class="pmim-modal-body pmim-def-block">
+        <div class="pmim-def-title">【生产类】</div>
+        <div>用于生产运营的物资，包括设备备件、维修材料、消耗性工具、安全防护用品等。此类物资采购后主要用于风电场日常运维、设备检修等生产活动。</div>
+        <div class="pmim-def-title">【办公类】</div>
+        <div>用于日常办公的物资，包括办公设备（电脑、打印机）、办公用品、办公家具等。此类物资采购后由行政部门统一管理，供员工日常办公使用。</div>
+        <div class="pmim-def-title">【销售类】</div>
+        <div>用于对外销售的物资，即存货。此类物资采购后入库存储，后续通过销售方式转出公司。销售类物资后续可申请转为固定资产。</div>
+        <div class="pmim-def-title">参考制度</div>
+        <div>《物资管理办法》第三章 物资分类管理</div>
+      </div>
+      <div class="pmim-modal-foot">
+        <button type="button" class="pmim-btn" data-close>关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pmim-modal-mask" id="editMask" aria-hidden="true">
+    <div class="pmim-modal">
+      <div class="pmim-modal-head">
+        <h3 class="pmim-modal-title" id="editTitle">新增采购信息</h3>
+        <button type="button" class="pmim-modal-close" data-close>×</button>
+      </div>
+      <div class="pmim-modal-body">
+        <div class="pmim-modal-grid">
+          <div class="wh-field"><label for="mContract">合同编号</label><input id="mContract" type="text" placeholder="输入或搜索合同编号" /></div>
+          <div class="wh-field"><label for="mDept">采购部门</label><select id="mDept"><option>华北运维部</option><option>华东运维部</option><option>综合管理部</option><option>经营发展中心</option></select></div>
+          <div class="wh-field"><label for="mName">物资名称</label><input id="mName" type="text" /></div>
+          <div class="wh-field"><label for="mSpec">规格型号</label><input id="mSpec" type="text" /></div>
+          <div class="wh-field">
+            <label for="mCategory">物资类别 *</label>
+            <select id="mCategory">
+              <option value="生产类">生产类</option>
+              <option value="办公类">办公类</option>
+              <option value="销售类">销售类</option>
+            </select>
+            <div class="pmim-tip" id="mCategoryTip">💡 生产类：用于生产运营的物资，如设备备件、维修材料等</div>
+          </div>
+          <div class="wh-field"><label for="mQty">采购数量</label><input id="mQty" type="number" min="0" step="1" value="1" /></div>
+          <div class="wh-field"><label for="mPriceIn">采购单价(含税)</label><input id="mPriceIn" type="number" min="0" step="0.01" value="0" /></div>
+          <div class="wh-field"><label for="mPriceEx">系统折算单价</label><input id="mPriceEx" type="number" min="0" step="0.01" value="0" /></div>
+          <div class="wh-field"><label for="mTotalIn">采购总价(含税)</label><input id="mTotalIn" type="number" readonly /></div>
+          <div class="wh-field"><label for="mTotalEx">系统折算总价</label><input id="mTotalEx" type="number" readonly /></div>
+          <div class="wh-field"><label for="mRemark">备注</label><input id="mRemark" type="text" placeholder="请输入备注" /></div>
+        </div>
+      </div>
+      <div class="pmim-modal-foot">
+        <button type="button" class="pmim-btn" data-close>取消</button>
+        <button type="button" class="pmim-btn pmim-btn--primary" id="saveEdit">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="pmim-modal-mask" id="detailMask" aria-hidden="true">
+    <div class="pmim-modal">
+      <div class="pmim-modal-head">
+        <h3 class="pmim-modal-title">采购信息详情</h3>
+        <button type="button" class="pmim-modal-close" data-close>×</button>
+      </div>
+      <div class="pmim-modal-body">
+        <div class="pmim-detail-grid" id="detailGrid"></div>
+      </div>
+      <div class="pmim-modal-foot">
+        <button type="button" class="pmim-btn" data-close>关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var taxRate = 0.13;
+      var PURCHASE_SYNC_KEY = "demoProcurementToPurchaseInfo_v1";
+      var state = {
+        activeTab: "all",
+        categoryFilter: "",
+        editingId: null,
+        filters: { contract: "", name: "", dept: "", dateStart: "", dateEnd: "" }
+      };
+      var records = [
+        { id: 1, contractNo: "HT-2026-001", contractName: "华北春检备件执行合同", subContractNo: "SUB-2026-001", sameFrame: "是", dept: "华北运维部", name: "齿轮箱备件", spec: "GBX-2200", category: "生产类", priceEx: 6800, priceIn: 7684, qty: 12, taxRate: "13%", remark: "春检集中采购", purchaseDate: "2026-04-02", requestNo: "PA-2026-018", approvalStatus: "已通过", supplier: "国能装备", inboundStatus: "已入库" },
+        { id: 2, contractNo: "HT-2026-002", contractName: "总部办公设备采购合同", subContractNo: "SUB-2026-002", sameFrame: "否", dept: "综合管理部", name: "办公电脑", spec: "ThinkPad P16", category: "办公类", priceEx: 8900, priceIn: 10057, qty: 8, taxRate: "13%", remark: "总部换新", purchaseDate: "2026-04-05", requestNo: "PA-2026-022", approvalStatus: "已通过", supplier: "联想政企", inboundStatus: "待入库" },
+        { id: 3, contractNo: "HT-2026-003", contractName: "销售备货框架合同", subContractNo: "SUB-2026-003", sameFrame: "是", dept: "经营发展中心", name: "标准连接器套件", spec: "CN-88", category: "销售类", priceEx: 420, priceIn: 474.6, qty: 300, taxRate: "13%", remark: "销售备货", purchaseDate: "2026-03-20", requestNo: "PA-2026-011", approvalStatus: "已通过", supplier: "华科机电", inboundStatus: "已入库" },
+        { id: 4, contractNo: "HT-2026-004", contractName: "华东安全工器具采购", subContractNo: "SUB-2026-004", sameFrame: "否", dept: "华东运维部", name: "安全防坠器", spec: "AQ-120", category: "生产类", priceEx: 980, priceIn: 1107.4, qty: 40, taxRate: "13%", remark: "高空作业", purchaseDate: "2026-03-25", requestNo: "PA-2026-012", approvalStatus: "审批中", supplier: "中安防护", inboundStatus: "待入库" },
+        { id: 5, contractNo: "HT-2026-005", contractName: "办公耗材季度合同", subContractNo: "SUB-2026-005", sameFrame: "否", dept: "综合管理部", name: "打印耗材", spec: "TN-3435", category: "办公类", priceEx: 260, priceIn: 293.8, qty: 120, taxRate: "13%", remark: "季度补货", purchaseDate: "2026-02-18", requestNo: "PA-2026-007", approvalStatus: "已通过", supplier: "京能办公", inboundStatus: "已入库" },
+        { id: 6, contractNo: "HT-2026-006", contractName: "外部展示销售物资合同", subContractNo: "SUB-2026-006", sameFrame: "是", dept: "经营发展中心", name: "展示样机组件", spec: "ZX-45", category: "销售类", priceEx: 3600, priceIn: 4068, qty: 24, taxRate: "13%", remark: "外部展示", purchaseDate: "2026-04-07", requestNo: "PA-2026-023", approvalStatus: "已通过", supplier: "华风科技", inboundStatus: "待入库" }
+      ];
+      function absorbSyncedPurchaseRecords() {
+        try {
+          var raw = localStorage.getItem(PURCHASE_SYNC_KEY);
+          if (!raw) return;
+          var synced = JSON.parse(raw);
+          if (!Array.isArray(synced) || !synced.length) return;
+          var maxId = records.reduce(function (m, x) { return Math.max(m, Number(x.id || 0)); }, 0);
+          synced.forEach(function (x) {
+            if (!x || !x.requestNo) return;
+            var exists = records.some(function (r) { return r.requestNo === x.requestNo; });
+            if (exists) return;
+            maxId += 1;
+            records.unshift({
+              id: maxId,
+              contractNo: x.contractNo || ("AUTO-" + x.requestNo),
+              contractName: x.contractName || "自动同步合同",
+              subContractNo: x.subContractNo || ("SUB-" + String(maxId).padStart(4, "0")),
+              sameFrame: x.sameFrame || "否",
+              dept: x.dept || "未指定部门",
+              name: x.name || "未命名物资",
+              spec: x.spec || "-",
+              category: x.category || "生产类",
+              priceEx: Number(x.priceEx || 0),
+              priceIn: Number(x.priceIn || 0),
+              qty: Number(x.qty || 0),
+              taxRate: x.taxRate || "13%",
+              remark: x.remark || "审批通过自动同步",
+              purchaseDate: x.purchaseDate || new Date().toISOString().slice(0, 10),
+              requestNo: x.requestNo,
+              approvalStatus: x.approvalStatus || "已通过",
+              supplier: x.supplier || "待维护",
+              inboundStatus: x.inboundStatus || "待入库"
+            });
+          });
+          localStorage.removeItem(PURCHASE_SYNC_KEY);
+        } catch (err) {}
+      }
+
+      var refs = {
+        body: document.getElementById("pmimBody"),
+        stats: document.getElementById("pmimStats"),
+        summary: document.getElementById("pmimSummary"),
+        updatedAt: document.getElementById("pmimUpdatedAt"),
+        tabs: Array.prototype.slice.call(document.querySelectorAll(".pmim-tab")),
+        fContract: document.getElementById("fContract"),
+        fMaterial: document.getElementById("fMaterial"),
+        fDept: document.getElementById("fDept"),
+        fDateStart: document.getElementById("fDateStart"),
+        fDateEnd: document.getElementById("fDateEnd"),
+        categoryTrigger: document.getElementById("categoryTrigger"),
+        categoryMenu: document.getElementById("categoryMenu"),
+        defMask: document.getElementById("defMask"),
+        editMask: document.getElementById("editMask"),
+        detailMask: document.getElementById("detailMask"),
+        detailGrid: document.getElementById("detailGrid"),
+        editTitle: document.getElementById("editTitle"),
+        mContract: document.getElementById("mContract"),
+        mDept: document.getElementById("mDept"),
+        mName: document.getElementById("mName"),
+        mSpec: document.getElementById("mSpec"),
+        mCategory: document.getElementById("mCategory"),
+        mCategoryTip: document.getElementById("mCategoryTip"),
+        mQty: document.getElementById("mQty"),
+        mPriceIn: document.getElementById("mPriceIn"),
+        mPriceEx: document.getElementById("mPriceEx"),
+        mTotalIn: document.getElementById("mTotalIn"),
+        mTotalEx: document.getElementById("mTotalEx"),
+        mRemark: document.getElementById("mRemark")
+      };
+
+      function fmtMoney(v) { return "¥ " + Number(v || 0).toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+      function toNum(v) { return Number(v || 0); }
+      function catMeta(cat) {
+        if (cat === "生产类") return { key: "production", cls: "pmim-tag--production" };
+        if (cat === "办公类") return { key: "office", cls: "pmim-tag--office" };
+        return { key: "sales", cls: "pmim-tag--sales" };
+      }
+      function setUpdatedTime() {
+        var d = new Date();
+        var f = function (n) { return n < 10 ? "0" + n : "" + n; };
+        refs.updatedAt.textContent = "最后更新时间：" + d.getFullYear() + "-" + f(d.getMonth() + 1) + "-" + f(d.getDate()) + " " + f(d.getHours()) + ":" + f(d.getMinutes()) + ":" + f(d.getSeconds());
+      }
+      function withComputed(item) {
+        item.totalEx = toNum(item.priceEx) * toNum(item.qty);
+        item.totalIn = toNum(item.priceIn) * toNum(item.qty);
+        return item;
+      }
+      function currentMonthKey() {
+        var d = new Date();
+        return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+      }
+      function filterRows() {
+        var monthKey = currentMonthKey();
+        return records.filter(function (x) {
+          var m = catMeta(x.category);
+          if (state.activeTab === "production" && m.key !== "production") return false;
+          if (state.activeTab === "office" && m.key !== "office") return false;
+          if (state.activeTab === "sales" && m.key !== "sales") return false;
+          if (state.activeTab === "newMonth" && String(x.purchaseDate || "").slice(0, 7) !== monthKey) return false;
+
+          if (state.categoryFilter && x.category !== state.categoryFilter) return false;
+          if (state.filters.contract && x.contractNo.indexOf(state.filters.contract) < 0) return false;
+          if (state.filters.name && x.name.indexOf(state.filters.name) < 0) return false;
+          if (state.filters.dept && x.dept.indexOf(state.filters.dept) < 0) return false;
+          if (state.filters.dateStart && x.purchaseDate < state.filters.dateStart) return false;
+          if (state.filters.dateEnd && x.purchaseDate > state.filters.dateEnd) return false;
+          return true;
+        }).map(function (x) { return withComputed(Object.assign({}, x)); });
+      }
+
+      function renderStats() {
+        var all = records.map(function (x) { return withComputed(Object.assign({}, x)); });
+        var monthKey = currentMonthKey();
+        var totalAmount = all.reduce(function (s, x) { return s + x.totalIn; }, 0);
+        var count = all.length;
+        var monthCount = all.filter(function (x) { return String(x.purchaseDate).slice(0, 7) === monthKey; }).length;
+        var waitIn = all.filter(function (x) { return x.inboundStatus === "待入库"; }).length;
+        refs.stats.innerHTML =
+          '<div class="pmim-stat"><div class="pmim-stat-label">总采购金额</div><div class="pmim-stat-value">' + fmtMoney(totalAmount) + "</div></div>" +
+          '<div class="pmim-stat"><div class="pmim-stat-label">采购笔数</div><div class="pmim-stat-value">' + count + "</div></div>" +
+          '<div class="pmim-stat"><div class="pmim-stat-label">本月新增</div><div class="pmim-stat-value">' + monthCount + "</div></div>" +
+          '<div class="pmim-stat"><div class="pmim-stat-label">待入库</div><div class="pmim-stat-value">' + waitIn + "</div></div>";
+      }
+
+      function renderTable() {
+        var rows = filterRows();
+        refs.body.innerHTML = "";
+        rows.forEach(function (x, i) {
+          var m = catMeta(x.category);
+          var inboundCls = x.inboundStatus === "已入库" ? "pmim-inbound--ok" : "pmim-inbound--todo";
+          var tr = document.createElement("tr");
+          tr.innerHTML =
+            '<td class="sticky-col" data-label="序号">' + (i + 1) + "</td>" +
+            '<td class="sticky-col-2" data-label="合同编号"><a class="pmim-link" data-act="open-contract" data-id="' + x.id + '">' + x.contractNo + "</a></td>" +
+            '<td class="sticky-col-3" data-label="合同名称">' + (x.contractName || "-") + "</td>" +
+            '<td data-label="采购部门">' + x.dept + "</td>" +
+            '<td data-label="物资名称">' + x.name + "</td>" +
+            '<td data-label="规格型号">' + x.spec + "</td>" +
+            '<td data-label="供应商">' + (x.supplier || "-") + "</td>" +
+            '<td data-label="子合同编号">' + (x.subContractNo || "-") + "</td>" +
+            '<td data-label="是否同一框架">' + (x.sameFrame || "否") + "</td>" +
+            '<td data-label="物资类别"><span class="pmim-tag ' + m.cls + '" data-act="show-def">' + x.category + "</span></td>" +
+            '<td data-label="采购单价(含税)">' + fmtMoney(x.priceIn) + "</td>" +
+            '<td data-label="采购总价(含税)">' + fmtMoney(x.totalIn) + "</td>" +
+            '<td data-label="税率">' + (x.taxRate || "13%") + "</td>" +
+            '<td data-label="入库状态"><span class="' + inboundCls + '">' + x.inboundStatus + "</span></td>" +
+            '<td data-label="采购数量">' + x.qty + "</td>" +
+            '<td data-label="备注">' + x.remark + "</td>" +
+            '<td data-label="操作"><div class="pmim-op"><button type="button" class="pmim-op-btn" data-act="view" data-id="' + x.id + '">查看详情</button></div></td>';
+          refs.body.appendChild(tr);
+        });
+        renderSummary(rows);
+      }
+
+      function renderSummary(rows) {
+        var totalQty = rows.reduce(function (s, x) { return s + toNum(x.qty); }, 0);
+        var totalIn = rows.reduce(function (s, x) { return s + x.totalIn; }, 0);
+        var cats = ["生产类", "办公类", "销售类"].map(function (cat) {
+          var part = rows.filter(function (x) { return x.category === cat; });
+          return cat + "：" + part.length + " 条，" + fmtMoney(part.reduce(function (s, x) { return s + x.totalIn; }, 0));
+        });
+        refs.summary.innerHTML =
+          '<div class="pmim-summary-line"><b>总记录数：</b>' + rows.length + ' 条 <b>采购数量合计：</b>' + totalQty + ' 件 <b>采购总价合计(含税)：</b>' + fmtMoney(totalIn) + "</div>" +
+          '<div class="pmim-summary-line"><b>按类别统计：</b>' + cats.join(" ｜ ") + "</div>";
+      }
+
+      function openMask(mask) { mask.classList.add("show"); mask.setAttribute("aria-hidden", "false"); }
+      function closeMask(mask) { mask.classList.remove("show"); mask.setAttribute("aria-hidden", "true"); }
+
+      function updateCategoryTip() {
+        var v = refs.mCategory.value;
+        if (v === "生产类") refs.mCategoryTip.textContent = "💡 生产类：用于生产运营的物资，如设备备件、维修材料等";
+        else if (v === "办公类") refs.mCategoryTip.textContent = "💡 办公类：用于日常办公的物资，如办公设备、办公用品等";
+        else refs.mCategoryTip.textContent = "💡 销售类：用于对外销售的存货，后续可申请转为固定资产";
+      }
+      function recalcFromIn() {
+        var qty = toNum(refs.mQty.value);
+        var pin = toNum(refs.mPriceIn.value);
+        var pex = pin / (1 + taxRate);
+        refs.mPriceEx.value = pex.toFixed(2);
+        refs.mTotalIn.value = (pin * qty).toFixed(2);
+        refs.mTotalEx.value = (pex * qty).toFixed(2);
+      }
+      function recalcFromEx() {
+        var qty = toNum(refs.mQty.value);
+        var pex = toNum(refs.mPriceEx.value);
+        var pin = pex * (1 + taxRate);
+        refs.mPriceIn.value = pin.toFixed(2);
+        refs.mTotalIn.value = (pin * qty).toFixed(2);
+        refs.mTotalEx.value = (pex * qty).toFixed(2);
+      }
+      function fillDetail(item) {
+        var computed = withComputed(Object.assign({}, item));
+        refs.detailGrid.innerHTML =
+          '<div><b>合同编号：</b><a class="pmim-link" data-act="open-contract">' + item.contractNo + '</a></div>' +
+          "<div><b>采购部门：</b>" + item.dept + "</div>" +
+          "<div><b>采购日期：</b>" + item.purchaseDate + "</div>" +
+          "<div><b>物资名称：</b>" + item.name + "</div>" +
+          "<div><b>规格型号：</b>" + item.spec + '</div>' +
+          '<div><b>物资类别：</b><span class="pmim-tag ' + catMeta(item.category).cls + '" data-act="show-def">' + item.category + '</span> <a class="pmim-link" data-act="show-def">查看定义</a></div>' +
+          "<div><b>采购单价(含税)：</b>" + fmtMoney(item.priceIn) + "</div>" +
+          "<div><b>采购总价(含税)：</b>" + fmtMoney(computed.totalIn) + "</div>" +
+          "<div><b>税率：</b>" + (item.taxRate || "13%") + "</div>" +
+          "<div><b>子合同编号：</b>" + (item.subContractNo || "-") + "</div>" +
+          "<div><b>是否同一框架：</b>" + (item.sameFrame || "否") + "</div>" +
+          "<div><b>采购数量：</b>" + item.qty + "</div>" +
+          '<div><b>采购申请单号：</b><a class="pmim-link" href="procurement-application.html">' + item.requestNo + "</a></div>" +
+          "<div><b>审批状态：</b>" + item.approvalStatus + "</div>" +
+          "<div><b>供应商：</b>" + item.supplier + "</div>" +
+          "<div><b>仓库入库状态：</b>" + item.inboundStatus + "</div>" +
+          '<div class="full"><b>数据流向：</b>同步至 <a class="pmim-link" href="base-data-material-ledger.html">基础数据配置</a>、<a class="pmim-link" href="purchase-ledger.html?tab=plan">采购数据台账</a>（含物资台账页签）</div>';
+      }
+      function resetEditForm() {
+        refs.mContract.value = "";
+        refs.mDept.selectedIndex = 0;
+        refs.mName.value = "";
+        refs.mSpec.value = "";
+        refs.mCategory.value = "生产类";
+        refs.mQty.value = 1;
+        refs.mPriceIn.value = "0";
+        refs.mPriceEx.value = "0";
+        refs.mRemark.value = "";
+        updateCategoryTip();
+        recalcFromIn();
+      }
+      function exportCsv(rows) {
+        var header = ["序号", "合同编号", "合同名称", "采购部门", "物资名称", "规格型号", "供应商", "子合同编号", "是否同一框架", "物资类别", "采购单价(含税)", "采购总价(含税)", "税率", "入库状态", "采购数量", "备注"];
+        var lines = [header.join(",")];
+        rows.forEach(function (x, i) {
+          lines.push([
+            i + 1, x.contractNo, x.contractName || "-", x.dept, x.name, x.spec, x.supplier || "-", x.subContractNo || "-", x.sameFrame || "否", x.category,
+            x.priceIn.toFixed(2), x.totalIn.toFixed(2), x.taxRate || "13%", x.inboundStatus || "待入库", x.qty, x.remark
+          ].map(function (v) { return '"' + String(v).replace(/"/g, '""') + '"'; }).join(","));
+        });
+        var blob = new Blob(["\ufeff" + lines.join("\n")], { type: "text/csv;charset=utf-8;" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "物资采购信息导出.csv";
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
+
+      refs.tabs.forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          state.activeTab = tab.getAttribute("data-tab");
+          refs.tabs.forEach(function (t) { t.classList.remove("is-active"); });
+          tab.classList.add("is-active");
+          renderTable();
+        });
+      });
+      document.getElementById("btnRefreshTime").addEventListener("click", setUpdatedTime);
+      document.getElementById("btnDef").addEventListener("click", function () { openMask(refs.defMask); });
+      document.getElementById("btnSearch").addEventListener("click", function () {
+        state.filters.contract = refs.fContract.value.trim();
+        state.filters.name = refs.fMaterial.value.trim();
+        state.filters.dept = refs.fDept.value.trim();
+        state.filters.dateStart = refs.fDateStart.value;
+        state.filters.dateEnd = refs.fDateEnd.value;
+        renderTable();
+      });
+      document.getElementById("btnReset").addEventListener("click", function () {
+        refs.fContract.value = "";
+        refs.fMaterial.value = "";
+        refs.fDept.value = "";
+        refs.fDateStart.value = "";
+        refs.fDateEnd.value = "";
+        state.filters = { contract: "", name: "", dept: "", dateStart: "", dateEnd: "" };
+        state.categoryFilter = "";
+        refs.categoryTrigger.innerHTML = '全部类别 <i class="fa-solid fa-angle-down"></i>';
+        renderTable();
+      });
+      refs.categoryTrigger.addEventListener("click", function (e) {
+        e.stopPropagation();
+        refs.categoryMenu.classList.toggle("show");
+      });
+      refs.categoryMenu.querySelectorAll(".pmim-custom-option").forEach(function (op) {
+        op.addEventListener("click", function () {
+          var val = op.getAttribute("data-value") || "";
+          state.categoryFilter = val;
+          refs.categoryTrigger.innerHTML = (val || "全部类别") + ' <i class="fa-solid fa-angle-down"></i>';
+          refs.categoryMenu.classList.remove("show");
+          renderTable();
+        });
+      });
+      document.addEventListener("click", function (e) {
+        if (!document.getElementById("categorySelect").contains(e.target)) refs.categoryMenu.classList.remove("show");
+      });
+      document.getElementById("btnAdd").addEventListener("click", function () {
+        state.editingId = null;
+        refs.editTitle.textContent = "新增采购信息";
+        resetEditForm();
+        openMask(refs.editMask);
+      });
+      document.getElementById("btnExport").addEventListener("click", function () {
+        exportCsv(filterRows());
+      });
+
+      document.querySelectorAll("[data-close]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          closeMask(refs.defMask);
+          closeMask(refs.editMask);
+          closeMask(refs.detailMask);
+        });
+      });
+      [refs.defMask, refs.editMask, refs.detailMask].forEach(function (m) {
+        m.addEventListener("click", function (e) { if (e.target === m) closeMask(m); });
+      });
+
+      refs.mCategory.addEventListener("change", updateCategoryTip);
+      refs.mPriceIn.addEventListener("input", recalcFromIn);
+      refs.mPriceEx.addEventListener("input", recalcFromEx);
+      refs.mQty.addEventListener("input", recalcFromIn);
+
+      document.getElementById("saveEdit").addEventListener("click", function () {
+        var payload = {
+          id: state.editingId || (records.length ? Math.max.apply(null, records.map(function (x) { return x.id; })) + 1 : 1),
+          contractNo: refs.mContract.value.trim() || "HT-NEW-" + Date.now(),
+          dept: refs.mDept.value,
+          name: refs.mName.value.trim() || "未命名物资",
+          spec: refs.mSpec.value.trim() || "-",
+          category: refs.mCategory.value,
+          priceEx: toNum(refs.mPriceEx.value),
+          priceIn: toNum(refs.mPriceIn.value),
+          qty: toNum(refs.mQty.value),
+          remark: refs.mRemark.value.trim() || "手动补充",
+          purchaseDate: new Date().toISOString().slice(0, 10),
+          requestNo: "PA-NEW-" + String(Date.now()).slice(-4),
+          approvalStatus: "已通过",
+          supplier: "待维护",
+          inboundStatus: "待入库"
+        };
+        if (state.editingId) {
+          records = records.map(function (x) { return x.id === state.editingId ? payload : x; });
+        } else {
+          records.unshift(payload);
+        }
+        closeMask(refs.editMask);
+        renderStats();
+        renderTable();
+      });
+
+      refs.body.addEventListener("click", function (e) {
+        var act = e.target.getAttribute("data-act");
+        if (!act) return;
+        if (act === "show-def") {
+          openMask(refs.defMask);
+          return;
+        }
+        var id = Number(e.target.getAttribute("data-id"));
+        var item = records.find(function (x) { return x.id === id; });
+        if (!item) return;
+        if (act === "view") {
+          fillDetail(item);
+          openMask(refs.detailMask);
+        } else if (act === "open-contract") {
+          window.location.href = "purchase-management-hub.html?tab=p8";
+        }
+      });
+      refs.detailGrid.addEventListener("click", function (e) {
+        var act = e.target.getAttribute("data-act");
+        if (act === "show-def") openMask(refs.defMask);
+      });
+
+      absorbSyncedPurchaseRecords();
+      setUpdatedTime();
+      renderStats();
+      resetEditForm();
+      renderTable();
+    })();
+  </script>
+</body>
+</html>

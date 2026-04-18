@@ -1,0 +1,97 @@
+<!-- 来源: src/views/workflow/task/myDocument.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <el-row>
+      <!-- 流程分类树 -->
+      <el-col style="">
+        <el-card shadow="hover">
+          <el-input placeholder="请输入流程分类名" prefix-icon="Search" clearable />
+          <el-tree
+            class="mt-2"
+            node-key="id"
+            highlight-current
+            default-expand-all
+          ></el-tree>
+        </el-card>
+      </el-col>
+      <el-col>
+        <transition>
+          <div class="mb-[10px]">
+            <el-card shadow="hover">
+              <el-form label-width="120px">
+                <el-form-item label="流程定义名称" prop="name">
+                  <el-input placeholder="请输入流程定义名称" />
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" icon="Search">搜索</el-button>
+                  <el-button icon="Refresh">重置</el-button>
+                </el-form-item>
+              </el-form>
+            </el-card>
+          </div>
+        </transition>
+        <el-card shadow="hover">
+          <template>
+            <el-row class="mb8">
+              <right-toolbar></right-toolbar>
+            </el-row>
+          </template>
+
+          <el-table border>
+            <el-table-column type="selection" width="55" align="center" />
+            <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
+            <el-table-column align="center" prop="id" label="id"></el-table-column>
+            <el-table-column align="center" label="流程定义名称">
+              <template="scope">
+                <span>（动态文本）v（动态文本）.0</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="processDefinitionKey" label="流程定义KEY"></el-table-column>
+            <el-table-column align="center" prop="processDefinitionVersion" label="版本号" width="90">
+              <template="scope"> v（动态文本）.0</template>
+            </el-table-column>
+            <el-table-column align="center" prop="isSuspended" label="状态" min-width="70">
+              <template="scope">
+                <el-tag type="success">激活</el-tag>
+                <el-tag type="danger">挂起</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="流程状态" min-width="70">
+              <template="scope">
+                <dict-tag></dict-tag>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="startTime" label="启动时间" width="160"></el-table-column>
+            <el-table-column align="center" prop="endTime" label="结束时间" width="160"></el-table-column>
+            <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+              <template="scope">
+                <el-tooltip
+                  content="修改"
+                  placement="top"
+                >
+                  <el-button link type="primary" icon="Edit"></el-button>
+                </el-tooltip>
+                <el-tooltip
+                  content="删除"
+                  placement="top"
+                >
+                  <el-button link type="primary" icon="Delete"></el-button>
+                </el-tooltip>
+                <el-tooltip placement="top" content="查看">
+                  <el-button link type="primary" icon="View"></el-button>
+                </el-tooltip>
+                <el-tooltip content="撤销" placement="top">
+                  <el-button link type="primary" icon="Notification"></el-button>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+          </el-table>
+          <pagination
+          />
+        </el-card>
+      </el-col>
+    </el-row>
+    <!-- 提交组件 -->
+    <submitVerify />
+  </div>

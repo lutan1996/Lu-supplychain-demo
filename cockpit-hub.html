@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>正在跳转…</title>
+  <script>
+    (function () {
+      var STORAGE_KEY = "portalLoggedIn_v1";
+  var home = "index-portal-screen-alt.html";
+      if (sessionStorage.getItem(STORAGE_KEY) !== "1") {
+    if (window.parent && typeof window.parent.__demoOpenPage === "function") {
+      window.parent.__demoOpenPage("index.html");
+    } else {
+        window.location.replace("index.html");
+    }
+        return;
+      }
+  if (window.parent && typeof window.parent.__demoOpenPage === "function") {
+    window.parent.__demoOpenPage(home);
+  } else {
+    window.location.replace(home);
+  }
+    })();
+  </script>
+</head>
+<body>
+  <p style="margin: 1rem; font-family: system-ui, sans-serif; color: #666;">正在进入首页…</p>
+</body>
+</html>

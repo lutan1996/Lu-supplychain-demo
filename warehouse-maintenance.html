@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>库内保养 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/module-hub.css" />
+  <link rel="stylesheet" href="css/warehouse-modal.css" />
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit.html" title="驾驶舱"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html" title="物流管理"><span class="nav-label">物流管理</span></a>
+        <div class="nav-item nav-item--module-active" id="navWarehouse" data-nav="warehouse" title="仓储管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 21h18V10.5L12 6 3 10.5V21z"/><path d="M9 21v-7h6v7"/></svg></span>
+          <span class="nav-label">仓储管理</span>
+        </div>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+
+      <aside id="warehouseSecondaryPanel" class="warehouse-secondary-panel" aria-label="仓储管理子菜单" aria-hidden="true" hidden>
+        <div class="warehouse-secondary-inner">
+          <div class="warehouse-secondary-row warehouse-secondary-row--pipe" id="masterSecondaryRow">
+            <button type="button" class="warehouse-secondary-link" data-action="slot" data-label="货位管理">货位管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="receive" data-label="收货入库">收货入库</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="scan" data-label="扫码领用">扫码领用</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="inventory-check" data-label="盘库管理">盘库管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="stock" data-label="库存管理">库存管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="maintenance" data-label="库内保养">库内保养</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="idle" data-label="闲置物资">闲置物资</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="warehouse" data-label="仓库管理">仓库管理</button>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title">库内保养</h1>
+          <p id="pageContextHint" class="page-context-hint" hidden style="font-size:13px;color:#62788f;margin:0 0 10px;"></p>
+
+          <p style="font-size:12px;color:#cf1322;margin:0 0 8px;">逾期未保养物资将在列表中以「逾期」状态标红提醒（演示）。</p>
+          <div class="carrier-toolbar">
+            <button type="button" class="carrier-btn-add" id="btnNewMaintenancePlan"><i class="fa-solid fa-plus" aria-hidden="true"></i> 新建保养计划</button>
+            <div class="carrier-toolbar-right">
+              <select class="carrier-select" aria-label="仓库">
+                <option value="">全部仓库</option>
+                <option>华北主仓</option>
+                <option>华东备件仓</option>
+              </select>
+              <select class="carrier-select" aria-label="状态">
+                <option value="">全部状态</option>
+                <option>待执行</option>
+                <option>进行中</option>
+                <option>已完成</option>
+                <option>已逾期</option>
+              </select>
+              <input type="search" class="carrier-search" placeholder="保养单号 / 设备" aria-label="搜索" />
+            </div>
+          </div>
+
+          <div class="carrier-table-wrap">
+            <table class="carrier-table">
+              <thead>
+                <tr>
+                  <th>计划编号</th>
+                  <th>物资名称</th>
+                  <th>保养类型</th>
+                  <th>计划日期</th>
+                  <th>执行日期</th>
+                  <th>责任人</th>
+                  <th>状态</th>
+                  <th style="min-width:160px">操作</th>
+                </tr>
+              </thead>
+              <tbody id="maintTableBody">
+                <tr data-plan="BY-2026-0315">
+                  <td>BY-2026-0315</td>
+                  <td>叉车 #3</td>
+                  <td>定期保养</td>
+                  <td>2026-03-15</td>
+                  <td>2026-03-15</td>
+                  <td>赵强</td>
+                  <td><span class="tag-status" style="background:#f6ffed;color:#389e0d;">已完成</span></td>
+                  <td><a href="#" class="maint-op" data-action="record" style="color:#1677ff;font-size:13px;">记录</a></td>
+                </tr>
+                <tr data-plan="BY-2026-0320">
+                  <td>BY-2026-0320</td>
+                  <td>货架区 R1</td>
+                  <td>专项保养</td>
+                  <td>2026-03-20</td>
+                  <td>—</td>
+                  <td>—</td>
+                  <td><span class="tag-status" style="background:#fff1f0;color:#cf1322;">已逾期</span></td>
+                  <td><a href="#" class="maint-op" data-action="assign" style="color:#1677ff;font-size:13px;">派工</a> · <a href="#" class="maint-op" data-action="checkin" style="color:#1677ff;font-size:13px;">签到</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="wh-modal-mask modal-mask" id="maintPlanMask" aria-hidden="true">
+    <div class="wh-modal-box" role="dialog" aria-modal="true" aria-labelledby="maintPlanTitle">
+      <div class="wh-modal-head">
+        <h3 class="wh-modal-title" id="maintPlanTitle">新建保养计划</h3>
+        <button type="button" class="wh-modal-close" id="maintPlanCloseX" aria-label="关闭">×</button>
+      </div>
+      <div class="wh-modal-body">
+        <div class="wh-field">
+          <label class="wh-label" for="maintPlanTarget">设备 / 区域</label>
+          <input id="maintPlanTarget" class="wh-input" type="text" placeholder="例如：叉车 #5" />
+        </div>
+        <div class="wh-field">
+          <label class="wh-label" for="maintPlanType">保养类型</label>
+          <select id="maintPlanType" class="wh-input">
+            <option>定期保养</option>
+            <option>专项保养</option>
+            <option>应急检修</option>
+          </select>
+        </div>
+        <div class="wh-field">
+          <label class="wh-label" for="maintPlanDate">计划日期</label>
+          <input id="maintPlanDate" class="wh-input" type="date" />
+        </div>
+      </div>
+      <div class="wh-modal-foot">
+        <button type="button" class="wh-btn wh-btn--ghost" id="maintPlanCancel">取消</button>
+        <button type="button" class="wh-btn wh-btn--primary" id="maintPlanOk">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/warehouse-submenu.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var mask = document.getElementById("maintPlanMask");
+      function toast(msg) {
+        var t = document.createElement("div");
+        t.textContent = msg;
+        t.setAttribute("role", "status");
+        t.style.cssText = "position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;z-index:10050;max-width:90vw;text-align:center;";
+        document.body.appendChild(t);
+        setTimeout(function () { t.remove(); }, 2400);
+      }
+      function openMask() {
+        document.getElementById("maintPlanTarget").value = "";
+        document.getElementById("maintPlanDate").value = new Date().toISOString().slice(0, 10);
+        mask.classList.add("show");
+        mask.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+      function closeMask() {
+        mask.classList.remove("show");
+        mask.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+      document.getElementById("btnNewMaintenancePlan").addEventListener("click", openMask);
+      document.getElementById("maintPlanCloseX").addEventListener("click", closeMask);
+      document.getElementById("maintPlanCancel").addEventListener("click", closeMask);
+      mask.addEventListener("click", function (e) { if (e.target === mask) closeMask(); });
+      document.getElementById("maintPlanOk").addEventListener("click", function () {
+        var name = (document.getElementById("maintPlanTarget").value || "").trim();
+        if (!name) {
+          toast("请填写设备或区域");
+          return;
+        }
+        closeMask();
+        toast("已创建保养计划（演示）：" + name);
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && mask.classList.contains("show")) closeMask();
+      });
+      document.getElementById("maintTableBody").addEventListener("click", function (e) {
+        var a = e.target.closest("a.maint-op");
+        if (!a) return;
+        e.preventDefault();
+        var act = a.getAttribute("data-action");
+        var plan = (a.closest("tr") && a.closest("tr").getAttribute("data-plan")) || "";
+        if (act === "record") toast("打开保养记录：" + plan);
+        else if (act === "assign") toast("已发起派工（演示）：" + plan);
+        else if (act === "checkin") toast("现场签到成功（演示）：" + plan);
+      });
+    })();
+  </script>
+</body>
+</html>

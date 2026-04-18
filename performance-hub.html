@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-perf-tab="login">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>绩效考核 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/module-hub.css" />
+  <script src="js/vendor/echarts.min.js"></script>
+  <script>
+    (function () {
+      function resolvePerfTab() {
+        var t = "";
+        try {
+          var sp = new URLSearchParams(window.location.search);
+          t = (sp.get("tab") || "").trim();
+          if (t === "flow-exec") t = "flow";
+          if (!t) {
+            var ps = (sp.get("pageSub") || "").trim();
+            if (
+              ps === "流程频次统计" ||
+              ps === "KPI考核" ||
+              ps === "考核规则"
+            ) {
+              t = "flow";
+            } else if (ps === "登录频次统计" || ps === "绩效看板") {
+              t = "login";
+            }
+          }
+        } catch (e0) {}
+        if (!t) {
+          try {
+            var n = window.name || "";
+            if (n) t = (new URLSearchParams(n).get("tab") || "").trim();
+            if (t === "flow-exec") t = "flow";
+          } catch (e1) {}
+        }
+        if (!t) {
+          try {
+            t = (sessionStorage.getItem("demoPerformanceTab") || "").trim();
+          } catch (e2) {}
+        }
+        /* 离线演示壳 __demoOpenPage 写入的是 demoTab；iframe 与父页 sessionStorage 隔离时与 demoPerformanceTab 互补 */
+        if (!t || (t !== "flow" && t !== "login")) {
+          try {
+            var dt = (sessionStorage.getItem("demoTab") || "").trim();
+            if (dt === "flow" || dt === "login") t = dt;
+          } catch (e2b) {}
+        }
+        if (t === "flow-exec") t = "flow";
+        if (t !== "flow" && t !== "login") t = "login";
+        try {
+          document.documentElement.setAttribute("data-perf-tab", t);
+          sessionStorage.setItem("demoPerformanceTab", t);
+        } catch (e3) {}
+        return t;
+      }
+      var tab = resolvePerfTab();
+      var titleMap = {
+        login: "登录频次统计",
+        flow: "流程频次统计"
+      };
+      function applyPerfTabUi(activeTab) {
+        var h1 = document.querySelector(".carrier-page-title");
+        if (h1 && titleMap[activeTab]) h1.textContent = titleMap[activeTab];
+        try {
+          document.title = titleMap[activeTab] + " - 新能源物资供应链管理系统";
+        } catch (e4) {}
+      }
+      function applyPerfPanels(activeTab) {
+        try {
+          document.documentElement.setAttribute("data-perf-tab", activeTab);
+          var loginPanel = document.querySelector('.module-hub-panel[data-panel="login"]');
+          var flowPanel = document.querySelector('.module-hub-panel[data-panel="flow"]');
+          if (loginPanel) loginPanel.classList.toggle("is-visible", activeTab === "login");
+          if (flowPanel) flowPanel.classList.toggle("is-visible", activeTab === "flow");
+          sessionStorage.setItem("demoPerformanceTab", activeTab);
+          sessionStorage.setItem("demoTab", activeTab);
+        } catch (e5) {}
+      }
+      document.addEventListener("DOMContentLoaded", function () {
+        /* 演示壳 iframe 在 head 执行时 window.name 可能尚未带上 tab=，DOM 就绪后再解析一次 */
+        var tab2 = resolvePerfTab();
+        tab = tab2;
+        applyPerfTabUi(tab2);
+        applyPerfPanels(tab2);
+      });
+      window.addEventListener("demo-performance-tab-change", function (e) {
+        var next = e && e.detail && e.detail.tab ? String(e.detail.tab).trim() : "";
+        if (next !== "flow" && next !== "login") return;
+        tab = next;
+        applyPerfTabUi(next);
+        applyPerfPanels(next);
+      });
+      applyPerfTabUi(tab);
+    })();
+  </script>
+  <style>
+    /* 与 data-perf-tab 同步：iframe/blob 丢 ?tab= 时仍可按 pageSub / sessionStorage 切换 */
+    html[data-perf-tab="flow"] .module-hub-panel[data-panel="login"] {
+      display: none !important;
+    }
+    html[data-perf-tab="flow"] .module-hub-panel[data-panel="flow"] {
+      display: block !important;
+    }
+    html[data-perf-tab="login"] .module-hub-panel[data-panel="flow"] {
+      display: none !important;
+    }
+    html[data-perf-tab="login"] .module-hub-panel[data-panel="login"] {
+      display: block !important;
+    }
+    .perf-flow-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 12px;
+      margin-top: 4px;
+      border-radius: 10px;
+      background: #f5f6f8;
+    }
+    .perf-flow-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 14px;
+      margin-bottom: 0;
+      padding: 12px 16px;
+      background: #fff;
+      border: 1px solid #e8ecf0;
+      border-radius: 8px;
+    }
+    .perf-flow-toolbar label {
+      font-size: 13px;
+      color: #3f5366;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+    .perf-flow-toolbar .carrier-select,
+    .perf-flow-toolbar input[type="date"] {
+      height: 32px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      padding: 0 10px;
+      font-size: 13px;
+      min-width: 148px;
+      background: #fff;
+    }
+    .perf-flow-toolbar .perf-btn-query,
+    .perf-flow-toolbar .perf-btn-reset,
+    .perf-flow-toolbar .perf-btn-export {
+      height: 32px;
+      padding: 0 16px;
+      border-radius: 4px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .perf-flow-toolbar .perf-btn-reset,
+    .perf-flow-toolbar .perf-btn-export {
+      border: 1px solid #d9d9d9;
+      background: #fff;
+      color: rgba(0, 0, 0, 0.85);
+    }
+    .perf-flow-toolbar .perf-btn-reset:hover,
+    .perf-flow-toolbar .perf-btn-export:hover {
+      border-color: #1890ff;
+      color: #1890ff;
+    }
+    .perf-flow-toolbar .perf-btn-query {
+      background: #1890ff;
+      border: 1px solid #1890ff;
+      color: #fff;
+    }
+    .perf-flow-toolbar .perf-btn-query:hover {
+      background: #40a9ff;
+      border-color: #40a9ff;
+    }
+    .perf-chart-card {
+      background: #fff;
+      border: 1px solid #e8ecf0;
+      border-radius: 8px;
+      padding: 14px 16px 12px;
+    }
+    .perf-chart-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1f3551;
+      margin: 0 0 4px;
+    }
+    .perf-chart-sub {
+      font-size: 12px;
+      color: #8c9aad;
+      margin: 0 0 10px;
+    }
+    #perfFlowTrend {
+      width: 100%;
+      min-height: 300px;
+      border-radius: 4px;
+      background: #fafbfc;
+    }
+    .perf-table-card {
+      background: #fff;
+      border: 1px solid #e8ecf0;
+      border-radius: 8px;
+      padding: 4px 4px 12px;
+    }
+    .perf-table-card .carrier-table-wrap {
+      border: none;
+      margin: 0;
+    }
+    .carrier-table tr.perf-row-alert td {
+      background: #fff2f0 !important;
+      color: #a8071a;
+    }
+    .carrier-table tr.perf-row-alert td .perf-rate {
+      font-weight: 600;
+    }
+    .perf-link-detail {
+      color: #1677ff;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .perf-link-detail:hover {
+      text-decoration: underline;
+    }
+    .perf-modal-mask {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.45);
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+    .perf-modal-mask.is-open {
+      display: flex;
+    }
+    .perf-modal {
+      width: min(720px, 100%);
+      max-height: 85vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      padding: 20px 22px;
+    }
+    .perf-modal h3 {
+      margin: 0 0 14px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a3a5c;
+    }
+    .perf-modal .perf-modal-actions {
+      margin-top: 16px;
+      text-align: right;
+    }
+    .perf-modal .perf-btn-close {
+      height: 32px;
+      padding: 0 20px;
+      border-radius: 6px;
+      border: 1px solid #d9d9d9;
+      background: #fff;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .perf-modal .perf-btn-close:hover {
+      border-color: #1890ff;
+      color: #1890ff;
+    }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit-analytics.html"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item nav-item--module-active" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title">登录频次统计</h1>
+          <div class="module-hub-panel" data-panel="login">
+            <h2 class="module-hub-scene-title">登录频次统计</h2>
+            <div class="carrier-toolbar"><div class="carrier-toolbar-right">
+              <select class="carrier-select"><option>全部部门</option><option>计划物资部</option></select>
+              <input type="date" class="carrier-search" style="width:auto" value="2026-03-01" />
+              <span>至</span>
+              <input type="date" class="carrier-search" style="width:auto" value="2026-03-31" />
+            </div></div>
+            <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>部门</th><th>用户</th><th>登录次数</th><th>活跃天数</th><th>最后登录</th></tr></thead><tbody>
+              <tr><td>计划物资部</td><td>张三</td><td>42</td><td>18</td><td>2026-03-30 08:10</td></tr>
+            </tbody></table></div>
+            <div id="perfLine" style="height:220px;margin-top:12px;border:1px solid #e7ecf3;border-radius:8px;"></div>
+            <p style="margin-top:8px;"><button type="button" class="btn-sub" style="border:1px solid #d7e1ee;padding:6px 12px;border-radius:6px;background:#fff;cursor:pointer;">导出 Excel</button></p>
+          </div>
+          <div class="module-hub-panel" data-panel="flow">
+            <h2 class="module-hub-scene-title">流程频次统计</h2>
+            <div class="perf-flow-stack">
+              <div class="perf-flow-toolbar" id="perfFlowToolbar">
+                <label for="perfFlowType">流程类型：</label>
+                <select id="perfFlowType" class="carrier-select" aria-label="流程类型">
+                  <option value="">全部</option>
+                  <option value="采购审批">采购审批</option>
+                  <option value="报废审批">报废审批</option>
+                  <option value="领用审批">领用审批</option>
+                  <option value="调剂审批">调剂审批</option>
+                </select>
+                <label for="perfFlowDateStart">日期范围：</label>
+                <input type="date" id="perfFlowDateStart" value="2026-01-01" />
+                <span style="color:#8ca0b8;font-size:13px">至</span>
+                <input type="date" id="perfFlowDateEnd" value="2026-12-31" />
+                <button type="button" class="perf-btn-query" id="perfFlowQuery">查询</button>
+                <button type="button" class="perf-btn-reset" id="perfFlowReset">重置</button>
+                <button type="button" class="perf-btn-export" id="perfFlowExport">导出报表</button>
+              </div>
+              <div class="perf-chart-card">
+                <div class="perf-chart-title">流程处理效率趋势图</div>
+                <p class="perf-chart-sub">各流程平均处理时长趋势（1–12 月）</p>
+                <div id="perfFlowTrend" style="height:300px"></div>
+              </div>
+              <div class="perf-table-card">
+                <div class="carrier-table-wrap">
+                  <table class="carrier-table" id="perfFlowTable">
+                    <thead>
+                      <tr>
+                        <th>流程名称</th>
+                        <th>发起数量</th>
+                        <th>已完成数量</th>
+                        <th>平均处理时长(天)</th>
+                        <th>超期数量</th>
+                        <th>超期率</th>
+                        <th style="min-width:100px">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody id="perfFlowTableBody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="perf-modal-mask" id="perfFlowDetailMask" aria-hidden="true">
+    <div class="perf-modal" role="dialog" aria-modal="true" aria-labelledby="perfFlowDetailTitle">
+      <h3 id="perfFlowDetailTitle">超期任务明细</h3>
+      <p style="margin:0 0 10px;font-size:13px;color:#5d738d">流程：<span id="perfDetailFlowName">—</span></p>
+      <div class="carrier-table-wrap">
+        <table class="carrier-table">
+          <thead>
+            <tr>
+              <th>任务名称</th>
+              <th>发起人</th>
+              <th>发起时间</th>
+              <th>当前节点</th>
+              <th>已耗时</th>
+            </tr>
+          </thead>
+          <tbody id="perfFlowDetailBody"></tbody>
+        </table>
+      </div>
+      <div class="perf-modal-actions">
+        <button type="button" class="perf-btn-close" id="perfFlowDetailClose">关闭</button>
+      </div>
+    </div>
+  </div>
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script src="js/module-hub-tabs.js"></script>
+  <script>
+    (function () {
+      var FLOW_ROWS = [
+        { name: "采购审批", start: 128, done: 120, avgDays: 2.5, overdue: 18, rateStr: "14.1%", rateNum: 14.1 },
+        { name: "报废审批", start: 45, done: 40, avgDays: 3.2, overdue: 8, rateStr: "17.8%", rateNum: 17.8 },
+        { name: "领用审批", start: 256, done: 250, avgDays: 1.2, overdue: 12, rateStr: "4.7%", rateNum: 4.7 },
+        { name: "调剂审批", start: 32, done: 28, avgDays: 2.8, overdue: 5, rateStr: "15.6%", rateNum: 15.6 }
+      ];
+
+      var DETAIL_BY_FLOW = {
+        采购审批: [
+          { task: "备件集中采购申请 PA-2026-0312", user: "张明", time: "2026-03-01 09:20", node: "部门负责人", elapsed: "6 天" },
+          { task: "齿轮箱采购立项 ZB-2026-0088", user: "李华", time: "2026-03-05 14:10", node: "采购部审核", elapsed: "5 天" },
+          { task: "电缆批次询价 CG-2026-0156", user: "王强", time: "2026-03-08 11:00", node: "分管领导", elapsed: "4 天" }
+        ],
+        报废审批: [
+          { task: "风机报废计划 BHJH-2026-02", user: "赵敏", time: "2026-02-20 08:30", node: "设备评估", elapsed: "18 天" },
+          { task: "齿轮箱报废申请 BF-2026-0099", user: "钱磊", time: "2026-03-10 16:45", node: "董事会", elapsed: "12 天" },
+          { task: "叶片处置审批 BF-2026-0101", user: "孙涛", time: "2026-03-12 10:00", node: "会议审批", elapsed: "9 天" },
+          { task: "箱变退役报废 BF-2026-0105", user: "周杰", time: "2026-03-15 09:15", node: "部门复核", elapsed: "7 天" }
+        ],
+        领用审批: [
+          { task: "主轴轴承领用 LY-2026-1201", user: "吴刚", time: "2026-03-18 13:20", node: "仓储主管", elapsed: "3 天" },
+          { task: "润滑油领用 LY-2026-1208", user: "郑芳", time: "2026-03-20 08:50", node: "场站负责人", elapsed: "2 天" }
+        ],
+        调剂审批: [
+          { task: "华北-华东备件调剂 TJ-2026-003", user: "陈静", time: "2026-03-02 10:00", node: "调入方确认", elapsed: "11 天" },
+          { task: "闲置电缆调剂 TJ-2026-007", user: "杨洋", time: "2026-03-11 15:30", node: "调出方审批", elapsed: "8 天" },
+          { task: "检修工具调剂 TJ-2026-009", user: "黄磊", time: "2026-03-19 09:00", node: "双方会签", elapsed: "5 天" }
+        ]
+      };
+
+      var flowChartInst = null;
+
+      function renderFlowTable(rows) {
+        var tb = document.getElementById("perfFlowTableBody");
+        if (!tb) return;
+        tb.innerHTML = "";
+        rows.forEach(function (r) {
+          var tr = document.createElement("tr");
+          var alert = r.rateNum > 17;
+          if (alert) tr.className = "perf-row-alert";
+          tr.innerHTML =
+            "<td>" +
+            r.name +
+            "</td><td>" +
+            r.start +
+            "</td><td>" +
+            r.done +
+            "</td><td>" +
+            (typeof r.avgDays === "number" ? r.avgDays.toFixed(1) : r.avgDays) +
+            "</td><td>" +
+            r.overdue +
+            '</td><td><span class="perf-rate">' +
+            r.rateStr +
+            '</span></td><td><a href="#" class="perf-link-detail" data-flow="' +
+            r.name +
+            '">查看明细</a></td>';
+          tb.appendChild(tr);
+        });
+      }
+
+      function filterFlowRows() {
+        var sel = document.getElementById("perfFlowType");
+        var v = sel ? sel.value : "";
+        if (!v) return FLOW_ROWS.slice();
+        return FLOW_ROWS.filter(function (r) {
+          return r.name === v;
+        });
+      }
+
+      function bindFlowTableClicks() {
+        var tb = document.getElementById("perfFlowTableBody");
+        if (!tb) return;
+        tb.onclick = function (e) {
+          var a = e.target.closest && e.target.closest("a.perf-link-detail");
+          if (!a) return;
+          e.preventDefault();
+          var flow = a.getAttribute("data-flow") || "";
+          openFlowDetail(flow);
+        };
+      }
+
+      function openFlowDetail(flowName) {
+        var mask = document.getElementById("perfFlowDetailMask");
+        var titleEl = document.getElementById("perfDetailFlowName");
+        var body = document.getElementById("perfFlowDetailBody");
+        if (!mask || !body) return;
+        if (titleEl) titleEl.textContent = flowName || "—";
+        var rows = DETAIL_BY_FLOW[flowName] || [];
+        body.innerHTML = "";
+        if (!rows.length) {
+          body.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#8ca0b8;padding:16px">暂无超期任务</td></tr>';
+        } else {
+          rows.forEach(function (x) {
+            var tr = document.createElement("tr");
+            tr.innerHTML =
+              "<td>" +
+              x.task +
+              "</td><td>" +
+              x.user +
+              "</td><td>" +
+              x.time +
+              "</td><td>" +
+              x.node +
+              "</td><td>" +
+              x.elapsed +
+              "</td>";
+            body.appendChild(tr);
+          });
+        }
+        mask.classList.add("is-open");
+        mask.setAttribute("aria-hidden", "false");
+      }
+
+      function closeFlowDetail() {
+        var mask = document.getElementById("perfFlowDetailMask");
+        if (!mask) return;
+        mask.classList.remove("is-open");
+        mask.setAttribute("aria-hidden", "true");
+      }
+
+      function initFlowTrendChart() {
+        var el = document.getElementById("perfFlowTrend");
+        if (!el || typeof echarts === "undefined") return;
+        if (!flowChartInst) flowChartInst = echarts.init(el);
+        var months = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+        flowChartInst.setOption({
+          color: ["#1890ff", "#52c41a", "#faad14", "#722ed1"],
+          tooltip: {
+            trigger: "axis",
+            axisPointer: { type: "cross", crossStyle: { color: "#999" } }
+          },
+          legend: {
+            data: ["采购审批", "报废审批", "领用审批", "调剂审批"],
+            bottom: 4,
+            itemWidth: 14,
+            itemHeight: 8,
+            textStyle: { fontSize: 12, color: "#5d738d" }
+          },
+          grid: { left: 52, right: 28, top: 28, bottom: 52 },
+          xAxis: {
+            type: "category",
+            boundaryGap: false,
+            data: months,
+            axisLine: { lineStyle: { color: "#e0e6ee" } },
+            axisLabel: { color: "#5d738d", fontSize: 11 }
+          },
+          yAxis: {
+            type: "value",
+            name: "天",
+            nameTextStyle: { color: "#8ca0b8", fontSize: 12, padding: [0, 0, 0, 8] },
+            axisLabel: { color: "#5d738d", fontSize: 11 },
+            splitLine: { lineStyle: { color: "#f0f2f5", type: "dashed" } }
+          },
+          series: [
+            {
+              name: "采购审批",
+              type: "line",
+              smooth: true,
+              symbol: "circle",
+              symbolSize: 5,
+              lineStyle: { width: 2 },
+              data: [2.9, 2.7, 2.6, 2.5, 2.4, 2.5, 2.4, 2.5, 2.6, 2.5, 2.4, 2.5]
+            },
+            {
+              name: "报废审批",
+              type: "line",
+              smooth: true,
+              symbol: "circle",
+              symbolSize: 5,
+              lineStyle: { width: 2 },
+              data: [3.4, 3.3, 3.2, 3.4, 3.5, 3.3, 3.2, 3.3, 3.4, 3.2, 3.3, 3.2]
+            },
+            {
+              name: "领用审批",
+              type: "line",
+              smooth: true,
+              symbol: "circle",
+              symbolSize: 5,
+              lineStyle: { width: 2 },
+              data: [1.4, 1.3, 1.25, 1.2, 1.15, 1.2, 1.18, 1.2, 1.22, 1.2, 1.19, 1.2]
+            },
+            {
+              name: "调剂审批",
+              type: "line",
+              smooth: true,
+              symbol: "circle",
+              symbolSize: 5,
+              lineStyle: { width: 2 },
+              data: [3.0, 2.9, 2.85, 2.8, 2.9, 2.85, 2.8, 2.82, 2.8, 2.78, 2.8, 2.8]
+            }
+          ]
+        });
+        flowChartInst.resize();
+      }
+
+      function tryInitFlowPanel() {
+        var panel = document.querySelector('.module-hub-panel[data-panel="flow"]');
+        if (!panel || !panel.classList.contains("is-visible")) return;
+        renderFlowTable(filterFlowRows());
+        bindFlowTableClicks();
+        setTimeout(function () {
+          initFlowTrendChart();
+        }, 80);
+      }
+
+      if (typeof echarts !== "undefined") {
+        var elLogin = document.getElementById("perfLine");
+        if (elLogin) {
+          var chLogin = echarts.init(elLogin);
+          chLogin.setOption({
+            tooltip: { trigger: "axis" },
+            xAxis: { type: "category", data: ["3/1", "3/5", "3/10", "3/15", "3/20", "3/25", "3/30"] },
+            yAxis: { type: "value", name: "次数" },
+            series: [{ name: "登录次数", type: "line", data: [12, 15, 10, 18, 22, 20, 24], smooth: true, itemStyle: { color: "#1890ff" } }]
+          });
+        }
+      }
+
+      renderFlowTable(FLOW_ROWS);
+      bindFlowTableClicks();
+
+      document.getElementById("perfFlowQuery").addEventListener("click", function (e) {
+        e.preventDefault();
+        renderFlowTable(filterFlowRows());
+        bindFlowTableClicks();
+      });
+      document.getElementById("perfFlowReset").addEventListener("click", function (e) {
+        e.preventDefault();
+        var sel = document.getElementById("perfFlowType");
+        var ds = document.getElementById("perfFlowDateStart");
+        var de = document.getElementById("perfFlowDateEnd");
+        if (sel) sel.value = "";
+        if (ds) ds.value = "2026-01-01";
+        if (de) de.value = "2026-12-31";
+        renderFlowTable(FLOW_ROWS);
+        bindFlowTableClicks();
+      });
+      document.getElementById("perfFlowExport").addEventListener("click", function (e) {
+        e.preventDefault();
+        alert("演示环境：导出报表将生成 Excel（原型未接入后端）。");
+      });
+
+      document.getElementById("perfFlowDetailClose").addEventListener("click", closeFlowDetail);
+      document.getElementById("perfFlowDetailMask").addEventListener("click", function (e) {
+        if (e.target === this) closeFlowDetail();
+      });
+
+      var flowPanel = document.querySelector('.module-hub-panel[data-panel="flow"]');
+      if (flowPanel) {
+        var obs = new MutationObserver(function () {
+          if (flowPanel.classList.contains("is-visible")) tryInitFlowPanel();
+        });
+        obs.observe(flowPanel, { attributes: true, attributeFilter: ["class"] });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", function () {
+          try {
+            var sp = new URLSearchParams(window.location.search || "");
+            if ((sp.get("tab") || "").trim() === "flow") tryInitFlowPanel();
+          } catch (err) {}
+        });
+      } else {
+        try {
+          var sp2 = new URLSearchParams(window.location.search || "");
+          if ((sp2.get("tab") || "").trim() === "flow") tryInitFlowPanel();
+        } catch (err2) {}
+      }
+
+      window.addEventListener("resize", function () {
+        if (flowChartInst) flowChartInst.resize();
+      });
+    })();
+  </script>
+</body>
+</html>

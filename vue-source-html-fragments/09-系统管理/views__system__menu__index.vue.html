@@ -1,0 +1,255 @@
+<!-- 来源: src/views/system/menu/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2" style="height: 100%;">
+    <transition>
+      <div class="mb-[10px]">
+        <el-card shadow="hover">
+          <el-form>
+            <el-form-item label="菜单名称" prop="menuName">
+              <el-input placeholder="请输入菜单名称" clearable />
+            </el-form-item>
+            <el-form-item label="状态" prop="status">
+              <el-select placeholder="菜单状态" clearable>
+                <el-option />
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="Search">搜索</el-button>
+              <el-button icon="Refresh">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </div>
+    </transition>
+
+    <el-card shadow="hover" style="">
+      <template>
+        <el-row>
+          <el-col>
+            <el-button type="primary" plain icon="Plus">新增 </el-button>
+          </el-col>
+          <el-col>
+            <el-button type="info" plain icon="Sort">展开/折叠</el-button>
+          </el-col>
+          <right-toolbar></right-toolbar>
+        </el-row>
+      </template>
+
+      <el-table
+        height="calc(100vh - 18rem)" 
+        row-key="menuId"
+      >
+        <el-table-column prop="menuName" label="菜单名称" width="160"></el-table-column>
+        <el-table-column prop="icon" label="图标" align="center" width="100">
+          <template="scope">
+            <svg-icon />
+          </template>
+        </el-table-column>
+        <el-table-column prop="orderNum" label="排序" width="60"></el-table-column>
+        <el-table-column prop="perms" label="权限标识"></el-table-column>
+        <el-table-column prop="component" label="组件路径"></el-table-column>
+        <el-table-column prop="status" label="状态" width="80">
+          <template="scope">
+            <dict-tag />
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" align="center" prop="createTime">
+          <template="scope">
+            <span>（动态文本）</span>
+          </template>
+        </el-table-column>
+        <el-table-column fixed="right" label="操作" width="180">
+          <template="scope">
+            <el-tooltip content="修改" placement="top">
+              <el-button link type="primary" icon="Edit" />
+            </el-tooltip>
+            <el-tooltip content="新增" placement="top">
+              <el-button link type="primary" icon="Plus" />
+            </el-tooltip>
+            <el-tooltip content="删除" placement="top">
+              <el-button link type="primary" icon="Delete" />
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+
+    <el-dialog destroy-on-close append-to-bod width="750px">
+      <el-form label-width="100px">
+        <el-row>
+          <el-col>
+            <el-form-item label="上级菜单">
+              <el-tree-select
+                value-key="menuId"
+                placeholder="选择上级菜单"
+                check-strictly
+              />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="菜单类型" prop="menuType">
+              <el-radio-group>
+                <el-radio value="M">目录</el-radio>
+                <el-radio value="C">菜单</el-radio>
+                <el-radio value="F">按钮</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="菜单图标" prop="icon">
+              <!-- 图标选择器 -->
+              <icon-select />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="菜单名称" prop="menuName">
+              <el-input placeholder="请输入菜单名称" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="显示排序" prop="orderNum">
+              <el-input-number controls-position="right" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item>
+              <template>
+                <span>
+                  <el-tooltip content="选择是外链则路由地址需要以`http(s)://`开头" placement="top">
+                    <el-icon>
+                      <question-filled />
+                    </el-icon> </el-tooltip
+                  >是否外链
+                </span>
+              </template>
+              <el-radio-group>
+                <el-radio label="0">是</el-radio>
+                <el-radio label="1">否</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item prop="path">
+              <template>
+                <span>
+                  <el-tooltip content="访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头" placement="top">
+                    <el-icon>
+                      <question-filled />
+                    </el-icon>
+                  </el-tooltip>
+                  路由地址
+                </span>
+              </template>
+              <el-input placeholder="请输入路由地址" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item prop="component">
+              <template>
+                <span>
+                  <el-tooltip content="访问的组件路径，如：`system/user/index`，默认在`views`目录下" placement="top">
+                    <el-icon>
+                      <question-filled />
+                    </el-icon>
+                  </el-tooltip>
+                  组件路径
+                </span>
+              </template>
+              <el-input placeholder="请输入组件路径" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item>
+              <el-input placeholder="请输入权限标识" maxlength="100" />
+              <template>
+                <span>
+                  <el-tooltip content="控制器中定义的权限字符，如：@SaCheckPermission('system:user:list')" placement="top">
+                    <el-icon>
+                      <question-filled />
+                    </el-icon>
+                  </el-tooltip>
+                  权限字符
+                </span>
+              </template>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item>
+              <el-input placeholder="请输入路由参数" maxlength="255" />
+              <template>
+                <span>
+                  <el-tooltip content='访问路由的默认传递参数，如：`{"id": 1, "name": "ry"}`' placement="top">
+                    <el-icon>
+                      <question-filled />
+                    </el-icon>
+                  </el-tooltip>
+                  路由参数
+                </span>
+              </template>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item>
+              <template>
+                <span>
+                  <el-tooltip content="选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致" placement="top">
+                    <el-icon>
+                      <question-filled />
+                    </el-icon>
+                  </el-tooltip>
+                  是否缓存
+                </span>
+              </template>
+              <el-radio-group>
+                <el-radio label="0">缓存</el-radio>
+                <el-radio label="1">不缓存</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item>
+              <template>
+                <span>
+                  <el-tooltip content="选择隐藏则路由将不会出现在侧边栏，但仍然可以访问" placement="top">
+                    <el-icon>
+                      <question-filled />
+                    </el-icon>
+                  </el-tooltip>
+                  显示状态
+                </span>
+              </template>
+              <el-radio-group>
+                <el-radio>（动态文本） </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item>
+              <template>
+                <span>
+                  <el-tooltip content="选择停用则路由将不会出现在侧边栏，也不能被访问" placement="top">
+                    <el-icon>
+                      <question-filled />
+                    </el-icon>
+                  </el-tooltip>
+                  菜单状态
+                </span>
+              </template>
+              <el-radio-group>
+                <el-radio>
+                  （动态文本）
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>

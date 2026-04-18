@@ -1,0 +1,60 @@
+<!-- 来源: src/views/monitor/online/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <div class="mb-[10px]">
+      <el-card shadow="hover">
+        <el-form>
+          <el-form-item label="登录地址" prop="ipaddr">
+            <el-input placeholder="请输入登录地址" clearable />
+          </el-form-item>
+          <el-form-item label="用户名称" prop="userName">
+            <el-input placeholder="请输入用户名称" clearable />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="Search">搜索</el-button>
+            <el-button icon="Refresh">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </el-card>
+    </div>
+    <el-card shadow="hover">
+      <el-table
+        style="width: 100%"
+      >
+        <el-table-column label="序号" width="50" type="index" align="center">
+          <template="scope">
+            <span>（动态文本）</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="会话编号" align="center" prop="tokenId" />
+        <el-table-column label="登录名称" align="center" prop="userName" />
+        <el-table-column label="客户端" align="center" prop="clientKey" />
+        <el-table-column label="设备类型" align="center">
+          <template="scope">
+            <dict-tag />
+          </template>
+        </el-table-column>
+        <el-table-column label="所属部门" align="center" prop="deptName" />
+        <el-table-column label="主机" align="center" prop="ipaddr" />
+        <el-table-column label="登录地点" align="center" prop="loginLocation" />
+        <el-table-column label="操作系统" align="center" prop="os" />
+        <el-table-column label="浏览器" align="center" prop="browser" />
+        <el-table-column label="登录时间" align="center" prop="loginTime" width="180">
+          <template="scope">
+            <span>（动态文本）</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template="scope">
+            <el-tooltip content="强退" placement="top">
+              <el-button link type="primary" icon="Delete">
+              </el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination />
+    </el-card>
+  </div>

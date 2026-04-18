@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>首页（大屏备选）· 新能源物资供应链管理系统</title>
+  <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/portal-screen-alt.css" />
+  <style>
+    /* 首页·业务动态：我的资产补充样式（不改 CSS 引用路径，保持同页内轻量覆盖） */
+    .asset-subtabs {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0;
+      margin: 0 0 6px;
+      padding: 0;
+      border-bottom: 1px solid #e8e8e8;
+    }
+    .asset-subtab {
+      appearance: none;
+      border: 1px solid transparent;
+      background: transparent;
+      color: rgba(0, 0, 0, 0.65);
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 6px 6px 0 0;
+      cursor: pointer;
+      position: relative;
+      top: 1px;
+    }
+    .asset-subtab:hover {
+      color: rgba(0, 0, 0, 0.85);
+      background: rgba(24, 144, 255, 0.06);
+    }
+    .asset-subtab.is-active {
+      color: #1677ff;
+      font-weight: 600;
+      background: #fff;
+      border-color: #e8e8e8;
+      border-bottom-color: #fff;
+    }
+    .asset-subpanel {
+      display: none;
+    }
+    .asset-subpanel.is-active {
+      display: block;
+    }
+    .asset-hint {
+      margin: 0 0 6px;
+      font-size: 11px;
+      color: rgba(0, 0, 0, 0.45);
+    }
+    .tag {
+      display: inline-block;
+      padding: 0 6px;
+      border-radius: 3px;
+      border: 1px solid transparent;
+      font-size: 10px;
+      line-height: 16px;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+    .tag--ok {
+      background: #f6ffed;
+      color: #237804;
+      border-color: #b7eb8f;
+    }
+    .tag--warn {
+      background: #fffbe6;
+      color: #ad6800;
+      border-color: #ffe58f;
+    }
+    .tag--info {
+      background: #e6f4ff;
+      color: #0958d9;
+      border-color: #91caff;
+    }
+    .biz-asset-col-action {
+      width: 56px;
+      text-align: center;
+      white-space: nowrap;
+    }
+    /* 我的资产：固定可视高度（约表头+2行），其余行在面板内滚动，避免挤压下方核心功能模块 */
+    .biz-pane--assets .biz-table-wrap {
+      max-height: 6.4rem;
+      overflow-y: scroll;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-gutter: stable;
+      scrollbar-width: thin;
+      scrollbar-color: #c5c5c5 #f0f0f0;
+    }
+    .biz-pane--assets .biz-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      box-shadow: 0 1px 0 #d6e4ff;
+    }
+    .biz-pane--assets .biz-table-wrap::-webkit-scrollbar {
+      width: 8px;
+    }
+    .biz-pane--assets .biz-table-wrap::-webkit-scrollbar-thumb {
+      background: #c5c5c5;
+      border-radius: 4px;
+    }
+    .biz-pane--assets .biz-table-wrap::-webkit-scrollbar-thumb:hover {
+      background: #a6a6a6;
+    }
+  </style>
+</head>
+<body class="page-source-navbar page-screen-alt">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item nav-item--module-active" href="index-portal-screen-alt.html" title="首页">
+          <span class="nav-label">首页</span>
+        </a>
+        <div class="nav-item" data-nav="cockpit" title="驾驶舱"><span class="nav-label">驾驶舱</span></div>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html" title="物流管理"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html" title="仓储管理"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+
+      <main class="main-scroll">
+        <div class="screen-alt-surface">
+          <div class="screen-main">
+            <div class="row-top">
+              <div class="stack-col stack-col--main">
+                <section class="panel quick-panel" aria-labelledby="quick-title">
+                  <div class="panel-head">
+                    <h2 class="panel-title" id="quick-title">快捷采购</h2>
+                  </div>
+                  <div class="panel-body">
+                      <div class="quick-grid">
+                      <a class="quick-card" href="procurement-application.html">采购申请</a>
+                      <a class="quick-card" href="purchase-management-hub.html?tab=p6">采购计划</a>
+                      <a class="quick-card" href="purchase-management-hub.html?tab=p8">供应商管理</a>
+                      <a class="quick-card" href="cockpit.html">驾驶舱入口</a>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="panel biz-panel" aria-labelledby="biz-title">
+                  <div class="panel-head biz-panel-head">
+                    <h2 class="panel-title panel-title--bar" id="biz-title">业务动态</h2>
+                    </div>
+                  <div class="panel-body biz-panel-body">
+                    <div class="biz-tablist" role="tablist" aria-label="业务动态分类">
+                      <button type="button" class="biz-tab is-active" role="tab" aria-selected="true" data-biz-tab="tasks">我的任务</button>
+                      <button type="button" class="biz-tab" role="tab" aria-selected="false" data-biz-tab="assets">我的资产</button>
+                      <button type="button" class="biz-tab" role="tab" aria-selected="false" data-biz-tab="notice">公示信息</button>
+                  </div>
+                    <div class="biz-filter-row" id="bizFilterRow" role="toolbar" aria-label="任务筛选">
+                      <button type="button" class="biz-filter" data-biz-filter="initiated">我发起的</button>
+                      <button type="button" class="biz-filter is-active" data-biz-filter="todo">我的待办</button>
+                      <button type="button" class="biz-filter" data-biz-filter="done">我的已办</button>
+                      <button type="button" class="biz-filter" data-biz-filter="cc">我的抄送</button>
+                  </div>
+                    <div class="biz-pane biz-pane--tasks is-active" id="bizPaneTasks" role="tabpanel">
+                      <div class="biz-task-subpanel is-active" id="bizTaskPanelTodo" data-biz-task-panel="todo" role="tabpanel">
+                        <div class="biz-table-wrap">
+                          <table class="biz-table">
+                            <thead>
+                              <tr>
+                                <th class="biz-col-num">序号</th>
+                                <th>类型</th>
+                                <th class="biz-col-summary">摘要</th>
+                                <th>状态</th>
+                                <th>发起人</th>
+                                <th>创建时间</th>
+                                <th class="biz-col-action">操作</th>
+                              </tr>
+                            </thead>
+                        <tbody>
+                              <tr>
+                                <td class="biz-col-num">1</td>
+                                <td>采购审批</td>
+                                <td class="biz-col-summary">风机备件集中采购申请（华北）</td>
+                                <td><span class="tag-pending">待审批</span></td>
+                                <td>张敏</td>
+                                <td>2026-03-24 09:20</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">2</td>
+                                <td>物流异常</td>
+                                <td class="biz-col-summary">运单 YD20260303156 路由滞留复核</td>
+                                <td><span class="tag-pending">待审批</span></td>
+                                <td>系统</td>
+                                <td>2026-03-24 11:05</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">3</td>
+                                <td>采购审批</td>
+                                <td class="biz-col-summary">海上项目电缆标段技术澄清待办</td>
+                                <td><span class="tag-pending">待审批</span></td>
+                                <td>李华</td>
+                                <td>2026-03-23 16:10</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">4</td>
+                                <td>合同用印</td>
+                                <td class="biz-col-summary">承运商框架协议用印审批</td>
+                                <td><span class="tag-pending">待审批</span></td>
+                                <td>王芳</td>
+                                <td>2026-03-22 10:40</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                        </tbody>
+                      </table>
+                        </div>
+                      </div>
+                      <div class="biz-task-subpanel" id="bizTaskPanelInitiated" data-biz-task-panel="initiated" role="tabpanel">
+                        <div class="biz-table-wrap">
+                          <table class="biz-table">
+                            <thead>
+                              <tr>
+                                <th class="biz-col-num">序号</th>
+                                <th>类型</th>
+                                <th class="biz-col-summary">摘要</th>
+                                <th>状态</th>
+                                <th>发起人</th>
+                                <th>创建时间</th>
+                                <th class="biz-col-action">操作</th>
+                              </tr>
+                            </thead>
+                        <tbody>
+                              <tr>
+                                <td class="biz-col-num">1</td>
+                                <td>采购审批</td>
+                                <td class="biz-col-summary">风机备件集中采购申请（华北）</td>
+                                <td><span class="tag-processing">审批中</span></td>
+                                <td>张三</td>
+                                <td>2026-03-24 09:20</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">2</td>
+                                <td>物流异常</td>
+                                <td class="biz-col-summary">运单 YD20260303156 路由滞留复核</td>
+                                <td><span class="tag-pending">待审批</span></td>
+                                <td>张三</td>
+                                <td>2026-03-24 11:05</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">3</td>
+                                <td>采购计划</td>
+                                <td class="biz-col-summary">2026 年二季度备件集中采购计划报批</td>
+                                <td><span class="tag-processing">审批中</span></td>
+                                <td>张三</td>
+                                <td>2026-03-20 14:30</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">4</td>
+                                <td>合同审批</td>
+                                <td class="biz-col-summary">区域物流承运框架协议续签申请</td>
+                                <td><span class="tag-pending">待部门负责人审批</span></td>
+                                <td>张三</td>
+                                <td>2026-03-22 09:15</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                        </tbody>
+                      </table>
+                        </div>
+                      </div>
+                      <div class="biz-task-subpanel" id="bizTaskPanelDone" data-biz-task-panel="done" role="tabpanel">
+                        <div class="biz-table-wrap">
+                          <table class="biz-table">
+                            <thead>
+                              <tr>
+                                <th class="biz-col-num">序号</th>
+                                <th>类型</th>
+                                <th class="biz-col-summary">摘要</th>
+                                <th>状态</th>
+                                <th>发起人</th>
+                                <th>创建时间</th>
+                                <th class="biz-col-action">操作</th>
+                              </tr>
+                            </thead>
+                        <tbody>
+                              <tr>
+                                <td class="biz-col-num">1</td>
+                                <td>采购审批</td>
+                                <td class="biz-col-summary">风机备件集中采购申请（华北）</td>
+                                <td><span class="tag-done">已办结</span></td>
+                                <td>张敏</td>
+                                <td>2026-03-24 09:20</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">2</td>
+                                <td>物流异常</td>
+                                <td class="biz-col-summary">运单 YD20260303156 路由滞留复核</td>
+                                <td><span class="tag-passed">已通过</span></td>
+                                <td>系统</td>
+                                <td>2026-03-24 11:05</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">3</td>
+                                <td>到货验收</td>
+                                <td class="biz-col-summary">华北中心仓备件到货联合验收</td>
+                                <td><span class="tag-done">已办结</span></td>
+                                <td>王芳</td>
+                                <td>2026-03-18 10:00</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">4</td>
+                                <td>付款申请</td>
+                                <td class="biz-col-summary">承运商 Q1 运费结算付款审批</td>
+                                <td><span class="tag-passed">已通过</span></td>
+                                <td>刘强</td>
+                                <td>2026-03-19 15:22</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                        </tbody>
+                      </table>
+                        </div>
+                      </div>
+                      <div class="biz-task-subpanel" id="bizTaskPanelCc" data-biz-task-panel="cc" role="tabpanel">
+                        <div class="biz-table-wrap">
+                          <table class="biz-table">
+                            <thead>
+                              <tr>
+                                <th class="biz-col-num">序号</th>
+                                <th>类型</th>
+                                <th class="biz-col-summary">摘要</th>
+                                <th>状态</th>
+                                <th>发起人</th>
+                                <th>创建时间</th>
+                                <th class="biz-col-action">操作</th>
+                              </tr>
+                            </thead>
+                        <tbody>
+                              <tr>
+                                <td class="biz-col-num">1</td>
+                                <td>采购审批</td>
+                                <td class="biz-col-summary">风机备件集中采购申请（华北）</td>
+                                <td><span class="tag-cc">待阅</span></td>
+                                <td>张敏</td>
+                                <td>2026-03-24 09:20</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">2</td>
+                                <td>物流异常</td>
+                                <td class="biz-col-summary">运单 YD20260303156 路由滞留复核</td>
+                                <td><span class="tag-cc">待阅</span></td>
+                                <td>系统</td>
+                                <td>2026-03-24 11:05</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">3</td>
+                                <td>通知抄送</td>
+                                <td class="biz-col-summary">2026 年度仓库盘点工作安排</td>
+                                <td><span class="tag-cc">待阅</span></td>
+                                <td>系统</td>
+                                <td>2026-03-10 09:00</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">4</td>
+                                <td>制度抄送</td>
+                                <td class="biz-col-summary">《物资出库与处置管理办法》修订公示</td>
+                                <td><span class="tag-done">已阅</span></td>
+                                <td>综合部</td>
+                                <td>2026-03-12 11:20</td>
+                                <td class="biz-col-action"><button type="button" class="biz-process-link">办理</button></td>
+                              </tr>
+                        </tbody>
+                      </table>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="biz-pane biz-pane--assets" id="bizPaneAssets" role="tabpanel" hidden>
+                      <div class="asset-subtabs" role="tablist" aria-label="我的资产分类">
+                        <button type="button" class="asset-subtab is-active" role="tab" aria-selected="true" data-asset-tab="personal">个人资产</button>
+                        <button type="button" class="asset-subtab" role="tab" aria-selected="false" data-asset-tab="department">部门资产</button>
+                        <button type="button" class="asset-subtab" role="tab" aria-selected="false" data-asset-tab="company">公司资产</button>
+                  </div>
+
+                      <div class="asset-subpanel is-active" data-asset-panel="personal" role="tabpanel">
+                        <p class="asset-hint">个人资产：当前用户名下资产（示例数据）。</p>
+                        <div class="biz-table-wrap">
+                          <table class="biz-table">
+                            <thead>
+                              <tr>
+                                <th class="biz-col-num">序号</th>
+                                <th>资产编号</th>
+                                <th>资产名称</th>
+                                <th>型号</th>
+                                <th>存放地点</th>
+                                <th>原值</th>
+                                <th>净值</th>
+                                <th>状态</th>
+                                <th class="biz-asset-col-action">操作</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td class="biz-col-num">1</td>
+                                <td>ZC-PA-2026-001</td>
+                                <td>扭矩扳手套装</td>
+                                <td>TW-300</td>
+                                <td>华北中心仓 A-02-03</td>
+                                <td>¥2,800</td>
+                                <td>¥2,240</td>
+                                <td><span class="tag tag--ok">正常</span></td>
+                                <td class="biz-asset-col-action"><a class="biz-op-link" href="assets-personal.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">2</td>
+                                <td>ZC-PA-2026-002</td>
+                                <td>绝缘电阻测试仪</td>
+                                <td>IR-5000</td>
+                                <td>华北中心仓 B-01-02</td>
+                                <td>¥6,500</td>
+                                <td>¥5,460</td>
+                                <td><span class="tag tag--ok">正常</span></td>
+                                <td class="biz-asset-col-action"><a class="biz-op-link" href="assets-personal.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">3</td>
+                                <td>ZC-PA-2026-003</td>
+                                <td>便携式对讲机</td>
+                                <td>PT-860</td>
+                                <td>运维车辆（京A·2X9D7）</td>
+                                <td>¥1,200</td>
+                                <td>¥840</td>
+                                <td><span class="tag tag--info">待交接</span></td>
+                                <td class="biz-asset-col-action"><a class="biz-op-link" href="assets-personal.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">4</td>
+                                <td>ZC-PA-2025-018</td>
+                                <td>手持扫码终端</td>
+                                <td>SCAN-X2</td>
+                                <td>华北中心仓 C-03-01</td>
+                                <td>¥4,900</td>
+                                <td>¥3,185</td>
+                                <td><span class="tag tag--warn">闲置</span></td>
+                                <td class="biz-asset-col-action"><a class="biz-op-link" href="assets-personal.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">5</td>
+                                <td>ZC-PA-2024-041</td>
+                                <td>便携式照明灯</td>
+                                <td>LED-120</td>
+                                <td>华北中心仓 A-01-04</td>
+                                <td>¥980</td>
+                                <td>¥420</td>
+                                <td><span class="tag tag--ok">正常</span></td>
+                                <td class="biz-asset-col-action"><a class="biz-op-link" href="assets-personal.html">查看</a></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                    </div>
+                        </div>
+
+                      <div class="asset-subpanel" data-asset-panel="department" role="tabpanel">
+                        <p class="asset-hint">部门资产：本部门所有资产（示例数据）。仅部门主任、部门管理专责可见（演示：已授权）。</p>
+                        <div class="biz-table-wrap">
+                          <table class="biz-table">
+                            <thead>
+                              <tr>
+                                <th class="biz-col-num">序号</th>
+                                <th>资产编号</th>
+                                <th>资产名称</th>
+                                <th>型号</th>
+                                <th>存放地点</th>
+                                <th>保管人</th>
+                                <th>原值</th>
+                                <th>净值</th>
+                                <th>状态</th>
+                                <th class="biz-asset-col-action">操作</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td class="biz-col-num">1</td>
+                                <td>ZC-DA-2026-011</td>
+                                <td>液压拉马</td>
+                                <td>HY-10T</td>
+                                <td>华北中心仓 D-02-01</td>
+                                <td>李华</td>
+                                <td>¥12,800</td>
+                                <td>¥11,520</td>
+                                <td><span class="tag tag--ok">正常</span></td>
+                                <td class="biz-asset-col-action"><a class="biz-op-link" href="assets-department.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">2</td>
+                                <td>ZC-DA-2026-012</td>
+                                <td>电缆故障测试仪</td>
+                                <td>CF-200</td>
+                                <td>华北中心仓 B-03-02</td>
+                                <td>王芳</td>
+                                <td>¥36,000</td>
+                                <td>¥31,680</td>
+                                <td><span class="tag tag--ok">正常</span></td>
+                                <td class="biz-asset-col-action"><a class="biz-op-link" href="assets-department.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">3</td>
+                                <td>ZC-DA-2025-029</td>
+                                <td>应急发电机</td>
+                                <td>GEN-30K</td>
+                                <td>运维站点库房</td>
+                                <td>赵强</td>
+                                <td>¥58,000</td>
+                                <td>¥40,600</td>
+                                <td><span class="tag tag--warn">闲置</span></td>
+                                <td class="biz-asset-col-action"><a class="biz-op-link" href="assets-department.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">4</td>
+                                <td>ZC-DA-2024-087</td>
+                                <td>工具柜（带锁）</td>
+                                <td>CAB-1200</td>
+                                <td>华北中心仓 A-03-01</td>
+                                <td>张敏</td>
+                                <td>¥3,600</td>
+                                <td>¥1,980</td>
+                                <td><span class="tag tag--info">待交接</span></td>
+                                <td class="biz-asset-col-action"><a class="biz-op-link" href="assets-department.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">5</td>
+                                <td>ZC-DA-2023-112</td>
+                                <td>高空作业安全绳</td>
+                                <td>SAFE-20M</td>
+                                <td>运维站点库房</td>
+                                <td>刘强</td>
+                                <td>¥1,580</td>
+                                <td>¥632</td>
+                                <td><span class="tag tag--ok">正常</span></td>
+                                <td class="biz-asset-col-action"><a class="biz-op-link" href="assets-department.html">查看</a></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                    </div>
+                  </div>
+
+                      <div class="asset-subpanel" data-asset-panel="company" role="tabpanel">
+                        <p class="asset-hint">公司资产：全公司资产（示例数据）。仅领导、财务部、经营发展中心可见（演示：已授权）。</p>
+                        <div class="biz-table-wrap">
+                          <table class="biz-table">
+                            <thead>
+                              <tr>
+                                <th class="biz-col-num">序号</th>
+                                <th>资产编号</th>
+                                <th>资产名称</th>
+                                <th>型号</th>
+                                <th>存放地点</th>
+                                <th>所属区域</th>
+                                <th>原值</th>
+                                <th>净值</th>
+                                <th>状态</th>
+                                <th class="biz-asset-col-action">操作</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td class="biz-col-num">1</td>
+                                <td>ZC-CA-2026-101</td>
+                                <td>仓储叉车</td>
+                                <td>FC-3.0T</td>
+                                <td>华东中心仓</td>
+                                <td>华东区域</td>
+                                <td>¥268,000</td>
+                                <td>¥254,600</td>
+                                <td><span class="tag tag--ok">正常</span></td>
+                                <td class="biz-asset-col-action"><a class="biz-op-link" href="assets-company.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">2</td>
+                                <td>ZC-CA-2025-233</td>
+                                <td>仓库监控主机</td>
+                                <td>NVR-64</td>
+                                <td>华北中心仓</td>
+                                <td>华北区域</td>
+                                <td>¥42,000</td>
+                                <td>¥33,600</td>
+                                <td><span class="tag tag--ok">正常</span></td>
+                                <td class="biz-asset-col-action"><a class="biz-op-link" href="assets-company.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">3</td>
+                                <td>ZC-CA-2024-519</td>
+                                <td>备件货架系统</td>
+                                <td>RACK-H12</td>
+                                <td>西北中心仓</td>
+                                <td>西北区域</td>
+                                <td>¥118,000</td>
+                                <td>¥82,600</td>
+                                <td><span class="tag tag--warn">闲置</span></td>
+                                <td class="biz-asset-col-action"><a class="biz-op-link" href="assets-company.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">4</td>
+                                <td>ZC-CA-2023-804</td>
+                                <td>移动盘点终端</td>
+                                <td>INV-M3</td>
+                                <td>华南中心仓</td>
+                                <td>华南区域</td>
+                                <td>¥9,800</td>
+                                <td>¥3,920</td>
+                                <td><span class="tag tag--info">待交接</span></td>
+                                <td class="biz-asset-col-action"><a class="biz-op-link" href="assets-company.html">查看</a></td>
+                              </tr>
+                              <tr>
+                                <td class="biz-col-num">5</td>
+                                <td>ZC-CA-2022-911</td>
+                                <td>应急物资柜</td>
+                                <td>EMG-01</td>
+                                <td>华中中心仓</td>
+                                <td>华中区域</td>
+                                <td>¥6,200</td>
+                                <td>¥1,860</td>
+                                <td><span class="tag tag--ok">正常</span></td>
+                                <td class="biz-asset-col-action"><a class="biz-op-link" href="assets-company.html">查看</a></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                  </div>
+              </div>
+                      </div>
+                    <div class="biz-pane biz-pane--notice" id="bizPaneNotice" role="tabpanel" hidden>
+                      <div class="biz-notice-subtabs" role="tablist" aria-label="公示信息分类">
+                        <button type="button" class="biz-notice-subtab is-active" role="tab" aria-selected="true" data-notice-tab="bid">招标公示</button>
+                        <button type="button" class="biz-notice-subtab" role="tab" aria-selected="false" data-notice-tab="idle">闲置物资</button>
+                        <button type="button" class="biz-notice-subtab" role="tab" aria-selected="false" data-notice-tab="upgrade">升级改造</button>
+                    </div>
+                      <div class="biz-notice-subpanel is-active" data-notice-panel="bid" role="tabpanel">
+                        <ul class="biz-notice-link-list">
+                          <li><a href="notice-bid-fixed.html">2026 年度风机备件集中采购招标公告（第一批）</a><span class="item-date">2026-03-18</span></li>
+                          <li><a href="notice-bid-fixed.html">海上风电项目电缆标段公开招标资格预审</a><span class="item-date">2026-03-17</span></li>
+                          <li><a href="notice-bid-fixed.html">仓储自动化设备维保服务询价公示</a><span class="item-date">2026-03-16</span></li>
+                          <li><a href="notice-bid-fixed.html">运输承运商年度框架协议招标结果公示</a><span class="item-date">2026-03-15</span></li>
+                        </ul>
+                          </div>
+                      <div class="biz-notice-subpanel" data-notice-panel="idle" role="tabpanel">
+                        <ul class="biz-notice-link-list">
+                          <li><a href="notice-prototype-list.html?scene=nonbid">华北区域闲置齿轮箱处置公示（编号 HX-2026-03）</a><span class="item-date">2026-03-18</span></li>
+                          <li><a href="idle-materials.html">华东备件库闲置电气元件调剂清单</a><span class="item-date">2026-03-17</span></li>
+                          <li><a href="idle-materials.html">退役叶片资源化利用合作方征集</a><span class="item-date">2026-03-16</span></li>
+                          <li><a href="idle-materials.html">闲置吊车及工器具内部调剂公告</a><span class="item-date">2026-03-14</span></li>
+                        </ul>
+                        </div>
+                      <div class="biz-notice-subpanel" data-notice-panel="upgrade" role="tabpanel">
+                        <ul class="biz-notice-link-list">
+                          <li><a href="notice-hub.html?tab=nonbid">WMS 与承运系统接口升级改造计划</a><span class="item-date">2026-03-18</span></li>
+                          <li><a href="notice-hub.html?tab=nonbid">条码与批次追溯功能上线试运行说明</a><span class="item-date">2026-03-17</span></li>
+                          <li><a href="cockpit.html">驾驶舱指标口径调整通知</a><span class="item-date">2026-03-15</span></li>
+                          <li><a href="notice-hub.html?tab=nonbid">单点登录与权限模型优化公告</a><span class="item-date">2026-03-12</span></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="panel module-hub" aria-labelledby="core-title">
+                  <div class="panel-head">
+                    <h2 class="panel-title panel-title--bar" id="core-title">核心功能模块</h2>
+              </div>
+              <div class="panel-body">
+                <div class="module-grid">
+                      <div class="module-card">
+                    <h4>物资采购</h4>
+                    <div class="module-links">
+                          <a href="procurement-application.html">采购申请</a>
+                          <a href="purchase-management-hub.html?tab=p6">采购计划</a>
+                          <a href="material-procurement-hub.html?tab=m3">订单管理</a>
+                          <a href="material-procurement-hub.html?tab=m5">供应商管理</a>
+                    </div>
+                      </div>
+                      <div class="module-card">
+                    <h4>物流管理</h4>
+                    <div class="module-links">
+                          <a href="carrier-management.html">承运商管理</a>
+                          <a href="logistics-tracking.html">物流跟踪</a>
+                          <a href="logistics-payment.html">物流付款</a>
+                          <a href="logistics-contract.html">物流合同</a>
+                    </div>
+                      </div>
+                      <div class="module-card">
+                    <h4>仓储管理</h4>
+                    <div class="module-links">
+                          <a href="slot-management.html">货位管理</a>
+                          <a href="receipt-inbound.html">收货入库</a>
+                          <a href="inventory-management.html">库存管理</a>
+                          <a href="idle-materials.html">闲置物资</a>
+                    </div>
+                      </div>
+                      <div class="module-card">
+                        <h4>物资出库与处置</h4>
+                    <div class="module-links">
+                          <a href="retire-scrap-application.html">退役申请</a>
+                          <a href="big-small-reuse.html">以大代小 循环再利用</a>
+                          <a href="goods-transfer-out.html" class="module-link-with-icon" title="货物转出">
+                            <svg class="transfer-icon" viewBox="0 0 16 16" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round">
+                              <path d="M11 12H2m9 0l-2.5 2.5M11 12L8.5 9.5M5 4h9M5 4l2.5-2.5M5 4l2.5 2.5"/>
+                            </svg>
+                            货物转出
+                          </a>
+                    </div>
+                      </div>
+                      <div class="module-card">
+                    <h4>综合业务管理</h4>
+                        <div class="module-links module-links--rows">
+                          <div class="module-links-row">
+                            <a href="integrated-business-hub.html?tab=fin">财务管理</a>
+                            <a href="integrated-business-hub.html?tab=rep">维修管理</a>
+                            <a href="integrated-business-hub.html?tab=adj">调剂管理</a>
+                    </div>
+                          <div class="module-links-row">
+                            <a href="integrated-business-hub.html?tab=emg">应急物资管理</a>
+                            <a href="biz-standard-list.html">标准规范</a>
+                            <a href="integrated-business-hub.html?tab=flow">业务流程设计</a>
+                          </div>
+                          <div class="module-links-row">
+                            <a href="integrated-business-hub.html?tab=claim">物资理赔</a>
+                            <a href="integrated-business-hub.html?tab=dom">国产化替代</a>
+                            <a href="integrated-business-hub.html?tab=exp">专家管理</a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="module-card">
+                    <h4>数据管理</h4>
+                        <div class="module-links module-links--rows">
+                          <div class="module-links-row">
+                            <a href="base-data-material-ledger.html">基础数据</a>
+                            <a href="base-data-material-ledger.html">供应商数据</a>
+                            <a href="base-data-material-ledger.html">产品目录</a>
+                            <a href="base-data-material-ledger.html">编码管理</a>
+                    </div>
+                          <div class="module-links-row">
+                            <a href="base-data-material-ledger.html">数据模型</a>
+                            <a href="cockpit.html">决策分析支持</a>
+                    </div>
+                    </div>
+                      </div>
+                </div>
+              </div>
+            </section>
+              </div>
+
+              <div class="stack-col stack-col--right">
+                <section class="panel notice-roll-panel" aria-labelledby="notice-roll-title">
+                  <div class="panel-head">
+                    <h2 class="panel-title" id="notice-roll-title">通知公告</h2>
+                  </div>
+                  <div class="panel-body">
+                    <div class="notice-marquee" id="noticeMarquee">
+                      <div class="notice-marquee-track">
+                        <ul class="notice-list">
+                          <li>
+                            <span class="notice-tag notice-tag--new">最新</span>
+                            <span>关于加强物资到货验收的通知</span>
+                          </li>
+                          <li>
+                            <span class="notice-tag notice-tag--result">结果</span>
+                            <span>第二季度集中采购评标结果公示</span>
+                          </li>
+                          <li>
+                            <span class="notice-tag notice-tag--arrival">到货</span>
+                            <span>华东区域备件集中到货计划</span>
+                          </li>
+                          <li>
+                            <span class="notice-tag notice-tag--forecast">预测</span>
+                            <span>三季度物资需求预测填报说明</span>
+                          </li>
+                          <li>
+                            <span class="notice-tag notice-tag--new">最新</span>
+                            <span>系统维护窗口：本周日凌晨 2:00–4:00</span>
+                          </li>
+                          <li>
+                            <span class="notice-tag notice-tag--arrival">到货</span>
+                            <span>西北区域风机备件专列到港预告</span>
+                          </li>
+                        </ul>
+                        <ul class="notice-list" aria-hidden="true">
+                          <li>
+                            <span class="notice-tag notice-tag--new">最新</span>
+                            <span>关于加强物资到货验收的通知</span>
+                          </li>
+                          <li>
+                            <span class="notice-tag notice-tag--result">结果</span>
+                            <span>第二季度集中采购评标结果公示</span>
+                          </li>
+                          <li>
+                            <span class="notice-tag notice-tag--arrival">到货</span>
+                            <span>华东区域备件集中到货计划</span>
+                          </li>
+                          <li>
+                            <span class="notice-tag notice-tag--forecast">预测</span>
+                            <span>三季度物资需求预测填报说明</span>
+                          </li>
+                          <li>
+                            <span class="notice-tag notice-tag--new">最新</span>
+                            <span>系统维护窗口：本周日凌晨 2:00–4:00</span>
+                          </li>
+                          <li>
+                            <span class="notice-tag notice-tag--arrival">到货</span>
+                            <span>西北区域风机备件专列到港预告</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="inv-panel" aria-labelledby="side-title">
+                  <h2 class="inv-outside-title" id="side-title">库存与仓库</h2>
+                  <div class="inv-card">
+                    <div class="inv-block">
+                      <h3 class="inv-subhead">库存动态变化（最近12个月）</h3>
+                      <div class="inv-chart-wrap" aria-hidden="true">
+                        <svg class="inv-area-svg" viewBox="0 0 400 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                          <defs>
+                            <linearGradient id="invAreaFill" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stop-color="#91caff" stop-opacity="0.45" />
+                              <stop offset="50%" stop-color="#bae0ff" stop-opacity="0.2" />
+                              <stop offset="100%" stop-color="#e6f4ff" stop-opacity="0.04" />
+                            </linearGradient>
+                          </defs>
+                          <g stroke="#d6e4ff" stroke-width="0.6" opacity="0.95">
+                            <line x1="0" y1="20" x2="400" y2="20" />
+                            <line x1="0" y1="40" x2="400" y2="40" />
+                            <line x1="0" y1="60" x2="400" y2="60" />
+                            <line x1="0" y1="80" x2="400" y2="80" />
+                          </g>
+                          <path
+                            fill="url(#invAreaFill)"
+                            d="M0,82 C38,76 72,88 112,70 C152,52 188,68 232,54 C268,44 302,58 342,42 C362,34 382,38 400,30 L400,100 L0,100 Z"
+                          />
+                          <path
+                            fill="none"
+                            stroke="#69b1ff"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M0,82 C38,76 72,88 112,70 C152,52 188,68 232,54 C268,44 302,58 342,42 C362,34 382,38 400,30"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="inv-divider" aria-hidden="true"></div>
+                    <div class="inv-block">
+                      <h3 class="inv-subhead">仓库一览</h3>
+                      <table class="inv-wh-table">
+                        <thead>
+                          <tr>
+                            <th style="width:12%">仓库名称</th>
+                            <th style="width:10%">库位</th>
+                            <th style="width:40%">区域公司</th>
+                            <th style="width:10%">场站</th>
+                            <th style="width:14%">仓库编码</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>222</td>
+                            <td>222</td>
+                            <td class="col-company">龙源（北京）新能源工程设计研究院有限公司</td>
+                            <td>222</td>
+                            <td>CK00001</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </div>
+
+            <div class="bottom-cards-grid">
+              <section class="project-metrics" aria-labelledby="pm-title">
+                <div class="card">
+                  <div class="card-header" id="pm-title">项目指标</div>
+                  <div class="indicators-grid">
+                    <div class="indicator-card">
+                      <span class="indicator-number">452</span>
+                      <span class="indicator-label">总项目数</span>
+                      <span class="indicator-trend indicator-trend--up">↑ +12% 较去年</span>
+                    </div>
+                    <div class="indicator-card">
+                      <span class="indicator-number">398</span>
+                      <span class="indicator-label">已完成</span>
+                      <span class="indicator-trend indicator-trend--blue">完成率 88%</span>
+                    </div>
+                    <div class="indicator-card">
+                      <span class="indicator-number">54</span>
+                      <span class="indicator-label">未完成</span>
+                      <span class="indicator-trend indicator-trend--down">↓ -8% 较去年</span>
+                    </div>
+                  </div>
+                  <div class="action-buttons">
+                    <a class="action-link" href="receipt-inbound.html">收货入库</a>
+                    <a class="action-link" href="logistics-tracking.html">物流跟踪</a>
+                  </div>
+                </div>
+              </section>
+
+              <section class="material-structure" aria-labelledby="ms-title">
+                <div class="card">
+                  <div class="card-header" id="ms-title">物资分类（库存结构）</div>
+                  <div class="material-body">
+                  <div class="progress-item">
+                    <div class="progress-label"><span>主机部件</span><span>72%</span></div>
+                      <div class="progress-bar"><span style="width:72%"></span></div>
+                  </div>
+                  <div class="progress-item">
+                    <div class="progress-label"><span>电气备件</span><span>58%</span></div>
+                      <div class="progress-bar"><span style="width:58%"></span></div>
+                  </div>
+                  <div class="progress-item">
+                    <div class="progress-label"><span>通用耗材</span><span>41%</span></div>
+                      <div class="progress-bar"><span style="width:41%"></span></div>
+                  </div>
+                    <p class="more-link">分类口径与「库存管理/物资台账」筛选一致</p>
+                  </div>
+                </div>
+              </section>
+
+              <section class="waybill-status" aria-labelledby="wb-title">
+                <div class="card">
+                  <div class="card-header" id="wb-title">运单状态分布</div>
+                  <div class="waybill-body">
+                    <p class="status-anno">状态枚举与「物流跟踪」列表一致</p>
+                  <div class="status-combo">
+                      <div class="status-bars">
+                        <div class="status-row">
+                          <span>异常</span>
+                          <div class="progress-bar"><span style="width:33.3%"></span></div>
+                          <span>33.3%</span>
+                    </div>
+                        <div class="status-row">
+                          <span>已签收</span>
+                          <div class="progress-bar"><span style="width:33.3%"></span></div>
+                          <span>33.3%</span>
+                      </div>
+                        <div class="status-row">
+                          <span>在途</span>
+                          <div class="progress-bar"><span style="width:33.3%"></span></div>
+                          <span>33.3%</span>
+                        </div>
+                      </div>
+                      <div class="donut-wrap" aria-hidden="true">
+                        <div class="donut"></div>
+                      </div>
+                      <div class="legend">
+                        <div class="legend-row">
+                          <span class="legend-dot" style="background:#1677ff"></span>
+                          <span>在途 33.3%</span>
+                        </div>
+                        <div class="legend-row">
+                          <span class="legend-dot" style="background:#52c41a"></span>
+                          <span>已签收 33.3%</span>
+                        </div>
+                        <div class="legend-row">
+                          <span class="legend-dot" style="background:#ff4d4f"></span>
+                          <span>异常 33.3%</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <footer class="portal-footer">Copyright © 2026 国家能源集团 · 龙源电力 · 新能源物资供应链管理系统</footer>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var box = document.getElementById("noticeMarquee");
+      if (!box) return;
+      box.addEventListener("mouseenter", function () {
+        box.classList.add("is-paused");
+      });
+      box.addEventListener("mouseleave", function () {
+        box.classList.remove("is-paused");
+      });
+    })();
+  </script>
+  <script>
+    (function () {
+      var root = document.querySelector(".biz-panel");
+      if (!root) return;
+      var tabs = root.querySelectorAll("[data-biz-tab]");
+      var filters = root.querySelectorAll("[data-biz-filter]");
+      var paneTasks = root.querySelector("#bizPaneTasks");
+      var paneAssets = root.querySelector("#bizPaneAssets");
+      var paneNotice = root.querySelector("#bizPaneNotice");
+      var filterRow = root.querySelector("#bizFilterRow");
+      var noticeSubtabs = root.querySelectorAll("[data-notice-tab]");
+      var noticePanels = root.querySelectorAll("[data-notice-panel]");
+      var taskPanels = root.querySelectorAll("[data-biz-task-panel]");
+      var assetSubtabs = root.querySelectorAll("[data-asset-tab]");
+      var assetPanels = root.querySelectorAll("[data-asset-panel]");
+
+      function applyTaskFilter(filterKey) {
+        var fk = filterKey || "todo";
+        taskPanels.forEach(function (p) {
+          if (p.getAttribute("data-biz-task-panel") === fk) {
+            p.classList.add("is-active");
+          } else {
+            p.classList.remove("is-active");
+          }
+        });
+      }
+
+      function showTasksPaneWithFilter(filterKey) {
+        var fk = filterKey || "todo";
+        if (filterRow) filterRow.hidden = false;
+        paneTasks.hidden = false;
+        if (paneAssets) paneAssets.hidden = true;
+        paneNotice.hidden = true;
+        paneTasks.classList.add("is-active");
+        if (paneAssets) paneAssets.classList.remove("is-active");
+        paneNotice.classList.remove("is-active");
+        filters.forEach(function (f) {
+          f.classList.remove("is-active");
+        });
+        var pill = root.querySelector('[data-biz-filter="' + fk + '"]');
+        if (pill) pill.classList.add("is-active");
+        applyTaskFilter(fk);
+      }
+
+      function showAssetsPane() {
+        if (filterRow) filterRow.hidden = true;
+        paneTasks.hidden = true;
+        if (paneAssets) paneAssets.hidden = false;
+        paneNotice.hidden = true;
+        paneTasks.classList.remove("is-active");
+        if (paneAssets) paneAssets.classList.add("is-active");
+        paneNotice.classList.remove("is-active");
+      }
+
+      function showNoticePane() {
+        if (filterRow) filterRow.hidden = true;
+        paneTasks.hidden = true;
+        if (paneAssets) paneAssets.hidden = true;
+        paneNotice.hidden = false;
+        paneTasks.classList.remove("is-active");
+        if (paneAssets) paneAssets.classList.remove("is-active");
+        paneNotice.classList.add("is-active");
+      }
+
+      function syncBizTasksFromHash() {
+        var m = /^#bizTasks=(initiated|todo|done|cc)$/.exec(location.hash);
+        if (!m) return;
+        tabs.forEach(function (t) {
+          t.classList.remove("is-active");
+          t.setAttribute("aria-selected", "false");
+        });
+        var tasksBtn = root.querySelector('[data-biz-tab="tasks"]');
+        if (tasksBtn) {
+          tasksBtn.classList.add("is-active");
+          tasksBtn.setAttribute("aria-selected", "true");
+        }
+        showTasksPaneWithFilter(m[1]);
+      }
+
+      tabs.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          tabs.forEach(function (t) {
+            t.classList.remove("is-active");
+            t.setAttribute("aria-selected", "false");
+          });
+          btn.classList.add("is-active");
+          btn.setAttribute("aria-selected", "true");
+          var key = btn.getAttribute("data-biz-tab");
+          if (key === "tasks") {
+            var activeF = root.querySelector(".biz-filter.is-active");
+            showTasksPaneWithFilter(activeF ? activeF.getAttribute("data-biz-filter") : "todo");
+          } else if (key === "assets") {
+            showAssetsPane();
+          } else {
+            showNoticePane();
+          }
+        });
+      });
+
+      noticeSubtabs.forEach(function (sub) {
+        sub.addEventListener("click", function () {
+          var nk = sub.getAttribute("data-notice-tab");
+          noticeSubtabs.forEach(function (t) {
+            t.classList.remove("is-active");
+            t.setAttribute("aria-selected", "false");
+          });
+          sub.classList.add("is-active");
+          sub.setAttribute("aria-selected", "true");
+          noticePanels.forEach(function (p) {
+            if (p.getAttribute("data-notice-panel") === nk) {
+              p.classList.add("is-active");
+            } else {
+              p.classList.remove("is-active");
+            }
+          });
+        });
+      });
+
+      assetSubtabs.forEach(function (sub) {
+        sub.addEventListener("click", function (e) {
+          e.preventDefault();
+          var ak = sub.getAttribute("data-asset-tab");
+          assetSubtabs.forEach(function (t) {
+            t.classList.remove("is-active");
+            t.setAttribute("aria-selected", "false");
+          });
+          sub.classList.add("is-active");
+          sub.setAttribute("aria-selected", "true");
+          assetPanels.forEach(function (p) {
+            if (p.getAttribute("data-asset-panel") === ak) {
+              p.classList.add("is-active");
+            } else {
+              p.classList.remove("is-active");
+            }
+        });
+      });
+      });
+
+      // 委托在筛选行上捕获点击，避免点到文字节点时未命中 button 监听器、事件冒泡到 .main-scroll 触发其它逻辑
+      if (filterRow) {
+        filterRow.addEventListener(
+          "click",
+          function (e) {
+            var t = e.target;
+            if (t && t.nodeType !== 1) t = t.parentElement;
+            if (!t || !t.closest) return;
+            var btn = t.closest("[data-biz-filter]");
+            if (!btn || !filterRow.contains(btn)) return;
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            var fk = btn.getAttribute("data-biz-filter");
+            filters.forEach(function (f) {
+              f.classList.remove("is-active");
+            });
+            btn.classList.add("is-active");
+            applyTaskFilter(fk);
+          },
+          true
+        );
+      }
+
+      window.addEventListener("hashchange", syncBizTasksFromHash);
+      syncBizTasksFromHash();
+    })();
+  </script>
+</body>
+</html>

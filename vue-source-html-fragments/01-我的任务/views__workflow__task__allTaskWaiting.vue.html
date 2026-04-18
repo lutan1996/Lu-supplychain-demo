@@ -1,0 +1,129 @@
+<!-- 来源: src/views/workflow/task/allTaskWaiting.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <div class="mb-[10px]">
+      <el-card shadow="hover" class="text-center">
+        <el-radio-group>
+          <el-radio-button value="waiting">待办任务</el-radio-button>
+          <el-radio-button value="finish">已办任务</el-radio-button>
+        </el-radio-group>
+      </el-card>
+    </div>
+    <transition>
+      <div class="mb-[10px]">
+        <el-card shadow="hover">
+          <el-form>
+            <el-form-item label="任务名称" prop="name">
+              <el-input placeholder="请输入任务名称" />
+            </el-form-item>
+            <el-form-item label="流程定义名称" label-width="100" prop="processDefinitionName">
+              <el-input placeholder="请输入流程定义名称" />
+            </el-form-item>
+            <el-form-item label="流程定义KEY" label-width="100" prop="processDefinitionKey">
+              <el-input placeholder="请输入流程定义KEY" />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="Search">搜索</el-button>
+              <el-button icon="Refresh">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </div>
+    </transition>
+    <el-card shadow="hover">
+      <template>
+        <el-row class="mb8">
+          <el-col>
+            <el-button type="primary" plain icon="Edit">修改办理人</el-button>
+          </el-col>
+          <right-toolbar></right-toolbar>
+        </el-row>
+      </template>
+
+      <el-table border>
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
+        <el-table-column align="center" label="流程定义名称">
+          <template="scope">
+            <span>（动态文本）v（动态文本）.0</span>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="processDefinitionKey" label="流程定义KEY"></el-table-column>
+        <el-table-column align="center" prop="name" label="任务名称"></el-table-column>
+        <el-table-column align="center" prop="assigneeName" label="办理人">
+          <template="scope">
+            <template>
+              <el-tag type="success">
+                （动态文本）
+              </el-tag>
+            </template>
+            <template>
+              <el-tag type="success">
+                （动态文本）
+              </el-tag>
+            </template>
+          </template>
+          <template="scope">
+            <el-tag type="success">
+              （动态文本）
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="流程状态" min-width="70">
+          <template="scope">
+            <dict-tag></dict-tag>
+            <el-tag type="success">已完成</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="createTime" label="创建时间" width="160"></el-table-column>
+        <el-table-column align="center" prop="startTime" label="创建时间" width="160"></el-table-column>
+        <el-table-column label="操作" align="center">
+          <template="scope">
+            <el-row class="mb8">
+              <el-col>
+                <el-button link type="primary" size="small" icon="View">查看</el-button>
+              </el-col>
+              <el-col>
+                <el-button link type="primary" size="small" icon="Document">流程变量</el-button>
+              </el-col>
+            </el-row>
+            <el-row class="mb8">
+              <el-col>
+                <el-button link type="primary" size="small" icon="Remove">减签</el-button>
+              </el-col>
+              <el-col>
+                <el-button link type="primary" size="small" icon="CirclePlus">加签</el-button>
+              </el-col>
+            </el-row>
+          </template>
+        </el-table-column>
+      </el-table>
+      <pagination
+      />
+    </el-card>
+    <!-- 加签组件 -->
+    <multiInstanceUser />
+    <!-- 选人组件 -->
+    <UserSelect></UserSelect>
+    <!-- 流程变量开始 -->
+    <el-dialog draggable title="流程变量" width="60%">
+      <el-card class="box-card">
+        <template>
+          <div class="clearfix">
+            <span
+              >流程定义名称：<el-tag>（动态文本）</el-tag></span
+            >
+          </div>
+        </template>
+        <div>
+          <el-form label-width="150px">
+            <el-form-item>
+              （动态文本）
+            </el-form-item>
+          </el-form>
+        </div>
+      </el-card>
+    </el-dialog>
+    <!-- 流程变量结束 -->
+  </div>

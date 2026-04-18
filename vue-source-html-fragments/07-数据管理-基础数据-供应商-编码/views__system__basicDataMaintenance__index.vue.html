@@ -1,0 +1,183 @@
+<!-- 来源: src/views/system/basicDataMaintenance/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <transition>
+      <div class="mb-[10px]">
+        <el-card shadow="hover">
+          <el-form>
+            <el-form-item label="长协编号" prop="longTermAgreementNumber">
+              <el-input placeholder="请输入长协编号" clearable />
+            </el-form-item>
+            <el-form-item label="项目名称" prop="projectName">
+              <el-input placeholder="请输入项目名称" clearable />
+            </el-form-item>
+            <el-form-item label="采购编号" prop="purchaseNumber">
+              <el-input placeholder="请输入采购编号" clearable />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="Search">搜索</el-button>
+              <el-button icon="Refresh">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </div>
+    </transition>
+
+    <el-card shadow="never">
+      <template>
+        <el-row class="mb8">
+          <el-col>
+            <el-button type="primary" plain icon="Plus">新增</el-button>
+          </el-col>
+          <el-col>
+            <el-button type="success" plain icon="Edit"
+              >修改</el-button
+            >
+          </el-col>
+          <el-col>
+            <el-button
+              type="danger"
+              plain
+              icon="Delete"
+              >删除</el-button
+            >
+          </el-col>
+          <el-col>
+            <el-button type="warning" plain icon="Download">导出</el-button>
+          </el-col>
+          <el-col>
+            <el-button type="primary" plain icon="Download">导入</el-button>
+          </el-col>
+          <right-toolbar></right-toolbar>
+        </el-row>
+      </template>
+
+      <el-table>
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="长协编号" align="center" prop="longTermAgreementNumber" />
+        <el-table-column label="项目名称" align="center" prop="projectName" />
+        <el-table-column label="采购编号" align="center" prop="purchaseNumber" />
+        <el-table-column label="首选供应商" align="center" prop="preferredSupplier" />
+        <el-table-column label="备选供应商" align="center" prop="alternativeSuppliers" />
+        <el-table-column label="有效期" align="center" prop="periodOfValidity" width="180" />
+        <el-table-column label="采购类别" align="center" prop="purchasingCategories" />
+        <el-table-column label="是否备品备件" align="center" prop="isSpareParts" />
+        <el-table-column label="采购预算金额" align="center" prop="purchaseBudgetAmount" />
+        <el-table-column label="累计已使用金额" align="center" prop="accumulatedAmountUsed" />
+        <el-table-column label="申请在途金额" align="center" prop="applyForInTransitAmount" />
+        <el-table-column label="申请预算金额累计" align="center" prop="accumulatedBudgetAmountAppliedFor" />
+        <el-table-column label="长协采购方式-询价" align="center" prop="longTermInquiry" />
+        <el-table-column label="长协采购方式-招标" align="center" prop="longTermBidding" />
+        <el-table-column label="区域公司" align="center" prop="regionalCompany" />
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template="scope">
+            <el-tooltip content="修改" placement="top">
+              <el-button
+                link
+                type="primary"
+                icon="Edit"
+              ></el-button>
+            </el-tooltip>
+            <el-tooltip content="删除" placement="top">
+              <el-button
+                link
+                type="primary"
+                icon="Delete"
+              ></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+      <pagination />
+    </el-card>
+    <!-- 添加或修改基础数据维护对话框 -->
+    <el-dialog width="800px" append-to-body>
+      <el-form label-width="auto">
+        <el-form-item label="长协编号" prop="longTermAgreementNumber">
+          <el-input placeholder="请输入长协编号" />
+        </el-form-item>
+        <el-form-item label="项目名称" prop="projectName">
+          <el-input placeholder="请输入项目名称" />
+        </el-form-item>
+        <el-form-item label="采购编号" prop="purchaseNumber">
+          <el-input placeholder="请输入采购编号" />
+        </el-form-item>
+        <el-form-item label="首选供应商" prop="preferredSupplier">
+          <el-input placeholder="请输入首选供应商" />
+        </el-form-item>
+        <el-form-item label="备选供应商" prop="alternativeSuppliers">
+          <el-input placeholder="请输入备选供应商" />
+        </el-form-item>
+        <el-form-item label="有效期" prop="periodOfValidity">
+          <el-date-picker clearable type="datetime" value-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择有效期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="采购类别" prop="purchasingCategories">
+          <el-input placeholder="请输入采购类别" />
+        </el-form-item>
+        <el-form-item label="是否备品备件" prop="isSpareParts">
+          <el-radio-group>
+            <el-radio label="是"></el-radio>
+            <el-radio label="否"></el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="采购预算金额" prop="purchaseBudgetAmount">
+          <el-input type="number" placeholder="请输入采购预算金额" />
+        </el-form-item>
+        <el-form-item label="累计已使用金额" prop="accumulatedAmountUsed">
+          <el-input type="number" placeholder="请输入累计已使用金额" />
+        </el-form-item>
+        <el-form-item label="申请在途金额" prop="applyForInTransitAmount">
+          <el-input type="number" placeholder="请输入申请在途金额" />
+        </el-form-item>
+        <el-form-item label="申请预算金额累计" prop="accumulatedBudgetAmountAppliedFor">
+          <el-input type="number" placeholder="请输入申请预算金额累计" />
+        </el-form-item>
+        <el-form-item label="长协采购方式-询价" prop="longTermInquiry">
+          <el-input placeholder="请输入长协采购方式-询价" />
+        </el-form-item>
+        <el-form-item label="长协采购方式-招标" prop="longTermBidding">
+          <el-input placeholder="请输入长协采购方式-招标" />
+        </el-form-item>
+        <el-form-item label="区域公司" prop="regionalCompany">
+          <el-input placeholder="请输入区域公司" />
+        </el-form-item>
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 导入对话框 -->
+    <el-dialog width="400px" append-to-body>
+      <el-upload
+        accept=".xlsx, .xls"
+        drag
+      >
+        <el-icon class="el-icon--upload">
+          <i-ep-upload-filled />
+        </el-icon>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <template>
+          <div class="text-center el-upload__tip">
+            <!-- <p class="el-upload__tip"></p> -->
+            <p style="color: red">仅允许导入xlsx、xls格式文件</p>
+            <p>
+              <el-link type="primary" style="font-size: 12px; vertical-align: baseline">
+                下载表格模板
+              </el-link>
+            </p>
+          </div>
+        </template>
+      </el-upload>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>

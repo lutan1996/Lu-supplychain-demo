@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>物流合同 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/logistics-contract.css" />
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="5" width="14" height="17" rx="1.5"/><path d="M8 9h8M8 12.5h8M8 16h6"/></svg></span>
+<span class="nav-label">我的任务</span>
+        </div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 10.5L12 3l9 7.5V20a1.5 1.5 0 0 1-1.5 1.5H15v-7H9v7H4.5A1.5 1.5 0 0 1 3 20v-9.5z"/></svg></span>
+          <span class="nav-label">首页</span>
+        </a>
+        <a class="nav-item" href="cockpit.html" data-nav="cockpit" title="驾驶舱">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1"/></svg></span>
+          <span class="nav-label">驾驶舱</span>
+        </a>
+        <div class="nav-item" title="采购管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6h14l-1.2 9H7.2L6 6z"/><path d="M6 6V5a1 1 0 0 1 1-1h2"/><circle cx="9" cy="20" r="1.25"/><circle cx="17" cy="20" r="1.25"/></svg></span>
+          <span class="nav-label">采购管理</span>
+        </div>
+        <div class="nav-item nav-item--module-active" title="物流管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1 16h11.5V8.5H5V7h11.5v5h2.5l3.5 4.5"/><circle cx="6.5" cy="17.5" r="1.75"/><circle cx="16.5" cy="17.5" r="1.75"/></svg></span>
+          <span class="nav-label">物流管理</span>
+        </div>
+        <a class="nav-item" href="warehouse.html" title="仓储管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 21h18V10.5L12 6 3 10.5V21z"/><path d="M9 21v-7h6v7"/></svg></span>
+          <span class="nav-label">仓储管理</span>
+        </a>
+        <div class="nav-item" title="物资采购">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6a2 2 0 0 1 2-2h6v16H6a2 2 0 0 1-2-2V6z"/><path d="M20 6a2 2 0 0 0-2-2h-6v16h6a2 2 0 0 0 2-2V6z"/><path d="M12 4v16"/><path d="M7 9h3M7 12.5h3M7 16h2M14 9h3M14 12.5h3M14 16h2"/></svg></span>
+          <span class="nav-label">物资采购</span>
+        </div>
+        <div class="nav-item" title="物资出库与处置">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 12a9 9 0 0 0-9-9 9.5 9.5 0 0 0-7 3"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.5 9.5 0 0 0 7-3"/><path d="M16 16h5v5"/></svg></span>
+          <span class="nav-label">物资出库与处置</span>
+        </div>
+        <div class="nav-item" title="绩效考核">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="3" width="12" height="18" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h5"/></svg></span>
+          <span class="nav-label">绩效考核</span>
+        </div>
+        <div class="nav-item" title="公告管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h12a2 2 0 0 1 2 2v10H6a2 2 0 0 0-2 2v2"/><path d="M4 6V5a1 1 0 0 1 1-1h2"/><path d="M8 10h8M8 14h6"/></svg></span>
+          <span class="nav-label">公告管理</span>
+        </div>
+        <div class="nav-item" title="综合业务管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg></span>
+          <span class="nav-label">综合业务管理</span>
+        </div>
+        <div class="nav-item" title="数据管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="5" rx="9" ry="2.5"/><path d="M3 5v6c0 1.6 4 3 9 3s9-1.4 9-3V5"/><path d="M3 11v6c0 1.6 4 3 9 3s9-1.4 9-3V11"/><path d="M3 17v2c0 1.6 4 3 9 3s9-1.4 9-3v-2"/></svg></span>
+          <span class="nav-label">数据管理</span>
+        </div>
+        <div class="nav-item" title="开发工具">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 18l6-6-6-6"/><path d="M8 6 2 12l6 6"/></svg></span>
+          <span class="nav-label">开发工具</span>
+        </div>
+        <div class="nav-item" title="设置">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3"/><path d="M12 1v2.5M12 20.5V23M4.2 4.2l1.8 1.8M18 18l1.8 1.8M1 12h2.5M20.5 12H23M4.2 19.8 6 18M18 6l1.8-1.8"/></svg></span>
+          <span class="nav-label">设置</span>
+        </div>
+        <div class="nav-item" title="系统管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="9" r="3.5"/><path d="M5 20.5v-1a7 7 0 0 1 14 0v1"/></svg></span>
+          <span class="nav-label">系统管理</span>
+        </div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+        <h1 class="carrier-page-title">物流合同</h1>
+
+        <div class="carrier-toolbar">
+          <button type="button" class="carrier-btn-add" id="btnAddContract">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            新增合同
+          </button>
+          <div class="carrier-toolbar-right">
+            <input
+              type="search"
+              class="carrier-search"
+              id="contractSearch"
+              placeholder="请输入合同编号/承运商"
+              autocomplete="off"
+              aria-label="按合同编号或承运商搜索"
+            />
+            <select class="carrier-select" id="contractStatusFilter" aria-label="合同状态">
+              <option value="">全部</option>
+              <option value="active">生效中</option>
+              <option value="expiring">即将到期</option>
+              <option value="expired">已过期</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="carrier-table-wrap">
+          <table class="carrier-table">
+            <thead>
+              <tr>
+                <th>合同编号</th>
+                <th>承运商</th>
+                <th>合同名称</th>
+                <th>来源标识</th>
+                <th>签订日期</th>
+                <th>生效日期</th>
+                <th>失效日期</th>
+                <th>合同金额</th>
+                <th>状态</th>
+                <th style="min-width: 220px">操作</th>
+              </tr>
+            </thead>
+            <tbody id="contractTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="carrier-pagination" role="navigation" aria-label="分页">
+          <span id="contractTotalText">共 5 条</span>
+          <span>每页</span>
+          <select id="contractPageSize" aria-label="每页条数">
+            <option value="10" selected>10 条/页</option>
+            <option value="20">20 条/页</option>
+            <option value="50">50 条/页</option>
+          </select>
+          <div class="carrier-page-btns">
+            <button type="button" aria-label="上一页">&lt;</button>
+            <button type="button" class="is-current" aria-current="page">1</button>
+            <button type="button" aria-label="下一页">&gt;</button>
+          </div>
+          <span class="carrier-goto">
+            前往
+            <input type="text" inputmode="numeric" value="1" aria-label="跳转页码" />
+            页
+          </span>
+        </div>
+      
+        
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- 合同详情弹框（点击“合同名称”打开） -->
+  <div class="modal-mask" id="contractDetailMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="contractDetailTitle">
+      <div class="modal-header">
+        <h2 class="modal-title" id="contractDetailTitle">合同详情</h2>
+        <button class="modal-close" id="btnCloseContractDetail" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body contract-detail-body">
+        <div class="field">
+          <label>合同编号</label>
+          <div id="cdContractNo" class="contract-readonly"></div>
+        </div>
+        <div class="field">
+          <label>承运商</label>
+          <div id="cdCarrier" class="contract-readonly"></div>
+        </div>
+        <div class="field">
+          <label>合同名称</label>
+          <div id="cdContractName" class="contract-readonly"></div>
+        </div>
+        <div class="field">
+          <label>来源标识</label>
+          <div id="cdSource" class="contract-readonly"></div>
+        </div>
+        <div class="field">
+          <label>签订日期</label>
+          <div id="cdSignedDate" class="contract-readonly"></div>
+        </div>
+        <div class="field">
+          <label>合同金额</label>
+          <div id="cdAmount" class="contract-readonly"></div>
+        </div>
+        <div class="field">
+          <label>生效日期</label>
+          <div id="cdStartDate" class="contract-readonly"></div>
+        </div>
+        <div class="field">
+          <label>失效日期</label>
+          <div id="cdEndDate" class="contract-readonly"></div>
+        </div>
+        <div class="field">
+          <label>状态</label>
+          <div id="cdStatus" class="contract-readonly"></div>
+        </div>
+
+        <div class="field contract-detail-span3">
+          <label>签约方（甲方/乙方）</label>
+          <div id="cdParties" class="contract-readonly contract-readonly--multiline"></div>
+        </div>
+        <div class="field contract-detail-span3">
+          <label>合同类型</label>
+          <div id="cdContractType" class="contract-readonly"></div>
+        </div>
+        <div class="field contract-detail-span3">
+          <label>合同附件（可下载）</label>
+          <div id="cdAttachments" class="contract-detail-attachments"></div>
+        </div>
+        <div class="field contract-detail-span3">
+          <label>主要条款</label>
+          <pre id="cdMainClauses" class="contract-detail-clauses"></pre>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content:flex-end;">
+        <button class="btn" id="btnCancelContractDetail" type="button">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 新增/编辑合同（布局对齐承运商弹窗） -->
+  <div class="modal-mask" id="contractFormMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="contractFormTitle">
+      <div class="modal-header">
+        <h2 class="modal-title" id="contractFormTitle">新增合同</h2>
+        <button class="modal-close" id="btnCloseContractForm" type="button" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body contract-form-body">
+        <div class="field full">
+          <label for="cfNo">合同编号</label>
+          <input id="cfNo" type="text" placeholder="保存时自动生成或手工填写" />
+        </div>
+        <div class="field full">
+          <label for="cfCarrier">承运商</label>
+          <input id="cfCarrier" type="text" required autocomplete="off" />
+        </div>
+        <div class="field full">
+          <label for="cfName">合同名称</label>
+          <input id="cfName" type="text" required autocomplete="off" />
+        </div>
+        <div class="field">
+          <label for="cfSource">来源标识</label>
+          <select id="cfSource">
+            <option value="系统录入">系统录入</option>
+            <option value="合同系统同步">合同系统同步</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="cfSigned">签订日期</label>
+          <input id="cfSigned" type="date" />
+        </div>
+        <div class="field">
+          <label for="cfStart">生效日期</label>
+          <input id="cfStart" type="date" />
+        </div>
+        <div class="field">
+          <label for="cfEnd">失效日期</label>
+          <input id="cfEnd" type="date" />
+        </div>
+        <div class="field">
+          <label for="cfAmount">合同金额（元）</label>
+          <input id="cfAmount" type="text" placeholder="如 1200000" />
+        </div>
+        <div class="field">
+          <label for="cfStatusDisplay">状态</label>
+          <input id="cfStatusDisplay" type="text" readonly class="contract-contractno-readonly" title="根据失效日期自动计算" />
+        </div>
+        <div class="field full">
+          <label for="cfType">合同类型</label>
+          <input id="cfType" type="text" value="物流合同" />
+        </div>
+        <div class="field full">
+          <label for="cfClauses">主要条款</label>
+          <textarea id="cfClauses" placeholder="合同主要条款摘要"></textarea>
+        </div>
+        <div class="field full">
+          <label for="cfFiles">合同附件</label>
+          <input id="cfFiles" type="file" multiple />
+          <div class="help" id="cfFilesHelp">未选择文件</div>
+        </div>
+        <div class="field full">
+          <label for="cfRemark">备注</label>
+          <textarea id="cfRemark" placeholder="请输入备注（可选）"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content:flex-end;">
+        <div class="footer-actions">
+          <button class="btn" id="btnCancelContractForm" type="button">取消</button>
+          <button class="btn btn-primary" id="btnSaveContractForm" type="button">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="contractDeleteMask" aria-hidden="true" style="z-index:10000;">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="contractDeleteTitle" style="width:min(440px,92vw);">
+      <div class="modal-header">
+        <h2 class="modal-title" id="contractDeleteTitle">删除合同</h2>
+        <button class="modal-close" id="btnCloseContractDelete" type="button" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body" style="display:block;padding:16px 18px;">
+        <p id="contractDeleteMsg" style="margin:0;font-size:14px;color:#2a3d56;line-height:1.65;"></p>
+      </div>
+      <div class="modal-footer" style="justify-content:flex-end;gap:8px;">
+        <button class="btn" id="btnCancelContractDelete" type="button">取消</button>
+        <button class="btn btn-contract-delete" id="btnConfirmContractDelete" type="button">确定删除</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var tbody = document.getElementById("contractTableBody");
+      var totalEl = document.getElementById("contractTotalText");
+      var search = document.getElementById("contractSearch");
+      var filter = document.getElementById("contractStatusFilter");
+      var btnAdd = document.getElementById("btnAddContract");
+
+      var formMask = document.getElementById("contractFormMask");
+      var formTitle = document.getElementById("contractFormTitle");
+      var btnCloseForm = document.getElementById("btnCloseContractForm");
+      var btnCancelForm = document.getElementById("btnCancelContractForm");
+      var btnSaveForm = document.getElementById("btnSaveContractForm");
+      var cfNo = document.getElementById("cfNo");
+      var cfName = document.getElementById("cfName");
+      var cfCarrier = document.getElementById("cfCarrier");
+      var cfSource = document.getElementById("cfSource");
+      var cfType = document.getElementById("cfType");
+      var cfSigned = document.getElementById("cfSigned");
+      var cfStart = document.getElementById("cfStart");
+      var cfEnd = document.getElementById("cfEnd");
+      var cfAmount = document.getElementById("cfAmount");
+      var cfClauses = document.getElementById("cfClauses");
+      var cfFiles = document.getElementById("cfFiles");
+      var cfFilesHelp = document.getElementById("cfFilesHelp");
+      var cfRemark = document.getElementById("cfRemark");
+      var cfStatusDisplay = document.getElementById("cfStatusDisplay");
+
+      var deleteMask = document.getElementById("contractDeleteMask");
+      var btnCloseDelete = document.getElementById("btnCloseContractDelete");
+      var btnCancelDelete = document.getElementById("btnCancelContractDelete");
+      var btnConfirmDelete = document.getElementById("btnConfirmContractDelete");
+      var deleteMsg = document.getElementById("contractDeleteMsg");
+
+      var detailMask = document.getElementById("contractDetailMask");
+      var btnCloseDetail = document.getElementById("btnCloseContractDetail");
+      var btnCancelDetail = document.getElementById("btnCancelContractDetail");
+      var cdContractNo = document.getElementById("cdContractNo");
+      var cdContractName = document.getElementById("cdContractName");
+      var cdCarrier = document.getElementById("cdCarrier");
+      var cdSource = document.getElementById("cdSource");
+      var cdContractType = document.getElementById("cdContractType");
+      var cdParties = document.getElementById("cdParties");
+      var cdAmount = document.getElementById("cdAmount");
+      var cdSignedDate = document.getElementById("cdSignedDate");
+      var cdStartDate = document.getElementById("cdStartDate");
+      var cdEndDate = document.getElementById("cdEndDate");
+      var cdStatus = document.getElementById("cdStatus");
+      var cdAttachments = document.getElementById("cdAttachments");
+      var cdMainClauses = document.getElementById("cdMainClauses");
+
+      var editingNo = null;
+      var pendingDeleteNo = null;
+
+      // ====== Modal 样式（对齐承运商弹窗） ======
+      if (!document.getElementById("contractDetailModalStyle")) {
+        var st = document.createElement("style");
+        st.id = "contractDetailModalStyle";
+        st.textContent =
+          ".modal-mask{position:fixed;inset:0;background:rgba(6,20,40,0.5);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;}"+
+          ".modal-mask.show{display:flex;}"+
+          ".modal{width:min(900px,96vw);background:#fff;border-radius:12px;border:1px solid #dbe6f3;box-shadow:0 18px 46px rgba(9,24,45,0.28);overflow:hidden;}"+
+          ".modal-header{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #e8eef7;}"+
+          ".modal-title{margin:0;font-size:17px;color:#1f3551;}"+
+          ".modal-close{border:none;background:transparent;cursor:pointer;font-size:22px;line-height:1;color:#6a819f;}"+
+          ".modal-body{padding:14px;display:grid;gap:12px 14px;grid-template-columns:1fr 1fr 1fr;}"+
+          ".contract-form-body{grid-template-columns:1fr 1fr !important;}"+
+          ".field.full{grid-column:1/-1;}"+
+          ".field label{display:block;margin:0 0 6px;font-size:13px;color:#516a87;}"+
+          ".field input,.field select,.field textarea{width:100%;height:34px;border:1px solid #d7e1ee;border-radius:6px;padding:0 10px;font-size:14px;color:#223a55;background:#fff;}"+
+          ".field input.contract-contractno-readonly[readonly]{background:#f5f7fa;border-color:#e8ecf2;color:#5c6b7a;cursor:default;}"+
+          ".field textarea{height:88px;padding:8px 10px;resize:vertical;}"+
+          ".help{font-size:12px;color:#7d8ea2;margin-top:4px;}"+
+          ".contract-detail-body{grid-template-columns:1fr 1fr 1fr !important;}"+
+          ".contract-detail-span3{grid-column:1/-1;}"+
+          ".contract-readonly{min-height:34px;display:flex;align-items:center;padding:0 10px;border:1px solid #e8ecf2;border-radius:6px;background:#f5f7fa;color:#2a3d56;font-size:14px;box-sizing:border-box;}"+
+          ".contract-readonly--multiline{min-height:34px;align-items:flex-start;padding:8px 10px;line-height:1.55;white-space:pre-wrap;word-break:break-word;}"+
+          ".contract-detail-attachments{border:1px dashed #c5cdd9;border-radius:6px;padding:10px;background:#fafbfc;min-height:52px;color:#2b4664;font-size:13px;box-sizing:border-box;}"+
+          ".contract-detail-clauses{margin:0;border:1px solid #e8ecf2;border-radius:6px;padding:10px;background:#f5f7fa;white-space:pre-wrap;word-break:break-word;line-height:1.55;color:#2a3d56;font-size:13px;max-height:220px;overflow:auto;box-sizing:border-box;}"+
+          ".modal-footer{min-height:54px;border-top:1px solid #e8eef7;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;flex-wrap:wrap;gap:8px;}"+
+          ".footer-tip{font-size:12px;color:#7b8fa7;}"+
+          ".footer-actions{display:flex;gap:8px;}"+
+          ".btn{border:1px solid #d7e1ee;background:#fff;color:#2b4664;border-radius:6px;padding:7px 14px;font-size:14px;cursor:pointer;}"+
+          ".btn-primary{background:#1890ff;color:#fff;border-color:#1890ff;}"+
+          ".btn-contract-delete{background:#ff4d4f !important;border-color:#ff4d4f !important;color:#fff !important;}";
+        document.head.appendChild(st);
+      }
+
+      function escapeHtml(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function fmtMoney(n) {
+        return "¥ " + Number(n || 0).toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function parseAmount(s) {
+        var t = String(s || "").replace(/,/g, "").replace(/¥/g, "").trim();
+        var x = parseFloat(t);
+        return isFinite(x) ? x : 0;
+      }
+
+      function rowStatus(c) {
+        if (!c || !c.endDate) return "active";
+        var end = new Date(c.endDate + "T12:00:00");
+        var now = new Date();
+        if (end < now) return "expired";
+        var days = (end - now) / 86400000;
+        if (days <= 90) return "expiring";
+        return "active";
+      }
+
+      function statusLabelZh(st) {
+        if (st === "expired") return "已过期";
+        if (st === "expiring") return "即将到期";
+        return "生效中";
+      }
+
+      function partiesLine(carrier) {
+        return "甲方：新能源物资供应链管理系统（我方） / 乙方：" + (carrier || "—");
+      }
+
+      var contracts = [
+        {
+          no: "HT-2025-001",
+          carrier: "华通物流有限公司",
+          name: "年度公路运输服务框架协议",
+          source: "系统录入",
+          signedDate: "2025-01-08",
+          startDate: "2025-01-15",
+          endDate: "2026-01-14",
+          amount: 1200000,
+          type: "物流合同",
+          clauses:
+            "主要条款预览：\n1）服务范围与运价机制\n2）交付标准与验收\n3）违约责任与争议解决\n4）合同附件与补充协议",
+          attachments: [
+            { name: "年度公路运输服务框架协议.pdf", content: "（演示）附件内容：年度公路运输服务框架协议主要条款节选。" }
+          ],
+          remark: ""
+        },
+        {
+          no: "HT-2024-088",
+          carrier: "远达运输集团",
+          name: "冷链运输补充协议",
+          source: "合同系统同步",
+          signedDate: "2024-06-20",
+          startDate: "2024-07-01",
+          endDate: "2025-03-28",
+          amount: 380000,
+          type: "物流合同",
+          clauses:
+            "主要条款预览：\n1）温控与冷链操作规范\n2）应急处置流程\n3）记录与追溯要求\n4）费用结算与付款条件",
+          attachments: [{ name: "冷链运输补充协议.pdf", content: "（演示）附件内容：冷链运输补充协议主要条款节选。" }],
+          remark: ""
+        },
+        {
+          no: "HT-2023-156",
+          carrier: "联程供应链科技",
+          name: "仓储与配送一体化合同",
+          source: "系统录入",
+          signedDate: "2023-09-10",
+          startDate: "2023-10-01",
+          endDate: "2024-09-30",
+          amount: 560000,
+          type: "物流合同",
+          clauses:
+            "主要条款预览：\n1）仓储服务范围\n2）配送时效与异常处理\n3）库存盘点与对账\n4）合同考核与续签",
+          attachments: [{ name: "仓储与配送一体化合同.pdf", content: "（演示）附件内容：仓储与配送一体化合同主要条款节选。" }],
+          remark: ""
+        },
+        {
+          no: "HT-2025-012",
+          carrier: "顺捷货运服务部",
+          name: "区域短途运输合同",
+          source: "合同系统同步",
+          signedDate: "2025-02-18",
+          startDate: "2025-03-01",
+          endDate: "2025-12-31",
+          amount: 96000,
+          type: "物流合同",
+          clauses:
+            "主要条款预览：\n1）起运与送达要求\n2）运费支付周期\n3）责任划分与索赔\n4）合同履约考核",
+          attachments: [{ name: "区域短途运输合同.pdf", content: "（演示）附件内容：区域短途运输合同主要条款节选。" }],
+          remark: ""
+        },
+        {
+          no: "HT-2024-201",
+          carrier: "华通物流有限公司",
+          name: "大件设备运输专项",
+          source: "系统录入",
+          signedDate: "2024-11-05",
+          startDate: "2024-11-15",
+          endDate: "2025-04-10",
+          amount: 240000,
+          type: "物流合同",
+          clauses:
+            "主要条款预览：\n1）装卸与吊装规范\n2）运输安全与保险责任\n3）现场交接要求\n4）费用结算与补充条款",
+          attachments: [{ name: "大件设备运输专项.pdf", content: "（演示）附件内容：大件设备运输专项主要条款节选。" }],
+          remark: ""
+        }
+      ];
+
+      function findContract(no) {
+        return contracts.find(function (x) { return x.no === no; });
+      }
+
+      function genContractNo() {
+        var d = new Date();
+        var y = d.getFullYear();
+        var m = String(d.getMonth() + 1).padStart(2, "0");
+        var day = String(d.getDate()).padStart(2, "0");
+        return "HT-" + y + m + day + String(Math.floor(Math.random() * 900 + 100));
+      }
+
+      function statusTagHtml(st) {
+        if (st === "expired") return '<span class="tag-status tag-status--contract-expired">已过期</span>';
+        if (st === "expiring") return '<span class="tag-status tag-status--contract-expiring">即将到期</span>';
+        return '<span class="tag-status tag-status--contract-active">生效中</span>';
+      }
+
+      function searchHay(c) {
+        return (c.no + " " + c.carrier + " " + c.name).toLowerCase();
+      }
+
+      function renderTable() {
+        tbody.innerHTML = "";
+        contracts.forEach(function (c) {
+          var st = rowStatus(c);
+          var tr = document.createElement("tr");
+          tr.setAttribute("data-status", st);
+          tr.setAttribute("data-search", searchHay(c));
+          tr.setAttribute("data-contract-no", c.no);
+          tr.innerHTML =
+            "<td>" + escapeHtml(c.no) + "</td>" +
+            "<td>" + escapeHtml(c.carrier) + "</td>" +
+            "<td><a href=\"#\" class=\"contract-name-link\" data-contract-no=\"" + escapeHtml(c.no) + "\" aria-label=\"查看合同详情\">" +
+            escapeHtml(c.name) + "</a></td>" +
+            "<td>" + escapeHtml(c.source) + "</td>" +
+            "<td>" + escapeHtml(c.signedDate) + "</td>" +
+            "<td>" + escapeHtml(c.startDate) + "</td>" +
+            "<td>" + escapeHtml(c.endDate) + "</td>" +
+            '<td class="cell-amount">' + escapeHtml(fmtMoney(c.amount)) + "</td>" +
+            "<td>" + statusTagHtml(st) + "</td>" +
+            '<td><div class="wh-ops">' +
+            '<a href="#" class="contract-op" data-action="view" data-no="' + escapeHtml(c.no) + '" title="查看" aria-label="查看"><i class="fa-regular fa-eye"></i></a>' +
+            '<a href="#" class="contract-op" data-action="edit" data-no="' + escapeHtml(c.no) + '" title="编辑" aria-label="编辑"><i class="fa-regular fa-pen-to-square"></i></a>' +
+            '<a href="#" class="contract-op" data-action="delete" data-no="' + escapeHtml(c.no) + '" title="删除" aria-label="删除"><i class="fa-regular fa-trash-can"></i></a>' +
+            "</div></td>";
+          tbody.appendChild(tr);
+        });
+        applyFilter();
+      }
+
+      function openContractDetail(contractNo) {
+        var c = findContract(contractNo);
+        if (!c) return;
+        cdContractNo.textContent = c.no;
+        cdCarrier.textContent = c.carrier || "—";
+        cdContractName.textContent = c.name;
+        cdSource.textContent = c.source || "—";
+        cdSignedDate.textContent = c.signedDate || "—";
+        cdAmount.textContent = fmtMoney(c.amount);
+        cdStartDate.textContent = c.startDate || "—";
+        cdEndDate.textContent = c.endDate || "—";
+        cdStatus.textContent = statusLabelZh(rowStatus(c));
+        cdParties.textContent = partiesLine(c.carrier);
+        cdContractType.textContent = c.type || "物流合同";
+
+        var attHtml = "";
+        if (c.attachments && c.attachments.length) {
+          c.attachments.forEach(function (a, idx) {
+            var content = a && typeof a.content === "string" ? a.content : "";
+            var blob = new Blob([content], { type: "text/plain;charset=UTF-8" });
+            var url = URL.createObjectURL(blob);
+            attHtml += '<div style="margin:0 0 6px;"><a href="' + url + '" download="' + escapeHtml(a.name || ("附件-" + idx)) + '" style="color:#1677ff;text-decoration:none;font-size:13px;">' + escapeHtml(a.name || ("附件-" + idx)) + "</a></div>";
+          });
+        } else {
+          attHtml = '<span style="color:#7d8ea2;font-size:13px;">暂无附件</span>';
+        }
+        cdAttachments.innerHTML = attHtml;
+        cdMainClauses.textContent = c.clauses || "";
+
+        detailMask.setAttribute("aria-hidden", "false");
+        detailMask.classList.add("show");
+      }
+
+      function closeContractDetail() {
+        detailMask.setAttribute("aria-hidden", "true");
+        detailMask.classList.remove("show");
+      }
+
+      function updateCfStatusPreview() {
+        if (!cfStatusDisplay) return;
+        if (!cfEnd || !cfEnd.value) {
+          cfStatusDisplay.value = editingNo ? "—" : "保存后自动计算";
+          return;
+        }
+        cfStatusDisplay.value = statusLabelZh(rowStatus({ endDate: cfEnd.value }));
+      }
+
+      function openForm(mode, c) {
+        editingNo = mode === "edit" && c ? c.no : null;
+        formTitle.textContent = mode === "add" ? "新增合同" : "编辑合同";
+        cfFiles.value = "";
+        if (mode === "edit" && c) {
+          cfNo.value = c.no;
+          cfNo.readOnly = true;
+          cfNo.setAttribute("readonly", "readonly");
+          cfNo.classList.add("contract-contractno-readonly");
+          cfName.value = c.name || "";
+          cfCarrier.value = c.carrier || "";
+          cfSource.value = c.source || "系统录入";
+          cfType.value = c.type || "物流合同";
+          cfSigned.value = c.signedDate || "";
+          cfStart.value = c.startDate || "";
+          cfEnd.value = c.endDate || "";
+          cfAmount.value = String(c.amount != null ? c.amount : "");
+          cfClauses.value = c.clauses || "";
+          cfRemark.value = c.remark || "";
+          var names = (c.attachments || []).map(function (a) { return a.name; }).filter(Boolean);
+          cfFilesHelp.textContent = names.length ? "已存在：" + names.join("，") : "未选择文件";
+          updateCfStatusPreview();
+        } else {
+          cfNo.value = "";
+          cfNo.readOnly = false;
+          cfNo.removeAttribute("readonly");
+          cfNo.classList.remove("contract-contractno-readonly");
+          cfNo.placeholder = "保存时自动生成或手工填写";
+          cfName.value = "";
+          cfCarrier.value = "";
+          cfSource.value = "系统录入";
+          cfType.value = "物流合同";
+          cfSigned.value = "";
+          cfStart.value = "";
+          cfEnd.value = "";
+          cfAmount.value = "";
+          cfClauses.value = "";
+          cfRemark.value = "";
+          cfFilesHelp.textContent = "未选择文件";
+          updateCfStatusPreview();
+        }
+        formMask.setAttribute("aria-hidden", "false");
+        formMask.classList.add("show");
+      }
+
+      function closeForm() {
+        formMask.setAttribute("aria-hidden", "true");
+        formMask.classList.remove("show");
+        editingNo = null;
+        cfNo.readOnly = false;
+        cfNo.removeAttribute("readonly");
+        cfNo.classList.remove("contract-contractno-readonly");
+      }
+
+      function openDelete(no) {
+        var c = findContract(no);
+        pendingDeleteNo = no;
+        deleteMsg.textContent = c
+          ? "确定删除合同「" + c.no + " / " + c.name + "」吗？此操作为演示，将从列表中移除该条。"
+          : "确定删除该合同吗？此操作为演示，将从列表中移除该条。";
+        deleteMask.setAttribute("aria-hidden", "false");
+        deleteMask.classList.add("show");
+      }
+
+      function closeDelete() {
+        deleteMask.setAttribute("aria-hidden", "true");
+        deleteMask.classList.remove("show");
+        pendingDeleteNo = null;
+      }
+
+      if (cfFiles) {
+        cfFiles.addEventListener("change", function () {
+          var files = Array.prototype.slice.call(cfFiles.files || []);
+          var names = files.map(function (f) { return f.name; });
+          cfFilesHelp.textContent = names.length ? "已选择：" + names.join("，") : "未选择文件";
+        });
+      }
+      if (cfEnd) cfEnd.addEventListener("change", updateCfStatusPreview);
+      if (cfStart) cfStart.addEventListener("change", updateCfStatusPreview);
+
+      btnSaveForm.addEventListener("click", function () {
+        var name = (cfName.value || "").trim();
+        var carrier = (cfCarrier.value || "").trim();
+        if (!name || !carrier) {
+          alert("请填写合同名称与承运商。");
+          return;
+        }
+        var amt = parseAmount(cfAmount.value);
+        var att = [];
+        var fileList = Array.prototype.slice.call(cfFiles.files || []);
+        fileList.forEach(function (f) {
+          att.push({ name: f.name, content: "（演示）附件占位：" + f.name });
+        });
+        if (editingNo) {
+          var cur = findContract(editingNo);
+          if (!cur) return;
+          cur.name = name;
+          cur.carrier = carrier;
+          cur.source = cfSource.value || "系统录入";
+          cur.type = (cfType.value || "").trim() || "物流合同";
+          cur.signedDate = cfSigned.value || cur.signedDate;
+          cur.startDate = cfStart.value || cur.startDate;
+          cur.endDate = cfEnd.value || cur.endDate;
+          cur.amount = amt;
+          cur.clauses = (cfClauses.value || "").trim();
+          cur.remark = (cfRemark.value || "").trim();
+          if (att.length) cur.attachments = att;
+        } else {
+          var no = (cfNo.value || "").trim() || genContractNo();
+          if (findContract(no)) {
+            alert("合同编号已存在，请更换编号。");
+            return;
+          }
+          contracts.unshift({
+            no: no,
+            carrier: carrier,
+            name: name,
+            source: cfSource.value || "系统录入",
+            signedDate: cfSigned.value || new Date().toISOString().slice(0, 10),
+            startDate: cfStart.value || cfSigned.value || new Date().toISOString().slice(0, 10),
+            endDate: cfEnd.value || new Date().toISOString().slice(0, 10),
+            amount: amt,
+            type: (cfType.value || "").trim() || "物流合同",
+            clauses: (cfClauses.value || "").trim(),
+            attachments: att.length ? att : [{ name: no + ".pdf", content: "（演示）新建合同附件占位。" }],
+            remark: (cfRemark.value || "").trim()
+          });
+        }
+        closeForm();
+        renderTable();
+      });
+
+      btnConfirmDelete.addEventListener("click", function () {
+        if (!pendingDeleteNo) return;
+        contracts = contracts.filter(function (x) { return x.no !== pendingDeleteNo; });
+        closeDelete();
+        renderTable();
+      });
+
+      if (btnCloseDetail) btnCloseDetail.addEventListener("click", closeContractDetail);
+      if (btnCancelDetail) btnCancelDetail.addEventListener("click", closeContractDetail);
+      if (detailMask) {
+        detailMask.addEventListener("click", function (e) {
+          if (e.target === detailMask) closeContractDetail();
+        });
+      }
+
+      if (btnCloseForm) btnCloseForm.addEventListener("click", closeForm);
+      if (btnCancelForm) btnCancelForm.addEventListener("click", closeForm);
+      if (formMask) {
+        formMask.addEventListener("click", function (e) {
+          if (e.target === formMask) closeForm();
+        });
+      }
+
+      if (btnCloseDelete) btnCloseDelete.addEventListener("click", closeDelete);
+      if (btnCancelDelete) btnCancelDelete.addEventListener("click", closeDelete);
+      if (deleteMask) {
+        deleteMask.addEventListener("click", function (e) {
+          if (e.target === deleteMask) closeDelete();
+        });
+      }
+
+      function applyFilter() {
+        var q = (search.value || "").trim().toLowerCase();
+        var st = filter.value;
+        tbody.querySelectorAll("tr").forEach(function (row) {
+          var hay = (row.getAttribute("data-search") || "").toLowerCase();
+          var status = row.getAttribute("data-status") || "";
+          var okSearch = !q || hay.indexOf(q) !== -1;
+          var okStatus = !st || status === st;
+          row.style.display = okSearch && okStatus ? "" : "none";
+        });
+        var n = 0;
+        tbody.querySelectorAll("tr").forEach(function (row) {
+          if (row.style.display !== "none") n++;
+        });
+        totalEl.textContent = "共 " + n + " 条";
+      }
+
+      search.addEventListener("input", applyFilter);
+      filter.addEventListener("change", applyFilter);
+      btnAdd.addEventListener("click", function () {
+        openForm("add", null);
+      });
+
+      tbody.addEventListener("click", function (e) {
+        var link = e.target.closest("a.contract-name-link");
+        if (link) {
+          e.preventDefault();
+          openContractDetail(link.getAttribute("data-contract-no") || "");
+          return;
+        }
+        var op = e.target.closest("a.contract-op");
+        if (!op) return;
+        e.preventDefault();
+        var action = op.getAttribute("data-action");
+        var no = op.getAttribute("data-no");
+        var c = findContract(no);
+        if (!c) return;
+        if (action === "view") openContractDetail(no);
+        else if (action === "edit") openForm("edit", c);
+        else if (action === "delete") openDelete(no);
+      });
+
+      renderTable();
+    })();
+  </script>
+</body>
+</html>

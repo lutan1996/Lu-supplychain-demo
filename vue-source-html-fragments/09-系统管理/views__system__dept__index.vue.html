@@ -1,0 +1,134 @@
+<!-- 来源: src/views/system/dept/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <transition>
+      <div class="mb-[10px]">
+        <el-card shadow="hover">
+          <el-form>
+            <el-form-item label="部门名称" prop="deptName">
+              <el-input placeholder="请输入部门名称" clearable />
+            </el-form-item>
+            <el-form-item label="类别编码" prop="deptCategory">
+              <el-input placeholder="请输入类别编码" clearable style="width: 240px" />
+            </el-form-item>
+            <el-form-item label="状态" prop="status">
+              <el-select placeholder="部门状态" clearable>
+                <el-option />
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="Search">搜索</el-button>
+              <el-button icon="Refresh">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </div>
+    </transition>
+
+    <el-card shadow="hover">
+      <template>
+        <el-row>
+          <el-col>
+            <el-button type="primary" plain icon="Plus">新增 </el-button>
+          </el-col>
+          <el-col>
+            <el-button type="info" plain icon="Sort">展开/折叠</el-button>
+          </el-col>
+          <right-toolbar></right-toolbar>
+        </el-row>
+      </template>
+
+      <el-table
+        row-key="deptId"
+      >
+        <el-table-column prop="deptName" label="部门名称" width="260"></el-table-column>
+        <el-table-column prop="deptCategory" align="center" label="类别编码" width="200"></el-table-column>
+        <el-table-column prop="orderNum" align="center" label="排序" width="200"></el-table-column>
+        <el-table-column prop="status" align="center" label="状态" width="100">
+          <template="scope">
+            <dict-tag />
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" align="center" prop="createTime" width="200">
+          <template="scope">
+            <span>（动态文本）</span>
+          </template>
+        </el-table-column>
+        <el-table-column fixed="right" align="center" label="操作">
+          <template="scope">
+            <el-tooltip content="修改" placement="top">
+              <el-button link type="primary" icon="Edit" />
+            </el-tooltip>
+            <el-tooltip content="新增" placement="top">
+              <el-button link type="primary" icon="Plus" />
+            </el-tooltip>
+            <el-tooltip content="删除" placement="top">
+              <el-button link type="primary" icon="Delete" />
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+
+    <el-dialog destroy-on-close append-to-body width="600px">
+      <el-form label-width="80px">
+        <el-row>
+          <el-col>
+            <el-form-item label="上级部门" prop="parentId">
+              <el-tree-select
+                value-key="deptId"
+                placeholder="选择上级部门"
+                check-strictly
+              />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="部门名称" prop="deptName">
+              <el-input placeholder="请输入部门名称" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="类别编码" prop="deptCategory">
+              <el-input placeholder="请输入类别编码" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="显示排序" prop="orderNum">
+              <el-input-number controls-position="right" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="负责人" prop="leader">
+              <el-select placeholder="请选择负责人">
+                <el-option />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="联系电话" prop="phone">
+              <el-input placeholder="请输入联系电话" maxlength="11" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="邮箱" prop="email">
+              <el-input placeholder="请输入邮箱" maxlength="50" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="部门状态">
+              <el-radio-group>
+                <el-radio>（动态文本）</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>废旧物资鉴定审批</title>
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+</head>
+<body class="page-source-navbar page-subpage">
+  <div class="app">
+    <header class="header"><div class="header-left"><button class="header-hamburger"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="header-logo" href="#"><img src="assets/logo-chenergy.png" width="220" height="40" alt="" /></a><div class="header-source-brand"><p>新能源供应链管理系统</p></div></div><div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar">用</div></div></header>
+    <div class="layout"><aside class="sidebar"><div class="nav-item nav-item--module-active"><span class="nav-label">物资出库与处置</span></div></aside><main class="main-scroll"><div class="subpage-panel">
+      <h1 class="subpage-title">废旧物资鉴定审批（XQ-041）</h1>
+      <div class="subpage-toolbar"><button class="btn btn-primary">新增鉴定单</button><input class="subpage-search" placeholder="申请编号/申请部门" /><button class="btn">查询</button></div>
+      <div class="subpage-table-wrap"><table class="subpage-table"><thead><tr><th>申请编号</th><th>申请部门</th><th>申请物资</th><th>申请状态</th><th>鉴定意见</th><th>鉴定人</th><th>操作</th></tr></thead><tbody id="tb">
+        <tr><td>BF-2026-001</td><td>华北运维部</td><td>液压泵*2、变流器模块*1</td><td><span class="tag-status tag-status--to-shelf">待审批</span></td><td>-</td><td>-</td><td><a href="#" data-a="ok">同意</a> / <a href="#" data-a="no">拒绝</a></td></tr>
+      </tbody></table></div>
+    </div></main></div>
+  </div>
+  <script src="js/sidebar-actions.js"></script><script src="js/subpage-feature-title.js"></script><script src="js/subpage-clock.js"></script>
+  <script>
+    document.getElementById("tb").addEventListener("click", function(e){
+      var ok = e.target.closest("[data-a='ok']");
+      var no = e.target.closest("[data-a='no']");
+      if (!ok && !no) return;
+      e.preventDefault();
+      var tr = e.target.closest("tr");
+      if (!tr) return;
+      if (ok) {
+        tr.children[3].innerHTML = '<span class="tag-status tag-status--in-use">已批准</span>';
+        tr.children[4].textContent = "同意报废处置";
+      } else {
+        tr.children[3].innerHTML = '<span class="tag-status tag-status--isolate">已拒绝</span>';
+        tr.children[4].textContent = "请补充检测依据";
+      }
+      tr.children[5].textContent = "鉴定专责";
+      tr.children[6].innerHTML = '<span style="color:#8c8c8c">已处理</span>';
+    });
+  </script>
+</body>
+</html>

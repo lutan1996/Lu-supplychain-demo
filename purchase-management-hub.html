@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>采购管理 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/module-hub.css" />
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar" title="用户">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit-analytics.html"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item nav-item--module-active" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title">采购管理</h1>
+          <div class="module-hub-panel is-visible" data-panel="p1">
+            <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>计划编号</th><th>计划名称</th><th>类型</th><th>申报部门</th><th>总金额(万元)</th><th>状态</th></tr></thead><tbody>
+              <tr><td>JH-2026-03-B</td><td>三月招标类备件计划</td><td>招标</td><td>计划物资部</td><td>128.6</td><td><span class="tag-status tag-status--to-shelf">审批中</span></td></tr>
+            </tbody></table></div>
+          </div>
+          <div class="module-hub-panel" data-panel="p2"><div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>审批单编号</th><th>类型</th><th>申请部门</th><th>预算(万元)</th><th>状态</th></tr></thead><tbody>
+            <tr><td>SP-2026-018</td><td>采购计划审批单</td><td>检修中心</td><td>56</td><td>待审批</td></tr>
+          </tbody></table></div></div>
+          <div class="module-hub-panel" data-panel="p3"><div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>通知编号</th><th>项目名称</th><th>审定结果</th><th>审定日期</th></tr></thead><tbody>
+            <tr><td>TZ-2026-001</td><td>非招标采购结果</td><td>通过</td><td>2026-03-10</td></tr>
+          </tbody></table></div></div>
+          <div class="module-hub-panel" data-panel="p4"><div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>领用单号</th><th>长协名称</th><th>物资</th><th>数量</th><th>状态</th></tr></thead><tbody>
+            <tr><td>LX-2026-003</td><td>轴承长协</td><td>主轴轴承</td><td>4</td><td>已审批</td></tr>
+          </tbody></table></div></div>
+          <div class="module-hub-panel" data-panel="p5">
+            <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>申请单号</th><th>部门</th><th>预算金额</th><th>状态</th></tr></thead><tbody><tr><td>CG-2026-021</td><td>运维一部</td><td>12 万</td><td>审批中</td></tr></tbody></table></div>
+          </div>
+          <div class="module-hub-panel" data-panel="p6"><div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>计划编号</th><th>计划年度</th><th>编制部门</th><th>总金额</th><th>状态</th></tr></thead><tbody>
+            <tr><td>JC-2026</td><td>2026</td><td>集采中心</td><td>—</td><td>已发布</td></tr>
+          </tbody></table></div></div>
+          <div class="module-hub-panel" data-panel="p7"><div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>项目编号</th><th>项目名称</th><th>招标方式</th><th>状态</th></tr></thead><tbody>
+            <tr><td>ZB-2026-05</td><td>叶片采购</td><td>公开</td><td>进行中</td></tr>
+          </tbody></table></div></div>
+          <div class="module-hub-panel" data-panel="p8">
+            <div class="carrier-toolbar">
+              <button type="button" class="carrier-btn-add" id="pmAddOrder"><i class="fa-solid fa-plus"></i> 新增订单</button>
+              <div class="carrier-toolbar-right">
+                <input class="carrier-search" type="search" placeholder="订单编号" />
+                <select class="carrier-select"><option>全部提报单位</option><option>河南能源</option><option>天津能源</option></select>
+                <select class="carrier-select"><option>全部状态</option><option>待确认</option><option>已确认</option></select>
+              </div>
+            </div>
+            <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>订单编号</th><th>提报单位</th><th>场站名称</th><th>设备清单</th><th>指定业务部门</th><th>订单状态</th><th>操作</th></tr></thead><tbody id="pmOrderBody">
+              <tr><td>ORD2026001</td><td>河南能源</td><td>新安风电场</td><td>齿轮箱总成*2、变流器模块*4</td><td>经营发展中心</td><td><span class="tag-status tag-status--to-shelf">待确认</span></td><td><a href="#" class="pm-order-confirm" style="color:#1677ff;text-decoration:none;font-weight:500">确认订单</a></td></tr>
+              <tr><td>ORD2026002</td><td>天津能源</td><td>滨海场站</td><td>主控柜*1、液压站*2</td><td>运维业务一部</td><td><span class="tag-status tag-status--in-use">已确认</span></td><td><a href="receipt-inbound.html" style="color:#1677ff;text-decoration:none;font-weight:500">收货入库</a></td></tr>
+            </tbody></table></div>
+          </div>
+          <div class="module-hub-panel" data-panel="p9"><div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>验收单号</th><th>订单号</th><th>结论</th><th>结算单号</th></tr></thead><tbody>
+            <tr><td>YS-003</td><td>PO-20260301</td><td>合格</td><td>JS-009</td></tr>
+          </tbody></table></div></div>
+          <div class="module-hub-panel" data-panel="p10">
+            <button type="button" class="carrier-btn-add"><i class="fa-solid fa-folder-open"></i> 打开归档目录</button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script src="js/module-hub-tabs.js"></script>
+  <script>
+    (function () {
+      var titles = {
+        p1: "月度计划申报",
+        p2: "采购审批单",
+        p3: "审定结果通知",
+        p4: "长协领用",
+        p5: "重新采购申请",
+        p6: "集团采购计划",
+        p7: "招标项目",
+        p8: "订单需求管理",
+        p9: "到货验收与结算",
+        p10: "归档目录"
+      };
+      function syncPmTitle() {
+        var vis = document.querySelector(".module-hub-panel.is-visible");
+        var p = vis && vis.getAttribute("data-panel");
+        var h1 = document.querySelector(".carrier-page-title");
+        if (!h1 || !p || !titles[p]) return;
+        h1.textContent = titles[p];
+        try {
+          document.title = titles[p] + " - 新能源物资供应链管理系统";
+        } catch (e) {}
+      }
+      function run() {
+        syncPmTitle();
+        document.querySelectorAll(".module-hub-panel").forEach(function (el) {
+          if (el.__pmTitleObs) return;
+          el.__pmTitleObs = true;
+          new MutationObserver(syncPmTitle).observe(el, { attributes: true, attributeFilter: ["class"] });
+        });
+      }
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
+      else run();
+      var pmOrderBody = document.getElementById("pmOrderBody");
+      if (pmOrderBody) {
+        pmOrderBody.addEventListener("click", function (e) {
+          var a = e.target.closest(".pm-order-confirm");
+          if (!a) return;
+          e.preventDefault();
+          var tr = a.closest("tr");
+          if (!tr) return;
+          tr.children[5].innerHTML = '<span class="tag-status tag-status--in-use">已确认</span>';
+          a.outerHTML = '<a href="receipt-inbound.html" style="color:#1677ff;text-decoration:none;font-weight:500">收货入库</a>';
+        });
+      }
+      var pmAddOrder = document.getElementById("pmAddOrder");
+      if (pmAddOrder) {
+        pmAddOrder.addEventListener("click", function () {
+          alert("已打开新增订单（设备清单筛选勾选）流程：类别/供应商/规格型号筛选 + 多选设备 + 指定业务部门。");
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>采购计划审批单 - 新能源物资供应链管理系统</title>
+  <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .pph .carrier-main-inner { padding: 12px 14px 20px; max-width: 1100px; margin: 0 auto; }
+    .pph-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .pph-toolbar-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .pph-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 0 16px;
+      font-size: 13px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid #d9d9d9;
+      background: #fff;
+      color: rgba(0, 0, 0, 0.88);
+      font-family: inherit;
+    }
+    .pph-btn--primary {
+      background: #1890ff;
+      border-color: #1890ff;
+      color: #fff;
+    }
+    .pph-btn--primary:hover { background: #40a9ff; border-color: #40a9ff; }
+    .pph-btn--ghost:hover { border-color: #1890ff; color: #1890ff; }
+    .pph-title {
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+      color: #1f3551;
+      margin: 6px 0 14px;
+      letter-spacing: 0.02em;
+    }
+    .pph-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+      font-size: 13px;
+      color: #4c6077;
+    }
+    .pph-meta select {
+      height: 30px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      padding: 0 8px;
+      font-size: 13px;
+      color: #333;
+      background: #fff;
+      min-width: 120px;
+    }
+    .pph-form-wrap {
+      background: #fff;
+      border: 1px solid #e8eef5;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .pph-grid {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 13px;
+    }
+    .pph-grid td {
+      border: 1px solid #e8eef5;
+      padding: 0;
+      vertical-align: middle;
+    }
+    .pph-label {
+      width: 18%;
+      background: #f5f7fa;
+      color: #3f5366;
+      padding: 10px 12px;
+      text-align: right;
+      font-weight: 500;
+      box-sizing: border-box;
+    }
+    .pph-label .req { color: #ff4d4f; margin-right: 2px; }
+    .pph-cell {
+      width: 32%;
+      padding: 6px 10px;
+      background: #fff;
+      box-sizing: border-box;
+    }
+    .pph-cell--full { width: auto; }
+    .pph-input {
+      width: 100%;
+      height: 32px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      padding: 0 10px;
+      font-size: 13px;
+      color: #333;
+      box-sizing: border-box;
+      outline: none;
+    }
+    .pph-input:focus { border-color: #1890ff; box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.12); }
+    .pph-radio-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      min-height: 32px;
+    }
+    .pph-radio-row label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-weight: 400;
+      color: #333;
+    }
+    .pph-upload {
+      display: flex;
+      justify-content: center;
+      padding: 16px 12px;
+      border-top: 1px solid #e8eef5;
+      background: #fafbfd;
+    }
+    .pph-upload .pph-btn--primary {
+      background: #e6f4ff;
+      border-color: #91caff;
+      color: #1677ff;
+    }
+    .pph-upload .pph-btn--primary:hover {
+      background: #bae0ff;
+      border-color: #69b1ff;
+      color: #0958d9;
+    }
+    .pph-toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translateX(-50%);
+      padding: 10px 18px;
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      border-radius: 6px;
+      font-size: 13px;
+      z-index: 10000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .pph-toast.show { opacity: 1; }
+
+    /* 审批弹窗「提示」 */
+    .pph-modal-mask {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 10050;
+      background: rgba(15, 25, 45, 0.45);
+      backdrop-filter: blur(2px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .pph-modal-mask.is-open { display: flex; }
+    .pph-modal {
+      width: min(520px, 100%);
+      max-height: min(92vh, 720px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 12px 40px rgba(15, 35, 70, 0.18);
+      border: 1px solid #e8eef5;
+    }
+    .pph-modal-hd {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: 14px 40px 12px;
+      border-bottom: 1px solid #f0f2f5;
+      flex-shrink: 0;
+    }
+    .pph-modal-hd h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #1f3551;
+    }
+    .pph-modal-x {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      font-size: 22px;
+      line-height: 1;
+      color: #8c9aad;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .pph-modal-x:hover { color: #1f3551; background: #f5f7fa; }
+    .pph-modal-bd {
+      padding: 16px 18px;
+      overflow-y: auto;
+      font-size: 13px;
+      color: #3f5366;
+    }
+    .pph-modal-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .pph-modal-row:last-child { margin-bottom: 0; }
+    .pph-modal-row--block { flex-direction: column; gap: 8px; }
+    .pph-modal-label {
+      flex: 0 0 72px;
+      padding-top: 6px;
+      font-weight: 500;
+      color: #4c6077;
+    }
+    .pph-modal-row--block .pph-modal-label { padding-top: 0; }
+    .pph-modal-checks {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px 18px;
+      padding-top: 4px;
+    }
+    .pph-modal-checks label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-weight: 400;
+      color: #333;
+    }
+    .pph-modal-hint {
+      margin: 6px 0 0;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #ff4d4f;
+    }
+    .pph-cc-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: #1890ff;
+      color: #fff;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin-top: 2px;
+    }
+    .pph-cc-btn:hover { background: #40a9ff; }
+    .pph-modal-textarea {
+      width: 100%;
+      min-height: 96px;
+      padding: 10px 12px;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      color: #333;
+      resize: vertical;
+      box-sizing: border-box;
+      outline: none;
+    }
+    .pph-modal-textarea:focus {
+      border-color: #1890ff;
+      box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.12);
+    }
+    .pph-quick-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .pph-tag {
+      padding: 4px 12px;
+      font-size: 12px;
+      border: 1px solid #91caff;
+      border-radius: 999px;
+      background: #e6f4ff;
+      color: #1677ff;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .pph-tag:hover {
+      background: #bae0ff;
+      border-color: #69b1ff;
+    }
+    .pph-modal-ft {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 16px 16px;
+      border-top: 1px solid #f0f2f5;
+      flex-shrink: 0;
+      background: #fafbfd;
+    }
+    .pph-ft-btn {
+      min-width: 72px;
+      height: 32px;
+      padding: 0 14px;
+      font-size: 13px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      border: 1px solid transparent;
+    }
+    .pph-ft-btn--primary {
+      background: #1890ff;
+      border-color: #1890ff;
+      color: #fff;
+    }
+    .pph-ft-btn--primary:hover { background: #40a9ff; border-color: #40a9ff; }
+    .pph-ft-btn--danger {
+      background: #ff4d4f;
+      border-color: #ff4d4f;
+      color: #fff;
+    }
+    .pph-ft-btn--danger:hover { background: #ff7875; border-color: #ff7875; }
+    .pph-ft-btn--ghost {
+      background: #fff;
+      border-color: #d9d9d9;
+      color: rgba(0, 0, 0, 0.85);
+    }
+    .pph-ft-btn--ghost:hover {
+      border-color: #1890ff;
+      color: #1890ff;
+    }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics pph">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar" title="用户">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item nav-item--module-active" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit-analytics.html"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <div class="pph-toolbar">
+            <div class="pph-toolbar-left">
+              <button type="button" class="pph-btn pph-btn--primary" id="pphBtnApprove">审批</button>
+              <button type="button" class="pph-btn pph-btn--primary" id="pphBtnTrack">流程轨迹</button>
+            </div>
+            <a class="pph-btn pph-btn--ghost" href="my-tasks-prototype-list.html?scene=todo" id="pphBtnBack">返回</a>
+          </div>
+          <h2 class="pph-title">采购计划审批单</h2>
+          <div class="pph-meta">
+            <label>归档 <select id="pphArchive" aria-label="归档">
+              <option value="">请选择</option>
+              <option value="yes">是</option>
+              <option value="no">否</option>
+            </select></label>
+            <span id="pphFormNo">表单编号：CGJHSP20241203004</span>
+          </div>
+          <div class="pph-form-wrap">
+            <table class="pph-grid" role="presentation">
+              <tbody>
+                <tr>
+                  <td class="pph-label"><span class="req">*</span>提报人</td>
+                  <td class="pph-cell"><input class="pph-input" type="text" name="reporter" value="张三" autocomplete="off" /></td>
+                  <td class="pph-label"><span class="req">*</span>提报时间</td>
+                  <td class="pph-cell"><input class="pph-input" type="text" name="reportTime" value="2024-12-03 11:00:00" readonly /></td>
+                </tr>
+                <tr>
+                  <td class="pph-label"><span class="req">*</span>联系方式</td>
+                  <td class="pph-cell"><input class="pph-input" type="text" name="contact" value="010-88886666" autocomplete="off" /></td>
+                  <td class="pph-label"><span class="req">*</span>提报单位</td>
+                  <td class="pph-cell"><input class="pph-input" type="text" name="unit" value="经营发展中心" autocomplete="off" /></td>
+                </tr>
+                <tr>
+                  <td class="pph-label"><span class="req">*</span>项目名称</td>
+                  <td class="pph-cell pph-cell--full" colspan="3"><input class="pph-input" type="text" name="projectName" value="年度备件集中采购计划" autocomplete="off" /></td>
+                </tr>
+                <tr>
+                  <td class="pph-label"><span class="req">*</span>采购范围</td>
+                  <td class="pph-cell pph-cell--full" colspan="3"><input class="pph-input" type="text" name="scope" value="风机备件、电气元件及耗材" autocomplete="off" /></td>
+                </tr>
+                <tr>
+                  <td class="pph-label"><span class="req">*</span>计划类型</td>
+                  <td class="pph-cell"><input class="pph-input" type="text" name="planType" value="批次计划" autocomplete="off" /></td>
+                  <td class="pph-label"><span class="req">*</span>项目类别</td>
+                  <td class="pph-cell"><input class="pph-input" type="text" name="projectCat" value="物资类" autocomplete="off" /></td>
+                </tr>
+                <tr>
+                  <td class="pph-label"><span class="req">*</span>专业板块</td>
+                  <td class="pph-cell"><input class="pph-input" type="text" name="sector" value="新能源" autocomplete="off" /></td>
+                  <td class="pph-label"><span class="req">*</span>本部专业部门</td>
+                  <td class="pph-cell"><input class="pph-input" type="text" name="hqDept" value="运维管理部" autocomplete="off" /></td>
+                </tr>
+                <tr>
+                  <td class="pph-label"><span class="req">*</span>标的类别</td>
+                  <td class="pph-cell"><input class="pph-input" type="text" name="targetCat" value="货物" autocomplete="off" /></td>
+                  <td class="pph-label"><span class="req">*</span>预算/限价（万元）</td>
+                  <td class="pph-cell"><input class="pph-input" type="text" name="budget" value="520" inputmode="decimal" autocomplete="off" /></td>
+                </tr>
+                <tr>
+                  <td class="pph-label"><span class="req">*</span>采购方式</td>
+                  <td class="pph-cell"><input class="pph-input" type="text" name="method" value="公开招标" autocomplete="off" /></td>
+                  <td class="pph-label"><span class="req">*</span>是否有最高限价</td>
+                  <td class="pph-cell">
+                    <div class="pph-radio-row">
+                      <label><input type="radio" name="maxPrice" value="yes" checked /> 是</label>
+                      <label><input type="radio" name="maxPrice" value="no" /> 否</label>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="pph-upload">
+              <input type="file" id="pphFile" hidden multiple />
+              <button type="button" class="pph-btn pph-btn--primary" id="pphPickFile">选择文件</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div class="pph-toast" id="pphToast" role="status" aria-live="polite"></div>
+
+  <div class="pph-modal-mask" id="pphApproveModal" aria-hidden="true">
+    <div class="pph-modal" role="dialog" aria-modal="true" aria-labelledby="pphModalTitle">
+      <div class="pph-modal-hd">
+        <h3 id="pphModalTitle">提示</h3>
+        <button type="button" class="pph-modal-x" id="pphModalCloseX" aria-label="关闭">×</button>
+      </div>
+      <div class="pph-modal-bd">
+        <div class="pph-modal-row">
+          <span class="pph-modal-label">消息提醒</span>
+          <div class="pph-modal-checks">
+            <label><input type="checkbox" name="pphNotify" value="site" checked /> 站内信</label>
+            <label><input type="checkbox" name="pphNotify" value="mail" /> 邮件</label>
+            <label><input type="checkbox" name="pphNotify" value="sms" /> 短信</label>
+          </div>
+        </div>
+        <div class="pph-modal-row pph-modal-row--block">
+          <span class="pph-modal-label">附件</span>
+          <div>
+            <input type="file" id="pphModalFile" hidden multiple />
+            <button type="button" class="pph-btn pph-btn--primary" id="pphModalPickFile">选取文件</button>
+            <p class="pph-modal-hint">请上传 大小不超过 20MB 格式为 doc/xls/ppt/txt/pdf/xlsx/docx/zip 的文件</p>
+          </div>
+        </div>
+        <div class="pph-modal-row">
+          <span class="pph-modal-label">抄送</span>
+          <button type="button" class="pph-cc-btn" id="pphCcAdd" title="添加抄送人">+</button>
+        </div>
+        <div class="pph-modal-row pph-modal-row--block">
+          <label class="pph-modal-label" for="pphOpinion">审批意见</label>
+          <textarea id="pphOpinion" class="pph-modal-textarea" rows="4" placeholder="请输入审批意见"></textarea>
+          <div class="pph-quick-tags" id="pphQuickTags">
+            <button type="button" class="pph-tag" data-text="同意">同意</button>
+            <button type="button" class="pph-tag" data-text="驳回">驳回</button>
+            <button type="button" class="pph-tag" data-text="转办">转办</button>
+            <button type="button" class="pph-tag" data-text="加签">加签</button>
+            <button type="button" class="pph-tag" data-text="终止">终止</button>
+            <button type="button" class="pph-tag" data-text="不同意">不同意</button>
+            <button type="button" class="pph-tag" data-text="已阅">已阅</button>
+          </div>
+        </div>
+      </div>
+      <div class="pph-modal-ft">
+        <button type="button" class="pph-ft-btn pph-ft-btn--primary" data-pph-ft="submit">提交</button>
+        <button type="button" class="pph-ft-btn pph-ft-btn--primary" data-pph-ft="delegate">委托</button>
+        <button type="button" class="pph-ft-btn pph-ft-btn--primary" data-pph-ft="transfer">转办</button>
+        <button type="button" class="pph-ft-btn pph-ft-btn--danger" data-pph-ft="terminate">终止</button>
+        <button type="button" class="pph-ft-btn pph-ft-btn--danger" data-pph-ft="return">退回</button>
+        <button type="button" class="pph-ft-btn pph-ft-btn--ghost" id="pphModalCancel">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      function toast(msg) {
+        var el = document.getElementById("pphToast");
+        if (!el) return;
+        el.textContent = msg;
+        el.classList.add("show");
+        clearTimeout(toast._t);
+        toast._t = setTimeout(function () {
+          el.classList.remove("show");
+        }, 2200);
+      }
+      var modal = document.getElementById("pphApproveModal");
+      function openApproveModal() {
+        if (!modal) return;
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+        try {
+          var ta = document.getElementById("pphOpinion");
+          if (ta) setTimeout(function () { ta.focus(); }, 100);
+        } catch (e) {}
+      }
+      function closeApproveModal() {
+        if (!modal) return;
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+      document.getElementById("pphBtnApprove").addEventListener("click", openApproveModal);
+      document.getElementById("pphModalCloseX").addEventListener("click", closeApproveModal);
+      document.getElementById("pphModalCancel").addEventListener("click", closeApproveModal);
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) closeApproveModal();
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && modal && modal.classList.contains("is-open")) closeApproveModal();
+      });
+      document.getElementById("pphModalPickFile").addEventListener("click", function () {
+        document.getElementById("pphModalFile").click();
+      });
+      document.getElementById("pphModalFile").addEventListener("change", function () {
+        var n = this.files && this.files.length;
+        toast(n ? "已选择 " + n + " 个附件（演示）" : "未选择文件");
+      });
+      document.getElementById("pphCcAdd").addEventListener("click", function () {
+        toast("演示：选择抄送人");
+      });
+      document.getElementById("pphQuickTags").addEventListener("click", function (e) {
+        var btn = e.target.closest(".pph-tag");
+        if (!btn) return;
+        var t = btn.getAttribute("data-text") || "";
+        var ta = document.getElementById("pphOpinion");
+        if (!ta || !t) return;
+        var cur = ta.value.trim();
+        ta.value = cur ? cur + " " + t : t;
+      });
+      var ftLabels = {
+        submit: "提交",
+        delegate: "委托",
+        transfer: "转办",
+        terminate: "终止",
+        return: "退回"
+      };
+      modal.querySelector(".pph-modal-ft").addEventListener("click", function (e) {
+        var b = e.target.closest("[data-pph-ft]");
+        if (!b) return;
+        var k = b.getAttribute("data-pph-ft");
+        if (k === "return" || k === "terminate") {
+          toast("演示：" + (ftLabels[k] || k) + "（原型未接后端）");
+          closeApproveModal();
+          return;
+        }
+        if (k === "submit") {
+          toast("演示：已提交审批意见（原型）");
+          closeApproveModal();
+          return;
+        }
+        toast("演示：" + (ftLabels[k] || k) + "（原型）");
+      });
+      document.getElementById("pphBtnTrack").addEventListener("click", function () {
+        toast("演示：打开流程轨迹");
+      });
+      document.getElementById("pphPickFile").addEventListener("click", function () {
+        document.getElementById("pphFile").click();
+      });
+      document.getElementById("pphFile").addEventListener("change", function () {
+        var n = this.files && this.files.length;
+        toast(n ? "已选择 " + n + " 个文件（演示）" : "未选择文件");
+      });
+      try {
+        var sp = new URLSearchParams(window.location.search);
+        var no = sp.get("no");
+        if (no) {
+          document.getElementById("pphFormNo").textContent = "表单编号：" + no;
+        }
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>

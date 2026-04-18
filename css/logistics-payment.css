@@ -1,0 +1,33 @@
+/**
+ * 物流付款页：承运商布局 + 付款状态标签
+ */
+.tag-status--pending {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.tag-status--approve {
+  background: #e8f4ff;
+  color: #1769c5;
+}
+
+.tag-status--paid {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.tag-status--reject {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* 金额列右对齐更易读（可选） */
+.carrier-table td.cell-amount {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.carrier-table td.cell-paid-amount {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

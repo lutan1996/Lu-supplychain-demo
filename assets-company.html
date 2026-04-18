@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>公司资产 - 新能源物资供应链管理系统</title>
+  <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-toolbar.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/asset-pages.css" />
+</head>
+<body class="page-source-navbar page-subpage page-assets">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item nav-item--module-active" title="我的资产">
+          <span class="nav-label">我的资产</span>
+        </div>
+        <div class="nav-item" title="我的任务">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="5" width="14" height="17" rx="1.5"/><path d="M8 9h8M8 12.5h8M8 16h6"/></svg></span>
+          <span class="nav-label">我的任务</span>
+        </div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 10.5L12 3l9 7.5V20a1.5 1.5 0 0 1-1.5 1.5H15v-7H9v7H4.5A1.5 1.5 0 0 1 3 20v-9.5z"/></svg></span>
+          <span class="nav-label">首页</span>
+        </a>
+        <div class="nav-item" data-nav="cockpit" title="驾驶舱">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1"/></svg></span>
+          <span class="nav-label">驾驶舱</span>
+        </div>
+        <div class="nav-item" title="采购管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6h14l-1.2 9H7.2L6 6z"/><path d="M6 6V5a1 1 0 0 1 1-1h2"/><circle cx="9" cy="20" r="1.25"/><circle cx="17" cy="20" r="1.25"/></svg></span>
+          <span class="nav-label">采购管理</span>
+        </div>
+        <a class="nav-item" href="carrier-management.html" title="物流管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1 16h11.5V8.5H5V7h11.5v5h2.5l3.5 4.5"/><circle cx="6.5" cy="17.5" r="1.75"/><circle cx="16.5" cy="17.5" r="1.75"/></svg></span>
+          <span class="nav-label">物流管理</span>
+        </a>
+        <div class="nav-item" id="navWarehouse" data-nav="warehouse" title="仓储管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 21h18V10.5L12 6 3 10.5V21z"/><path d="M9 21v-7h6v7"/></svg></span>
+          <span class="nav-label">仓储管理</span>
+        </div>
+        <div class="nav-item" title="物资采购">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6a2 2 0 0 1 2-2h6v16H6a2 2 0 0 1-2-2V6z"/><path d="M20 6a2 2 0 0 0-2-2h-6v16h6a2 2 0 0 0 2-2V6z"/><path d="M12 4v16"/><path d="M7 9h3M7 12.5h3M7 16h2M14 9h3M14 12.5h3M14 16h2"/></svg></span>
+          <span class="nav-label">物资采购</span>
+        </div>
+        <div class="nav-item" title="物资出库与处置">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 12a9 9 0 0 0-9-9 9.5 9.5 0 0 0-7 3"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.5 9.5 0 0 0 7-3"/><path d="M16 16h5v5"/></svg></span>
+          <span class="nav-label">物资出库与处置</span>
+        </div>
+        <div class="nav-item" title="绩效考核">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="3" width="12" height="18" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h5"/></svg></span>
+          <span class="nav-label">绩效考核</span>
+        </div>
+        <div class="nav-item" title="公告管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h12a2 2 0 0 1 2 2v10H6a2 2 0 0 0-2 2v2"/><path d="M4 6V5a1 1 0 0 1 1-1h2"/><path d="M8 10h8M8 14h6"/></svg></span>
+          <span class="nav-label">公告管理</span>
+        </div>
+        <div class="nav-item" title="综合业务管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg></span>
+          <span class="nav-label">综合业务管理</span>
+        </div>
+        <div class="nav-item" title="数据管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="5" rx="9" ry="2.5"/><path d="M3 5v6c0 1.6 4 3 9 3s9-1.4 9-3V5"/><path d="M3 11v6c0 1.6 4 3 9 3s9-1.4 9-3V11"/><path d="M3 17v2c0 1.6 4 3 9 3s9-1.4 9-3v-2"/></svg></span>
+          <span class="nav-label">数据管理</span>
+        </div>
+        <div class="nav-item" title="开发工具">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 18l6-6-6-6"/><path d="M8 6 2 12l6 6"/></svg></span>
+          <span class="nav-label">开发工具</span>
+        </div>
+        <div class="nav-item" title="设置">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3"/><path d="M12 1v2.5M12 20.5V23M4.2 4.2l1.8 1.8M18 18l1.8 1.8M1 12h2.5M20.5 12H23M4.2 19.8 6 18M18 6l1.8-1.8"/></svg></span>
+          <span class="nav-label">设置</span>
+        </div>
+        <div class="nav-item" title="系统管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="9" r="3.5"/><path d="M5 20.5v-1a7 7 0 0 1 14 0v1"/></svg></span>
+          <span class="nav-label">系统管理</span>
+        </div>
+      </aside>
+
+      <main class="main-scroll">
+        <div class="asset-page-head">
+          <h1 class="asset-page-title">公司资产</h1>
+          <div class="asset-page-head__actions">
+            <button type="button" class="asset-btn asset-btn--scan" id="btnOpenScanModal" title="盘点时快速扫码录入">扫码盘点</button>
+            <button type="button" class="asset-btn asset-btn--stats" id="btnOpenStatsModal" title="查看公司资产分布统计">统计分析</button>
+          </div>
+        </div>
+        <div class="asset-inner">
+          <div class="asset-info-bar asset-info-bar--company" role="region" aria-label="公司资产概览">
+            <span><em>所属公司</em> 新能源集团总部</span>
+            <span><em>部门总数</em> 25</span>
+            <span><em>资产总数</em> 1,256</span>
+            <span><em>资产总值</em> ¥ 8,965,200.00</span>
+            <span><em>净值合计</em> ¥ 6,234,800.00</span>
+          </div>
+
+          <div class="asset-kpi-row">
+            <div class="asset-kpi-card">
+              <div class="asset-kpi-card__label">固定资产</div>
+              <div class="asset-kpi-card__val asset-kpi-card__val--green">856</div>
+            </div>
+            <div class="asset-kpi-card">
+              <div class="asset-kpi-card__label">领用物资</div>
+              <div class="asset-kpi-card__val asset-kpi-card__val--blue">400</div>
+            </div>
+            <div class="asset-kpi-card">
+              <div class="asset-kpi-card__label">闲置资产</div>
+              <div class="asset-kpi-card__val asset-kpi-card__val--orange">68</div>
+            </div>
+            <div class="asset-kpi-card">
+              <div class="asset-kpi-card__label">待交接</div>
+              <div class="asset-kpi-card__val asset-kpi-card__val--purple">15</div>
+            </div>
+            <div class="asset-kpi-card">
+              <div class="asset-kpi-card__label">已退役</div>
+              <div class="asset-kpi-card__val asset-kpi-card__val--red">23</div>
+            </div>
+          </div>
+
+          <div class="asset-charts-row">
+            <div class="asset-chart-card">
+              <h3>资产分布（按区域）</h3>
+              <ul class="asset-chart-list">
+                <li><span>华东区域</span><strong>512</strong></li>
+                <li><span>华北区域</span><strong>356</strong></li>
+                <li><span>西北区域</span><strong>198</strong></li>
+                <li><span>华南区域</span><strong>124</strong></li>
+                <li><span>其他</span><strong>66</strong></li>
+              </ul>
+            </div>
+            <div class="asset-chart-card">
+              <h3>资产状态分布</h3>
+              <ul class="asset-chart-list">
+                <li><span>正常使用</span><strong>75%</strong></li>
+                <li><span>闲置</span><strong>8%</strong></li>
+                <li><span>待交接</span><strong>2%</strong></li>
+                <li><span>已退役</span><strong>15%</strong></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="asset-pill-row" role="toolbar" aria-label="按区域筛选">
+            <span class="asset-pill-row__label">按区域筛选：</span>
+            <button type="button" class="asset-pill is-active">全部</button>
+            <button type="button" class="asset-pill">华东</button>
+            <button type="button" class="asset-pill">华北</button>
+            <button type="button" class="asset-pill">西北</button>
+            <button type="button" class="asset-pill">华南</button>
+          </div>
+
+          <div class="asset-panel">
+            <div class="asset-tabs" role="tablist" aria-label="资产分类">
+              <button type="button" class="asset-tab is-active" role="tab" aria-selected="true">全部资产</button>
+              <button type="button" class="asset-tab" role="tab" aria-selected="false">固定资产</button>
+              <button type="button" class="asset-tab" role="tab" aria-selected="false">领用物资</button>
+              <button type="button" class="asset-tab" role="tab" aria-selected="false">闲置资产</button>
+              <button type="button" class="asset-tab" role="tab" aria-selected="false">待交接</button>
+              <button type="button" class="asset-tab" role="tab" aria-selected="false">已退役</button>
+            </div>
+            <div class="asset-filter-grid">
+              <div class="wh-field">
+                <label for="ac-code">资产编号</label>
+                <input id="ac-code" type="text" placeholder="请输入资产编号" />
+              </div>
+              <div class="wh-field">
+                <label for="ac-name">资产名称</label>
+                <input id="ac-name" type="text" placeholder="请输入资产名称" />
+              </div>
+              <div class="wh-field">
+                <label for="ac-region">所属区域</label>
+                <select id="ac-region">
+                  <option>全部区域</option>
+                  <option>华东区域</option>
+                  <option>华北区域</option>
+                  <option>西北区域</option>
+                  <option>华南区域</option>
+                </select>
+              </div>
+              <div class="wh-field">
+                <label for="ac-dept">所属部门</label>
+                <select id="ac-dept">
+                  <option>全部部门</option>
+                  <option>华北区域运维部</option>
+                  <option>华东检修中心</option>
+                  <option>西北物资部</option>
+                </select>
+              </div>
+              <div class="wh-field">
+                <label for="ac-keeper">保管人</label>
+                <input id="ac-keeper" type="text" placeholder="请输入保管人" />
+              </div>
+              <div class="wh-field">
+                <label for="ac-loc">存放地点</label>
+                <input id="ac-loc" type="text" placeholder="请输入存放地点" />
+              </div>
+              <div class="wh-field">
+                <label for="ac-status">状态</label>
+                <select id="ac-status">
+                  <option>全部状态</option>
+                  <option>正常使用</option>
+                  <option>闲置</option>
+                  <option>待交接</option>
+                  <option>已退役</option>
+                </select>
+              </div>
+            </div>
+            <div class="asset-action-row">
+              <button type="button" class="asset-btn asset-btn--search-green">搜索</button>
+              <button type="button" class="asset-btn asset-btn--reset">重置</button>
+              <button type="button" class="asset-btn asset-btn--report">资产报表</button>
+              <button type="button" class="asset-btn asset-btn--export-orange">导出数据</button>
+            </div>
+
+            <div class="asset-table-wrap">
+              <table class="wh-table">
+                <thead>
+                  <tr>
+                    <th style="width:40px"><input type="checkbox" aria-label="全选" /></th>
+                    <th style="width:48px">序号</th>
+                    <th>资产编号</th>
+                    <th>资产名称</th>
+                    <th>型号/规格</th>
+                    <th>所属区域</th>
+                    <th>所属部门</th>
+                    <th>保管人</th>
+                    <th>存放地点</th>
+                    <th>原值(元)</th>
+                    <th>净值(元)</th>
+                    <th>采购日期</th>
+                    <th>状态</th>
+                    <th style="width:160px">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="checkbox" aria-label="选择行" /></td>
+                    <td>1</td>
+                    <td>GD-2024-001</td>
+                    <td>主变压器巡检仪</td>
+                    <td>ZX-500A</td>
+                    <td>华东区域</td>
+                    <td>华北区域运维部</td>
+                    <td>张三</td>
+                    <td>华北运维中心库房</td>
+                    <td>32,500.00</td>
+                    <td>28,750.00</td>
+                    <td>2024-03-15</td>
+                    <td><span class="tag-asset tag-asset--normal">正常使用</span></td>
+                    <td><a class="asset-op-btn asset-op-btn--green asset-op-view" href="#">查看</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" aria-label="选择行" /></td>
+                    <td>2</td>
+                    <td>GD-2024-056</td>
+                    <td>箱变综合测试仪</td>
+                    <td>BX-PRO</td>
+                    <td>华北区域</td>
+                    <td>华北区域运维部</td>
+                    <td>王五</td>
+                    <td>张北场站库房</td>
+                    <td>41,200.00</td>
+                    <td>36,800.00</td>
+                    <td>2024-04-10</td>
+                    <td><span class="tag-asset tag-asset--normal">正常使用</span></td>
+                    <td><a class="asset-op-btn asset-op-btn--green asset-op-view" href="#">查看</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" aria-label="选择行" /></td>
+                    <td>3</td>
+                    <td>LY-2024-112</td>
+                    <td>安全绳及防坠器套装</td>
+                    <td>SAFE-R8</td>
+                    <td>西北区域</td>
+                    <td>西北物资部</td>
+                    <td>赵六</td>
+                    <td>酒泉备件库</td>
+                    <td>2,400.00</td>
+                    <td>2,050.00</td>
+                    <td>2024-05-22</td>
+                    <td><span class="tag-asset tag-asset--transfer">待交接</span></td>
+                    <td><a class="asset-op-btn asset-op-btn--green asset-op-view" href="#">查看</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" aria-label="选择行" /></td>
+                    <td>4</td>
+                    <td>GD-2023-201</td>
+                    <td>电缆故障定位车单元</td>
+                    <td>CFU-8K</td>
+                    <td>华东区域</td>
+                    <td>华东检修中心</td>
+                    <td>刘洋</td>
+                    <td>南通仓储中心</td>
+                    <td>88,000.00</td>
+                    <td>72,300.00</td>
+                    <td>2023-08-30</td>
+                    <td><span class="tag-asset tag-asset--idle">闲置</span></td>
+                    <td><a class="asset-op-btn asset-op-btn--green asset-op-view" href="#">查看</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" aria-label="选择行" /></td>
+                    <td>5</td>
+                    <td>GD-2021-089</td>
+                    <td>退役风机主轴组件</td>
+                    <td>SP-2MW</td>
+                    <td>华北区域</td>
+                    <td>华北区域运维部</td>
+                    <td>陈静</td>
+                    <td>退役资产暂存区</td>
+                    <td>120,000.00</td>
+                    <td>18,000.00</td>
+                    <td>2021-06-12</td>
+                    <td><span class="tag-asset tag-asset--retired">已退役</span></td>
+                    <td><a class="asset-op-btn asset-op-btn--green asset-op-view" href="#">查看</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" aria-label="选择行" /></td>
+                    <td>6</td>
+                    <td>LY-2024-078</td>
+                    <td>备品滤芯（箱）</td>
+                    <td>FLT-X3</td>
+                    <td>华南区域</td>
+                    <td>华南运维部</td>
+                    <td>周琪</td>
+                    <td>粤西中心仓</td>
+                    <td>5,600.00</td>
+                    <td>5,100.00</td>
+                    <td>2024-03-08</td>
+                    <td><span class="tag-asset tag-asset--normal">正常使用</span></td>
+                    <td><a class="asset-op-btn asset-op-btn--green asset-op-view" href="#">查看</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" aria-label="选择行" /></td>
+                    <td>7</td>
+                    <td>GD-2024-033</td>
+                    <td>继电保护校验仪</td>
+                    <td>RPT-700</td>
+                    <td>华东区域</td>
+                    <td>华东检修中心</td>
+                    <td>马强</td>
+                    <td>南京检修基地</td>
+                    <td>27,800.00</td>
+                    <td>25,400.00</td>
+                    <td>2024-02-14</td>
+                    <td><span class="tag-asset tag-asset--normal">正常使用</span></td>
+                    <td><a class="asset-op-btn asset-op-btn--green asset-op-view" href="#">查看</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" aria-label="选择行" /></td>
+                    <td>8</td>
+                    <td>GD-2020-044</td>
+                    <td>退役箱变壳体</td>
+                    <td>BX-OLD1</td>
+                    <td>西北区域</td>
+                    <td>西北物资部</td>
+                    <td>孙磊</td>
+                    <td>退役堆放场</td>
+                    <td>65,000.00</td>
+                    <td>9,800.00</td>
+                    <td>2020-11-02</td>
+                    <td><span class="tag-asset tag-asset--retired">已退役</span></td>
+                    <td><a class="asset-op-btn asset-op-btn--green asset-op-view" href="#">查看</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" aria-label="选择行" /></td>
+                    <td>9</td>
+                    <td>LY-2023-256</td>
+                    <td>应急照明及发电一体机</td>
+                    <td>EMG-L200</td>
+                    <td>华北区域</td>
+                    <td>华北区域运维部</td>
+                    <td>张三</td>
+                    <td>承德场站</td>
+                    <td>6,200.00</td>
+                    <td>5,400.00</td>
+                    <td>2023-12-01</td>
+                    <td><span class="tag-asset tag-asset--normal">正常使用</span></td>
+                    <td><a class="asset-op-btn asset-op-btn--green asset-op-view" href="#">查看</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" aria-label="选择行" /></td>
+                    <td>10</td>
+                    <td>GD-2024-091</td>
+                    <td>齿轮箱内窥检测系统</td>
+                    <td>GB-INS3</td>
+                    <td>华东区域</td>
+                    <td>华东检修中心</td>
+                    <td>钱伟</td>
+                    <td>盐城运维中心</td>
+                    <td>52,000.00</td>
+                    <td>48,600.00</td>
+                    <td>2024-06-18</td>
+                    <td><span class="tag-asset tag-asset--idle">闲置</span></td>
+                    <td><a class="asset-op-btn asset-op-btn--green asset-op-view" href="#">查看</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="wh-pagination">
+              <span>共 1,256 条</span>
+              <select aria-label="每页条数">
+                <option>10条/页</option>
+                <option>20条/页</option>
+              </select>
+              <div class="wh-page-btns">
+                <button type="button" aria-label="上一页">&lt;</button>
+                <button type="button" class="is-current" aria-current="page">1</button>
+                <button type="button">2</button>
+                <button type="button">3</button>
+                <span>…</span>
+                <button type="button">126</button>
+                <button type="button" aria-label="下一页">&gt;</button>
+              </div>
+              <span class="wh-goto">前往 <input type="text" value="1" aria-label="页码" /> 页</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="asset-modal-mask" id="scanModalMask" aria-hidden="true">
+    <div class="asset-modal" role="dialog" aria-modal="true" aria-labelledby="scanModalTitle">
+      <div class="asset-modal__header">
+        <h2 class="asset-modal__title" id="scanModalTitle">扫码盘点</h2>
+        <button type="button" class="asset-modal__close" id="btnCloseScanModal" aria-label="关闭">×</button>
+      </div>
+      <div class="asset-modal__body">
+        <p class="asset-scan-tip">在全公司资产台账中扫码或输入编号，快速核对实物与账面信息（区域、部门、存放地点等），提交实盘结果。（演示环境支持手动输入或模拟扫码）</p>
+        <div class="asset-scan-frame">
+          <div class="asset-scan-frame__icon" aria-hidden="true">▣</div>
+          <p class="asset-scan-frame__text">将条码/二维码对准采集框</p>
+          <p class="asset-scan-frame__hint">移动端可调用摄像头；PC 端建议配合扫码枪或手动输入</p>
+        </div>
+        <div class="asset-scan-row">
+          <label for="scanAssetCode">资产编号</label>
+          <input id="scanAssetCode" type="text" placeholder="扫码自动填入，或手动输入如 GD-2024-056" autocomplete="off" />
+        </div>
+        <div class="asset-scan-actions">
+          <button type="button" class="asset-btn asset-btn--search-orange" id="btnScanSimulate">模拟扫码成功</button>
+          <button type="button" class="asset-btn asset-btn--reset" id="btnScanCamera">调起摄像头（演示）</button>
+        </div>
+        <div class="asset-scan-result" id="scanResultPanel" aria-live="polite">
+          <h4>台账信息</h4>
+          <dl class="asset-scan-kv" id="scanResultKv"></dl>
+          <div class="asset-scan-row">
+            <label for="scanActualStatus">实盘状态</label>
+            <select id="scanActualStatus">
+              <option value="normal">账实相符 · 正常使用</option>
+              <option value="idle">账实相符 · 闲置</option>
+              <option value="move">存放地点变更</option>
+              <option value="missing">盘亏 / 未找到实物</option>
+            </select>
+          </div>
+          <div class="asset-scan-row" style="align-items:flex-start;">
+            <label for="scanRemark">备注</label>
+            <textarea id="scanRemark" placeholder="可填写现场照片编号、异常说明等"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="asset-modal__footer">
+        <button type="button" class="asset-btn asset-btn--reset" id="btnScanCancel">关闭</button>
+        <button type="button" class="asset-btn asset-btn--search-orange" id="btnScanSubmit" disabled>确认盘点录入</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="asset-modal-mask" id="statsModalMask" aria-hidden="true">
+    <div class="asset-modal asset-modal--wide" role="dialog" aria-modal="true" aria-labelledby="statsModalTitle">
+      <div class="asset-modal__header">
+        <h2 class="asset-modal__title" id="statsModalTitle">统计分析 — 公司资产分布</h2>
+        <button type="button" class="asset-modal__close" id="btnCloseStatsModal" aria-label="关闭">×</button>
+      </div>
+      <div class="asset-modal__body">
+        <p class="asset-scan-tip" style="margin-top:0;">以下统计基于全公司台账汇总（演示数据，共 1,256 条），与列表筛选条件无关。</p>
+        <div class="asset-stats-grid">
+          <div class="asset-stats-card">
+            <h3 class="asset-stats-card__title">状态分布</h3>
+            <div class="stat-bar-row">
+              <span class="stat-bar-label">正常使用</span>
+              <div class="stat-bar-track"><div class="stat-bar-fill stat-bar-fill--g" style="width:100%"></div></div>
+              <span class="stat-bar-num">942</span>
+            </div>
+            <div class="stat-bar-row">
+              <span class="stat-bar-label">闲置</span>
+              <div class="stat-bar-track"><div class="stat-bar-fill stat-bar-fill--o" style="width:10.6%"></div></div>
+              <span class="stat-bar-num">100</span>
+            </div>
+            <div class="stat-bar-row">
+              <span class="stat-bar-label">待交接</span>
+              <div class="stat-bar-track"><div class="stat-bar-fill stat-bar-fill--b" style="width:2.7%"></div></div>
+              <span class="stat-bar-num">25</span>
+            </div>
+            <div class="stat-bar-row">
+              <span class="stat-bar-label">已退役</span>
+              <div class="stat-bar-track"><div class="stat-bar-fill stat-bar-fill--p" style="width:20.1%"></div></div>
+              <span class="stat-bar-num">189</span>
+            </div>
+          </div>
+          <div class="asset-stats-card">
+            <h3 class="asset-stats-card__title">保管人 TOP5</h3>
+            <div class="stat-bar-row">
+              <span class="stat-bar-label">张三</span>
+              <div class="stat-bar-track"><div class="stat-bar-fill stat-bar-fill--b" style="width:100%"></div></div>
+              <span class="stat-bar-num">156</span>
+            </div>
+            <div class="stat-bar-row">
+              <span class="stat-bar-label">王五</span>
+              <div class="stat-bar-track"><div class="stat-bar-fill stat-bar-fill--c" style="width:91%"></div></div>
+              <span class="stat-bar-num">142</span>
+            </div>
+            <div class="stat-bar-row">
+              <span class="stat-bar-label">赵六</span>
+              <div class="stat-bar-track"><div class="stat-bar-fill stat-bar-fill--g" style="width:82.1%"></div></div>
+              <span class="stat-bar-num">128</span>
+            </div>
+            <div class="stat-bar-row">
+              <span class="stat-bar-label">刘洋</span>
+              <div class="stat-bar-track"><div class="stat-bar-fill stat-bar-fill--o" style="width:73.7%"></div></div>
+              <span class="stat-bar-num">115</span>
+            </div>
+            <div class="stat-bar-row">
+              <span class="stat-bar-label">陈静</span>
+              <div class="stat-bar-track"><div class="stat-bar-fill stat-bar-fill--m" style="width:62.8%"></div></div>
+              <span class="stat-bar-num">98</span>
+            </div>
+          </div>
+          <div class="asset-stats-card">
+            <h3 class="asset-stats-card__title">类型分布</h3>
+            <div class="stat-donut-wrap">
+              <div class="stat-donut stat-donut--type-company" role="img" aria-label="固定资产约六成八，领用物资约三成二"></div>
+              <ul class="stat-legend">
+                <li><span class="stat-legend__dot" style="background:#52c41a"></span>固定资产 · 856 台/件（68%）</li>
+                <li><span class="stat-legend__dot" style="background:#faad14"></span>领用物资 · 400 台/件（32%）</li>
+              </ul>
+            </div>
+          </div>
+          <div class="asset-stats-card">
+            <h3 class="asset-stats-card__title">存放地点分布（TOP）</h3>
+            <div class="stat-loc-bars">
+              <div class="stat-loc-item">
+                <div class="stat-loc-col" style="height:100px"><div class="stat-loc-fill" style="height:100%"></div></div>
+                <span class="stat-loc-val">320</span>
+                <span class="stat-loc-name">华北运维中心库房</span>
+              </div>
+              <div class="stat-loc-item">
+                <div class="stat-loc-col" style="height:100px"><div class="stat-loc-fill" style="height:87.5%"></div></div>
+                <span class="stat-loc-val">280</span>
+                <span class="stat-loc-name">华东中心仓</span>
+              </div>
+              <div class="stat-loc-item">
+                <div class="stat-loc-col" style="height:100px"><div class="stat-loc-fill" style="height:62%"></div></div>
+                <span class="stat-loc-val">198</span>
+                <span class="stat-loc-name">西北备件库</span>
+              </div>
+              <div class="stat-loc-item">
+                <div class="stat-loc-col" style="height:100px"><div class="stat-loc-fill" style="height:52%"></div></div>
+                <span class="stat-loc-val">165</span>
+                <span class="stat-loc-name">华南中心仓</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="asset-modal__footer">
+        <button type="button" class="asset-btn asset-btn--search-orange" id="btnStatsOk">知道了</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="asset-modal-mask" id="assetDetailMask" aria-hidden="true">
+    <div class="asset-modal" role="dialog" aria-modal="true" aria-labelledby="assetDetailTitle">
+      <div class="asset-modal__header">
+        <h2 class="asset-modal__title" id="assetDetailTitle">资产详情</h2>
+        <button type="button" class="asset-modal__close" id="btnCloseAssetDetail" aria-label="关闭">×</button>
+      </div>
+      <div class="asset-modal__body" id="assetDetailBody"></div>
+      <div class="asset-modal__footer">
+        <button type="button" class="asset-btn asset-btn--reset" id="btnAssetDetailOk">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      document.querySelectorAll(".asset-tabs").forEach(function (wrap) {
+        wrap.querySelectorAll(".asset-tab").forEach(function (tab) {
+          tab.addEventListener("click", function () {
+            wrap.querySelectorAll(".asset-tab").forEach(function (t) {
+              t.classList.remove("is-active");
+              t.setAttribute("aria-selected", "false");
+            });
+            tab.classList.add("is-active");
+            tab.setAttribute("aria-selected", "true");
+          });
+        });
+      });
+      document.querySelectorAll(".asset-pill-row").forEach(function (row) {
+        row.querySelectorAll(".asset-pill").forEach(function (p) {
+          p.addEventListener("click", function () {
+            row.querySelectorAll(".asset-pill").forEach(function (x) {
+              x.classList.remove("is-active");
+            });
+            p.classList.add("is-active");
+            var region = (p.textContent || "").trim();
+            applyRegionFilter(region);
+          });
+        });
+      });
+      var companyTableWrap = document.querySelector(".asset-panel .asset-table-wrap");
+      var companyTableBody = companyTableWrap ? companyTableWrap.querySelector("tbody") : null;
+      var regionSelect = document.getElementById("ac-region");
+      var allowedRegions = [];
+
+      function applyRegionFilter(regionName) {
+        if (!companyTableBody) return;
+        companyTableBody.querySelectorAll("tr").forEach(function (tr) {
+          var td = tr.children[5];
+          var rowRegion = td ? (td.textContent || "").trim() : "";
+          var okRegion =
+            !regionName ||
+            regionName === "全部" ||
+            rowRegion === regionName ||
+            rowRegion.indexOf(regionName) >= 0;
+          tr.style.display = okRegion ? "" : "none";
+        });
+      }
+
+      function applyCompanyRegionAcl() {
+        var role = typeof window.getDemoOrgRole === "function" ? window.getDemoOrgRole() : null;
+        if (!role) return;
+        var map = {
+          director_feng: [],
+          gm_zeng: [],
+          corp_asset_head: [],
+          corp_asset_specialist: [],
+          value_leader: [],
+          value_dept_head: [],
+          value_asset_specialist: [],
+          dept_head: ["华北"],
+          dept_asset_specialist: ["华北"],
+          leader_supervisor: ["华北", "华东"]
+        };
+        allowedRegions = map[role.id] || [];
+
+        var tipOld = document.getElementById("assetCompanyAclTip");
+        if (tipOld && tipOld.parentNode) tipOld.parentNode.removeChild(tipOld);
+        if (allowedRegions.length) {
+          var infoBar = document.querySelector(".asset-info-bar--company");
+          if (infoBar) {
+            var tip = document.createElement("span");
+            tip.id = "assetCompanyAclTip";
+            tip.innerHTML = "<em>区域权限</em> " + allowedRegions.join(" / ");
+            infoBar.appendChild(tip);
+          }
+        }
+
+        document.querySelectorAll(".asset-pill-row .asset-pill").forEach(function (pill) {
+          var txt = (pill.textContent || "").trim();
+          var can =
+            !allowedRegions.length ||
+            txt === "全部" ||
+            allowedRegions.some(function (r) {
+              return txt.indexOf(r) >= 0 || r.indexOf(txt) >= 0;
+            });
+          pill.style.display = can ? "" : "none";
+        });
+
+        if (regionSelect) {
+          Array.prototype.slice.call(regionSelect.options).forEach(function (opt, idx) {
+            if (idx === 0) return;
+            var txt = (opt.textContent || "").trim();
+            var can =
+              !allowedRegions.length ||
+              allowedRegions.some(function (r) {
+                return txt.indexOf(r) >= 0 || r.indexOf(txt) >= 0;
+              });
+            opt.disabled = !can;
+          });
+        }
+
+        if (!allowedRegions.length) return;
+        if (companyTableBody) {
+          companyTableBody.querySelectorAll("tr").forEach(function (tr) {
+            var td = tr.children[5];
+            var rowRegion = td ? (td.textContent || "").trim() : "";
+            var can = allowedRegions.some(function (r) {
+              return rowRegion.indexOf(r) >= 0;
+            });
+            tr.style.display = can ? "" : "none";
+          });
+        }
+      }
+      applyCompanyRegionAcl();
+      window.addEventListener("demo-org-role-change", function () {
+        applyCompanyRegionAcl();
+      });
+
+      var scanMask = document.getElementById("scanModalMask");
+      var statsMask = document.getElementById("statsModalMask");
+      var scanCodeInput = document.getElementById("scanAssetCode");
+      var scanResultPanel = document.getElementById("scanResultPanel");
+      var scanResultKv = document.getElementById("scanResultKv");
+      var btnScanSubmit = document.getElementById("btnScanSubmit");
+
+      var demoAssets = {
+        "GD-2024-001": { name: "主变压器巡检仪", model: "ZX-500A", region: "华东区域", dept: "华北区域运维部", keeper: "张三", location: "华北运维中心库房", status: "正常使用" },
+        "GD-2024-056": { name: "箱变综合测试仪", model: "BX-PRO", region: "华北区域", dept: "华北区域运维部", keeper: "王五", location: "张北场站库房", status: "正常使用" },
+        "LY-2024-112": { name: "安全绳及防坠器套装", model: "SAFE-R8", region: "西北区域", dept: "西北物资部", keeper: "赵六", location: "酒泉备件库", status: "待交接" },
+        "GD-2023-201": { name: "电缆故障定位车单元", model: "CFU-8K", region: "华东区域", dept: "华东检修中心", keeper: "刘洋", location: "南通仓储中心", status: "闲置" },
+        "GD-2021-089": { name: "退役风机主轴组件", model: "SP-2MW", region: "华北区域", dept: "华北区域运维部", keeper: "陈静", location: "退役资产暂存区", status: "已退役" }
+      };
+
+      function openScanModal() {
+        scanMask.classList.add("is-open");
+        scanMask.setAttribute("aria-hidden", "false");
+        scanCodeInput.value = "";
+        scanResultPanel.classList.remove("is-visible");
+        btnScanSubmit.disabled = true;
+        document.getElementById("scanRemark").value = "";
+        document.getElementById("scanActualStatus").value = "normal";
+        setTimeout(function () { scanCodeInput.focus(); }, 100);
+      }
+      function closeScanModal() {
+        scanMask.classList.remove("is-open");
+        scanMask.setAttribute("aria-hidden", "true");
+      }
+      function openStatsModal() {
+        statsMask.classList.add("is-open");
+        statsMask.setAttribute("aria-hidden", "false");
+      }
+      function closeStatsModal() {
+        statsMask.classList.remove("is-open");
+        statsMask.setAttribute("aria-hidden", "true");
+      }
+
+      function showScanResult(code) {
+        var info = demoAssets[code];
+        if (!info) {
+          info = {
+            name: "（演示）未建档编号",
+            model: "—",
+            region: "—",
+            dept: "—",
+            keeper: "—",
+            location: "—",
+            status: "待核实"
+          };
+        }
+        scanResultKv.innerHTML =
+          "<dt>资产编号</dt><dd>" + code + "</dd>" +
+          "<dt>资产名称</dt><dd>" + info.name + "</dd>" +
+          "<dt>型号规格</dt><dd>" + info.model + "</dd>" +
+          "<dt>所属区域</dt><dd>" + info.region + "</dd>" +
+          "<dt>所属部门</dt><dd>" + info.dept + "</dd>" +
+          "<dt>保管人</dt><dd>" + info.keeper + "</dd>" +
+          "<dt>系统存放地点</dt><dd>" + info.location + "</dd>" +
+          "<dt>账面状态</dt><dd>" + info.status + "</dd>";
+        scanResultPanel.classList.add("is-visible");
+        btnScanSubmit.disabled = false;
+      }
+
+      document.getElementById("btnOpenScanModal").addEventListener("click", openScanModal);
+      document.getElementById("btnCloseScanModal").addEventListener("click", closeScanModal);
+      document.getElementById("btnScanCancel").addEventListener("click", closeScanModal);
+      document.getElementById("btnOpenStatsModal").addEventListener("click", openStatsModal);
+      document.getElementById("btnCloseStatsModal").addEventListener("click", closeStatsModal);
+      document.getElementById("btnStatsOk").addEventListener("click", closeStatsModal);
+
+      scanMask.addEventListener("click", function (e) {
+        if (e.target === scanMask) closeScanModal();
+      });
+      statsMask.addEventListener("click", function (e) {
+        if (e.target === statsMask) closeStatsModal();
+      });
+
+      document.getElementById("btnScanSimulate").addEventListener("click", function () {
+        var raw = (scanCodeInput.value || "").trim().toUpperCase();
+        var code = raw || "GD-2024-056";
+        scanCodeInput.value = code;
+        showScanResult(code);
+      });
+
+      document.getElementById("btnScanCamera").addEventListener("click", function () {
+        alert("演示环境：实际部署时将调用设备摄像头或外接扫码枪 SDK。\n\n您可点击「模拟扫码成功」或手动输入资产编号后继续。");
+      });
+
+      scanCodeInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          var raw = (scanCodeInput.value || "").trim().toUpperCase();
+          if (raw) showScanResult(raw);
+        }
+      });
+
+      btnScanSubmit.addEventListener("click", function () {
+        var code = (scanCodeInput.value || "").trim();
+        if (!code) return;
+        alert("已记录盘点结果（演示）：\n资产 " + code + "\n实盘：" + document.getElementById("scanActualStatus").selectedOptions[0].textContent);
+        closeScanModal();
+      });
+
+      function cellText(td) {
+        if (!td) return "";
+        var tag = td.querySelector(".tag-asset");
+        return (tag ? tag.textContent : td.textContent).trim();
+      }
+      function detailRow(k, v) {
+        return '<div class="asset-detail-row"><span class="asset-detail-k">' + k + '</span><span class="asset-detail-v">' + (v || "—") + "</span></div>";
+      }
+      function closeAssetDetail() {
+        document.getElementById("assetDetailMask").classList.remove("is-open");
+        document.getElementById("assetDetailMask").setAttribute("aria-hidden", "true");
+      }
+      if (companyTableWrap) {
+        companyTableWrap.addEventListener("click", function (e) {
+          var a = e.target.closest("a.asset-op-view");
+          if (!a) return;
+          e.preventDefault();
+          var tr = a.closest("tr");
+          if (!tr) return;
+          var tds = tr.querySelectorAll("td");
+          document.getElementById("assetDetailBody").innerHTML =
+            '<p class="asset-detail-scope">全公司资产台账 · 详情（演示）</p><div class="asset-detail-kv">' +
+            detailRow("资产编号", cellText(tds[2])) +
+            detailRow("资产名称", cellText(tds[3])) +
+            detailRow("型号/规格", cellText(tds[4])) +
+            detailRow("所属区域", cellText(tds[5])) +
+            detailRow("所属部门", cellText(tds[6])) +
+            detailRow("保管人", cellText(tds[7])) +
+            detailRow("存放地点", cellText(tds[8])) +
+            detailRow("原值(元)", cellText(tds[9])) +
+            detailRow("净值(元)", cellText(tds[10])) +
+            detailRow("采购日期", cellText(tds[11])) +
+            detailRow("状态", cellText(tds[12])) +
+            "</div>";
+          document.getElementById("assetDetailMask").classList.add("is-open");
+          document.getElementById("assetDetailMask").setAttribute("aria-hidden", "false");
+        });
+      }
+      document.getElementById("btnCloseAssetDetail").addEventListener("click", closeAssetDetail);
+      document.getElementById("btnAssetDetailOk").addEventListener("click", closeAssetDetail);
+      document.getElementById("assetDetailMask").addEventListener("click", function (e) {
+        if (e.target.id === "assetDetailMask") closeAssetDetail();
+      });
+    })();
+  </script>
+</body>
+</html>

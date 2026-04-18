@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>资产交接 - 新能源物资供应链管理系统</title>
+  <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-toolbar.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    body.page-asset-transfer .main-scroll { background: #f5f7fa; }
+    .at-title { margin: 0; padding: 16px 20px 10px; font-size: 20px; font-weight: 700; background: #fff; border-bottom: 1px solid #e8e8e8; color: #1f1f1f; }
+    .at-wrap { padding: 12px 16px 20px; }
+    .at-guard {
+      background: linear-gradient(135deg, rgba(250, 140, 22, 0.12), rgba(250, 173, 20, 0.08));
+      border: 1px solid rgba(250, 140, 22, 0.35);
+      color: #8c4d08;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .at-kpi { margin-top: 10px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .at-kpi-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 12px; }
+    .at-kpi-card b { display: block; color: #666; font-size: 12px; }
+    .at-kpi-card span { display: block; margin-top: 6px; color: #fa8c16; font-size: 22px; font-weight: 700; }
+    .at-panel { margin-top: 10px; background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; overflow: hidden; }
+    .at-tabs { display: flex; padding: 0 12px; border-bottom: 1px solid #e8e8e8; background: #fafafa; }
+    .at-tab { border: none; background: transparent; height: 38px; padding: 0 16px; font-size: 13px; color: #595959; cursor: pointer; position: relative; }
+    .at-tab.active { color: #fa8c16; font-weight: 700; }
+    .at-tab.active::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 0; height: 2px; background: #fa8c16; }
+    .at-filters { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; padding: 12px 16px 8px; }
+    .at-actions { display: flex; gap: 8px; padding: 0 16px 12px; border-bottom: 1px solid #f0f0f0; }
+    .at-btn { height: 32px; border-radius: 4px; border: 1px solid #d9d9d9; background: #fff; padding: 0 14px; font-size: 13px; cursor: pointer; }
+    .at-btn.primary { background: #fa8c16; border-color: #fa8c16; color: #fff; }
+    .at-btn.warn { background: #fff7e6; border-color: #ffd591; color: #d46b08; }
+    .at-table-wrap { overflow: auto; padding: 0 16px 10px; }
+    .at-table { width: 100%; min-width: 1180px; border-collapse: collapse; table-layout: fixed; font-size: 12px; }
+    .at-table th, .at-table td { border: 1px solid #e8e8e8; padding: 8px; text-align: left; }
+    .at-table th { background: #f5f5f5; white-space: nowrap; }
+    .at-op { display: inline-flex; gap: 6px; }
+    .at-op button { border: 1px solid #91caff; background: #e6f4ff; color: #0958d9; border-radius: 4px; height: 24px; padding: 0 8px; cursor: pointer; font-size: 12px; }
+    .tag { display: inline-flex; align-items: center; padding: 0 8px; height: 22px; border-radius: 4px; font-size: 11px; border: 1px solid transparent; }
+    .tag.pending { background: #fff7e6; border-color: #ffd591; color: #d48806; }
+    .tag.done { background: #f6ffed; border-color: #b7eb8f; color: #389e0d; }
+    .tag.reject { background: #fff1f0; border-color: #ffa39e; color: #cf1322; }
+    .at-modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 18px; }
+    .at-modal-mask.show { display: flex; }
+    .at-modal { width: min(980px,100%); max-height: 90vh; background: #fff; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+    .at-modal.narrow { width: min(680px,100%); }
+    .at-head, .at-foot { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+    .at-head h3 { margin: 0; font-size: 16px; font-weight: 600; color: #1f1f1f; }
+    .at-modal .wh-field label { color: #595959; }
+    .at-modal .wh-field input,
+    .at-modal .wh-field select { color: #262626; background: #fff; }
+    .at-foot { border-bottom: none; border-top: 1px solid #f0f0f0; justify-content: flex-end; gap: 8px; }
+    .at-body { padding: 12px 16px; overflow: auto; }
+    .at-close { border: none; background: transparent; font-size: 22px; color: #8c8c8c; cursor: pointer; }
+    .at-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px 12px; }
+    .at-pick { border: 1px solid #e8e8e8; border-radius: 6px; margin-top: 10px; overflow: hidden; }
+    .at-pick-toolbar { padding: 8px 10px; border-bottom: 1px solid #f0f0f0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .at-pick-wrap { max-height: 220px; overflow: auto; }
+    .at-pick-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .at-pick-table th, .at-pick-table td { border: 1px solid #f0f0f0; padding: 6px 8px; color: #1f1f1f; }
+    .at-modal .at-pick-toolbar input {
+      color: #262626;
+      background: #fff;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      height: 30px;
+      padding: 0 10px;
+      font-size: 13px;
+      box-sizing: border-box;
+    }
+    .at-modal .at-body { color: #262626; }
+    .at-summary { margin-top: 8px; padding: 8px 10px; border: 1px dashed #ffd591; background: #fff7e6; border-radius: 6px; color: #8c4d08; font-size: 13px; }
+    .at-flow { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; margin-top: 12px; }
+    .at-step { text-align: center; border: 1px dashed #d9d9d9; border-radius: 6px; padding: 8px 6px; font-size: 12px; color: #8c8c8c; }
+    .at-step.done { border-style: solid; border-color: #52c41a; color: #389e0d; background: #f6ffed; }
+    .at-step.active { border-style: solid; border-color: #fa8c16; color: #d46b08; background: #fff7e6; }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-asset-transfer">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#" aria-label="国家能源集团"><img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar" title="用户">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <div class="nav-item" title="驾驶舱"><span class="nav-label">驾驶舱</span></div>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <div class="nav-item" title="物流管理"><span class="nav-label">物流管理</span></div>
+        <div class="nav-item" title="仓储管理"><span class="nav-label">仓储管理</span></div>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <h1 class="at-title">资产交接</h1>
+        <div class="at-wrap">
+          <div class="at-guard">
+            <div>🔒 资产交接是强控机制：离职时系统检查名下资产是否全部交接完毕。</div>
+            <div>🔒 接收人必须确认后资产才会转移，确认后系统自动更新保管人并将原保管人名下数量清零。</div>
+          </div>
+          <div class="at-kpi" id="kpis"></div>
+          <section class="at-panel">
+            <div class="at-tabs">
+              <button class="at-tab active" data-tab="mine">我发起的</button>
+              <button class="at-tab" data-tab="confirm">待我确认</button>
+              <button class="at-tab" data-tab="done">已完成</button>
+              <button class="at-tab" data-tab="all">全部记录</button>
+            </div>
+            <div class="at-filters">
+              <div class="wh-field"><label for="fNo">交接单号</label><input id="fNo" type="text" placeholder="请输入交接单号"></div>
+              <div class="wh-field"><label for="fOut">转出人</label><input id="fOut" type="text" placeholder="请输入转出人"></div>
+              <div class="wh-field"><label for="fIn">转入人</label><input id="fIn" type="text" placeholder="请输入转入人"></div>
+              <div class="wh-field"><label for="fDate">交接日期</label><input id="fDate" type="date"></div>
+              <div class="wh-field"><label for="fStatus">状态</label><select id="fStatus"><option value="">全部状态</option><option>待确认</option><option>已完成</option><option>已拒绝</option></select></div>
+            </div>
+            <div class="at-actions">
+              <button class="at-btn primary" id="btnSearch">搜索</button>
+              <button class="at-btn" id="btnReset">重置</button>
+              <button class="at-btn warn" id="btnCreate">发起交接</button>
+              <button class="at-btn" id="btnLeaveCheck">离职校验</button>
+            </div>
+            <div class="at-table-wrap">
+              <table class="at-table">
+                <thead><tr><th>序号</th><th>交接单号</th><th>资产编号</th><th>资产名称</th><th>转出人</th><th>转入人</th><th>交接日期</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody id="tbody"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="at-modal-mask" id="createMask">
+    <div class="at-modal">
+      <div class="at-head"><h3>发起交接</h3><button class="at-close" data-close>×</button></div>
+      <div class="at-body">
+        <div class="at-pick">
+          <div class="at-pick-toolbar">
+            <input id="pickKey" placeholder="搜索资产编号/名称" />
+            <input id="pickLoc" placeholder="搜索存放地点" />
+          </div>
+          <div class="at-pick-wrap">
+            <table class="at-pick-table">
+              <thead><tr><th><input type="checkbox" id="pickAll"></th><th>资产编号</th><th>资产名称</th><th>型号规格</th><th>存放地点</th><th>原值</th></tr></thead>
+              <tbody id="pickBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="at-grid" style="margin-top:10px">
+          <div class="wh-field"><label>接收部门</label><select id="recvDept"><option>华北运维部</option><option>华东运维部</option><option>综合管理部</option></select></div>
+          <div class="wh-field"><label>接收人</label><select id="recvUser"><option>李四</option><option>王芳</option><option>周琪</option></select></div>
+          <div class="wh-field" style="grid-column:1 / -1"><label>交接原因</label><input id="reason" placeholder="请输入交接原因（离岗调动/岗位调整等）"></div>
+        </div>
+        <div class="at-summary" id="pickSummary">已选资产数量：0 项 ｜ 原值合计：¥ 0.00</div>
+      </div>
+      <div class="at-foot"><button class="at-btn" data-close>取消</button><button class="at-btn primary" id="submitCreate">提交交接</button></div>
+    </div>
+  </div>
+
+  <div class="at-modal-mask" id="confirmMask">
+    <div class="at-modal narrow">
+      <div class="at-head"><h3>确认接收</h3><button class="at-close" data-close>×</button></div>
+      <div class="at-body">
+        <div id="confirmInfo" style="font-size:13px;line-height:1.8"></div>
+        <div class="at-table-wrap" style="padding:0;margin-top:8px">
+          <table class="at-table" style="min-width:0">
+            <thead><tr><th>资产编号</th><th>资产名称</th><th>规格</th></tr></thead>
+            <tbody id="confirmAssets"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="at-foot"><button class="at-btn" id="btnReject">拒绝</button><button class="at-btn primary" id="btnAccept">确认接收</button></div>
+    </div>
+  </div>
+
+  <div class="at-modal-mask" id="detailMask">
+    <div class="at-modal">
+      <div class="at-head"><h3>交接详情</h3><button class="at-close" data-close>×</button></div>
+      <div class="at-body">
+        <div id="detailInfo" style="font-size:13px;line-height:1.8"></div>
+        <div class="at-flow">
+          <div class="at-step done">发起交接</div>
+          <div class="at-step active">接收人确认</div>
+          <div class="at-step">资产转移</div>
+          <div class="at-step">归档完成</div>
+        </div>
+      </div>
+      <div class="at-foot"><button class="at-btn" data-close>关闭</button></div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var rows = [
+        { id: 1, no: "AT-2026-001", assetNo: "ZC-PA-2026-001", assetName: "扭矩扳手套装", outUser: "张三", inUser: "李四", date: "2026-04-08", status: "待确认", owner: "mine", assets: [{ no: "ZC-PA-2026-001", name: "扭矩扳手套装", spec: "TW-300" }] },
+        { id: 2, no: "AT-2026-002", assetNo: "ZC-DA-2026-012", assetName: "电缆故障测试仪", outUser: "王芳", inUser: "当前用户", date: "2026-04-06", status: "待确认", owner: "confirm", assets: [{ no: "ZC-DA-2026-012", name: "电缆故障测试仪", spec: "CF-200" }] },
+        { id: 3, no: "AT-2026-003", assetNo: "ZC-CA-2025-233", assetName: "仓库监控主机", outUser: "赵强", inUser: "周琪", date: "2026-04-01", status: "已完成", owner: "done", assets: [{ no: "ZC-CA-2025-233", name: "仓库监控主机", spec: "NVR-64" }] },
+        { id: 4, no: "AT-2026-004", assetNo: "ZC-DA-2024-087", assetName: "工具柜（带锁）", outUser: "刘洋", inUser: "陈静", date: "2026-03-26", status: "已拒绝", owner: "all", assets: [{ no: "ZC-DA-2024-087", name: "工具柜（带锁）", spec: "CAB-1200" }] }
+      ];
+      var assetKeeperStore = {
+        "ZC-PA-2026-001": "张三",
+        "ZC-DA-2026-012": "王芳",
+        "ZC-CA-2025-233": "赵强",
+        "ZC-DA-2024-087": "刘洋",
+        "ZC-PA-2026-002": "当前用户",
+        "ZC-LY-2025-088": "当前用户",
+        "ZC-EM-2024-031": "当前用户"
+      };
+      var assets = [
+        { no: "ZC-PA-2026-001", name: "扭矩扳手套装", spec: "TW-300", loc: "华北仓A-02", original: 2800 },
+        { no: "ZC-PA-2026-002", name: "绝缘电阻测试仪", spec: "IR-5000", loc: "华北仓B-01", original: 6500 },
+        { no: "ZC-DA-2026-012", name: "电缆故障测试仪", spec: "CF-200", loc: "华北仓B-03", original: 36000 },
+        { no: "ZC-DA-2024-087", name: "工具柜（带锁）", spec: "CAB-1200", loc: "华北仓A-03", original: 3600 },
+        { no: "ZC-LY-2025-088", name: "登高作业安全带", spec: "SAFE-H5", loc: "张北场站库房", original: 1280 },
+        { no: "ZC-EM-2024-031", name: "红外测温仪", spec: "IR-T90", loc: "承德运维点", original: 4200 }
+      ];
+      var state = { tab: "mine", current: null, filters: { no: "", out: "", in: "", date: "", status: "" } };
+      var refs = {
+        tabs: Array.prototype.slice.call(document.querySelectorAll(".at-tab")),
+        tbody: document.getElementById("tbody"),
+        kpis: document.getElementById("kpis"),
+        fNo: document.getElementById("fNo"),
+        fOut: document.getElementById("fOut"),
+        fIn: document.getElementById("fIn"),
+        fDate: document.getElementById("fDate"),
+        fStatus: document.getElementById("fStatus"),
+        createMask: document.getElementById("createMask"),
+        confirmMask: document.getElementById("confirmMask"),
+        detailMask: document.getElementById("detailMask"),
+        pickBody: document.getElementById("pickBody"),
+        pickSummary: document.getElementById("pickSummary"),
+        pickAll: document.getElementById("pickAll")
+      };
+      function tag(status) {
+        if (status === "待确认") return '<span class="tag pending">待确认</span>';
+        if (status === "已完成") return '<span class="tag done">已完成</span>';
+        return '<span class="tag reject">已拒绝</span>';
+      }
+      function fmt(v) { return "¥ " + Number(v || 0).toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+      function calcRows() {
+        return rows.filter(function (x) {
+          if (state.tab !== "all" && x.owner !== state.tab) return false;
+          if (state.filters.no && x.no.indexOf(state.filters.no) < 0) return false;
+          if (state.filters.out && x.outUser.indexOf(state.filters.out) < 0) return false;
+          if (state.filters.in && x.inUser.indexOf(state.filters.in) < 0) return false;
+          if (state.filters.date && x.date !== state.filters.date) return false;
+          if (state.filters.status && x.status !== state.filters.status) return false;
+          return true;
+        });
+      }
+      function renderKpis() {
+        var m = rows.filter(function (x) { return String(x.date).slice(0, 7) === String(new Date().toISOString().slice(0, 7)); }).length;
+        var c = rows.filter(function (x) { return x.owner === "confirm" && x.status === "待确认"; }).length;
+        var d = rows.filter(function (x) { return x.status === "已完成"; }).length;
+        var e = rows.filter(function (x) { return x.status === "已拒绝"; }).length;
+        refs.kpis.innerHTML = '<div class="at-kpi-card"><b>本月交接</b><span>' + m + '</span></div>' +
+          '<div class="at-kpi-card"><b>待我确认</b><span>' + c + '</span></div>' +
+          '<div class="at-kpi-card"><b>已完成</b><span>' + d + '</span></div>' +
+          '<div class="at-kpi-card"><b>异常数量</b><span>' + e + '</span></div>';
+      }
+      function renderTable() {
+        var list = calcRows();
+        refs.tbody.innerHTML = "";
+        list.forEach(function (x, i) {
+          var tr = document.createElement("tr");
+          var op = '<button data-act="detail" data-id="' + x.id + '">详情</button>';
+          if (x.status === "待确认" && x.owner === "confirm") op += '<button data-act="confirm" data-id="' + x.id + '">确认接收</button>';
+          tr.innerHTML = "<td>" + (i + 1) + "</td><td>" + x.no + "</td><td>" + x.assetNo + "</td><td>" + x.assetName + "</td><td>" + x.outUser + "</td><td>" + x.inUser + "</td><td>" + x.date + "</td><td>" + tag(x.status) + '</td><td><div class="at-op">' + op + "</div></td>";
+          refs.tbody.appendChild(tr);
+        });
+      }
+      function open(mask) { mask.classList.add("show"); }
+      function close(mask) { mask.classList.remove("show"); }
+      function renderPick() {
+        refs.pickBody.innerHTML = assets.map(function (x) {
+          return '<tr><td><input type="checkbox" class="pick-one" data-no="' + x.no + '" data-val="' + x.original + '"></td><td>' + x.no + "</td><td>" + x.name + "</td><td>" + x.spec + "</td><td>" + x.loc + "</td><td>" + fmt(x.original) + "</td></tr>";
+        }).join("");
+        updatePickSummary();
+      }
+      function updatePickSummary() {
+        var picks = Array.prototype.slice.call(document.querySelectorAll(".pick-one:checked"));
+        var sum = picks.reduce(function (s, c) { return s + Number(c.getAttribute("data-val") || 0); }, 0);
+        refs.pickSummary.textContent = "已选资产数量：" + picks.length + " 项 ｜ 原值合计：" + fmt(sum);
+      }
+      function bindTabs() {
+        refs.tabs.forEach(function (t) {
+          t.addEventListener("click", function () {
+            state.tab = t.getAttribute("data-tab");
+            refs.tabs.forEach(function (x) { x.classList.remove("active"); });
+            t.classList.add("active");
+            renderTable();
+          });
+        });
+      }
+      document.getElementById("btnSearch").addEventListener("click", function () {
+        state.filters.no = refs.fNo.value.trim();
+        state.filters.out = refs.fOut.value.trim();
+        state.filters.in = refs.fIn.value.trim();
+        state.filters.date = refs.fDate.value;
+        state.filters.status = refs.fStatus.value;
+        renderTable();
+      });
+      document.getElementById("btnReset").addEventListener("click", function () {
+        refs.fNo.value = ""; refs.fOut.value = ""; refs.fIn.value = ""; refs.fDate.value = ""; refs.fStatus.selectedIndex = 0;
+        state.filters = { no: "", out: "", in: "", date: "", status: "" };
+        renderTable();
+      });
+      document.getElementById("btnLeaveCheck").addEventListener("click", function () {
+        var user = (refs.fOut.value || "").trim() || "当前用户";
+        var pending = rows.filter(function (x) {
+          return x.outUser === user && x.status === "待确认";
+        });
+        var ownAssets = Object.keys(assetKeeperStore).filter(function (k) {
+          return assetKeeperStore[k] === user;
+        });
+        if (!pending.length && !ownAssets.length) {
+          alert("离职校验通过：" + user + " 名下资产已全部交接完毕。");
+          return;
+        }
+        var msg = "离职校验未通过：" + user + " 仍有未完成交接。\n";
+        if (pending.length) msg += "待确认交接单：" + pending.map(function (x) { return x.no; }).join("、") + "\n";
+        if (ownAssets.length) msg += "仍归属资产：" + ownAssets.join("、");
+        alert(msg);
+      });
+      document.getElementById("btnCreate").addEventListener("click", function () { renderPick(); open(refs.createMask); });
+      document.querySelectorAll("[data-close]").forEach(function (b) {
+        b.addEventListener("click", function () { close(refs.createMask); close(refs.confirmMask); close(refs.detailMask); });
+      });
+      [refs.createMask, refs.confirmMask, refs.detailMask].forEach(function (m) {
+        m.addEventListener("click", function (e) { if (e.target === m) close(m); });
+      });
+      refs.pickAll.addEventListener("change", function () {
+        document.querySelectorAll(".pick-one").forEach(function (x) { x.checked = refs.pickAll.checked; });
+        updatePickSummary();
+      });
+      refs.pickBody.addEventListener("change", function (e) {
+        if (e.target.classList.contains("pick-one")) updatePickSummary();
+      });
+      document.getElementById("submitCreate").addEventListener("click", function () {
+        var picks = Array.prototype.slice.call(document.querySelectorAll(".pick-one:checked"));
+        if (!picks.length) { alert("请至少选择一项资产"); return; }
+        var assetNos = picks.map(function (x) { return x.getAttribute("data-no"); });
+        rows.unshift({
+          id: Date.now(),
+          no: "AT-" + new Date().getFullYear() + "-" + String(Math.floor(Math.random() * 900 + 100)),
+          assetNo: assetNos.join("、"),
+          assetName: "批量资产交接",
+          outUser: "当前用户",
+          inUser: document.getElementById("recvUser").value,
+          date: new Date().toISOString().slice(0, 10),
+          status: "待确认",
+          owner: "mine",
+          assets: assetNos.map(function (no) { return { no: no, name: "资产", spec: "-" }; })
+        });
+        close(refs.createMask); renderKpis(); renderTable();
+      });
+      refs.tbody.addEventListener("click", function (e) {
+        var act = e.target.getAttribute("data-act");
+        if (!act) return;
+        var id = Number(e.target.getAttribute("data-id"));
+        var item = rows.find(function (x) { return x.id === id; });
+        if (!item) return;
+        state.current = item;
+        if (act === "confirm") {
+          document.getElementById("confirmInfo").innerHTML = "<b>交接单号：</b>" + item.no + "<br><b>转出人：</b>" + item.outUser + "<br><b>交接日期：</b>" + item.date;
+          document.getElementById("confirmAssets").innerHTML = item.assets.map(function (a) { return "<tr><td>" + a.no + "</td><td>" + a.name + "</td><td>" + a.spec + "</td></tr>"; }).join("");
+          open(refs.confirmMask);
+        } else if (act === "detail") {
+          document.getElementById("detailInfo").innerHTML = "<b>交接单号：</b>" + item.no + "<br><b>资产：</b>" + item.assetNo + " / " + item.assetName + "<br><b>转出人：</b>" + item.outUser + "<br><b>转入人：</b>" + item.inUser + "<br><b>确认记录：</b>电子签字已留痕";
+          open(refs.detailMask);
+        }
+      });
+      document.getElementById("btnAccept").addEventListener("click", function () {
+        if (!state.current) return;
+        state.current.status = "已完成";
+        state.current.owner = "done";
+        (state.current.assets || []).forEach(function (a) {
+          if (a && a.no) assetKeeperStore[a.no] = state.current.inUser || "接收人";
+        });
+        close(refs.confirmMask); renderKpis(); renderTable();
+        alert("交接已完成，系统已自动更新保管人为：" + (state.current.inUser || "接收人"));
+      });
+      document.getElementById("btnReject").addEventListener("click", function () {
+        if (!state.current) return;
+        state.current.status = "已拒绝";
+        close(refs.confirmMask); renderKpis(); renderTable();
+      });
+      bindTabs(); renderKpis(); renderTable();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>合同管理</title>
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .cm-shell { padding: 12px 14px 16px; }
+    .cm-btn-query { background:#1890ff; color:#fff; border:1px solid #1890ff; }
+    .cm-btn-reset { background:#fff; color:#334155; border:1px solid #cbd5e1; }
+    .cm-btn-add { background:#e6f4ff; color:#0958d9; border:1px solid #91caff; }
+    .cm-btn-import { background:#f6ffed; color:#389e0d; border:1px solid #b7eb8f; }
+    .cm-btn-del { background:#fff1f0; color:#cf1322; border:1px solid #ffccc7; }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage bg-slate-100 text-slate-800">
+  <div class="app">
+    <header class="header"><div class="header-left"><button class="header-hamburger"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="header-logo" href="#"><img src="assets/logo-chenergy.png" width="220" height="40" alt="" /></a><div class="header-source-brand"><p>新能源供应链管理系统</p></div></div><div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar">用</div></div></header>
+    <div class="layout">
+      <aside class="sidebar"><div class="nav-item nav-item--module-active"><span class="nav-label">采购管理</span></div></aside>
+      <main class="main-scroll">
+  <div class="cm-shell mx-auto max-w-[1900px] space-y-4">
+    <section class="rounded-lg bg-white p-4 shadow border border-slate-200">
+      <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5">
+        <input id="fCode" class="h-10 rounded border border-slate-300 px-3 text-sm" placeholder="合同编码" />
+        <input id="fName" class="h-10 rounded border border-slate-300 px-3 text-sm" placeholder="合同名称" />
+        <input id="fSupplier" class="h-10 rounded border border-slate-300 px-3 text-sm" placeholder="供应商名称" />
+        <select id="fTargetType" class="h-10 rounded border border-slate-300 px-3 text-sm"></select>
+        <select id="fDept" class="h-10 rounded border border-slate-300 px-3 text-sm"></select>
+        <input id="fDateStart" type="date" class="h-10 rounded border border-slate-300 px-3 text-sm" />
+        <input id="fDateEnd" type="date" class="h-10 rounded border border-slate-300 px-3 text-sm" />
+              </div>
+      <input type="file" id="fileImportContract" class="hidden" accept=".xlsx,.xls,.csv" aria-hidden="true" />
+      <div class="mt-3 flex flex-wrap gap-2">
+        <button id="btnQuery" class="cm-btn-query h-10 rounded px-4 text-sm font-medium">查询</button>
+        <button id="btnReset" class="cm-btn-reset h-10 rounded px-4 text-sm font-medium">重置</button>
+        <button id="btnImport" type="button" class="cm-btn-import h-10 rounded px-4 text-sm font-medium">导入</button>
+        <button id="btnAdd" class="cm-btn-add h-10 rounded px-4 text-sm font-medium">新增合同</button>
+        <button id="btnBatchDelete" class="cm-btn-del h-10 rounded px-4 text-sm font-medium">批量删除</button>
+            </div>
+          </section>
+
+    <section class="rounded-lg bg-white shadow border border-slate-200">
+      <div class="overflow-x-auto">
+        <table class="min-w-[3600px] w-full text-xs border-collapse">
+          <thead class="bg-slate-100 text-slate-700">
+            <tr>
+              <th class="border border-slate-200 p-2"><input id="ckAll" type="checkbox" /></th>
+              <th class="border border-slate-200 p-2">合同编码</th>
+              <th class="border border-slate-200 p-2">合同名称</th>
+              <th class="border border-slate-200 p-2">框架协议注释</th>
+              <th class="border border-slate-200 p-2">常规合同签订时间</th>
+              <th class="border border-slate-200 p-2">归属部门</th>
+              <th class="border border-slate-200 p-2">供应商名称</th>
+              <th class="border border-slate-200 p-2">采购标包编号</th>
+              <th class="border border-slate-200 p-2">合同经办人</th>
+              <th class="border border-slate-200 p-2">业务相对方</th>
+              <th class="border border-slate-200 p-2">采购标的类别</th>
+              <th class="border border-slate-200 p-2">法务系统MDM编码</th>
+              <th class="border border-slate-200 p-2">框架协议合同金额（万元）</th>
+              <th class="border border-slate-200 p-2">常规合同金额（万元）</th>
+              <th class="border border-slate-200 p-2">付款方式</th>
+              <th class="border border-slate-200 p-2">付款比例</th>
+              <th class="border border-slate-200 p-2">合同有效期</th>
+              <th class="border border-slate-200 p-2">质保期</th>
+              <th class="border border-slate-200 p-2">入票金额</th>
+              <th class="border border-slate-200 p-2">入票时间</th>
+              <th class="border border-slate-200 p-2">入票进度</th>
+              <th class="border border-slate-200 p-2">支付金额</th>
+              <th class="border border-slate-200 p-2">支付时间</th>
+              <th class="border border-slate-200 p-2">支付进度</th>
+              <th class="border border-slate-200 p-2">阶段号</th>
+              <th class="border border-slate-200 p-2">物资名称</th>
+              <th class="border border-slate-200 p-2">规格型号</th>
+              <th class="border border-slate-200 p-2">税率</th>
+              <th class="border border-slate-200 p-2">采购单价（含税）</th>
+              <th class="border border-slate-200 p-2">采购数量</th>
+              <th class="border border-slate-200 p-2">物资类别</th>
+              <th class="border border-slate-200 p-2">操作</th>
+                  </tr>
+                </thead>
+          <tbody id="tbody"></tbody>
+              </table>
+            </div>
+      <div class="flex items-center justify-between border-t border-slate-200 p-3 text-sm">
+        <span id="totalText" class="text-slate-600"></span>
+        <div class="flex items-center gap-2">
+          <button id="prevPage" class="rounded border border-slate-300 px-3 py-1 hover:bg-slate-100">上一页</button>
+          <div id="pageNums" class="flex gap-1"></div>
+          <button id="nextPage" class="rounded border border-slate-300 px-3 py-1 hover:bg-slate-100">下一页</button>
+        </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var PAGE_SIZE = 5;
+      var page = 1;
+      var filtered = [];
+      var list = [
+        {id:1,code:"HT-2026-001",name:"华北风场齿轮箱框架合同",frameNote:"2026年度框架协议",signedAt:"2026-01-10",dept:"采购部",supplier:"联合动力",pkgNo:"PKG-HB-01",owner:"张敏",counterparty:"联合动力北京分公司",targetType:"物资",mdm:"MDM-HT-8801",frameAmt:1200,normalAmt:486,payMethod:"30/60/10",payRate:"90%",validRange:"2026-01-10 ~ 2026-12-31",warranty:"24个月",invoiceAmt:280,invoiceAt:"2026-03-05",invoiceProgress:58,payAmt:220,payAt:"2026-03-20",payProgress:45,stageNo:"S1",material:"齿轮箱总成",spec:"GBX-220",tax:"13%",price:88.5,qty:55,materialType:"生产类"},
+        {id:2,code:"HT-2026-002",name:"西北电缆改造服务合同",frameNote:"常规合同",signedAt:"2026-02-06",dept:"销售部",supplier:"华科工程",pkgNo:"PKG-XB-05",owner:"李哲",counterparty:"华科工程西北区",targetType:"服务",mdm:"MDM-HT-8802",frameAmt:0,normalAmt:172,payMethod:"40/50/10",payRate:"80%",validRange:"2026-02-06 ~ 2026-09-30",warranty:"12个月",invoiceAmt:90,invoiceAt:"2026-03-18",invoiceProgress:52,payAmt:60,payAt:"2026-04-02",payProgress:35,stageNo:"S2",material:"电缆敷设服务",spec:"YJV-3*120",tax:"6%",price:0.48,qty:360,materialType:"工程"},
+        {id:3,code:"HT-2026-003",name:"总部办公耗材年度合同",frameNote:"行政采购框架",signedAt:"2026-01-22",dept:"财务部",supplier:"京能办公",pkgNo:"PKG-ZH-03",owner:"刘静",counterparty:"京能办公科技",targetType:"物资",mdm:"MDM-HT-8803",frameAmt:180,normalAmt:96,payMethod:"50/50",payRate:"100%",validRange:"2026-01-22 ~ 2026-12-31",warranty:"6个月",invoiceAmt:72,invoiceAt:"2026-02-20",invoiceProgress:75,payAmt:40,payAt:"2026-03-12",payProgress:42,stageNo:"S1",material:"办公耗材包",spec:"A4/硒鼓组合",tax:"13%",price:0.12,qty:800,materialType:"办公类"},
+        {id:4,code:"HT-2026-004",name:"海上风场无人机巡检服务",frameNote:"科技专项合同",signedAt:"2026-03-01",dept:"采购部",supplier:"智巡科技",pkgNo:"PKG-IT-02",owner:"周宁",counterparty:"智巡科技有限公司",targetType:"服务",mdm:"MDM-HT-8804",frameAmt:0,normalAmt:130,payMethod:"20/60/20",payRate:"60%",validRange:"2026-03-01 ~ 2026-11-30",warranty:"12个月",invoiceAmt:45,invoiceAt:"2026-04-02",invoiceProgress:35,payAmt:25,payAt:"2026-04-10",payProgress:19,stageNo:"S3",material:"无人机巡检服务",spec:"AI-Inspect",tax:"6%",price:0.65,qty:200,materialType:"服务"},
+        {id:5,code:"HT-2026-005",name:"宁夏变桨系统供货合同",frameNote:"常规合同",signedAt:"2026-02-28",dept:"销售部",supplier:"中车",pkgNo:"PKG-NX-06",owner:"杨杰",counterparty:"中车供应链中心",targetType:"物资",mdm:"MDM-HT-8805",frameAmt:0,normalAmt:231,payMethod:"30/40/30",payRate:"70%",validRange:"2026-02-28 ~ 2027-02-27",warranty:"18个月",invoiceAmt:120,invoiceAt:"2026-03-28",invoiceProgress:52,payAmt:80,payAt:"2026-04-20",payProgress:35,stageNo:"S2",material:"变桨电机",spec:"BJ-7.5kW",tax:"13%",price:2.2,qty:105,materialType:"生产类"},
+        {id:6,code:"HT-2026-006",name:"新疆塔基工程施工合同",frameNote:"基建总包合同",signedAt:"2025-12-26",dept:"采购部",supplier:"中建西北",pkgNo:"PKG-XJ-01",owner:"孙博",counterparty:"中建西北工程",targetType:"工程",mdm:"MDM-HT-8806",frameAmt:0,normalAmt:1596,payMethod:"10/70/20",payRate:"55%",validRange:"2025-12-26 ~ 2026-10-31",warranty:"24个月",invoiceAmt:680,invoiceAt:"2026-02-18",invoiceProgress:43,payAmt:420,payAt:"2026-03-25",payProgress:26,stageNo:"S4",material:"塔基工程",spec:"TJG-01",tax:"9%",price:15.96,qty:100,materialType:"工程"},
+        {id:7,code:"HT-2026-007",name:"天津检修工器具合同",frameNote:"项目公司补采",signedAt:"2026-03-12",dept:"销售部",supplier:"大华工具",pkgNo:"PKG-TJ-02",owner:"赵坤",counterparty:"大华工具科技",targetType:"物资",mdm:"MDM-HT-8807",frameAmt:0,normalAmt:68,payMethod:"50/50",payRate:"50%",validRange:"2026-03-12 ~ 2026-09-30",warranty:"12个月",invoiceAmt:18,invoiceAt:"2026-04-01",invoiceProgress:26,payAmt:10,payAt:"2026-04-12",payProgress:15,stageNo:"S1",material:"检修工器具",spec:"KIT-2026",tax:"13%",price:0.34,qty:200,materialType:"生产类"},
+        {id:8,code:"HT-2026-008",name:"华东逆变器采购合同",frameNote:"框架转常规",signedAt:"2026-01-30",dept:"采购部",supplier:"东风",pkgNo:"PKG-HD-08",owner:"王芳",counterparty:"东风能源装备",targetType:"物资",mdm:"MDM-HT-8808",frameAmt:520,normalAmt:702,payMethod:"20/60/20",payRate:"88%",validRange:"2026-01-30 ~ 2026-12-30",warranty:"24个月",invoiceAmt:390,invoiceAt:"2026-03-10",invoiceProgress:56,payAmt:310,payAt:"2026-03-30",payProgress:44,stageNo:"S3",material:"逆变器模块",spec:"NBQ-1500",tax:"13%",price:7.8,qty:90,materialType:"销售类"},
+        {id:9,code:"HT-2026-009",name:"办公家具采购合同",frameNote:"行政后勤更新",signedAt:"2026-02-18",dept:"财务部",supplier:"宜家商用",pkgNo:"PKG-BG-09",owner:"马兰",counterparty:"宜家商用中国",targetType:"物资",mdm:"MDM-HT-8809",frameAmt:0,normalAmt:58,payMethod:"70/30",payRate:"70%",validRange:"2026-02-18 ~ 2026-08-18",warranty:"12个月",invoiceAmt:30,invoiceAt:"2026-03-02",invoiceProgress:52,payAmt:20,payAt:"2026-03-22",payProgress:34,stageNo:"S1",material:"办公桌椅",spec:"OF-SET-A",tax:"13%",price:0.58,qty:100,materialType:"办公类"}
+      ];
+
+      var targetTypeOpts = ["全部","物资","服务","工程"];
+      var deptOpts = ["全部","销售部","采购部","财务部"];
+      document.getElementById("fTargetType").innerHTML = targetTypeOpts.map(function(x){ return "<option>"+x+"</option>"; }).join("");
+      document.getElementById("fDept").innerHTML = deptOpts.map(function(x){ return "<option>"+x+"</option>"; }).join("");
+
+      function getFilters() {
+        return {
+          code: document.getElementById("fCode").value.trim(),
+          name: document.getElementById("fName").value.trim(),
+          supplier: document.getElementById("fSupplier").value.trim(),
+          targetType: document.getElementById("fTargetType").value,
+          dept: document.getElementById("fDept").value,
+          start: document.getElementById("fDateStart").value,
+          end: document.getElementById("fDateEnd").value
+        };
+      }
+
+      function applyFilter() {
+        var f = getFilters();
+        filtered = list.filter(function(x){
+          if (f.code && x.code.indexOf(f.code) < 0) return false;
+          if (f.name && x.name.indexOf(f.name) < 0) return false;
+          if (f.supplier && x.supplier.indexOf(f.supplier) < 0) return false;
+          if (f.targetType !== "全部" && x.targetType !== f.targetType) return false;
+          if (f.dept !== "全部" && x.dept !== f.dept) return false;
+          if (f.start && x.signedAt < f.start) return false;
+          if (f.end && x.signedAt > f.end) return false;
+          return true;
+        });
+      }
+
+      function renderPager() {
+        var max = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+        if (page > max) page = max;
+        document.getElementById("totalText").textContent = "共 " + filtered.length + " 条";
+        var html = "";
+        for (var i = 1; i <= max; i++) {
+          html += '<button data-page="'+i+'" class="rounded border px-2 py-1 ' + (i === page ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-300 hover:bg-slate-100') + '">' + i + "</button>";
+        }
+        document.getElementById("pageNums").innerHTML = html;
+      }
+
+      function progressBar(v) {
+        return '<div class="w-24 rounded bg-slate-200"><div class="h-2 rounded bg-blue-500" style="width:'+v+'%"></div></div><span class="ml-2">'+v+'%</span>';
+      }
+
+      function materialTypeCell(v) {
+        if (v !== "办公类") return v;
+        return '<span class="relative inline-flex items-center gap-1 group">办公类'
+          + '<span class="inline-flex h-4 w-4 items-center justify-center rounded-full border border-slate-400 text-[10px] text-slate-500 cursor-help">?</span>'
+          + '<span class="invisible absolute left-0 top-5 z-20 w-64 rounded bg-slate-800 px-2 py-1 text-[11px] text-white group-hover:visible">办公类定义：用于日常行政办公的物资，如文具、电脑耗材、办公家具等</span>'
+          + "</span>";
+      }
+
+      function renderTable() {
+        renderPager();
+        var start = (page - 1) * PAGE_SIZE;
+        var rows = filtered.slice(start, start + PAGE_SIZE);
+        var tbody = rows.map(function(x, idx){
+          var zebra = idx % 2 === 0 ? "bg-white" : "bg-slate-50";
+          return '<tr class="'+zebra+' hover:bg-blue-50">'
+            + '<td class="border border-slate-200 p-2 text-center"><input class="rowCk" type="checkbox" data-id="'+x.id+'"/></td>'
+            + '<td class="border border-slate-200 p-2">'+x.code+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.name+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.frameNote+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.signedAt+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.dept+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.supplier+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.pkgNo+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.owner+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.counterparty+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.targetType+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.mdm+'</td>'
+            + '<td class="border border-slate-200 p-2 text-right">'+x.frameAmt.toFixed(2)+'</td>'
+            + '<td class="border border-slate-200 p-2 text-right">'+x.normalAmt.toFixed(2)+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.payMethod+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.payRate+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.validRange+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.warranty+'</td>'
+            + '<td class="border border-slate-200 p-2 text-right">'+x.invoiceAmt.toFixed(2)+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.invoiceAt+'</td>'
+            + '<td class="border border-slate-200 p-2"><div class="flex items-center">'+progressBar(x.invoiceProgress)+'</div></td>'
+            + '<td class="border border-slate-200 p-2 text-right">'+x.payAmt.toFixed(2)+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.payAt+'</td>'
+            + '<td class="border border-slate-200 p-2"><div class="flex items-center">'+progressBar(x.payProgress)+'</div></td>'
+            + '<td class="border border-slate-200 p-2">'+x.stageNo+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.material+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.spec+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.tax+'</td>'
+            + '<td class="border border-slate-200 p-2 text-right">'+x.price.toFixed(2)+'</td>'
+            + '<td class="border border-slate-200 p-2 text-right">'+x.qty+'</td>'
+            + '<td class="border border-slate-200 p-2">'+materialTypeCell(x.materialType)+'</td>'
+            + '<td class="border border-slate-200 p-2"><div class="flex items-center justify-center gap-2">'
+            + '<button class="text-blue-600 hover:underline" data-act="view" data-code="'+x.code+'">查看</button>'
+            + '<button class="text-emerald-600 hover:underline" data-act="edit" data-code="'+x.code+'">编辑</button>'
+            + '<button class="text-rose-600 hover:underline" data-act="del" data-id="'+x.id+'">删除</button>'
+            + '</div></td>'
+            + "</tr>";
+        }).join("");
+        document.getElementById("tbody").innerHTML = tbody;
+      }
+
+      function refresh() { applyFilter(); renderTable(); }
+
+      document.getElementById("btnQuery").addEventListener("click", function(){ page = 1; refresh(); });
+      document.getElementById("btnReset").addEventListener("click", function(){
+        ["fCode","fName","fSupplier","fDateStart","fDateEnd"].forEach(function(id){ document.getElementById(id).value = ""; });
+        ["fTargetType","fDept"].forEach(function(id){ document.getElementById(id).selectedIndex = 0; });
+        page = 1;
+        refresh();
+      });
+      document.getElementById("btnAdd").addEventListener("click", function(){ alert("跳转新增页面"); });
+      document.getElementById("btnImport").addEventListener("click", function(){ document.getElementById("fileImportContract").click(); });
+      document.getElementById("fileImportContract").addEventListener("change", function(){
+        if (!this.files || !this.files.length) return;
+        alert("已选择文件：" + this.files[0].name + "\n（演示：此处接入模板校验与批量写入）");
+        this.value = "";
+      });
+
+      document.getElementById("tbody").addEventListener("click", function(e){
+        var t = e.target.closest("button[data-act]");
+        if (!t) return;
+        var act = t.getAttribute("data-act");
+        if (act === "del") {
+          var id = Number(t.getAttribute("data-id"));
+          if (!confirm("确认删除该合同记录？")) return;
+          list = list.filter(function(x){ return x.id !== id; });
+          refresh();
+          return;
+        }
+        var code = t.getAttribute("data-code");
+        alert((act === "view" ? "查看" : "编辑") + "：合同编码" + code);
+      });
+
+      document.getElementById("btnBatchDelete").addEventListener("click", function(){
+        var ids = Array.prototype.slice.call(document.querySelectorAll(".rowCk:checked")).map(function(x){ return Number(x.getAttribute("data-id")); });
+        if (!ids.length) { alert("请先勾选要删除的记录"); return; }
+        if (!confirm("确认批量删除选中合同？")) return;
+        list = list.filter(function(x){ return ids.indexOf(x.id) < 0; });
+        refresh();
+      });
+
+      document.getElementById("ckAll").addEventListener("change", function(e){
+        var checked = e.target.checked;
+        document.querySelectorAll(".rowCk").forEach(function(x){ x.checked = checked; });
+      });
+
+      document.getElementById("prevPage").addEventListener("click", function(){ if (page > 1) { page--; renderTable(); } });
+      document.getElementById("nextPage").addEventListener("click", function(){
+        var max = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+        if (page < max) { page++; renderTable(); }
+      });
+      document.getElementById("pageNums").addEventListener("click", function(e){
+        var btn = e.target.closest("button[data-page]");
+        if (!btn) return;
+        page = Number(btn.getAttribute("data-page"));
+        renderTable();
+      });
+
+      refresh();
+    })();
+  </script>
+</body>
+</html>

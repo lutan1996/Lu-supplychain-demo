@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>采购汇总表</title>
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .subpage-panel{padding:10px 12px 12px;background:#f5f6f8}
+    .ps-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+    .ps-left{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .ps-left select,.ps-left input{height:30px;border:1px solid #d9d9d9;border-radius:3px;padding:0 8px;font-size:12px;background:#fff}
+    .ps-btn{height:30px;border:1px solid #d9d9d9;border-radius:4px;background:#fff;padding:0 12px;font-size:12px;cursor:pointer}
+    .ps-btn.pri{background:#1890ff;border-color:#1890ff;color:#fff}
+    .subpage-table-wrap{border:1px solid #dde3ea;border-radius:4px;overflow:auto;background:#fff}
+    .subpage-table{min-width:1950px;font-size:12px;background:#fff}
+    .subpage-table thead tr{background:#f2f5f9}
+    .subpage-table th,.subpage-table td{border-bottom:1px solid #edf1f6;padding:8px 8px;text-align:center;white-space:nowrap}
+    .subpage-table th{color:#5a6677;font-weight:600}
+    .subpage-table a{color:#1677ff;text-decoration:none;font-weight:500}
+    .subpage-table a:hover{text-decoration:underline}
+    .table-foot{margin-top:8px;font-size:12px;color:#6c7786}
+  </style>
+</head>
+<body class="page-source-navbar page-subpage">
+  <div class="app">
+    <header class="header"><div class="header-left"><button class="header-hamburger"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="header-logo" href="#"><img src="assets/logo-chenergy.png" width="220" height="40" alt="" /></a><div class="header-source-brand"><p>新能源供应链管理系统</p></div></div><div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar">用</div></div></header>
+    <div class="layout">
+      <aside class="sidebar"><div class="nav-item"><span class="nav-label">采购管理</span></div></aside>
+      <main class="main-scroll">
+        <div class="subpage-panel">
+          <div class="ps-toolbar">
+            <div class="ps-left">
+              <select id="year"><option>2026</option><option>2025</option><option>2024</option></select>
+              <select id="supplier"><option>全部供应商</option><option>联合动力</option><option>东风</option></select>
+              <select id="cat"><option>全部类别</option><option>风机整机</option><option>齿轮箱</option><option>变流器</option></select>
+              <button class="ps-btn pri" id="btnQuery">查询</button>
+              <button class="ps-btn" id="btnExport">导出Excel</button>
+            </div>
+            </div>
+          <div class="subpage-table-wrap">
+            <table class="subpage-table">
+              <thead><tr><th>计划编号</th><th>采购部门</th><th>剩余执行数量</th><th>已执行数量</th><th>订单编号</th><th>提报单位</th><th>场站名称</th><th>合同编号</th><th>子合同编号</th><th>供应商</th><th>入库状态</th><th>货物编号</th><th>物资名称</th><th>存放状态</th><th>验收编号</th><th>验收状态</th><th>穿透详情</th></tr></thead>
+              <tbody id="reportBody"></tbody>
+              </table>
+            </div>
+          <div class="table-foot">当前默认展示 10 行数据（可继续扩展分页）。</div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/sidebar-actions.js"></script><script src="js/subpage-feature-title.js"></script><script src="js/subpage-clock.js"></script>
+  <script>
+    const reportRows = [
+      ["CGJH-2026-001","经营发展中心",70,50,"ORD2026001","河南能源","新安风电场","HT-2026-301","SUB-2026-001","联合动力","已入库","G-2026-001","齿轮箱总成","在库","QA-2026-201","通过"],
+      ["CGJH-2026-002","经营发展中心",40,20,"ORD2026002","华中电力","嵩县风电场","HT-2026-302","SUB-2026-002","东方电气","部分入库","G-2026-002","发电机组","在途","QA-2026-202","待验收"],
+      ["CGJH-2026-003","设备管理部",88,36,"ORD2026003","山西能源","黎城风电场","HT-2026-303","SUB-2026-003","金风科技","已入库","G-2026-003","塔筒组件","在库","QA-2026-203","通过"],
+      ["CGJH-2026-004","设备管理部",26,14,"ORD2026004","内蒙绿能","苏尼特风场","HT-2026-304","SUB-2026-004","明阳智能","待入库","G-2026-004","主轴总成","待收货","QA-2026-204","待验收"],
+      ["CGJH-2026-005","生产运维部",53,47,"ORD2026005","豫北新能源","林州风电场","HT-2026-305","SUB-2026-005","联合动力","已入库","G-2026-005","液压站","在库","QA-2026-205","通过"],
+      ["CGJH-2026-006","生产运维部",65,30,"ORD2026006","鲁西电力","菏泽风电场","HT-2026-306","SUB-2026-006","远景能源","部分入库","G-2026-006","变流柜","在途","QA-2026-206","部分通过"],
+      ["CGJH-2026-007","经营发展中心",35,35,"ORD2026007","晋东能源","长治风电场","HT-2026-307","SUB-2026-007","运达股份","已入库","G-2026-007","叶片组件","在库","QA-2026-207","通过"],
+      ["CGJH-2026-008","设备管理部",90,10,"ORD2026008","陇东电力","平凉风电场","HT-2026-308","SUB-2026-008","三一重能","待入库","G-2026-008","偏航系统","待收货","QA-2026-208","待验收"],
+      ["CGJH-2026-009","生产运维部",42,18,"ORD2026009","河北绿电","张北风电场","HT-2026-309","SUB-2026-009","海装风电","部分入库","G-2026-009","变桨系统","在途","QA-2026-209","待复验"],
+      ["CGJH-2026-010","经营发展中心",30,28,"ORD2026010","西北电建","酒泉风电场","HT-2026-310","SUB-2026-010","上海电气","已入库","G-2026-010","法兰连接件","在库","QA-2026-210","通过"]
+    ];
+
+    function renderRows(rows){
+      const tbody = document.getElementById("reportBody");
+      tbody.innerHTML = rows.map(function(r){
+        return "<tr>"
+          + "<td>"+r[0]+"</td>"
+          + "<td>"+r[1]+"</td>"
+          + "<td>"+r[2]+"</td>"
+          + "<td>"+r[3]+"</td>"
+          + "<td><a href=\"material-procurement-hub.html?tab=m3\">"+r[4]+"</a></td>"
+          + "<td>"+r[5]+"</td>"
+          + "<td>"+r[6]+"</td>"
+          + "<td><a href=\"purchase-ledger.html\">"+r[7]+"</a></td>"
+          + "<td>"+r[8]+"</td>"
+          + "<td>"+r[9]+"</td>"
+          + "<td>"+r[10]+"</td>"
+          + "<td><a href=\"purchase-ledger.html?tab=cargo\">"+r[11]+"</a></td>"
+          + "<td>"+r[12]+"</td>"
+          + "<td>"+r[13]+"</td>"
+          + "<td><a href=\"proc-quality-accept.html\">"+r[14]+"</a></td>"
+          + "<td>"+r[15]+"</td>"
+          + "<td><a href=\"proc-shipment.html\">查看链路</a></td>"
+          + "</tr>";
+      }).join("");
+    }
+
+    renderRows(reportRows);
+
+    document.getElementById("btnQuery").addEventListener("click", function () {
+      alert("已按筛选条件更新报表（演示）");
+    });
+    document.getElementById("btnExport").addEventListener("click", function () {
+      alert("已导出采购汇总报表 Excel（演示）");
+    });
+  </script>
+</body>
+</html>

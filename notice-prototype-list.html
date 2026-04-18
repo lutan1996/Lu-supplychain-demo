@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>公告管理 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/subpage-toolbar.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    /* 公告列表：与原型一致，主区略浅灰底衬托白内容 */
+    .np .main-scroll {
+      background: #f5f7fb;
+    }
+    .np .carrier-main-inner {
+      padding: 16px 20px 24px;
+      background: #f5f7fb;
+      min-height: 0;
+    }
+    .np-card {
+      background: #fff;
+      border-radius: 4px;
+      border: 1px solid #e8ecf2;
+      box-shadow: none;
+      padding: 10px 10px 0;
+      margin-bottom: 0;
+    }
+    .np-card .wh-filters {
+      padding: 0 0 8px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(300px, 1fr));
+      gap: 10px 16px;
+    }
+    .np-inline-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .np-inline-field label {
+      white-space: nowrap;
+      font-size: 12px;
+      color: #516a87;
+    }
+    .np-inline-field input {
+      width: 100%;
+      height: 30px;
+      border: 1px solid #d7e1ee;
+      border-radius: 2px;
+      padding: 0 8px;
+      font-size: 12px;
+    }
+    .np-card .wh-filter-actions {
+      padding: 0 0 12px;
+    }
+    /* 原型表：仅横向分隔线，无竖线 */
+    .notice-table--h-only {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .notice-table--h-only thead th {
+      background: #f5f5f5;
+      color: #333;
+      font-weight: 600;
+      text-align: left;
+      padding: 12px 12px;
+      border: none;
+      border-bottom: 1px solid #e8e8e8;
+      white-space: nowrap;
+    }
+    .notice-table--h-only tbody td {
+      padding: 12px 12px;
+      border: none;
+      border-bottom: 1px solid #e8e8e8;
+      color: #333;
+      vertical-align: middle;
+    }
+    .notice-table--h-only tbody tr:hover {
+      background: #fafafa;
+    }
+    .notice-table--h-only .col-check {
+      width: 48px;
+      text-align: center;
+    }
+    .notice-table--h-only .col-name {
+      min-width: 200px;
+      max-width: 420px;
+      white-space: normal;
+      word-break: break-word;
+    }
+    .notice-table--h-only .col-ops {
+      white-space: nowrap;
+      text-align: center;
+      width: 120px;
+    }
+    .notice-table--h-only .col-ops a {
+      color: #1890ff;
+      font-size: 12px;
+      margin: 0 4px;
+      text-decoration: none;
+    }
+    .notice-table--h-only .col-ops a:hover {
+      opacity: 0.85;
+    }
+    .np .wh-table-wrap {
+      padding: 0;
+      margin: 0 -16px;
+      border-radius: 0 0 8px 8px;
+      overflow: hidden;
+    }
+    .np .wh-pagination {
+      padding: 8px 16px 10px;
+      margin: 0 -16px;
+      background: #fff;
+      border-radius: 0 0 8px 8px;
+      border-top: 1px solid #f0f0f0;
+    }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics np">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar" title="用户">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit-analytics.html"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item nav-item--module-active" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <div class="np-card" id="npCard">
+            <div class="wh-filters" id="npFilters"></div>
+            <div class="wh-filter-actions">
+              <button type="button" class="btn btn-primary" id="npBtnSearch"><i class="fa-solid fa-magnifying-glass"></i> 搜索</button>
+              <button type="button" class="btn btn-default" id="npBtnReset"><i class="fa-solid fa-arrow-rotate-right"></i> 重置</button>
+            </div>
+
+            <div class="wh-toolbar">
+              <button type="button" class="btn-toolbar btn-toolbar--primary"><i class="fa-solid fa-plus" aria-hidden="true"></i> 新增</button>
+              <button type="button" class="btn-toolbar btn-toolbar--success"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i> 修改</button>
+              <button type="button" class="btn-toolbar btn-toolbar--danger"><i class="fa-solid fa-trash-can" aria-hidden="true"></i> 删除</button>
+              <button type="button" class="btn-toolbar btn-toolbar--warning"><i class="fa-solid fa-download" aria-hidden="true"></i> 导出</button>
+              <span class="wh-toolbar-spacer"></span>
+              <div class="wh-toolbar-icons">
+                <button type="button" title="刷新" aria-label="刷新"><i class="fa-solid fa-arrow-rotate-right"></i></button>
+                <button type="button" title="列设置" aria-label="列设置"><i class="fa-solid fa-gear"></i></button>
+              </div>
+            </div>
+
+            <div class="wh-table-wrap">
+              <table class="notice-table--h-only">
+                <thead>
+                  <tr id="npHead"></tr>
+                </thead>
+                <tbody id="npBody"></tbody>
+              </table>
+            </div>
+
+            <div class="wh-pagination" role="navigation" aria-label="分页">
+              <span>共 <span id="npTotal">0</span> 条</span>
+              <select aria-label="每页条数" id="npPageSize">
+                <option selected>10条/页</option>
+                <option>20条/页</option>
+                <option>50条/页</option>
+              </select>
+              <div class="wh-page-btns">
+                <button type="button" aria-label="上一页">&lt;</button>
+                <button type="button" class="is-current" aria-current="page">1</button>
+                <button type="button" aria-label="下一页">&gt;</button>
+              </div>
+              <span class="wh-goto">前往 <input type="text" value="1" aria-label="页码" /> 页</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var scene = "";
+      try {
+        var sp = new URLSearchParams(window.location.search);
+        scene = sp.get("scene") || "";
+      } catch (e) {}
+      if (!scene) {
+        try {
+          scene = sessionStorage.getItem("demoScene") || "";
+        } catch (e2) {}
+      }
+      if (!scene) {
+        try {
+          var nm = window.name || "";
+          if (nm) {
+            var sp2 = new URLSearchParams(nm);
+            scene = sp2.get("scene") || "";
+          }
+        } catch (e3) {}
+      }
+      if (scene !== "bid" && scene !== "nonbid") scene = "nonbid";
+
+      var bidCfg = {
+        filterLabels: ["招标编号", "招标名称", "招标地址"],
+        filterPlaceholders: ["请输入招标编号", "请输入招标名称", "请输入招标地址"],
+        cols: ["招标编号", "招标名称", "招标地址", "操作"],
+        rows: [
+          { no: "1243243", name: "外交部发言人就有关问题答记者问（例行发布会摘要）", addr: "1243324" },
+          { no: "13331", name: "全国两会开幕在即，各界关注经济社会发展目标", addr: "12342134" },
+          { no: "ZB-2026-008", name: "中老铁路国际旅客列车开行满周年运营情况通报", addr: "重庆市" }
+        ]
+      };
+
+      var nonbidCfg = {
+        filterLabels: ["非招标编号", "非招标名称", "非招标地址"],
+        filterPlaceholders: ["请输入非招标编号", "请输入非招标名称", "请输入非招标地址"],
+        cols: ["非招标编号", "非招标名称", "非招标地址", "操作"],
+        rows: [
+          { no: "FB-2026-001", name: "某批次备件询价公示（第一批）", addr: "华北区" },
+          { no: "FB-2026-002", name: "检修耗材定点采购结果公示", addr: "张北场站" }
+        ]
+      };
+
+      var cfg = scene === "bid" ? bidCfg : nonbidCfg;
+      document.title = (scene === "bid" ? "招标公告" : "非招标公告") + " - 新能源物资供应链管理系统";
+
+      var filters = document.getElementById("npFilters");
+      cfg.filterLabels.forEach(function (label, i) {
+        var div = document.createElement("div");
+        div.className = "np-inline-field";
+        var id = "np-f-" + i;
+        div.innerHTML =
+          "<label for=\"" + id + "\">" + label + "</label>" +
+          "<input id=\"" + id + "\" type=\"text\" placeholder=\"" + cfg.filterPlaceholders[i] + "\" />";
+        filters.appendChild(div);
+      });
+
+      var head = document.getElementById("npHead");
+      var th0 = document.createElement("th");
+      th0.className = "col-check";
+      th0.innerHTML = "<input type=\"checkbox\" aria-label=\"全选\" />";
+      head.appendChild(th0);
+      cfg.cols.forEach(function (c) {
+        var th = document.createElement("th");
+        if (c === "招标名称" || c === "非招标名称") th.className = "col-name";
+        if (c === "操作") th.className = "col-ops";
+        th.textContent = c;
+        head.appendChild(th);
+      });
+
+      var body = document.getElementById("npBody");
+      cfg.rows.forEach(function (row) {
+        var tr = document.createElement("tr");
+        var td0 = document.createElement("td");
+        td0.className = "col-check";
+        td0.innerHTML = "<input type=\"checkbox\" aria-label=\"选择行\" />";
+        tr.appendChild(td0);
+        var td1 = document.createElement("td");
+        td1.textContent = row.no;
+        tr.appendChild(td1);
+        var td2 = document.createElement("td");
+        td2.className = "col-name";
+        td2.textContent = row.name;
+        tr.appendChild(td2);
+        var td3 = document.createElement("td");
+        td3.textContent = row.addr;
+        tr.appendChild(td3);
+        var td4 = document.createElement("td");
+        td4.className = "col-ops";
+        td4.innerHTML =
+          "<a href=\"#\" title=\"编辑\" aria-label=\"编辑\"><i class=\"fa-solid fa-pen-to-square\"></i></a>" +
+          "<a href=\"#\" title=\"删除\" aria-label=\"删除\"><i class=\"fa-solid fa-trash-can\"></i></a>";
+        tr.appendChild(td4);
+        body.appendChild(tr);
+      });
+
+      document.getElementById("npTotal").textContent = String(cfg.rows.length);
+
+      document.getElementById("npBtnReset").addEventListener("click", function () {
+        cfg.filterLabels.forEach(function (_, i) {
+          var el = document.getElementById("np-f-" + i);
+          if (el) el.value = "";
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

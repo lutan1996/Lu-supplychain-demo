@@ -1,0 +1,263 @@
+{
+  "vueRoot": "/Users/lutan/Downloads/SupplyChainManageView-master-77b1e044500d63b8b5263dd39e9b1656d990ef4f",
+  "modules": {
+    "01-我的任务": [
+      {
+        "path": "views/workflow/task/myDocument.vue",
+        "output": "01-我的任务/views__workflow__task__myDocument.vue.html"
+      },
+      {
+        "path": "views/workflow/task/taskWaiting.vue",
+        "output": "01-我的任务/views__workflow__task__taskWaiting.vue.html"
+      },
+      {
+        "path": "views/workflow/task/taskFinish.vue",
+        "output": "01-我的任务/views__workflow__task__taskFinish.vue.html"
+      },
+      {
+        "path": "views/workflow/task/taskCopyList.vue",
+        "output": "01-我的任务/views__workflow__task__taskCopyList.vue.html"
+      },
+      {
+        "path": "views/workflow/task/allTaskWaiting.vue",
+        "output": "01-我的任务/views__workflow__task__allTaskWaiting.vue.html"
+      }
+    ],
+    "02-采购管理": [
+      {
+        "path": "views/workflow/leave/NBPCommApprova.vue",
+        "output": "02-采购管理/views__workflow__leave__NBPCommApprova.vue.html"
+      },
+      {
+        "path": "views/workflow/leave/PurchasePlanApprovalForm.vue",
+        "output": "02-采购管理/views__workflow__leave__PurchasePlanApprovalForm.vue.html"
+      },
+      {
+        "path": "views/workflow/leave/purchaseApprovalForm.vue",
+        "output": "02-采购管理/views__workflow__leave__purchaseApprovalForm.vue.html"
+      },
+      {
+        "path": "views/workflow/leave/rePurchaseApprovalForm.vue",
+        "output": "02-采购管理/views__workflow__leave__rePurchaseApprovalForm.vue.html"
+      },
+      {
+        "path": "views/workflow/leave/summaryOfProcurementDocumentReview.vue",
+        "output": "02-采购管理/views__workflow__leave__summaryOfProcurementDocumentReview.vue.html"
+      },
+      {
+        "path": "views/workflow/leave/tenderProcurementCommitteeApproval.vue",
+        "output": "02-采购管理/views__workflow__leave__tenderProcurementCommitteeApproval.vue.html"
+      },
+      {
+        "path": "views/workflow/leave/TerminationPurchaseApprovalForm.vue",
+        "output": "02-采购管理/views__workflow__leave__TerminationPurchaseApprovalForm.vue.html"
+      },
+      {
+        "path": "views/workflow/leave/approvalFormForCompanyLevelCentralized.vue",
+        "output": "02-采购管理/views__workflow__leave__approvalFormForCompanyLevelCentralized.vue.html"
+      },
+      {
+        "path": "views/workflow/leave/approvalFormForProcurementResults.vue",
+        "output": "02-采购管理/views__workflow__leave__approvalFormForProcurementResults.vue.html"
+      },
+      {
+        "path": "views/workflow/leave/monthlyBiddingAndProcurementPlanApplication.vue",
+        "output": "02-采购管理/views__workflow__leave__monthlyBiddingAndProcurementPlanApplication.vue.html"
+      },
+      {
+        "path": "views/workflow/leave/monthlyNonBiddingProcurementPlanApplication.vue",
+        "output": "02-采购管理/views__workflow__leave__monthlyNonBiddingProcurementPlanApplication.vue.html"
+      },
+      {
+        "path": "views/workflow/leave/noticeOfApprovalResultsForProcurementProjects.vue",
+        "output": "02-采购管理/views__workflow__leave__noticeOfApprovalResultsForProcurementProjects.vue.html"
+      },
+      {
+        "path": "views/workflow/leave/ProcurementManagementApproval.vue",
+        "output": "02-采购管理/views__workflow__leave__ProcurementManagementApproval.vue.html"
+      },
+      {
+        "path": "views/workflow/leave/index.vue",
+        "output": "02-采购管理/views__workflow__leave__index.vue.html"
+      },
+      {
+        "path": "views/system/basicDataMaintenance/index.vue",
+        "output": "02-采购管理/views__system__basicDataMaintenance__index.vue.html"
+      },
+      {
+        "path": "views/system/archiveDirectory/index.vue",
+        "output": "02-采购管理/views__system__archiveDirectory__index.vue.html"
+      },
+      {
+        "path": "views/system/htgl/index.vue",
+        "output": "02-采购管理/views__system__htgl__index.vue.html"
+      }
+    ],
+    "03-仓库管理": [
+      {
+        "path": "views/system/warehouseManagement/index.vue",
+        "output": "03-仓库管理/views__system__warehouseManagement__index.vue.html"
+      }
+    ],
+    "04-退役及废旧管理": [
+      {
+        "path": "views/system/brand/index.vue",
+        "output": "04-退役及废旧管理/views__system__brand__index.vue.html"
+      },
+      {
+        "path": "views/system/model/index.vue",
+        "output": "04-退役及废旧管理/views__system__model__index.vue.html"
+      },
+      {
+        "path": "views/system/replaceBigSmallWindTransformation/index.vue",
+        "output": "04-退役及废旧管理/views__system__replaceBigSmallWindTransformation__index.vue.html"
+      },
+      {
+        "path": "views/system/windTurbineUnit/index.vue",
+        "output": "04-退役及废旧管理/views__system__windTurbineUnit__index.vue.html"
+      },
+      {
+        "path": "views/system/engineElectricalCabinet/index.vue",
+        "output": "04-退役及废旧管理/views__system__engineElectricalCabinet__index.vue.html"
+      },
+      {
+        "path": "views/system/materialRequisition/index.vue",
+        "output": "04-退役及废旧管理/views__system__materialRequisition__index.vue.html"
+      },
+      {
+        "path": "views/system/projectManagement/index.vue",
+        "output": "04-退役及废旧管理/views__system__projectManagement__index.vue.html"
+      }
+    ],
+    "05-公告管理": [
+      {
+        "path": "views/system/nonTenderNotice/index.vue",
+        "output": "05-公告管理/views__system__nonTenderNotice__index.vue.html"
+      },
+      {
+        "path": "views/system/tenderNotice/index.vue",
+        "output": "05-公告管理/views__system__tenderNotice__index.vue.html"
+      }
+    ],
+    "06-标准规范": [
+      {
+        "path": "views/system/fileStandard/index.vue",
+        "output": "06-标准规范/views__system__fileStandard__index.vue.html"
+      }
+    ],
+    "07-数据管理-基础数据-供应商-编码": [
+      {
+        "path": "views/system/basicDataMaintenance/index.vue",
+        "output": "07-数据管理-基础数据-供应商-编码/views__system__basicDataMaintenance__index.vue.html"
+      },
+      {
+        "path": "views/system/masterSuppliers/index.vue",
+        "output": "07-数据管理-基础数据-供应商-编码/views__system__masterSuppliers__index.vue.html"
+      },
+      {
+        "path": "views/system/masterCode/index.vue",
+        "output": "07-数据管理-基础数据-供应商-编码/views__system__masterCode__index.vue.html"
+      }
+    ],
+    "08-开发工具": [
+      {
+        "path": "views/monitor/online/index.vue",
+        "output": "08-开发工具/views__monitor__online__index.vue.html"
+      },
+      {
+        "path": "views/system/tenant/index.vue",
+        "output": "08-开发工具/views__system__tenant__index.vue.html"
+      },
+      {
+        "path": "views/demo/demo/index.vue",
+        "output": "08-开发工具/views__demo__demo__index.vue.html"
+      },
+      {
+        "path": "views/demo/tree/index.vue",
+        "output": "08-开发工具/views__demo__tree__index.vue.html"
+      },
+      {
+        "path": "views/workflow/category/index.vue",
+        "output": "08-开发工具/views__workflow__category__index.vue.html"
+      },
+      {
+        "path": "views/workflow/leave/leaveEdit.vue",
+        "output": "08-开发工具/views__workflow__leave__leaveEdit.vue.html"
+      },
+      {
+        "path": "views/system/tenantPackage/index.vue",
+        "output": "08-开发工具/views__system__tenantPackage__index.vue.html"
+      },
+      {
+        "path": "views/workflow/model/index.vue",
+        "output": "08-开发工具/views__workflow__model__index.vue.html"
+      },
+      {
+        "path": "views/workflow/processDefinition/index.vue",
+        "output": "08-开发工具/views__workflow__processDefinition__index.vue.html"
+      },
+      {
+        "path": "views/workflow/processInstance/index.vue",
+        "output": "08-开发工具/views__workflow__processInstance__index.vue.html"
+      },
+      {
+        "path": "views/workflow/task/taskWaiting.vue",
+        "output": "08-开发工具/views__workflow__task__taskWaiting.vue.html"
+      },
+      {
+        "path": "views/monitor/cache/index.vue",
+        "output": "08-开发工具/views__monitor__cache__index.vue.html"
+      },
+      {
+        "path": "views/workflow/formManage/index.vue",
+        "output": "08-开发工具/views__workflow__formManage__index.vue.html"
+      }
+    ],
+    "09-系统管理": [
+      {
+        "path": "views/system/user/index.vue",
+        "output": "09-系统管理/views__system__user__index.vue.html"
+      },
+      {
+        "path": "views/system/role/index.vue",
+        "output": "09-系统管理/views__system__role__index.vue.html"
+      },
+      {
+        "path": "views/tool/gen/index.vue",
+        "output": "09-系统管理/views__tool__gen__index.vue.html"
+      },
+      {
+        "path": "views/system/menu/index.vue",
+        "output": "09-系统管理/views__system__menu__index.vue.html"
+      },
+      {
+        "path": "views/system/dept/index.vue",
+        "output": "09-系统管理/views__system__dept__index.vue.html"
+      },
+      {
+        "path": "views/system/post/index.vue",
+        "output": "09-系统管理/views__system__post__index.vue.html"
+      },
+      {
+        "path": "views/system/dict/index.vue",
+        "output": "09-系统管理/views__system__dict__index.vue.html"
+      },
+      {
+        "path": "views/system/config/index.vue",
+        "output": "09-系统管理/views__system__config__index.vue.html"
+      },
+      {
+        "path": "views/system/notice/index.vue",
+        "output": "09-系统管理/views__system__notice__index.vue.html"
+      },
+      {
+        "path": "views/system/oss/index.vue",
+        "output": "09-系统管理/views__system__oss__index.vue.html"
+      },
+      {
+        "path": "views/system/client/index.vue",
+        "output": "09-系统管理/views__system__client__index.vue.html"
+      }
+    ]
+  }
+}

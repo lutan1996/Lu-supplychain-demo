@@ -1,0 +1,202 @@
+<!-- 来源: src/views/system/warehouseManagement/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <transition>
+      <div class="mb-[10px]">
+        <el-card shadow="hover">
+          <el-form>
+            <el-form-item label="仓库名称" prop="warehouseName">
+              <el-input placeholder="请输入仓库名称" clearable />
+            </el-form-item>
+            <el-form-item label="库管员" prop="treasurer">
+              <el-input placeholder="请输入库管员" clearable />
+            </el-form-item>
+            <el-form-item label="区域公司" prop="regionalCompanies">
+              <el-input placeholder="请输入区域公司" clearable />
+            </el-form-item>
+
+            <el-form-item label="场站" prop="stations">
+              <el-input placeholder="请输入场站" clearable />
+            </el-form-item>
+            <el-form-item label="仓库地址" prop="warehouseAddress">
+              <el-input placeholder="请输入仓库地址" clearable />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="Search">搜索</el-button>
+              <el-button icon="Refresh">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </div>
+    </transition>
+
+    <el-card shadow="never">
+      <template>
+        <el-row class="mb8">
+          <el-col>
+            <el-button type="primary" plain icon="Plus">新增</el-button>
+          </el-col>
+          <el-col>
+            <el-button type="success" plain icon="Edit">修改</el-button>
+          </el-col>
+          <el-col>
+            <el-button type="danger" plain icon="Delete">删除</el-button>
+          </el-col>
+          <el-col>
+            <el-button type="warning" plain icon="Download">导出</el-button>
+          </el-col>
+          <right-toolbar></right-toolbar>
+        </el-row>
+      </template>
+
+      <el-table>
+        <el-table-column type="selection" width="55" align="center" />
+        <!-- <el-table-column label="主键" align="center" prop="id" /> -->
+        <el-table-column label="仓库名称" align="center" prop="warehouseName" />
+        <el-table-column label="库管员" align="center" prop="treasurer" />
+        <el-table-column label="区域公司" align="center" prop="regionalCompanies" />
+        <el-table-column label="场站" align="center" prop="stations" />
+        <el-table-column label="仓库编码" align="center" prop="warehouseCode" />
+
+        <el-table-column label="仓库地址" align="center" prop="warehouseAddress" />
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template="scope">
+            <el-tooltip content="修改" placement="top">
+              <el-button link type="primary" icon="Edit"></el-button>
+            </el-tooltip>
+            <el-tooltip content="仓库库位" placement="top">
+              <el-button link type="primary" icon="FirstAidKit"></el-button>
+            </el-tooltip>
+            <el-tooltip content="删除" placement="top">
+              <el-button link type="primary" icon="Delete"></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination />
+    </el-card>
+    <!-- 添加或修改仓库管理对话框 -->
+    <el-dialog width="500px" append-to-body>
+      <el-form label-width="80px">
+        <el-form-item label="仓库名称" prop="warehouseName">
+          <el-input placeholder="请输入仓库名称" />
+        </el-form-item>
+        <el-form-item label="库管员" prop="treasurer">
+          <!-- <el-button plain >
+            （动态文本）
+          </el-button> -->
+          <el-input disabled placeholder="请输入库管员" clearable style="width:80%;"/>
+          <el-button>选择</el-button>
+        </el-form-item>
+        <el-form-item label="区域公司" prop="regionalCompanies">
+          <!-- <el-input placeholder="请输入区域公司" /> -->
+          <el-select filterable placeholder="请选择" clearable style="width: 100%;">
+            <el-option
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="场站" prop="stations">
+          <el-input placeholder="请输入场站" />
+          <!-- <el-select placeholder="请选择场站" clearable style="width: 100%;">
+            <el-option
+            />
+          </el-select> -->
+        </el-form-item>
+        <el-form-item label="仓库地址" prop="warehouseAddress">
+          <el-input placeholder="请输入仓库地址" />
+        </el-form-item>
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+
+    <el-dialog width="900px" append-to-body>
+        <el-table highlight-current-row>
+
+            <!-- <el-table-column type="selection" width="50" align="center" /> -->
+            <el-table-column  key="userId" label="用户编号" align="center" prop="userId" />
+            <el-table-column  key="userName" label="用户名称" align="center" prop="userName" />
+            <el-table-column  key="nickName" label="用户昵称" align="center" prop="nickName" />
+            <el-table-column  key="deptName" label="部门" align="center" prop="deptName" />
+            <el-table-column  key="phonenumber" label="手机号码" align="center" prop="phonenumber" width="120" />
+            <el-table-column  key="status" label="状态" align="center">
+              <template="scope">
+                <!-- <el-switch active-value="0" inactive-value="1"></el-switch> -->
+              </template>
+            </el-table-column>
+
+            
+          
+          </el-table>
+
+          <pagination
+          />
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+
+    <el-dialog width="70%" append-to-body>
+      <div>
+        <el-row class="mb8">
+          <el-col>
+            <el-button type="primary" plain icon="Plus">新增库位</el-button>
+          </el-col>
+        </el-row>
+      </div>
+
+      <el-table>
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="仓库名称" align="center" prop="zbscWarehouseManagementName" />
+        <el-table-column label="库位编码" align="center" prop="positionsCode" />
+        <el-table-column label="库位名称" align="center" prop="positionsName" />
+        
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template="scope">
+            <el-tooltip content="修改" placement="top">
+              <el-button link type="primary" icon="Edit"></el-button>
+            </el-tooltip>
+            <el-tooltip content="删除" placement="top">
+              <el-button link type="primary" icon="Delete"></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+      <template>
+        <!-- <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div> -->
+      </template>
+    </el-dialog>
+    <el-dialog width="700px" append-to-body>
+      <el-form label-width="120px">
+        <el-form-item label="仓库名称" prop="warehouseName">
+          <el-input disabled placeholder="请输入仓库名称" />
+        </el-form-item>
+        <el-form-item label="库位名称" prop="positionsName">
+          <el-input placeholder="请输入库位名称" />
+        </el-form-item>
+        <el-form-item label="库位说明" >
+          <el-input placeholder="请输入库位说明" />
+        </el-form-item>
+        
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>盘库管理 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/module-hub.css" />
+  <link rel="stylesheet" href="css/warehouse-modal.css" />
+  <style>.module-hub-tabs button { border:1px solid #d9d9d9;background:#fff;padding:6px 14px;font-size:13px;cursor:pointer;margin-right:4px;border-radius:4px 4px 0 0; }
+  .module-hub-tabs button.is-active { background:#1890ff;color:#fff;border-color:#1890ff; }</style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit.html" title="驾驶舱"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html" title="物流管理"><span class="nav-label">物流管理</span></a>
+        <div class="nav-item nav-item--module-active" id="navWarehouse" data-nav="warehouse" title="仓储管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 21h18V10.5L12 6 3 10.5V21z"/><path d="M9 21v-7h6v7"/></svg></span>
+          <span class="nav-label">仓储管理</span>
+        </div>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+
+      <aside id="warehouseSecondaryPanel" class="warehouse-secondary-panel" aria-label="仓储管理子菜单" aria-hidden="true" hidden>
+        <div class="warehouse-secondary-inner">
+          <div class="warehouse-secondary-row warehouse-secondary-row--pipe" id="masterSecondaryRow">
+            <button type="button" class="warehouse-secondary-link" data-action="slot" data-label="货位管理">货位管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="receive" data-label="收货入库">收货入库</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="scan" data-label="扫码领用">扫码领用</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="inventory-check" data-label="盘库管理">盘库管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="stock" data-label="库存管理">库存管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="maintenance" data-label="库内保养">库内保养</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="idle" data-label="闲置物资">闲置物资</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="warehouse" data-label="仓库管理">仓库管理</button>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title">盘库管理</h1>
+          <p id="pageContextHint" class="page-context-hint" hidden style="font-size:13px;color:#62788f;margin:0 0 10px;"></p>
+
+          <div class="module-hub-tabs" style="margin-bottom:12px;">
+            <button type="button" class="is-active" id="tabTask">盘点任务列表</button>
+            <button type="button" id="tabDetail">盘点明细录入</button>
+          </div>
+
+          <div id="panelTask">
+          <div class="carrier-toolbar">
+            <button type="button" class="carrier-btn-add" id="btnNewInventoryPlan"><i class="fa-solid fa-plus" aria-hidden="true"></i> 新建盘点计划</button>
+            <div class="carrier-toolbar-right">
+              <select class="carrier-select" aria-label="仓库">
+                <option value="">全部仓库</option>
+                <option>华北主仓</option>
+                <option>华东备件仓</option>
+              </select>
+              <select class="carrier-select" aria-label="状态">
+                <option value="">全部状态</option>
+                <option>待盘点</option>
+                <option>盘点中</option>
+                <option>待审核</option>
+                <option>已结存</option>
+              </select>
+              <input type="search" class="carrier-search" placeholder="盘点单号" aria-label="搜索" />
+            </div>
+          </div>
+
+          <div class="carrier-table-wrap">
+            <table class="carrier-table">
+              <thead>
+                <tr>
+                  <th>盘点单号</th>
+                  <th>仓库</th>
+                  <th>盘点类型</th>
+                  <th>计划日期</th>
+                  <th>负责人</th>
+                  <th>盘盈/盘亏</th>
+                  <th>状态</th>
+                  <th style="min-width:200px">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>PD-2026-Q1-001</td>
+                  <td>华北主仓</td>
+                  <td>全盘</td>
+                  <td>2026-03-28</td>
+                  <td>王雷</td>
+                  <td>+2 / -1</td>
+                  <td><span class="tag-status" style="background:#fff7e6;color:#d46b08;">待审核</span></td>
+                  <td><a href="#" class="pd-op" data-action="detail" style="color:#1677ff;font-size:13px;">明细</a> · <a href="#" class="pd-op" data-action="post" style="color:#1677ff;font-size:13px;">过账</a> · <button type="button" class="carrier-btn-add pd-export-btn" style="height:26px;padding:0 8px;font-size:12px;">导出明细</button></td>
+                </tr>
+                <tr>
+                  <td>PD-2026-Q1-002</td>
+                  <td>华东备件仓</td>
+                  <td>抽盘</td>
+                  <td>2026-03-30</td>
+                  <td>李凯</td>
+                  <td>0 / 0</td>
+                  <td><span class="tag-status" style="background:#f6ffed;color:#389e0d;">已结存</span></td>
+                  <td><a href="#" class="pd-op" data-action="detail" style="color:#1677ff;font-size:13px;">明细</a> · <button type="button" class="carrier-btn-add pd-export-btn" style="height:26px;padding:0 8px;font-size:12px;">导出明细</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          </div>
+
+          <div id="panelDetail" style="display:none;">
+            <div class="carrier-toolbar">
+              <span style="font-size:13px;color:#516a87;">关联盘点单：PD-2026-Q1-001</span>
+              <button type="button" class="carrier-btn-add" id="btnExportPd"><i class="fa-solid fa-file-export"></i> 导出盘点明细表</button>
+            </div>
+            <div class="carrier-table-wrap">
+              <table class="carrier-table">
+                <thead>
+                  <tr>
+                    <th>固定资产编号</th>
+                    <th>固定资产名称</th>
+                    <th>规格型号</th>
+                    <th>存放地点</th>
+                    <th>保管人</th>
+                    <th>使用年限</th>
+                    <th>原值</th>
+                    <th>数量</th>
+                    <th>单位</th>
+                    <th>盘点数量</th>
+                    <th>使用状况</th>
+                    <th>盘点结果</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>GZ-2023-001</td>
+                    <td>齿轮箱</td>
+                    <td>GW-GX-3.2MW</td>
+                    <td>华北主仓 A-01</td>
+                    <td>李华</td>
+                    <td>15年</td>
+                    <td>400000</td>
+                    <td>1</td>
+                    <td>件</td>
+                    <td><input type="number" value="1" style="width:56px;" /></td>
+                    <td>良好</td>
+                    <td>账实相符</td>
+                  </tr>
+                  <tr>
+                    <td>GZ-2022-088</td>
+                    <td>发电机</td>
+                    <td>FD-2.0</td>
+                    <td>华东备件 B-03</td>
+                    <td>周杰</td>
+                    <td>20年</td>
+                    <td>175000</td>
+                    <td>1</td>
+                    <td>件</td>
+                    <td><input type="number" value="1" style="width:56px;" /></td>
+                    <td>待检</td>
+                    <td>待复核</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="wh-modal-mask modal-mask" id="pdNewPlanMask" aria-hidden="true">
+    <div class="wh-modal-box" role="dialog" aria-modal="true" aria-labelledby="pdNewPlanTitle">
+      <div class="wh-modal-head">
+        <h3 class="wh-modal-title" id="pdNewPlanTitle">新建盘点计划</h3>
+        <button type="button" class="wh-modal-close" id="pdNewPlanCloseX" aria-label="关闭">×</button>
+      </div>
+      <div class="wh-modal-body">
+        <div class="wh-field">
+          <label class="wh-label" for="pdNewWh">盘点仓库</label>
+          <select id="pdNewWh" class="wh-input">
+            <option>华北主仓</option>
+            <option>华东备件仓</option>
+          </select>
+        </div>
+        <div class="wh-field">
+          <label class="wh-label" for="pdNewType">盘点类型</label>
+          <select id="pdNewType" class="wh-input">
+            <option>全盘</option>
+            <option>抽盘</option>
+          </select>
+        </div>
+        <div class="wh-field">
+          <label class="wh-label" for="pdNewDate">计划日期</label>
+          <input id="pdNewDate" class="wh-input" type="date" />
+        </div>
+      </div>
+      <div class="wh-modal-foot">
+        <button type="button" class="wh-btn wh-btn--ghost" id="pdNewPlanCancel">取消</button>
+        <button type="button" class="wh-btn wh-btn--primary" id="pdNewPlanOk">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/warehouse-submenu.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    document.getElementById("tabTask").addEventListener("click", function () {
+      document.getElementById("panelTask").style.display = "block";
+      document.getElementById("panelDetail").style.display = "none";
+      document.getElementById("tabTask").classList.add("is-active");
+      document.getElementById("tabDetail").classList.remove("is-active");
+    });
+    document.getElementById("tabDetail").addEventListener("click", function () {
+      document.getElementById("panelTask").style.display = "none";
+      document.getElementById("panelDetail").style.display = "block";
+      document.getElementById("tabDetail").classList.add("is-active");
+      document.getElementById("tabTask").classList.remove("is-active");
+    });
+    function pdToast(msg) {
+      var t = document.createElement("div");
+      t.textContent = msg;
+      t.setAttribute("role", "status");
+      t.style.cssText = "position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;z-index:10050;max-width:90vw;text-align:center;";
+      document.body.appendChild(t);
+      setTimeout(function () { t.remove(); }, 2400);
+    }
+    var pdMask = document.getElementById("pdNewPlanMask");
+    function pdOpen() {
+      document.getElementById("pdNewDate").value = new Date().toISOString().slice(0, 10);
+      pdMask.classList.add("show");
+      pdMask.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+    function pdClose() {
+      pdMask.classList.remove("show");
+      pdMask.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+    }
+    document.getElementById("btnNewInventoryPlan").addEventListener("click", pdOpen);
+    document.getElementById("pdNewPlanCloseX").addEventListener("click", pdClose);
+    document.getElementById("pdNewPlanCancel").addEventListener("click", pdClose);
+    pdMask.addEventListener("click", function (e) { if (e.target === pdMask) pdClose(); });
+    document.getElementById("pdNewPlanOk").addEventListener("click", function () {
+      var wh = document.getElementById("pdNewWh").value;
+      var ty = document.getElementById("pdNewType").value;
+      pdClose();
+      pdToast("已创建盘点计划（演示）：" + wh + " · " + ty);
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && pdMask.classList.contains("show")) pdClose();
+    });
+    document.getElementById("btnExportPd").addEventListener("click", function () {
+      pdToast("正在导出盘点明细表（演示）…");
+    });
+    document.querySelector("#panelTask .carrier-table-wrap table").addEventListener("click", function (e) {
+      var a = e.target.closest("a.pd-op");
+      if (a) {
+        e.preventDefault();
+        var act = a.getAttribute("data-action");
+        var tr = a.closest("tr");
+        var no = tr && tr.cells[0] ? tr.cells[0].textContent.trim() : "";
+        if (act === "detail") pdToast("打开盘点明细：" + no);
+        if (act === "post") pdToast("过账提交（演示）：" + no);
+        return;
+      }
+      if (e.target.closest(".pd-export-btn")) {
+        e.preventDefault();
+        var tr = e.target.closest("tr");
+        var no = tr && tr.cells[0] ? tr.cells[0].textContent.trim() : "";
+        pdToast("导出明细（演示）：" + no);
+      }
+    });
+  </script>
+</body>
+</html>

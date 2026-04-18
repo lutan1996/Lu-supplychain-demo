@@ -1,0 +1,157 @@
+/* 仓储子页统一弹窗（对齐库存调拨：白底、灰边、标题栏+关闭、底栏取消/确定） */
+.wh-modal-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 25, 45, 0.45);
+  backdrop-filter: blur(2px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10020;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.wh-modal-mask.is-open,
+.wh-modal-mask.show {
+  display: flex;
+}
+.wh-modal-box {
+  width: min(520px, 100%);
+  max-height: min(90vh, 720px);
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #e8ecf0;
+  box-shadow: 0 12px 40px rgba(15, 35, 70, 0.14);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.wh-modal-box--md {
+  width: min(640px, 100%);
+}
+.wh-modal-box--lg {
+  width: min(720px, 100%);
+}
+.wh-modal-head {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  min-height: 48px;
+  border-bottom: 1px solid #f0f2f5;
+}
+.wh-modal-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f3551;
+}
+.wh-modal-close {
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  line-height: 1;
+  color: #8c9aad;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: inherit;
+}
+.wh-modal-close:hover {
+  color: #1f3551;
+  background: #f5f7fa;
+}
+.wh-modal-body {
+  padding: 16px 18px;
+  overflow-y: auto;
+  font-size: 13px;
+  color: #3f5366;
+}
+.wh-modal-body .wh-field {
+  margin-bottom: 14px;
+}
+.wh-modal-body .wh-field:last-child {
+  margin-bottom: 0;
+}
+.wh-modal-body .wh-label {
+  display: block;
+  font-size: 13px;
+  color: #516a87;
+  margin-bottom: 6px;
+}
+.wh-modal-body .wh-input,
+.wh-modal-body select.wh-input {
+  width: 100%;
+  height: 34px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  padding: 0 10px;
+  font-size: 13px;
+  box-sizing: border-box;
+  font-family: inherit;
+  color: #333;
+  background: #fff;
+}
+.wh-modal-body .wh-input:focus,
+.wh-modal-body select.wh-input:focus {
+  border-color: #1890ff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.12);
+}
+.wh-modal-body .wh-input[readonly] {
+  background: #f5f7fa;
+  color: #5d738d;
+}
+.wh-modal-body .wh-hint {
+  font-size: 12px;
+  color: #8ca0b8;
+  margin-top: 4px;
+  line-height: 1.5;
+}
+.wh-modal-foot {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-top: 1px solid #f0f2f5;
+  background: #fafbfd;
+}
+.wh-btn {
+  min-height: 32px;
+  padding: 0 16px;
+  font-size: 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+.wh-btn--ghost {
+  background: #fff;
+  border: 1px solid #d9d9d9;
+  color: rgba(0, 0, 0, 0.85);
+}
+.wh-btn--ghost:hover {
+  border-color: #1890ff;
+  color: #1890ff;
+}
+.wh-btn--primary {
+  background: #1890ff;
+  border: 1px solid #1890ff;
+  color: #fff;
+}
+.wh-btn--primary:hover {
+  background: #40a9ff;
+  border-color: #40a9ff;
+}
+
+/* 弹窗内表格与库存流水等复用 carrier-table */
+.wh-modal-body .carrier-table {
+  font-size: 13px;
+}
+.wh-modal-body .carrier-table th,
+.wh-modal-body .carrier-table td {
+  padding: 8px 10px;
+}

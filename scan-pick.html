@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>扫码领用 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/module-hub.css" />
+  <link rel="stylesheet" href="css/warehouse-modal.css" />
+  <style>
+    .module-hub-tabs { margin-bottom: 12px; }
+    .tag-st-wait { background: #fff7e6; color: #d48806; }
+    .tag-st-out { background: #f6ffed; color: #389e0d; }
+    .tag-st-rej { background: #fff1f0; color: #cf1322; }
+    .pick-form { background: #fff; border: 1px solid #e7ecf3; border-radius: 10px; padding: 14px; max-width: 720px; }
+    .pick-form .row { display: grid; grid-template-columns: 120px 1fr; gap: 10px; align-items: center; margin-bottom: 10px; }
+    .pick-form label { font-size: 13px; color: #516a87; }
+    .pick-form input, .pick-form select, .pick-form textarea {
+      width: 100%; height: 34px; border: 1px solid #d7e1ee; border-radius: 6px; padding: 0 10px; font-size: 14px;
+    }
+    .pick-form textarea { height: 72px; padding: 8px 10px; resize: vertical; }
+    .sig-wrap { border: 1px solid #d9d9d9; background: #fff; border-radius: 6px; touch-action: none; }
+    #sigCanvas { width: 100%; height: 150px; display: block; cursor: crosshair; }
+    .btn-p { background: #1890ff; color: #fff; border: 1px solid #1890ff; border-radius: 6px; padding: 6px 14px; cursor: pointer; font-size: 14px; }
+    .btn-g { background: #fff; color: #2b4664; border: 1px solid #d7e1ee; border-radius: 6px; padding: 6px 14px; cursor: pointer; font-size: 14px; }
+    .btn-p:disabled { opacity: 0.45; cursor: not-allowed; }
+    .wh-ops { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .wh-ops a, .wh-ops button { color: #1677ff; text-decoration: none; font-size: 13px; background: transparent; border: none; cursor: pointer; padding: 0; }
+    .sync-box { margin-top: 12px; padding: 10px 12px; border: 1px dashed #dbe4f0; border-radius: 8px; background: #f8fbff; font-size: 13px; color: #4c6077; }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit.html" title="驾驶舱"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html" title="物流管理"><span class="nav-label">物流管理</span></a>
+        <div class="nav-item nav-item--module-active" id="navWarehouse" data-nav="warehouse" title="仓储管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 21h18V10.5L12 6 3 10.5V21z"/><path d="M9 21v-7h6v7"/></svg></span>
+          <span class="nav-label">仓储管理</span>
+        </div>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+
+      <aside id="warehouseSecondaryPanel" class="warehouse-secondary-panel" aria-label="仓储管理子菜单" aria-hidden="true" hidden>
+        <div class="warehouse-secondary-inner">
+          <div class="warehouse-secondary-row warehouse-secondary-row--pipe" id="masterSecondaryRow">
+            <button type="button" class="warehouse-secondary-link" data-action="slot" data-label="货位管理">货位管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="receive" data-label="收货入库">收货入库</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="scan" data-label="扫码领用">扫码领用</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="inventory-check" data-label="盘库管理">盘库管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="stock" data-label="库存管理">库存管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="maintenance" data-label="库内保养">库内保养</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="idle" data-label="闲置物资">闲置物资</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="warehouse" data-label="仓库管理">仓库管理</button>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title">扫码领用</h1>
+          <p style="font-size:13px;color:#62788f;margin:0 0 10px;">在线领用单 + 电子签名（演示数据写死；今年不实现硬件扫码）</p>
+
+          <div id="panelApply" class="module-hub-panel is-visible">
+            <h2 style="font-size:17px;margin:0 0 12px;color:#1f3551;">物资领用申请</h2>
+            <div class="pick-form">
+              <div class="row"><label>领用人</label><input type="text" id="pfUser" readonly value="张明" /></div>
+              <div class="row"><label>部门</label><input type="text" id="pfDept" readonly value="检修中心" /></div>
+              <div class="row"><label>物资选择</label><div><button type="button" class="btn-p" id="btnPickMat">选择物资</button></div></div>
+              <div class="row"><label>物资名称</label><input type="text" id="pfMatName" readonly placeholder="请选择物资" /></div>
+              <div class="row"><label>规格型号</label><input type="text" id="pfSpec" readonly /></div>
+              <div class="row"><label>数量</label><input type="number" id="pfQty" min="1" value="1" /></div>
+              <div class="row"><label>单位</label><input type="text" id="pfUnit" readonly /></div>
+              <div class="row"><label>用途</label><textarea id="pfPurpose" maxlength="100" placeholder="必填，≤100字"></textarea></div>
+              <div class="row"><label>紧急程度</label>
+                <select id="pfUrgent"><option value="普通">普通</option><option value="紧急">紧急</option></select>
+              </div>
+              <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px;">
+                <button type="button" class="btn-g" id="btnApplyCancel">取消</button>
+                <button type="button" class="btn-p" id="btnApplyNext">下一步</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="panelList" class="module-hub-panel" style="display:none;">
+          <div class="carrier-toolbar">
+              <button type="button" class="carrier-btn-add" id="btnExportPick"><i class="fa-solid fa-file-export"></i> 导出领用记录</button>
+            <div class="carrier-toolbar-right">
+                <input type="date" id="fltStart" class="carrier-search" style="width:140px;" />
+                <span>—</span>
+                <input type="date" id="fltEnd" class="carrier-search" style="width:140px;" />
+                <select class="carrier-select" id="fltStatus">
+                <option value="">全部状态</option>
+                  <option value="待出库">待出库</option>
+                  <option value="已出库">已出库</option>
+                  <option value="已驳回">已驳回</option>
+              </select>
+                <input type="search" class="carrier-search" id="fltName" placeholder="物资名称" />
+              </div>
+            </div>
+          <div class="carrier-table-wrap">
+            <table class="carrier-table">
+              <thead>
+                <tr>
+                  <th>领用单号</th>
+                    <th>物资名称</th>
+                    <th>规格型号</th>
+                  <th>数量</th>
+                    <th>用途</th>
+                    <th>领用人</th>
+                    <th>领用日期</th>
+                  <th>状态</th>
+                    <th style="min-width:200px;">操作</th>
+                </tr>
+              </thead>
+                <tbody id="pickListBody"></tbody>
+            </table>
+          </div>
+            <div class="carrier-pagination" role="navigation">
+              <span id="pickTotal">共 0 条</span>
+            <span>每页</span>
+              <select><option>10 条/页</option></select>
+            <div class="carrier-page-btns">
+                <button type="button">&lt;</button>
+                <button type="button" class="is-current">1</button>
+                <button type="button">&gt;</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="sync-box">
+            库管员在「我的任务 → 我的待办 → 出库确认」处理待出库单据；驳回需填写原因。导出为 Excel 演示。
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- 物资选择 -->
+  <div class="wh-modal-mask modal-mask" id="maskMat" aria-hidden="true">
+    <div class="wh-modal-box wh-modal-box--md" role="dialog" aria-modal="true">
+      <div class="wh-modal-head">
+        <h3 class="wh-modal-title">选择物资（库存&gt;0）</h3>
+        <button type="button" class="wh-modal-close" id="closeMat" aria-label="关闭">×</button>
+      </div>
+      <div class="wh-modal-body" style="max-height:70vh;overflow:auto;">
+        <input type="search" id="matSearch" placeholder="物资编码/名称" class="wh-input" style="margin-bottom:10px;" />
+        <table class="carrier-table">
+          <thead><tr><th>物资编码</th><th>物资名称</th><th>规格型号</th><th>单位</th><th>当前库存</th><th></th></tr></thead>
+          <tbody id="matPickBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 电子签名 -->
+  <div class="wh-modal-mask modal-mask" id="maskSig" aria-hidden="true">
+    <div class="wh-modal-box wh-modal-box--md" role="dialog" aria-modal="true">
+      <div class="wh-modal-head">
+        <h3 class="wh-modal-title">电子签名确认</h3>
+        <button type="button" class="wh-modal-close" id="closeSig" aria-label="关闭">×</button>
+      </div>
+      <div class="wh-modal-body" style="max-height:70vh;overflow:auto;">
+        <p style="font-size:13px;color:#516a87;margin:0 0 8px;">请确认领用信息无误后进行电子签名</p>
+        <div style="border:1px solid #e7ecf3;border-radius:8px;padding:10px;margin:10px 0;background:#fafafa;">
+          <div id="sigSummary" style="font-size:14px;color:#223a55;"></div>
+        </div>
+        <div class="sig-wrap"><canvas id="sigCanvas" width="600" height="150"></canvas></div>
+        <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
+          <button type="button" class="wh-btn wh-btn--ghost" id="btnSigClear">清除</button>
+          <span id="sigTip" style="font-size:12px;color:#cf1322;"></span>
+        </div>
+      </div>
+      <div class="wh-modal-foot">
+        <button type="button" class="wh-btn wh-btn--ghost" id="btnSigCancel">取消</button>
+        <button type="button" class="wh-btn wh-btn--primary" id="btnSigSubmit" disabled>确认提交</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 详情 -->
+  <div class="wh-modal-mask modal-mask" id="maskDetail" aria-hidden="true">
+    <div class="wh-modal-box wh-modal-box--md" role="dialog" aria-modal="true">
+      <div class="wh-modal-head">
+        <h3 class="wh-modal-title">领用单详情</h3>
+        <button type="button" class="wh-modal-close" id="closeDetail" aria-label="关闭">×</button>
+      </div>
+      <div class="wh-modal-body" id="detailBody" style="font-size:13px;line-height:1.8;color:#31475f;max-height:70vh;overflow:auto;"></div>
+      <div class="wh-modal-foot">
+        <button type="button" class="wh-btn wh-btn--ghost" id="btnDetailOk">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 库管出库确认 -->
+  <div class="wh-modal-mask modal-mask" id="maskOut" aria-hidden="true">
+    <div class="wh-modal-box wh-modal-box--md" role="dialog" aria-modal="true">
+      <div class="wh-modal-head">
+        <h3 class="wh-modal-title">出库确认</h3>
+        <button type="button" class="wh-modal-close" id="closeOut" aria-label="关闭">×</button>
+      </div>
+      <div class="wh-modal-body" style="max-height:70vh;overflow:auto;">
+        <div id="outInfo" style="font-size:13px;margin-bottom:10px;"></div>
+        <label class="wh-label" for="outActual" style="display:block;">实际出库数量</label>
+        <input type="number" id="outActual" class="wh-input" min="1" style="margin:6px 0 10px;" />
+        <label class="wh-label" for="outRemark" style="display:block;">备注</label>
+        <textarea id="outRemark" style="width:100%;height:60px;border:1px solid #d9d9d9;border-radius:6px;padding:8px;font-family:inherit;font-size:13px;box-sizing:border-box;"></textarea>
+        <label class="wh-label" for="outReject" style="display:block;margin-top:10px;">驳回原因（驳回时必填）</label>
+        <textarea id="outReject" style="width:100%;height:60px;border:1px solid #d9d9d9;border-radius:6px;padding:8px;font-family:inherit;font-size:13px;box-sizing:border-box;"></textarea>
+      </div>
+      <div class="wh-modal-foot">
+        <button type="button" class="wh-btn wh-btn--ghost" id="btnOutReject">驳回</button>
+        <button type="button" class="wh-btn wh-btn--primary" id="btnOutOk">确认出库</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/warehouse-submenu.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var stockMats = [
+        { code: "MAT-GX-001", name: "齿轮箱", spec: "GW-GX-3.2MW", unit: "件", qty: 8 },
+        { code: "MAT-BLQ-002", name: "变流器", spec: "BLQ-1500V", unit: "件", qty: 16 },
+        { code: "MAT-HC-004", name: "液压油", spec: "L-HM 46", unit: "桶", qty: 30 }
+      ];
+      var selectedMat = null;
+      var issues = [
+        { issue_no: "LY-20260320001", recipient: "张明", dept: "检修中心", material_code: "MAT-GX-001", material_name: "齿轮箱", spec: "GW-GX-3.2MW", quantity: 2, purpose: "定检更换", issue_date: "2026-03-20", status: "待出库", urgent: "普通", signature: "", approver: "", approve_time: "", reject_reason: "" }
+      ];
+      var draft = {};
+      var outIdx = -1;
+      var drawing = false;
+      var canvas = document.getElementById("sigCanvas");
+      var ctx = canvas.getContext("2d");
+
+      var maskIds = ["maskMat", "maskSig", "maskDetail", "maskOut"];
+      function anyPickMaskOpen() {
+        return maskIds.some(function (x) {
+          var el = document.getElementById(x);
+          return el && el.classList.contains("show");
+        });
+      }
+      function show(id, on) {
+        var m = document.getElementById(id);
+        if (!m) return;
+        if (on) {
+          m.classList.add("show");
+          m.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+        } else {
+          m.classList.remove("show");
+          m.setAttribute("aria-hidden", "true");
+          if (!anyPickMaskOpen()) document.body.style.overflow = "";
+        }
+      }
+      maskIds.forEach(function (mid) {
+        var el = document.getElementById(mid);
+        if (el) {
+          el.addEventListener("click", function (e) {
+            if (e.target === el) show(mid, false);
+          });
+        }
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key !== "Escape") return;
+        maskIds.forEach(function (mid) {
+          var el = document.getElementById(mid);
+          if (el && el.classList.contains("show")) show(mid, false);
+        });
+      });
+      function pickToast(msg) {
+        var t = document.createElement("div");
+        t.textContent = msg;
+        t.setAttribute("role", "status");
+        t.style.cssText = "position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;z-index:10050;max-width:90vw;text-align:center;";
+        document.body.appendChild(t);
+        setTimeout(function () { t.remove(); }, 2400);
+      }
+
+      document.querySelectorAll(".module-hub-tabs button").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          document.querySelectorAll(".module-hub-tabs button").forEach(function (b) { b.classList.remove("is-active"); });
+          btn.classList.add("is-active");
+          var t = btn.getAttribute("data-tab");
+          document.getElementById("panelApply").style.display = t === "apply" ? "block" : "none";
+          document.getElementById("panelList").style.display = t === "list" ? "block" : "none";
+          if (t === "list") renderList();
+        });
+      });
+
+      document.getElementById("btnPickMat").addEventListener("click", function () {
+        var tb = document.getElementById("matPickBody");
+        tb.innerHTML = stockMats.filter(function (m) { return m.qty > 0; }).map(function (m) {
+          return "<tr><td>" + m.code + "</td><td>" + m.name + "</td><td>" + m.spec + "</td><td>" + m.unit + "</td><td>" + m.qty + "</td><td><button type='button' class='btn-p sel-mat' data-code='" + m.code + "'>选择</button></td></tr>";
+        }).join("");
+        show("maskMat", true);
+      });
+      document.getElementById("closeMat").addEventListener("click", function () { show("maskMat", false); });
+      document.getElementById("matPickBody").addEventListener("click", function (e) {
+        var b = e.target.closest(".sel-mat");
+        if (!b) return;
+        var code = b.getAttribute("data-code");
+        selectedMat = stockMats.find(function (x) { return x.code === code; });
+        document.getElementById("pfMatName").value = selectedMat.name;
+        document.getElementById("pfSpec").value = selectedMat.spec;
+        document.getElementById("pfUnit").value = selectedMat.unit;
+        show("maskMat", false);
+      });
+      document.getElementById("matSearch").addEventListener("input", function () {
+        pickToast("正在筛选物资（演示）…");
+      });
+
+      document.getElementById("btnApplyCancel").addEventListener("click", function () { pickToast("已取消本次申请"); });
+      document.getElementById("btnApplyNext").addEventListener("click", function () {
+        if (!selectedMat) { alert("请先选择物资"); return; }
+        var q = parseInt(document.getElementById("pfQty").value, 10);
+        var purpose = (document.getElementById("pfPurpose").value || "").trim();
+        if (!purpose) { alert("请填写用途"); return; }
+        if (q > selectedMat.qty) { alert("库存不足，当前库存 " + selectedMat.qty); return; }
+        draft = {
+          material_code: selectedMat.code,
+          material_name: selectedMat.name,
+          spec: selectedMat.spec,
+          quantity: q,
+          unit: selectedMat.unit,
+          purpose: purpose,
+          urgent: document.getElementById("pfUrgent").value
+        };
+        document.getElementById("sigSummary").innerHTML =
+          "<div><strong>物资名称</strong>：" + draft.material_name + "</div>" +
+          "<div><strong>数量</strong>：" + draft.quantity + " " + draft.unit + "</div>" +
+          "<div><strong>用途</strong>：" + draft.purpose + "</div>";
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        document.getElementById("btnSigSubmit").disabled = true;
+        document.getElementById("sigTip").textContent = "请先签名";
+        show("maskSig", true);
+      });
+
+      function sigHasInk() {
+        var d = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        for (var i = 3; i < d.length; i += 4) { if (d[i] > 10) return true; }
+        return false;
+      }
+      canvas.addEventListener("mousedown", function (e) { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
+      canvas.addEventListener("mousemove", function (e) {
+        if (!drawing) return;
+        ctx.strokeStyle = "#223a55";
+        ctx.lineWidth = 2;
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        var ok = sigHasInk();
+        document.getElementById("btnSigSubmit").disabled = !ok;
+        document.getElementById("sigTip").textContent = ok ? "" : "请先签名";
+      });
+      canvas.addEventListener("mouseup", function () { drawing = false; });
+      canvas.addEventListener("mouseleave", function () { drawing = false; });
+      document.getElementById("btnSigClear").addEventListener("click", function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        document.getElementById("btnSigSubmit").disabled = true;
+        document.getElementById("sigTip").textContent = "请先签名";
+      });
+      document.getElementById("btnSigCancel").addEventListener("click", function () { show("maskSig", false); });
+      document.getElementById("closeSig").addEventListener("click", function () { show("maskSig", false); });
+      document.getElementById("btnSigSubmit").addEventListener("click", function () {
+        if (!sigHasInk()) return;
+        var no = "LY-" + new Date().toISOString().slice(0, 10).replace(/-/g, "") + String(Math.floor(Math.random() * 900 + 100));
+        issues.unshift({
+          issue_no: no,
+          recipient: document.getElementById("pfUser").value,
+          dept: document.getElementById("pfDept").value,
+          material_code: draft.material_code,
+          material_name: draft.material_name,
+          spec: draft.spec,
+          quantity: draft.quantity,
+          purpose: draft.purpose,
+          issue_date: new Date().toISOString().slice(0, 10),
+          status: "待出库",
+          urgent: draft.urgent,
+          signature: "[签名图像已保存]",
+          approver: "",
+          approve_time: "",
+          reject_reason: ""
+        });
+        var sm = stockMats.find(function (x) { return x.code === draft.material_code; });
+        if (sm) sm.qty -= draft.quantity;
+        show("maskSig", false);
+        pickToast("提交成功，状态：待出库");
+        document.querySelector('.module-hub-tabs button[data-tab="list"]').click();
+      });
+
+      function tagClass(st) {
+        if (st === "待出库") return "tag-st-wait";
+        if (st === "已出库") return "tag-st-out";
+        return "tag-st-rej";
+      }
+
+      function renderList() {
+        var name = (document.getElementById("fltName").value || "").trim().toLowerCase();
+        var st = document.getElementById("fltStatus").value;
+        var rows = issues.filter(function (r) {
+          var okN = !name || (r.material_name || "").toLowerCase().indexOf(name) !== -1;
+          var okS = !st || r.status === st;
+          return okN && okS;
+        });
+        var tb = document.getElementById("pickListBody");
+        tb.innerHTML = rows.map(function (r) {
+          var i = issues.indexOf(r);
+          var ops = '<a href="#" data-a="d" data-i="' + i + '">查看详情</a>';
+          if (r.status === "待出库") ops += ' <a href="#" data-a="w" data-i="' + i + '">撤回</a>';
+          return "<tr><td>" + r.issue_no + "</td><td>" + r.material_name + "</td><td>" + r.spec + "</td><td>" + r.quantity + "</td><td>" + r.purpose + "</td><td>" + r.recipient + "</td><td>" + r.issue_date + "</td><td><span class='tag-status " + tagClass(r.status) + "'>" + r.status + "</span></td><td><div class='wh-ops'>" + ops + "</div></td></tr>";
+        }).join("");
+        document.getElementById("pickTotal").textContent = "共 " + rows.length + " 条";
+      }
+      document.getElementById("fltName").addEventListener("input", renderList);
+      document.getElementById("fltStatus").addEventListener("change", renderList);
+      document.getElementById("btnExportPick").addEventListener("click", function () { pickToast("正在导出领用记录 Excel（演示）…"); });
+
+      document.getElementById("pickListBody").addEventListener("click", function (e) {
+        var a = e.target.closest("a[data-a]");
+        if (!a) return;
+        e.preventDefault();
+        var i = parseInt(a.getAttribute("data-i"), 10);
+        var r = issues[i];
+        if (a.getAttribute("data-a") === "d") {
+          document.getElementById("detailBody").innerHTML =
+            "<p><strong>领用单号</strong>：" + r.issue_no + "</p>" +
+            "<p><strong>领用人/部门</strong>：" + r.recipient + " / " + r.dept + "</p>" +
+            "<p><strong>领用日期/紧急程度</strong>：" + r.issue_date + " / " + (r.urgent || "") + "</p>" +
+            "<p><strong>物资名称/规格/数量/单位</strong>：" + r.material_name + " / " + r.spec + " / " + r.quantity + "</p>" +
+            "<p><strong>用途</strong>：" + r.purpose + "</p>" +
+            "<p><strong>电子签名</strong>：" + (r.signature || "—") + "</p>" +
+            "<p><strong>出库确认人/时间</strong>：" + (r.approver || "—") + " / " + (r.approve_time || "—") + "</p>" +
+            (r.reject_reason ? "<p><strong>驳回原因</strong>：" + r.reject_reason + "</p>" : "");
+          show("maskDetail", true);
+        } else {
+          showActionModal("撤回", "确定撤回该领用单？", function () {
+            issues.splice(i, 1);
+            renderList();
+          });
+        }
+      });
+      document.getElementById("closeDetail").addEventListener("click", function () { show("maskDetail", false); });
+      document.getElementById("btnDetailOk").addEventListener("click", function () { show("maskDetail", false); });
+
+      document.getElementById("closeOut").addEventListener("click", function () { show("maskOut", false); });
+      document.getElementById("btnOutOk").addEventListener("click", function () {
+        var r = issues[outIdx];
+        if (!r) return;
+        var n = parseInt(document.getElementById("outActual").value, 10);
+        if (!n || n < 1) { alert("请填写实际出库数量"); return; }
+        r.status = "已出库";
+        r.approver = "库管-赵仓";
+        r.approve_time = new Date().toISOString().slice(0, 16).replace("T", " ");
+        show("maskOut", false);
+        renderList();
+        alert("已确认出库，库存已扣减（演示）");
+      });
+      document.getElementById("btnOutReject").addEventListener("click", function () {
+        var reason = (document.getElementById("outReject").value || "").trim();
+        if (!reason) { alert("驳回原因必填"); return; }
+        issues[outIdx].status = "已驳回";
+        issues[outIdx].reject_reason = reason;
+        show("maskOut", false);
+        renderList();
+      });
+
+      window.__openPickOutDemo = function (idx) {
+        outIdx = idx;
+        var r = issues[idx];
+        document.getElementById("outInfo").innerHTML = "<strong>领用单号</strong> " + r.issue_no + " <strong>物资</strong> " + r.material_name + " <strong>申请数量</strong> " + r.quantity;
+        document.getElementById("outActual").value = r.quantity;
+        document.getElementById("outRemark").value = "";
+        document.getElementById("outReject").value = "";
+        show("maskOut", true);
+      };
+
+      renderList();
+    })();
+  </script>
+</body>
+</html>

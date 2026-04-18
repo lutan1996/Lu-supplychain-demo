@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8" /><title>用户管理</title></head>
+<body>
+<script>
+  (function () {
+    try { sessionStorage.setItem("demoSystemScene", "user"); sessionStorage.setItem("demoScene", "user"); } catch (e) {}
+    window.location.replace("system-prototype-list.html?scene=user&pageSub=" + encodeURIComponent("用户管理"));
+  })();
+</script>
+</body>
+</html>

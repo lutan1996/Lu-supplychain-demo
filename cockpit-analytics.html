@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>数据驾驶舱（分析视图） - 新能源物资供应链管理系统</title>
+  <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/module-hub.css" />
+  <script src="js/vendor/echarts.min.js"></script>
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <a class="nav-item nav-item--module-active" href="cockpit-analytics.html" title="驾驶舱"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html" title="物流管理"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html" title="仓储管理"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title">数据驾驶舱</h1>
+          <div class="cockpit-analytics-grid">
+            <div class="cockpit-chart-card"><h3>1 物资分布（示意）</h3><div class="chart-box" id="ch1"></div></div>
+            <div class="cockpit-chart-card"><h3>2 历年采购金额</h3><div class="chart-box" id="ch2"></div></div>
+            <div class="cockpit-chart-card"><h3>3 各类采购部件数量</h3><div class="chart-box" id="ch3"></div></div>
+            <div class="cockpit-chart-card"><h3>4 库存动态（12 个月）</h3><div class="chart-box" id="ch4"></div></div>
+            <div class="cockpit-chart-card"><h3>5 各地库存数量</h3><div class="chart-box" id="ch5"></div></div>
+            <div class="cockpit-chart-card"><h3>6 以大代小循环再利用去向</h3><div class="chart-box" id="ch6"></div></div>
+            <div class="cockpit-chart-card"><h3>7 维修 / 国产化</h3><div class="chart-box" id="ch7"></div></div>
+            <div class="cockpit-chart-card"><h3>8 区域备件消耗 TOP5</h3><div class="chart-box" id="ch8"></div></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      if (typeof echarts === "undefined") return;
+      function bar(id, categories, values, horiz) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var ch = echarts.init(el);
+        ch.setOption({
+          tooltip: { trigger: "axis" },
+          grid: { left: horiz ? 80 : 40, right: 20, top: 20, bottom: 30 },
+          xAxis: horiz ? { type: "value" } : { type: "category", data: categories },
+          yAxis: horiz ? { type: "category", data: categories } : { type: "value" },
+          series: [{
+            type: horiz ? "bar" : "bar",
+            data: horiz ? values : values,
+            itemStyle: { color: "#1890ff" }
+          }]
+        });
+        return ch;
+      }
+      bar("ch3", ["主齿轮箱", "发电机", "叶片", "变流器", "变桨", "偏航"], [120, 98, 86, 72, 65, 58], true);
+      bar("ch5", ["华北", "华东", "华南", "西南", "西北"], [3200, 2800, 2100, 1600, 1400], true);
+      var el4 = document.getElementById("ch4");
+      if (el4) {
+        var ch4 = echarts.init(el4);
+        ch4.setOption({
+          tooltip: { trigger: "axis" },
+          xAxis: { type: "category", data: ["4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月", "1月", "2月", "3月"] },
+          yAxis: { type: "value" },
+          series: [{ type: "line", smooth: true, data: [120, 132, 101, 134, 90, 230, 210, 182, 191, 234, 290, 330], areaStyle: { opacity: 0.12 }, itemStyle: { color: "#1890ff" } }]
+        });
+      }
+      var el2 = document.getElementById("ch2");
+      if (el2) {
+        var ch2 = echarts.init(el2);
+        ch2.setOption({
+          tooltip: { trigger: "axis" },
+          legend: { data: ["采购额"] },
+          xAxis: { type: "category", data: ["2022", "2023", "2024", "2025", "2026"] },
+          yAxis: { type: "value", name: "万元" },
+          series: [{ name: "采购额", type: "line", data: [8200, 9100, 8800, 9600, 10200], itemStyle: { color: "#52c41a" } }]
+        });
+      }
+      var el1 = document.getElementById("ch1");
+      if (el1) {
+        var ch1 = echarts.init(el1);
+        ch1.setOption({
+          tooltip: {},
+          series: [{
+            type: "pie",
+            radius: ["32%", "58%"],
+            data: [
+              { name: "华北", value: 1200 },
+              { name: "华东", value: 980 },
+              { name: "华南", value: 760 },
+              { name: "其它", value: 540 }
+            ]
+          }]
+        });
+      }
+      var el6 = document.getElementById("ch6");
+      if (el6) {
+        echarts.init(el6).setOption({
+          tooltip: { trigger: "axis" },
+          legend: { data: ["内部循环", "外部循环", "报废"] },
+          xAxis: { type: "category", data: ["Q1", "Q2", "Q3", "Q4"] },
+          yAxis: { type: "value" },
+          series: [
+            { name: "内部循环", type: "bar", stack: "a", data: [12, 15, 10, 18], itemStyle: { color: "#1890ff" } },
+            { name: "外部循环", type: "bar", stack: "a", data: [8, 9, 7, 11], itemStyle: { color: "#52c41a" } },
+            { name: "报废", type: "bar", stack: "a", data: [3, 2, 4, 2], itemStyle: { color: "#ff7875" } }
+          ]
+        });
+      }
+      var el7 = document.getElementById("ch7");
+      if (el7) {
+        echarts.init(el7).setOption({
+          tooltip: { trigger: "axis" },
+          legend: { data: ["维修数量", "国产化部件"] },
+          xAxis: { type: "category", data: ["1月", "2月", "3月", "4月", "5月", "6月"] },
+          yAxis: [{ type: "value" }, { type: "value" }],
+          series: [
+            { name: "维修数量", type: "line", data: [22, 18, 25, 30, 28, 32], itemStyle: { color: "#722ed1" } },
+            { name: "国产化部件", type: "bar", yAxisIndex: 1, data: [40, 44, 48, 52, 55, 60], itemStyle: { color: "#faad14" } }
+          ]
+        });
+      }
+      var el8 = document.getElementById("ch8");
+      if (el8) {
+        echarts.init(el8).setOption({
+          tooltip: { trigger: "item" },
+          series: [{
+            type: "pie",
+            radius: ["40%", "65%"],
+            data: [
+              { name: "轴承", value: 28 },
+              { name: "滤芯", value: 22 },
+              { name: "油脂", value: 18 },
+              { name: "螺栓", value: 16 },
+              { name: "其它", value: 16 }
+            ]
+          }]
+        });
+      }
+      window.addEventListener("resize", function () {
+        ["ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7", "ch8"].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el && echarts.getInstanceByDom(el)) echarts.getInstanceByDom(el).resize();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

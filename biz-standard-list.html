@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>标准规范 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .std-page .main-scroll { overflow: hidden; background:#f5f7fb; }
+    .std-page .carrier-main-inner {
+      padding:10px 12px 12px;
+      background:#f5f7fb;
+      display:grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap:10px;
+      align-items:stretch;
+    }
+    .std-left {
+      width: 220px;
+      background:#fff;
+      border:1px solid #e7ecf3;
+      border-radius:4px;
+      padding:8px 10px;
+      font-size:13px;
+      color:#3f546f;
+      margin-top: 0;
+      height: 100%;
+      box-sizing: border-box;
+    }
+    .std-left-item {
+      padding:4px 0;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+    .std-left-item--active {
+      font-weight:600;
+      color:#1890ff;
+    }
+    .std-left-item i { font-size:12px; color:#1890ff; }
+    .std-right {
+      flex:1;
+      min-width:0;
+      background:#fff;
+      border:1px solid #e7ecf3;
+      border-radius:4px;
+      padding:8px 10px;
+      display:flex;
+      flex-direction:column;
+      margin-top: 0;
+    }
+    .std-search {
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:8px;
+      font-size:12px;
+    }
+    .std-search label { color:#4d6480; white-space:nowrap; }
+    .std-search input {
+      flex:0 0 260px;
+      height:28px;
+      border:1px solid #dbe6f3;
+      border-radius:2px;
+      padding:0 8px;
+      font-size:12px;
+    }
+    .std-search button {
+      border-radius:2px;
+      font-size:12px;
+      padding:4px 10px;
+      cursor:pointer;
+    }
+    .std-search .btn-search { background:#1890ff; border:1px solid #1890ff; color:#fff; }
+    .std-search .btn-reset { background:#fff; border:1px solid #dbe6f3; color:#4d6480; }
+    .std-toolbar {
+      display:flex;
+      align-items:center;
+      gap:6px;
+      margin-bottom:8px;
+    }
+    .std-btn {
+      border-radius:2px;
+      font-size:12px;
+      padding:4px 10px;
+      border:1px solid transparent;
+      cursor:pointer;
+    }
+    .std-btn-add { background:#e8f4ff; border-color:#cfe5fb; color:#3e8ad9; }
+    .std-btn-edit { background:#eef9ea; border-color:#d8f0d2; color:#69a95a; }
+    .std-btn-del { background:#fff0f0; border-color:#f8d7d7; color:#d97f7f; }
+    .std-btn-exp { background:#fff6e8; border-color:#f5e2c6; color:#b08a57; }
+    .std-table-wrap {
+      flex:1;
+      border:1px solid #e7ecf3;
+      border-radius:3px;
+      overflow:hidden;
+      margin-top:4px;
+      display:flex;
+      flex-direction:column;
+    }
+    .std-table {
+      width:100%;
+      border-collapse:collapse;
+      font-size:12px;
+    }
+    .std-table thead th {
+      background:#f6f8fb;
+      border-bottom:1px solid #edf1f6;
+      padding:8px 6px;
+      text-align:left;
+      color:#3f546f;
+      white-space:nowrap;
+    }
+    .std-table tbody td {
+      border-bottom:1px solid #edf1f6;
+      padding:8px 6px;
+      color:#3f546f;
+      font-size:12px;
+    }
+    .std-col-check { width:32px; text-align:center; }
+    .std-col-name { min-width:260px; }
+    .std-col-ops { width:80px; text-align:center; white-space:nowrap; }
+    .std-col-ops a {
+      color:#1890ff;
+      font-size:14px;
+      text-decoration:none;
+    }
+    .std-foot {
+      margin-top:auto;
+      padding:6px 8px;
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+      gap:8px;
+      font-size:11px;
+      color:#617894;
+      background:#fff;
+    }
+    .std-foot select {
+      height:22px;
+      border:1px solid #dbe6f3;
+      border-radius:2px;
+      font-size:11px;
+      padding:0 4px;
+    }
+    .std-pages button {
+      min-width:22px;
+      height:20px;
+      border:1px solid #dbe6f3;
+      background:#fff;
+      font-size:11px;
+      cursor:pointer;
+    }
+    .std-pages button.is-current {
+      background:#1890ff;
+      border-color:#1890ff;
+      color:#fff;
+    }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics std-page">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar" title="用户">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit-analytics.html"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item nav-item--module-active" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <div class="std-left">
+            <div class="std-left-item">工程技术公司</div>
+            <div class="std-left-item">国联集团</div>
+            <div class="std-left-item">龙源电力</div>
+            <div class="std-left-item std-left-item--active"><i class="fa-solid fa-circle-dot"></i><span>物资相关制度文件</span></div>
+          </div>
+          <div class="std-right">
+            <div class="std-search">
+              <label for="stdName">目录名称</label>
+              <input id="stdName" type="text" placeholder="请输入目录名称" />
+              <button class="btn-search" type="button">搜索</button>
+              <button class="btn-reset" type="button">重置</button>
+            </div>
+            <div class="std-toolbar">
+              <button class="std-btn std-btn-add" type="button">新增</button>
+              <button class="std-btn std-btn-edit" type="button">修改</button>
+              <button class="std-btn std-btn-del" type="button">删除</button>
+              <button class="std-btn std-btn-exp" type="button">导出</button>
+            </div>
+            <div class="std-table-wrap">
+              <table class="std-table">
+                <thead>
+                  <tr>
+                    <th class="std-col-check"><input type="checkbox" aria-label="全选" /></th>
+                    <th class="std-col-name">目录名称</th>
+                    <th class="std-col-ops">操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="std-col-check"><input type="checkbox" aria-label="选择行" /></td>
+                    <td class="std-col-name">《以大代小循环再利用方案》（修编中，临时版本）.pdf</td>
+                    <td class="std-col-ops"><a href="#" title="下载" aria-label="下载"><i class="fa-solid fa-download"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td class="std-col-check"><input type="checkbox" aria-label="选择行" /></td>
+                    <td class="std-col-name">龙源技术（2024）8号-龙港（北京）新能源工程技术有限公司物资管理办法（试行）.pdf</td>
+                    <td class="std-col-ops"><a href="#" title="下载" aria-label="下载"><i class="fa-solid fa-download"></i></a></td>
+                  </tr>
+                  <tr>
+                    <td class="std-col-check"><input type="checkbox" aria-label="选择行" /></td>
+                    <td class="std-col-name">龙源技术（2024）54号-龙港（北京）新能源工程技术有限公司固定资产管理办法.pdf</td>
+                    <td class="std-col-ops"><a href="#" title="下载" aria-label="下载"><i class="fa-solid fa-download"></i></a></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="std-foot">
+                <span>共 3 条</span>
+                <select aria-label="每页条数">
+                  <option>10条/页</option>
+                  <option>20条/页</option>
+                  <option>50条/页</option>
+                </select>
+                <div class="std-pages">
+                  <button type="button" aria-label="上一页">&lt;</button>
+                  <button type="button" class="is-current" aria-current="page">1</button>
+                  <button type="button" aria-label="下一页">&gt;</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+</body>
+</html>
+

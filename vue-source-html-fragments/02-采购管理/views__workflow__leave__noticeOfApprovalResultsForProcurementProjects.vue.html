@@ -1,0 +1,94 @@
+<!-- 来源: src/views/workflow/leave/noticeOfApprovalResultsForProcurementProjects.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <el-card shadow="never">
+      <div style="display: flex; justify-content: space-between">
+        <div>
+          <el-button type="info">暂存</el-button>
+          <el-button type="primary">提 交</el-button>
+          <el-button type="primary">审批</el-button>
+          <el-button type="primary">流程进度</el-button>
+        </div>
+        <div>
+          <el-button style="float: right">返回</el-button>
+        </div>
+      </div>
+    </el-card>
+    <el-card shadow="never" style="height: 78vh; overflow-y: auto">
+        <div class="table_title">龙源采购项目定标结果通知（非招标）</div>
+        <div style="display: flex;position: relative;">
+          <el-form-item label="" prop="dataDate">
+            日期：<el-date-picker clearable type="datetime" value-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择时间" />
+          </el-form-item>
+          <el-form-item label="归档" label-width="50" style="width:300px;" prop="archiveDirectoryId">
+            <el-tree-select
+            clearable
+            value-key="archiveDirectoryId"
+            placeholder="请选择归档路径"
+            check-strictly
+          />
+          </el-form-item>
+          <el-form-item label="表单编号" label-width="100" style="width:300px;position: absolute;right:0px;" prop="archiveDirectoryId">
+            <div>（动态文本）</div>
+          </el-form-item>
+        </div>
+        <el-form id="editForm" label-width="0">
+
+        <table border class="add_table">
+          <tr>
+            <th>定标会<sup> *</sup></th>
+            <td colspan="3">
+              <el-form-item label="" prop="calibrationMeeting">
+                <el-input placeholder="请输入定标会" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>定标结果通知<sup> *</sup></th>
+            <td colspan="3">
+              <el-form-item label="" prop="calibrationResults">
+                <fileUpload />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>采购部审核<sup> *</sup></th>
+            <td colspan="3">
+              <el-form-item label="" prop="procurementDepartmentReview">
+                <el-input placeholder="请输入采购部审核" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>采购部复核<sup> *</sup></th>
+            <td colspan="3">
+              <el-form-item label="" prop="purchasingDepartment">
+                <el-input placeholder="请输入采购部审核" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>采购部签发<sup> *</sup></th>
+            <td colspan="3">
+              <el-form-item label="" prop="procurementDepartment">
+                <el-input placeholder="请输入采购部签发" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>分发<sup> *</sup></th>
+            <td colspan="3">
+              <el-form-item label="" prop="distribute">
+                <el-input placeholder="请输入分发" />
+              </el-form-item>
+            </td>
+          </tr>
+        </table>
+      </el-form>
+    </el-card>
+    <!-- 提交组件 -->
+    <submitVerify />
+    <!-- 审批记录 -->
+    <approvalRecord />
+  </div>

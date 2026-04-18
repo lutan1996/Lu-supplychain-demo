@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>编码管理 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .cd .main-scroll{background:#f5f7fb;overflow:hidden}.cd .carrier-main-inner{padding:10px 12px 12px;background:#f5f7fb}
+    .top{background:#fff;border:1px solid #e7ecf3;border-radius:4px;padding:8px;margin-bottom:8px;display:flex;gap:8px;align-items:center;font-size:12px}
+    .top input,.top select{height:26px;border:1px solid #dbe6f3;border-radius:2px;padding:0 6px;font-size:12px}
+    .btn{font-size:12px;border-radius:2px;padding:4px 10px;border:1px solid transparent;cursor:pointer}
+    .bs{background:#1890ff;color:#fff;border-color:#1890ff}.br{background:#fff;color:#4d6480;border-color:#dbe6f3}
+    .bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .rbtn{display:flex;gap:6px}.rbtn .x{background:#eef8ff;border:1px solid #d7ecff;color:#4f95cf}
+    .tbl{border:1px solid #e7ecf3;border-radius:4px;overflow:auto;background:#fff;height:calc(100vh - 230px)}
+    table{width:1900px;border-collapse:collapse;font-size:11px}th,td{border-bottom:1px solid #edf1f6;padding:6px 4px;text-align:center;color:#3f546f}thead th{background:#f6f8fb;white-space:nowrap}
+    .foot{display:flex;justify-content:flex-end;gap:8px;align-items:center;padding:8px;font-size:11px;color:#617894}
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics cd">
+<div class="page-bg" aria-hidden="true"></div><div class="app">
+<header class="header"><div class="header-left"><button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40"/></a><div class="header-source-brand"><p>新能源供应链管理系统</p></div></div><div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar">用</div></div></header>
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="layout"><aside class="sidebar" aria-label="主导航"><div class="nav-item"><span class="nav-label">我的任务</span></div><a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a><a class="nav-item" href="cockpit-analytics.html"><span class="nav-label">驾驶舱</span></a><div class="nav-item"><span class="nav-label">采购管理</span></div><a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a><a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a><div class="nav-item"><span class="nav-label">物资采购</span></div><div class="nav-item"><span class="nav-label">物资出库与处置</span></div><div class="nav-item"><span class="nav-label">绩效考核</span></div><div class="nav-item"><span class="nav-label">公告管理</span></div><div class="nav-item"><span class="nav-label">综合业务管理</span></div><div class="nav-item nav-item--module-active"><span class="nav-label">数据管理</span></div><div class="nav-item"><span class="nav-label">开发工具</span></div><div class="nav-item"><span class="nav-label">设置</span></div><div class="nav-item"><span class="nav-label">系统管理</span></div></aside>
+<main class="main-scroll"><div class="carrier-main-inner">
+  <div class="top"><span>小类名称</span><input placeholder="请输入小类名称" style="width:180px"/><select style="width:130px"><option>所属中分类</option></select><button class="btn bs">搜索</button><button class="btn br">重置</button></div>
+  <div class="bar"><div></div><div class="rbtn"><button class="btn x">新增大类</button><button class="btn x">新增中类</button><button class="btn x">新增小类</button><button class="btn x">新增物资规格</button></div></div>
+  <div class="tbl"><table><thead><tr><th style="width:30px"><input type="checkbox"/></th><th>大类名称</th><th>中类名称</th><th>小类名称</th><th>标准1</th><th>标准2</th><th>标准3</th><th>标准4</th><th>标准5</th><th>标准6</th><th>标准7</th><th>标准8</th><th>标准9</th><th>标准10</th><th>标准11</th><th>标准12</th><th>标准13</th><th>标准14</th><th>标准15</th></tr></thead>
+  <tbody>
+  <tr><td><input type="checkbox"/></td><td>A01大类风机设备</td><td>D1风力发电机组</td><td>001风机742叶片机组</td><td>机舱全向标</td><td>机舱全型号</td><td>额定电压</td><td>叶轮直径</td><td>额定功率</td><td>设入风速</td><td>山顶风速</td><td>环境工况</td><td>RCC要求</td><td>叶轮尺寸</td><td>双馈励磁</td><td></td><td></td><td></td><td></td></tr>
+  <tr><td><input type="checkbox"/></td><td>A01大类风机设备</td><td>D1风力发电机组</td><td>002机舱</td><td>机舱全向标</td><td>机舱全型号</td><td>尺寸（长宽高）</td><td>重量</td><td>(t)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td><input type="checkbox"/></td><td>A01大类风机设备</td><td>023叶片</td><td>001叶片</td><td>机型宽全称</td><td>机型宽型号</td><td>长度</td><td>重量</td><td>叶片材质</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </tbody></table></div>
+  <div class="foot"><span>共 291 条</span><span>10条/页</span><button style="background:#1890ff;color:#fff;border:1px solid #1890ff;height:22px;min-width:22px">1</button><button style="height:22px">2</button><button style="height:22px">3</button><button style="height:22px">4</button><button style="height:22px">5</button><button style="height:22px">6</button><span>…</span><button style="height:22px">30</button><span>前往</span><input value="1" style="width:26px;height:20px;border:1px solid #dbe6f3"/><span>页</span></div>
+</div></main></div></div>
+<script src="js/sidebar-actions.js"></script><script src="js/subpage-feature-title.js"></script><script src="js/subpage-clock.js"></script>
+</body>
+</html>
+

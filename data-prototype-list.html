@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>数据管理 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .dm .main-scroll { overflow: hidden; }
+    .dm .carrier-main-inner { padding: 10px 12px 12px; overflow: hidden; }
+    .dm .carrier-page-title { margin-bottom: 8px; font-size: 18px; }
+    .dm-search { display: grid; grid-template-columns: repeat(6, minmax(200px, 1fr)); gap: 8px; margin-bottom: 8px; }
+    .dm-item { display: grid; grid-template-columns: 62px 1fr; align-items: center; gap: 6px; }
+    .dm-item label { font-size: 12px; color: #4d6480; }
+    .dm-item input, .dm-item select { height: 26px; border: 1px solid #dbe6f3; border-radius: 2px; padding: 0 6px; font-size: 12px; }
+    .dm-tools { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .dm-btn { border: 1px solid #dbe6f3; background: #fff; border-radius: 2px; color: #4d6480; font-size: 12px; padding: 4px 8px; cursor: pointer; }
+    .dm-btn.primary { background: #1890ff; border-color: #1890ff; color: #fff; }
+    .dm-table-wrap { border: 1px solid #e7ecf3; border-radius: 3px; overflow: hidden; height: calc(100vh - 190px); display: flex; flex-direction: column; }
+    .dm-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 11px; }
+    .dm-table th, .dm-table td { border-bottom: 1px solid #edf1f6; padding: 5px 4px; text-align: center; color: #40556f; }
+    .dm-table thead { background: #f6f8fb; }
+    .dm-table td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dm-status { display: inline-block; border-radius: 2px; padding: 1px 5px; font-size: 10px; }
+    .dm-ok { background: #f6ffed; color: #389e0d; }
+    .dm-on { background: #e6f4ff; color: #1677ff; }
+    .dm-ops a { color: #77a6d7; margin: 0 2px; text-decoration: none; }
+    .dm-foot { margin-top: auto; display: flex; justify-content: flex-end; align-items: center; gap: 8px; font-size: 11px; color: #617894; padding: 6px; }
+    .dm-login-box { height: calc(100vh - 190px); border: 1px solid #e7ecf3; border-radius: 3px; display: flex; align-items: center; justify-content: center; }
+    .dm-login-card { width: 300px; border-top: 1px solid #ddd; padding-top: 10px; }
+    .dm-login-title { text-align: center; color: #666; margin: 8px 0 10px; font-size: 18px; }
+    .dm-login-card input { width: 100%; height: 34px; border: 1px solid #e5e5e5; margin-bottom: 8px; padding: 0 10px; font-size: 13px; }
+    .dm-login-card button { width: 100%; height: 36px; border: 0; background: #1890ff; color: #fff; border-radius: 2px; cursor: pointer; }
+  </style>
+  <script src="js/vendor/echarts.min.js"></script>
+</head>
+<body class="page-source-navbar page-subpage page-logistics dm">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar" title="用户">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit-analytics.html"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item nav-item--module-active" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title" id="dmTitle">基础数据</h1>
+          <div class="dm-search" id="dmSearch"></div>
+          <div class="dm-tools" id="dmTools">
+            <button class="dm-btn primary" type="button">搜索</button>
+            <button class="dm-btn" type="button">重置</button>
+            <button class="dm-btn" type="button">新增</button>
+            <button class="dm-btn" type="button">修改</button>
+            <button class="dm-btn" type="button">删除</button>
+            <button class="dm-btn" type="button">导出</button>
+          </div>
+          <div id="dmContent"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var scene = "base";
+      try { scene = new URLSearchParams(window.location.search).get("scene") || "base"; } catch (e) {}
+      var cfg = {
+        base: { title: "基础数据", fields: ["数据库表", "厂家表格", "物资分类", "物料名称", "物料码", ""], cols: ["物资类型", "部件型号", "物资分类", "物料名称", "物料码", "参数1", "参数2", "参数3", "参数4", "操作"] },
+        supplier: { title: "供应商数据", fields: ["供应商名称", "类别", "", "", "", ""], cols: ["供应商数据", "类别", "操作"] },
+        code: { title: "编码管理", fields: ["小类名称", "", "", "", "", ""], cols: ["大类名称", "中类名称", "小类名称", "标准1", "标准2", "标准3", "标准4", "标准5", "标准6", "标准7", "操作"] },
+        contract: { title: "合同管理", fields: ["", "", "", "", "", ""], cols: [] },
+        product: { title: "产品目录", fields: ["产品名称", "供应商", "", "", "", ""], cols: ["产品编码", "产品名称", "规格型号", "品牌", "供应商", "参考价格", "操作"] },
+        model: { title: "数据模型", fields: [], cols: [] },
+        decision: { title: "决策分析支持", fields: [], cols: [] }
+      }[scene] || { title: "基础数据", fields: [], cols: [] };
+
+      document.getElementById("dmTitle").textContent = cfg.title;
+      var s = document.getElementById("dmSearch");
+      cfg.fields.forEach(function (f) {
+        var item = document.createElement("div");
+        item.className = "dm-item";
+        item.innerHTML = "<label>" + (f || " ") + "</label>" + (f ? "<input placeholder='请输入" + f + "' />" : "<input style='visibility:hidden' />");
+        s.appendChild(item);
+      });
+
+      var content = document.getElementById("dmContent");
+      if (scene === "contract") {
+        document.getElementById("dmTools").style.display = "none";
+        s.style.display = "none";
+        content.innerHTML =
+          "<div class='dm-login-box'><div class='dm-login-card'><div class='dm-login-title'>合同管理系统</div><input value='admin' /><input value='******' /><input placeholder='验证码' /><button type='button'>登录</button></div></div>";
+        return;
+      }
+      if (scene === "model") {
+        document.getElementById("dmTools").style.display = "none";
+        s.style.display = "none";
+        content.innerHTML = "<div style='min-height:360px;border:1px solid #e7ecf3;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#8ca0b8;font-size:15px;'>数据模型功能开发中，敬请期待</div>";
+        return;
+      }
+      if (scene === "decision") {
+        document.getElementById("dmTools").innerHTML = '<button class="dm-btn primary" type="button" id="dmRefresh">刷新</button>';
+        s.innerHTML = "";
+        s.style.display = "grid";
+        s.style.gridTemplateColumns = "repeat(4,minmax(0,1fr))";
+        s.innerHTML =
+          "<div class='dm-item'><label>时间范围</label><select><option>本月</option><option>本季度</option><option>本年</option><option>自定义</option></select></div>" +
+          "<div class='dm-item'><label>组织筛选</label><select><option>集团</option><option>区域公司</option><option>场站</option></select></div>";
+        content.innerHTML =
+          "<div style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;'>" +
+          "<div id='dc1' style='height:200px;border:1px solid #e7ecf3;border-radius:8px;'></div>" +
+          "<div id='dc2' style='height:200px;border:1px solid #e7ecf3;border-radius:8px;'></div>" +
+          "<div id='dc3' style='height:200px;border:1px solid #e7ecf3;border-radius:8px;'></div>" +
+          "<div id='dc4' style='height:200px;border:1px solid #e7ecf3;border-radius:8px;'></div></div>" +
+          "<div class='dm-table-wrap'><table class='dm-table'><thead><tr><th>自定义报表</th><th>操作</th></tr></thead><tbody><tr><td>可拖拽列表示例</td><td><a href='#'>编辑</a></td></tr></tbody></table><button class='dm-btn primary' type='button' style='margin:8px;'>导出Excel</button></div>";
+        if (typeof echarts !== "undefined") {
+          [["dc1","line"],["dc2","bar"],["dc3","bar"],["dc4","pie"]].forEach(function (x) {
+            var el = document.getElementById(x[0]);
+            if (!el) return;
+            var chart = echarts.init(el);
+            if (x[1] === "pie") chart.setOption({ series: [{ type: "pie", data: [{ name: "消耗A", value: 30 }, { name: "其他", value: 70 }] }] });
+            else if (x[1] === "line") chart.setOption({ xAxis: { type: "category", data: ["1","2","3"] }, yAxis: { type: "value" }, series: [{ type: "line", data: [3,5,4] }] });
+            else chart.setOption({ xAxis: { type: "category", data: ["S1","S2","S3"] }, yAxis: { type: "value" }, series: [{ type: "bar", data: [80,60,90] }] });
+          });
+        }
+        return;
+      }
+
+      var html = "<div class='dm-table-wrap'><table class='dm-table'><thead><tr>";
+      cfg.cols.forEach(function (x) { html += "<th>" + x + "</th>"; });
+      html += "</tr></thead><tbody>";
+      for (var r = 0; r < 10; r += 1) {
+        html += "<tr>";
+        for (var c = 0; c < cfg.cols.length; c += 1) {
+          if (cfg.cols[c] === "类别" || cfg.cols[c] === "状态") html += "<td><span class='dm-status dm-ok'>有效</span></td>";
+          else if (cfg.cols[c] === "操作") html += "<td class='dm-ops'><a href='#'>改</a><a href='#'>删</a></td>";
+          else html += "<td>" + (c + 1) + "-" + (r + 1) + "</td>";
+        }
+        html += "</tr>";
+      }
+      html += "</tbody></table><div class='dm-foot'>共 " + 10 + " 条 10条/页 <span class='dm-status dm-on'>1</span> 2 3</div></div>";
+      content.innerHTML = html;
+    })();
+  </script>
+</body>
+</html>

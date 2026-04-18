@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>物流付款 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/logistics-payment.css" />
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="5" width="14" height="17" rx="1.5"/><path d="M8 9h8M8 12.5h8M8 16h6"/></svg></span>
+          <span class="nav-label">我的任务</span>
+        </div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 10.5L12 3l9 7.5V20a1.5 1.5 0 0 1-1.5 1.5H15v-7H9v7H4.5A1.5 1.5 0 0 1 3 20v-9.5z"/></svg></span>
+          <span class="nav-label">首页</span>
+        </a>
+        <a class="nav-item" href="cockpit.html" data-nav="cockpit" title="驾驶舱">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1"/></svg></span>
+          <span class="nav-label">驾驶舱</span>
+        </a>
+        <div class="nav-item" title="采购管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6h14l-1.2 9H7.2L6 6z"/><path d="M6 6V5a1 1 0 0 1 1-1h2"/><circle cx="9" cy="20" r="1.25"/><circle cx="17" cy="20" r="1.25"/></svg></span>
+          <span class="nav-label">采购管理</span>
+        </div>
+        <a class="nav-item nav-item--module-active" href="carrier-management.html" title="物流管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1 16h11.5V8.5H5V7h11.5v5h2.5l3.5 4.5"/><circle cx="6.5" cy="17.5" r="1.75"/><circle cx="16.5" cy="17.5" r="1.75"/></svg></span>
+          <span class="nav-label">物流管理</span>
+        </a>
+        <a class="nav-item" href="warehouse.html" title="仓储管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 21h18V10.5L12 6 3 10.5V21z"/><path d="M9 21v-7h6v7"/></svg></span>
+          <span class="nav-label">仓储管理</span>
+        </a>
+        <div class="nav-item" title="物资采购">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6a2 2 0 0 1 2-2h6v16H6a2 2 0 0 1-2-2V6z"/><path d="M20 6a2 2 0 0 0-2-2h-6v16h6a2 2 0 0 0 2-2V6z"/><path d="M12 4v16"/><path d="M7 9h3M7 12.5h3M7 16h2M14 9h3M14 12.5h3M14 16h2"/></svg></span>
+          <span class="nav-label">物资采购</span>
+        </div>
+        <div class="nav-item" title="物资出库与处置">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 12a9 9 0 0 0-9-9 9.5 9.5 0 0 0-7 3"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.5 9.5 0 0 0 7-3"/><path d="M16 16h5v5"/></svg></span>
+          <span class="nav-label">物资出库与处置</span>
+        </div>
+        <div class="nav-item" title="绩效考核">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="3" width="12" height="18" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h5"/></svg></span>
+          <span class="nav-label">绩效考核</span>
+        </div>
+        <div class="nav-item" title="公告管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h12a2 2 0 0 1 2 2v10H6a2 2 0 0 0-2 2v2"/><path d="M4 6V5a1 1 0 0 1 1-1h2"/><path d="M8 10h8M8 14h6"/></svg></span>
+          <span class="nav-label">公告管理</span>
+        </div>
+        <div class="nav-item" title="综合业务管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg></span>
+          <span class="nav-label">综合业务管理</span>
+        </div>
+        <div class="nav-item" title="数据管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="5" rx="9" ry="2.5"/><path d="M3 5v6c0 1.6 4 3 9 3s9-1.4 9-3V5"/><path d="M3 11v6c0 1.6 4 3 9 3s9-1.4 9-3V11"/><path d="M3 17v2c0 1.6 4 3 9 3s9-1.4 9-3v-2"/></svg></span>
+          <span class="nav-label">数据管理</span>
+        </div>
+        <div class="nav-item" title="开发工具">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 18l6-6-6-6"/><path d="M8 6 2 12l6 6"/></svg></span>
+          <span class="nav-label">开发工具</span>
+        </div>
+        <div class="nav-item" title="设置">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3"/><path d="M12 1v2.5M12 20.5V23M4.2 4.2l1.8 1.8M18 18l1.8 1.8M1 12h2.5M20.5 12H23M4.2 19.8 6 18M18 6l1.8-1.8"/></svg></span>
+          <span class="nav-label">设置</span>
+        </div>
+        <div class="nav-item" title="系统管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="9" r="3.5"/><path d="M5 20.5v-1a7 7 0 0 1 14 0v1"/></svg></span>
+          <span class="nav-label">系统管理</span>
+        </div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+        <h1 class="carrier-page-title">物流付款</h1>
+
+        <div class="carrier-toolbar">
+          <button type="button" class="carrier-btn-add" id="btnAddPayment">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            新增付款申请
+          </button>
+          <div class="carrier-toolbar-right">
+            <input
+              type="search"
+              class="carrier-search"
+              id="paymentWaybillSearch"
+              placeholder="请输入运单号查询"
+              autocomplete="off"
+              aria-label="按运单号搜索"
+            />
+            <select class="carrier-select" id="paymentStatusFilter" aria-label="付款状态">
+              <option value="">全部</option>
+              <option value="approve">待审批</option>
+              <option value="pending">待付款</option>
+              <option value="paid">已付款</option>
+              <option value="reject">已驳回</option>
+              <option value="overdue">逾期</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="carrier-table-wrap">
+          <table class="carrier-table">
+            <thead>
+              <tr>
+                <th>申请单号</th>
+                <th>关联运单号</th>
+                <th>承运商</th>
+                <th>应付金额</th>
+                <th>实付金额</th>
+                <th>付款状态</th>
+                <th>申请日期</th>
+                <th>申请人</th>
+                <th style="min-width: 220px">操作</th>
+              </tr>
+            </thead>
+            <tbody id="paymentTableBody"></tbody>
+          </table>
+        </div>
+
+        <div class="carrier-pagination" role="navigation" aria-label="分页">
+          <span id="paymentTotalText">共 3 条</span>
+          <span>每页</span>
+          <select id="paymentPageSize" aria-label="每页条数">
+            <option value="10" selected>10 条/页</option>
+            <option value="20">20 条/页</option>
+            <option value="50">50 条/页</option>
+          </select>
+          <div class="carrier-page-btns">
+            <button type="button" aria-label="上一页">&lt;</button>
+            <button type="button" class="is-current" aria-current="page">1</button>
+            <button type="button" aria-label="下一页">&gt;</button>
+          </div>
+          <span class="carrier-goto">
+            前往
+            <input type="text" inputmode="numeric" value="1" aria-label="跳转页码" />
+            页
+          </span>
+        </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- 新增付款申请弹框 -->
+  <div class="modal-mask" id="paymentApplyMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="paymentApplyTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="paymentApplyTitle">新增付款申请</h3>
+        <button class="modal-close" id="btnClosePaymentApply" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body" style="grid-template-columns:1fr 1fr;">
+        <div class="field full">
+          <label for="paWaybill">关联运单号</label>
+          <select id="paWaybill" aria-label="关联运单号，仅可选已签收且未付款"></select>
+          <div class="help">仅列出已签收且未付款运单</div>
+        </div>
+        <div class="field">
+          <label for="paCarrier">承运商</label>
+          <input id="paCarrier" type="text" readonly />
+        </div>
+        <div class="field">
+          <label for="paAmount">应付金额</label>
+          <input id="paAmount" type="text" readonly />
+        </div>
+        <div class="field">
+          <label for="paPaid">实付金额</label>
+          <input id="paPaid" type="text" readonly value="—" />
+        </div>
+        <div class="field">
+          <label for="paPayStatus">付款状态</label>
+          <input id="paPayStatus" type="text" readonly value="待审批" />
+        </div>
+        <div class="field">
+          <label for="paApplyDate">申请日期</label>
+          <input id="paApplyDate" type="date" readonly />
+        </div>
+        <div class="field">
+          <label for="paApplicant">申请人</label>
+          <input id="paApplicant" type="text" value="当前用户" />
+        </div>
+        <div class="field full">
+          <label for="paInvoice">上传发票</label>
+          <input id="paInvoice" type="file" />
+          <div class="help" id="paInvoiceHelp">未选择文件</div>
+        </div>
+        <div class="field full">
+          <label for="paDesc">付款说明</label>
+          <textarea id="paDesc" placeholder="请输入付款说明"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="footer-tip">说明：本页为演示数据，可与物流公司系统对接后同步展示。</div>
+        <div class="footer-actions">
+          <button class="btn" id="btnCancelPaymentApply" type="button">取消</button>
+          <button class="btn btn-primary" id="btnSavePaymentApply" type="button">提交申请</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 详情弹框 -->
+  <div class="modal-mask" id="paymentDetailMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="paymentDetailTitle">
+      <div class="modal-header">
+        <h3 class="modal-title" id="paymentDetailTitle">付款申请详情</h3>
+        <button class="modal-close" id="btnClosePaymentDetail" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body" style="grid-template-columns:1fr 1fr;">
+        <div class="field"><label>申请单号</label><div id="pdNo" class="detail-cell"></div></div>
+        <div class="field"><label>关联运单号</label><div id="pdWaybill" class="detail-cell"></div></div>
+        <div class="field"><label>承运商</label><div id="pdCarrier" class="detail-cell"></div></div>
+        <div class="field"><label>应付金额</label><div id="pdDueAmount" class="detail-cell"></div></div>
+        <div class="field"><label>实付金额</label><div id="pdPaidAmount" class="detail-cell"></div></div>
+        <div class="field"><label>付款状态</label><div id="pdStatus" class="detail-cell"></div></div>
+        <div class="field"><label>申请日期</label><div id="pdApplyDate" class="detail-cell"></div></div>
+        <div class="field"><label>申请人</label><div id="pdApplicant" class="detail-cell"></div></div>
+        <div class="field full"><label>付款说明</label><pre id="pdDesc" class="detail-pre"></pre></div>
+      </div>
+      <div class="modal-footer" style="justify-content:flex-end;">
+        <button class="btn" id="btnCancelPaymentDetail" type="button">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var tbody = document.getElementById("paymentTableBody");
+      var totalEl = document.getElementById("paymentTotalText");
+      var search = document.getElementById("paymentWaybillSearch");
+      var filter = document.getElementById("paymentStatusFilter");
+      var btnAdd = document.getElementById("btnAddPayment");
+
+      try {
+        var sr0 = sessionStorage.getItem("demoLogisticsRole");
+        if (sr0 !== "staff" && sr0 !== "leader" && sr0 !== "finance") {
+          sessionStorage.setItem("demoLogisticsRole", "staff");
+        }
+      } catch (e0) {}
+
+      function getRole() {
+        try {
+          var s = sessionStorage.getItem("demoLogisticsRole");
+          if (s === "staff" || s === "leader" || s === "finance") return s;
+        } catch (e) {}
+        return "staff";
+      }
+
+      /** 付款单数据：status 对应筛选；step=dept|finance|pending_pay|done|reject */
+      var paymentRows = [
+        { no: "FK20260301001", waybill: "YD20260301001", carrier: "华通物流有限公司", due: 12800, paid: 12800, status: "paid", step: "done", date: "2026-03-20", applicant: "张明", desc: "到货验收完成，按合同条款支付。" },
+        { no: "FK20260302015", waybill: "YD20260302088", carrier: "远达运输集团", due: 6500, paid: null, status: "approve", step: "dept", date: "2026-03-21", applicant: "李娜", desc: "常规物流费用，附件含发票与说明。" },
+        { no: "FK20260303009", waybill: "YD20260303156", carrier: "联程供应链科技", due: 18200, paid: null, status: "reject", step: "reject", date: "2026-03-22", applicant: "王强", desc: "单据不齐全，需补充发票后重新提报。" }
+      ];
+
+      // modal refs
+      var paymentApplyMask = document.getElementById("paymentApplyMask");
+      var paymentDetailMask = document.getElementById("paymentDetailMask");
+      var paWaybill = document.getElementById("paWaybill");
+      var paCarrier = document.getElementById("paCarrier");
+      var paApplicant = document.getElementById("paApplicant");
+      var paAmount = document.getElementById("paAmount");
+      var paPaid = document.getElementById("paPaid");
+      var paPayStatus = document.getElementById("paPayStatus");
+      var paApplyDate = document.getElementById("paApplyDate");
+      var paInvoice = document.getElementById("paInvoice");
+      var paInvoiceHelp = document.getElementById("paInvoiceHelp");
+      var paDesc = document.getElementById("paDesc");
+
+      // 运单主数据（演示）：签收后才可付款，付款完成后回写 paymentStatus
+      var waybillStore = {
+        YD20260301001: { status: "已签收", location: "上海浦东仓", paymentStatus: "已付款", carrier: "华通物流有限公司", contractPrice: 12800 },
+        YD20260302088: { status: "已签收", location: "天津滨海仓", paymentStatus: "待付款", carrier: "远达运输集团", contractPrice: 6500 },
+        YD20260303156: { status: "在途", location: "苏州园区高速口", paymentStatus: "待付款", carrier: "联程供应链科技", contractPrice: 18200 }
+      };
+
+      // modal 样式
+      if (!document.getElementById("paymentModalStyle")) {
+        var st = document.createElement("style");
+        st.id = "paymentModalStyle";
+        st.textContent =
+          ".modal-mask{position:fixed;inset:0;background:rgba(6,20,40,0.5);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;}"+
+          ".modal-mask.show{display:flex;}"+
+          ".modal{width:min(900px,96vw);background:#fff;border:1px solid #dbe6f3;border-radius:12px;box-shadow:0 18px 46px rgba(9,24,45,0.28);overflow:hidden;}"+
+          ".modal-header{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #e8eef7;}"+
+          ".modal-title{margin:0;font-size:17px;color:#1f3551;}"+
+          ".modal-close{border:none;background:transparent;cursor:pointer;font-size:22px;line-height:1;color:#6a819f;}"+
+          ".modal-body{padding:14px;display:grid;gap:12px 14px;}"+
+          ".field.full{grid-column:1/-1;}"+
+          ".field label{display:block;margin:0 0 6px;font-size:13px;color:#516a87;}"+
+          ".field input,.field select,.field textarea{width:100%;height:34px;border:1px solid #d7e1ee;border-radius:6px;padding:0 10px;font-size:14px;color:#223a55;background:#fff;}"+
+          ".field textarea{height:88px;padding:8px 10px;resize:vertical;}"+
+          ".help{font-size:12px;color:#7d8ea2;margin-top:4px;}"+
+          ".detail-cell{height:34px;display:flex;align-items:center;padding:0 10px;border:1px solid #d7e1ee;border-radius:6px;background:#fff;color:#2a3d56;}"+
+          ".detail-pre{margin:0;border:1px solid #d7e1ee;border-radius:6px;padding:10px;background:#fff;white-space:pre-wrap;word-break:break-word;line-height:1.55;color:#2a3d56;font-size:13px;max-height:200px;overflow:auto;}"+
+          ".modal-footer{height:54px;border-top:1px solid #e8eef7;display:flex;align-items:center;justify-content:space-between;padding:0 14px;}"+
+          ".footer-tip{font-size:12px;color:#7b8fa7;}"+
+          ".footer-actions{display:flex;gap:8px;}"+
+          ".btn{border:1px solid #d7e1ee;background:#fff;color:#2b4664;border-radius:6px;padding:7px 14px;font-size:14px;cursor:pointer;}"+
+          ".btn-primary{background:#1890ff;color:#fff;border-color:#1890ff;}";
+        document.head.appendChild(st);
+      }
+
+      function fmtDate(d) {
+        var y = d.getFullYear();
+        var m = String(d.getMonth() + 1).padStart(2, "0");
+        var day = String(d.getDate()).padStart(2, "0");
+        return y + "-" + m + "-" + day;
+      }
+
+      function statusText(code) {
+        if (code === "approve") return "待审批";
+        if (code === "pending") return "待付款";
+        if (code === "paid") return "已付款";
+        if (code === "reject") return "已驳回";
+        return code;
+      }
+
+      function moneyCell(n) {
+        return "¥ " + Number(n || 0).toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function rowUiStatus(pr) {
+        if (pr.status === "paid") return "paid";
+        if (pr.status === "reject") return "reject";
+        if (pr.step === "pending_pay") return "pending";
+        return "approve";
+      }
+
+      function buildOpsHtml(_pr, idx) {
+        return '<div class="wh-ops"><a href="#" data-action="view" data-idx="' + idx + '">查看详情</a></div>';
+      }
+
+      function renderPaymentRows() {
+        tbody.innerHTML = "";
+        paymentRows.forEach(function (pr, idx) {
+          var tr = document.createElement("tr");
+          tr.setAttribute("data-waybill", pr.waybill);
+          tr.setAttribute("data-status", rowUiStatus(pr));
+          tr.setAttribute("data-approval-step", pr.step);
+          tr.setAttribute("data-pay-desc", pr.desc || "");
+          tr.setAttribute("data-row-index", String(idx));
+          var tag = "";
+          var us = rowUiStatus(pr);
+          if (us === "paid") tag = '<span class="tag-status tag-status--paid">已付款</span>';
+          else if (us === "reject") tag = '<span class="tag-status tag-status--reject">已驳回</span>';
+          else if (us === "pending") tag = '<span class="tag-status tag-status--pending">待付款</span>';
+          else tag = '<span class="tag-status tag-status--approve">待审批</span>';
+          tr.innerHTML =
+            "<td>" + pr.no + "</td>" +
+            "<td>" + pr.waybill + "</td>" +
+            "<td>" + pr.carrier + "</td>" +
+            '<td class="cell-amount">' + moneyCell(pr.due) + "</td>" +
+            '<td class="cell-paid-amount">' + (pr.paid != null ? moneyCell(pr.paid) : "—") + "</td>" +
+            '<td class="cell-status">' + tag + "</td>" +
+            "<td>" + pr.date + "</td>" +
+            "<td>" + pr.applicant + "</td>" +
+            "<td>" + buildOpsHtml(pr, idx) + "</td>";
+          tbody.appendChild(tr);
+        });
+        applyFilter();
+      }
+
+      function applyFilter() {
+        var q = (search.value || "").trim().toLowerCase();
+        var st = filter.value;
+        tbody.querySelectorAll("tr").forEach(function (row) {
+          var wb = (row.getAttribute("data-waybill") || "").toLowerCase();
+          var status = row.getAttribute("data-status") || "";
+          var okWaybill = !q || wb.indexOf(q) !== -1;
+          var okStatus = !st || status === st;
+          row.style.display = okWaybill && okStatus ? "" : "none";
+        });
+        var n = 0;
+        tbody.querySelectorAll("tr").forEach(function (row) {
+          if (row.style.display !== "none") n++;
+        });
+        totalEl.textContent = "共 " + n + " 条";
+      }
+
+      function openMask(mask) {
+        if (!mask) return;
+        mask.classList.add("show");
+        mask.setAttribute("aria-hidden", "false");
+      }
+      function closeMask(mask) {
+        if (!mask) return;
+        mask.classList.remove("show");
+        mask.setAttribute("aria-hidden", "true");
+      }
+
+      function bindModalClose(maskId, closeIds) {
+        var mask = document.getElementById(maskId);
+        if (!mask) return;
+        closeIds.forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.addEventListener("click", function () { closeMask(mask); });
+        });
+        mask.addEventListener("click", function (e) {
+          if (e.target === mask) closeMask(mask);
+        });
+      }
+
+      bindModalClose("paymentApplyMask", ["btnClosePaymentApply", "btnCancelPaymentApply"]);
+      bindModalClose("paymentDetailMask", ["btnClosePaymentDetail", "btnCancelPaymentDetail"]);
+
+      // 申请弹框：运单选项填充
+      function refreshWaybillOptions() {
+        var html = "";
+        Object.keys(waybillStore).forEach(function (wb) {
+          var w = waybillStore[wb];
+          if (w.status === "已签收" && w.paymentStatus !== "已付款") {
+            html += '<option value="' + wb + '">' + wb + " / " + w.carrier + "</option>";
+          }
+        });
+        paWaybill.innerHTML = html || '<option value="">暂无可申请运单</option>';
+        if (!paWaybill.value && paWaybill.options.length) paWaybill.selectedIndex = 0;
+        updateApplyFormByWaybill();
+      }
+
+      function updateApplyFormByWaybill() {
+        var wb = paWaybill.value;
+        var w = waybillStore[wb];
+        if (!w) {
+          paCarrier.value = "";
+          paAmount.value = "";
+          if (paPaid) paPaid.value = "—";
+          return;
+        }
+        paCarrier.value = w.carrier || "";
+        paAmount.value = "¥ " + Number(w.contractPrice || 0).toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      if (paWaybill) paWaybill.addEventListener("change", updateApplyFormByWaybill);
+      if (paInvoice) {
+        paInvoice.addEventListener("change", function () {
+          var f = (paInvoice.files && paInvoice.files[0]) ? paInvoice.files[0].name : "";
+          paInvoiceHelp.textContent = f ? ("已选择：" + f) : "未选择文件";
+        });
+      }
+
+      function openDetailByIndex(idx) {
+        var pr = paymentRows[idx];
+        if (!pr) return;
+        document.getElementById("pdNo").textContent = pr.no;
+        document.getElementById("pdWaybill").textContent = pr.waybill;
+        document.getElementById("pdCarrier").textContent = pr.carrier;
+        document.getElementById("pdDueAmount").textContent = moneyCell(pr.due);
+        document.getElementById("pdPaidAmount").textContent = pr.paid != null ? moneyCell(pr.paid) : "—";
+        document.getElementById("pdStatus").textContent = statusText(rowUiStatus(pr));
+        document.getElementById("pdApplyDate").textContent = pr.date;
+        document.getElementById("pdApplicant").textContent = pr.applicant;
+        document.getElementById("pdDesc").textContent = pr.desc || "无";
+        openMask(paymentDetailMask);
+      }
+
+      search.addEventListener("input", applyFilter);
+      filter.addEventListener("change", applyFilter);
+      btnAdd.addEventListener("click", function () {
+        if (getRole() !== "staff") {
+          alert("演示：新增付款申请仅部门用户（普通经办）可操作。");
+          return;
+        }
+        paApplicant.value = "当前用户";
+        paDesc.value = "";
+        if (paPayStatus) paPayStatus.value = "待审批";
+        if (paPaid) paPaid.value = "—";
+        if (paApplyDate) paApplyDate.value = fmtDate(new Date());
+        if (paInvoice) paInvoice.value = "";
+        if (paInvoiceHelp) paInvoiceHelp.textContent = "未选择文件";
+        refreshWaybillOptions();
+        openMask(paymentApplyMask);
+      });
+
+      document.getElementById("btnSavePaymentApply").addEventListener("click", function () {
+        var wb = (paWaybill.value || "").trim();
+        var w = waybillStore[wb];
+        if (!w) {
+          alert("暂无可申请的已签收未付款运单。");
+          return;
+        }
+        var payNo = "FK" + fmtDate(new Date()).replace(/-/g, "") + String(Math.floor(Math.random() * 900 + 100));
+        paymentRows.unshift({
+          no: payNo,
+          waybill: wb,
+          carrier: w.carrier || "",
+          due: w.contractPrice || 0,
+          paid: null,
+          status: "approve",
+          step: "dept",
+          date: fmtDate(new Date()),
+          applicant: paApplicant.value || "当前用户",
+          desc: (paDesc.value || "").trim()
+        });
+        w.paymentStatus = "审批中";
+        closeMask(paymentApplyMask);
+        renderPaymentRows();
+      });
+
+      tbody.addEventListener("click", function (e) {
+        var a = e.target.closest(".wh-ops a");
+        if (!a) return;
+        e.preventDefault();
+        var action = a.getAttribute("data-action");
+        var idx = parseInt(a.getAttribute("data-idx"), 10);
+        if (isNaN(idx)) return;
+        if (action === "view") {
+          openDetailByIndex(idx);
+          return;
+        }
+      });
+
+      renderPaymentRows();
+    })();
+  </script>
+</body>
+</html>

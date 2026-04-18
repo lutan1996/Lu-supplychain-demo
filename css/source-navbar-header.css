@@ -1,0 +1,50 @@
+/**
+ * 子页顶栏对齐 SupplyChainManageView Navbar.vue：
+ * 背景 #0a3382、左侧 Logo + 竖线 + 标题文案、右侧时钟/头像略提亮。
+ * 在 body 上增加 class：page-source-navbar
+ */
+body.page-source-navbar .header {
+  background: #0a3382;
+  border-bottom: none;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  padding-left: 0;
+}
+body.page-source-navbar .header::after {
+  display: none;
+}
+body.page-source-navbar .header-hamburger {
+  border-right-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+body.page-source-navbar .header-logo img {
+  height: 40px;
+  max-width: 182px;
+}
+body.page-source-navbar .header-source-brand {
+  border-left: 1px solid rgba(252, 252, 252, 0.17);
+  padding-left: 18px;
+  margin-left: 8px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+}
+body.page-source-navbar .header-source-brand p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+/* 从 h1.header-title 迁到 .header-source-brand 后，隐藏旧标题 */
+body.page-source-navbar .header-title {
+  display: none !important;
+}
+body.page-source-navbar .clock {
+  color: rgba(255, 255, 255, 0.92);
+}
+body.page-source-navbar .user-avatar {
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.18);
+  border: none;
+}

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>仓库管理 - 新能源物资供应链管理系统</title>
+  <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <!-- 子页面通用：操作栏四按钮（描边 + 浅色底），其它子菜单页请同样引用 -->
+  <link rel="stylesheet" href="css/subpage-toolbar.css" />
+  <!-- 子菜单业务页统一布局与样式（与仓库管理一致） -->
+  <link rel="stylesheet" href="css/subpage-base.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+</head>
+<body class="page-source-navbar page-subpage page-warehouse">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="5" width="14" height="17" rx="1.5"/><path d="M8 9h8M8 12.5h8M8 16h6"/></svg></span>
+<span class="nav-label">我的任务</span>
+        </div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 10.5L12 3l9 7.5V20a1.5 1.5 0 0 1-1.5 1.5H15v-7H9v7H4.5A1.5 1.5 0 0 1 3 20v-9.5z"/></svg></span>
+          <span class="nav-label">首页</span>
+        </a>
+        <div class="nav-item" data-nav="cockpit" title="驾驶舱">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1"/></svg></span>
+          <span class="nav-label">驾驶舱</span>
+        </div>
+        <div class="nav-item" title="采购管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6h14l-1.2 9H7.2L6 6z"/><path d="M6 6V5a1 1 0 0 1 1-1h2"/><circle cx="9" cy="20" r="1.25"/><circle cx="17" cy="20" r="1.25"/></svg></span>
+          <span class="nav-label">采购管理</span>
+        </div>
+        <a class="nav-item" href="carrier-management.html" title="物流管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1 16h11.5V8.5H5V7h11.5v5h2.5l3.5 4.5"/><circle cx="6.5" cy="17.5" r="1.75"/><circle cx="16.5" cy="17.5" r="1.75"/></svg></span>
+          <span class="nav-label">物流管理</span>
+        </a>
+        <div class="nav-item nav-item--module-active" id="navWarehouse" data-nav="warehouse" title="仓储管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 21h18V10.5L12 6 3 10.5V21z"/><path d="M9 21v-7h6v7"/></svg></span>
+          <span class="nav-label">仓储管理</span>
+        </div>
+        <div class="nav-item" title="物资采购">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6a2 2 0 0 1 2-2h6v16H6a2 2 0 0 1-2-2V6z"/><path d="M20 6a2 2 0 0 0-2-2h-6v16h6a2 2 0 0 0 2-2V6z"/><path d="M12 4v16"/><path d="M7 9h3M7 12.5h3M7 16h2M14 9h3M14 12.5h3M14 16h2"/></svg></span>
+          <span class="nav-label">物资采购</span>
+        </div>
+        <div class="nav-item" title="物资出库与处置">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 12a9 9 0 0 0-9-9 9.5 9.5 0 0 0-7 3"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.5 9.5 0 0 0 7-3"/><path d="M16 16h5v5"/></svg></span>
+          <span class="nav-label">物资出库与处置</span>
+        </div>
+        <div class="nav-item" title="绩效考核">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="3" width="12" height="18" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h5"/></svg></span>
+          <span class="nav-label">绩效考核</span>
+        </div>
+        <div class="nav-item" title="公告管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h12a2 2 0 0 1 2 2v10H6a2 2 0 0 0-2 2v2"/><path d="M4 6V5a1 1 0 0 1 1-1h2"/><path d="M8 10h8M8 14h6"/></svg></span>
+          <span class="nav-label">公告管理</span>
+        </div>
+        <div class="nav-item" title="综合业务管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg></span>
+          <span class="nav-label">综合业务管理</span>
+        </div>
+        <div class="nav-item" title="数据管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="5" rx="9" ry="2.5"/><path d="M3 5v6c0 1.6 4 3 9 3s9-1.4 9-3V5"/><path d="M3 11v6c0 1.6 4 3 9 3s9-1.4 9-3V11"/><path d="M3 17v2c0 1.6 4 3 9 3s9-1.4 9-3v-2"/></svg></span>
+          <span class="nav-label">数据管理</span>
+        </div>
+        <div class="nav-item" title="开发工具">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 18l6-6-6-6"/><path d="M8 6 2 12l6 6"/></svg></span>
+          <span class="nav-label">开发工具</span>
+        </div>
+        <div class="nav-item" title="设置">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3"/><path d="M12 1v2.5M12 20.5V23M4.2 4.2l1.8 1.8M18 18l1.8 1.8M1 12h2.5M20.5 12H23M4.2 19.8 6 18M18 6l1.8-1.8"/></svg></span>
+          <span class="nav-label">设置</span>
+        </div>
+        <div class="nav-item" title="系统管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="9" r="3.5"/><path d="M5 20.5v-1a7 7 0 0 1 14 0v1"/></svg></span>
+          <span class="nav-label">系统管理</span>
+        </div>
+      </aside>
+
+      <aside
+        id="warehouseSecondaryPanel"
+        class="warehouse-secondary-panel"
+        aria-label="仓储管理子菜单"
+        aria-hidden="true"
+        hidden
+      >
+        <div class="warehouse-secondary-inner">
+          <div class="warehouse-secondary-row warehouse-secondary-row--pipe" id="masterSecondaryRow">
+            <button type="button" class="warehouse-secondary-link" data-action="slot" data-label="货位管理">货位管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="receive" data-label="收货入库">收货入库</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="scan" data-label="扫码领用">扫码领用</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="inventory-check" data-label="盘库管理">盘库管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="stock" data-label="库存管理">库存管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="maintenance" data-label="库内保养">库内保养</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="idle" data-label="闲置物资">闲置物资</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="warehouse" data-label="仓库管理">仓库管理</button>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-scroll">
+        <h2 class="wh-title">仓库管理</h2>
+        <div class="wh-filters">
+          <div class="wh-field">
+            <label for="f-name">仓库名称</label>
+            <input id="f-name" type="text" placeholder="请输入仓库名称" />
+          </div>
+          <div class="wh-field">
+            <label for="f-keeper">库管员</label>
+            <input id="f-keeper" type="text" placeholder="请输入库管员" />
+          </div>
+          <div class="wh-field">
+            <label for="f-region">区域公司</label>
+            <input id="f-region" type="text" placeholder="请输入区域公司" />
+          </div>
+          <div class="wh-field">
+            <label for="f-station">场站</label>
+            <input id="f-station" type="text" placeholder="请输入场站" />
+          </div>
+          <div class="wh-field">
+            <label for="f-address">仓库地址</label>
+            <input id="f-address" type="text" placeholder="请输入仓库地址" />
+          </div>
+        </div>
+        <div class="wh-filter-actions">
+          <button type="button" class="btn btn-primary"><i class="fa-solid fa-magnifying-glass"></i> 搜索</button>
+          <button type="button" class="btn btn-default"><i class="fa-solid fa-arrow-rotate-right"></i> 重置</button>
+        </div>
+
+        <div class="wh-toolbar">
+          <button type="button" class="btn-toolbar btn-toolbar--primary"><i class="fa-solid fa-plus" aria-hidden="true"></i> 新增</button>
+          <button type="button" class="btn-toolbar btn-toolbar--success"><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i> 修改</button>
+          <button type="button" class="btn-toolbar btn-toolbar--danger"><i class="fa-solid fa-trash-can" aria-hidden="true"></i> 删除</button>
+          <button type="button" class="btn-toolbar btn-toolbar--warning"><i class="fa-solid fa-download" aria-hidden="true"></i> 导出</button>
+          <span class="wh-toolbar-spacer"></span>
+          <div class="wh-toolbar-icons">
+            <button type="button" title="搜索" aria-label="搜索"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <button type="button" title="刷新" aria-label="刷新"><i class="fa-solid fa-arrow-rotate-right"></i></button>
+          </div>
+        </div>
+
+        <div class="wh-table-wrap">
+          <table class="wh-table">
+            <thead>
+              <tr>
+                <th style="width:40px"><input type="checkbox" aria-label="全选" /></th>
+                <th>仓库编码</th>
+                <th>仓库名称</th>
+                <th>仓库类型</th>
+                <th>所属区域</th>
+                <th>详细地址</th>
+                <th>负责人</th>
+                <th>联系电话</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="warehouseBody"></tbody>
+          </table>
+        </div>
+
+        <div class="wh-pagination">
+          <span id="warehouseTotalText">共 0 条</span>
+          <select aria-label="每页条数">
+            <option>10条/页</option>
+            <option>20条/页</option>
+            <option>50条/页</option>
+          </select>
+          <div class="wh-page-btns">
+            <button type="button" aria-label="上一页">&lt;</button>
+            <button type="button" class="is-current" aria-current="page">1</button>
+            <button type="button" aria-label="下一页">&gt;</button>
+          </div>
+          <span class="wh-goto">前往 <input type="text" value="1" aria-label="页码" /> 页</span>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      function tickClock() {
+        var el = document.getElementById('clock');
+        if (!el) return;
+        var d = new Date();
+        var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+        el.textContent = d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) +
+          '  ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+      }
+      tickClock();
+      setInterval(tickClock, 1000);
+    })();
+  </script>
+  <script src="js/warehouse-submenu.js"></script>
+  <script>
+    (function () {
+      var rows = [
+        { code: "CK00001", name: "集团中心仓", type: "中心库", region: "集团", address: "北京市朝阳区xx路1号", manager: "程秀", phone: "13800000001", status: "启用", parent: "集团" , stockQty: 12},
+        { code: "CK01001", name: "华北区域仓", type: "区域库", region: "华北", address: "河北省张家口xx园区", manager: "王雷", phone: "13800000002", status: "启用", parent: "集团中心仓", stockQty: 8},
+        { code: "CK01011", name: "张北场站仓", type: "场站库", region: "华北", address: "张北风场A区", manager: "李凯", phone: "13800000003", status: "启用", parent: "华北区域仓", stockQty: 0}
+      ];
+
+      var refs = {
+        body: document.getElementById("warehouseBody"),
+        total: document.getElementById("warehouseTotalText"),
+        fName: document.getElementById("f-name"),
+        fKeeper: document.getElementById("f-keeper"),
+        fRegion: document.getElementById("f-region"),
+        fAddress: document.getElementById("f-address")
+      };
+
+      function render() {
+        var name = (refs.fName.value || "").trim();
+        var keeper = (refs.fKeeper.value || "").trim();
+        var region = (refs.fRegion.value || "").trim();
+        var address = (refs.fAddress.value || "").trim();
+        var list = rows.filter(function (x) {
+          return (!name || x.name.indexOf(name) > -1) &&
+            (!keeper || x.manager.indexOf(keeper) > -1) &&
+            (!region || x.region.indexOf(region) > -1) &&
+            (!address || x.address.indexOf(address) > -1);
+        });
+        refs.body.innerHTML = "";
+        list.forEach(function (x) {
+          var tr = document.createElement("tr");
+          tr.setAttribute("data-code", x.code);
+          tr.innerHTML =
+            '<td><input type="checkbox" aria-label="选择行" /></td>' +
+            "<td>" + x.code + "</td>" +
+            "<td>" + x.name + "<div style='font-size:12px;color:#8ca0b8;'>上级：" + x.parent + "</div></td>" +
+            "<td>" + x.type + "</td>" +
+            "<td>" + x.region + "</td>" +
+            "<td>" + x.address + "</td>" +
+            "<td>" + x.manager + "</td>" +
+            "<td>" + x.phone + "</td>" +
+            "<td>" + x.status + "</td>" +
+            '<td><div class="wh-ops"><a href="#" data-action="edit">编辑</a><a href="#" data-action="view">查看</a><a href="#" data-action="del">删除</a></div></td>';
+          refs.body.appendChild(tr);
+        });
+        refs.total.textContent = "共 " + list.length + " 条";
+      }
+
+      function genCode() {
+        return "CK" + String(Math.floor(Math.random() * 90000 + 10000));
+      }
+
+      document.querySelector(".btn-toolbar--primary").addEventListener("click", function () {
+        showActionPrompt("新增仓库", "仓库名称：", "", function (name) {
+          if (!name) return;
+          showActionPrompt("新增仓库", "仓库类型（中心库/区域库/场站库）：", "场站库", function (type) {
+            showActionPrompt("新增仓库", "上级仓库（集团→区域→场站）：", "集团中心仓", function (parent) {
+              showActionPrompt("新增仓库", "所属区域：", "华北", function (region) {
+                showActionPrompt("新增仓库", "详细地址：", "示例地址", function (address) {
+                  showActionPrompt("新增仓库", "负责人：", "管理员", function (manager) {
+                    showActionPrompt("新增仓库", "联系电话：", "13800000000", function (phone) {
+                      rows.unshift({ code: genCode(), name: name.trim(), type: (type || "场站库").trim(), region: (region || "华北").trim(), address: (address || "").trim(), manager: (manager || "").trim(), phone: (phone || "").trim(), status: "启用", parent: (parent || "集团中心仓").trim(), stockQty: 0 });
+                      render();
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+
+      refs.body.addEventListener("click", function (e) {
+        var a = e.target.closest("a[data-action]");
+        if (!a) return;
+        e.preventDefault();
+        var tr = a.closest("tr");
+        var code = tr && tr.getAttribute("data-code");
+        var item = rows.find(function (x) { return x.code === code; });
+        if (!item) return;
+        var action = a.getAttribute("data-action");
+        if (action === "view") {
+          alert("仓库编码：" + item.code + "\n仓库名称：" + item.name + "\n类型：" + item.type + "\n上级仓库：" + item.parent);
+          return;
+        }
+        if (action === "edit") {
+          showActionPrompt("编辑", "负责人：", item.manager, function (manager) {
+            if (!manager) return;
+            item.manager = manager.trim();
+            showActionPrompt("编辑", "联系电话：", item.phone, function (phone) {
+              item.phone = (phone || item.phone).trim();
+              render();
+            });
+          });
+          return;
+        }
+        if (action === "del") {
+          if (item.stockQty > 0) {
+            alert("该仓库存在库存，不可删除。");
+            return;
+          }
+          showActionConfirm("删除", "确认删除该仓库？", function () {
+            rows = rows.filter(function (x) { return x.code !== item.code; });
+            render();
+          });
+        }
+      });
+
+      document.querySelector(".btn.btn-primary").addEventListener("click", render);
+      document.querySelector(".btn.btn-default").addEventListener("click", function () {
+        refs.fName.value = "";
+        refs.fKeeper.value = "";
+        refs.fRegion.value = "";
+        refs.fAddress.value = "";
+        render();
+      });
+
+      function whToast(msg) {
+        var t = document.createElement("div");
+        t.textContent = msg;
+        t.setAttribute("role", "status");
+        t.style.cssText = "position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:rgba(0,0,0,.78);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;z-index:10050;max-width:90vw;text-align:center;";
+        document.body.appendChild(t);
+        setTimeout(function () { t.remove(); }, 2400);
+      }
+      var tbEdit = document.querySelector(".btn-toolbar--success");
+      var tbDel = document.querySelector(".btn-toolbar--danger");
+      var tbExport = document.querySelector(".btn-toolbar--warning");
+      if (tbEdit) tbEdit.addEventListener("click", function () { whToast("请先勾选要修改的仓库（演示）"); });
+      if (tbDel) tbDel.addEventListener("click", function () { whToast("请先勾选要删除的仓库（演示）"); });
+      if (tbExport) tbExport.addEventListener("click", function () { whToast("正在导出仓库列表（演示）…"); });
+      var iconBtns = document.querySelectorAll(".wh-toolbar-icons button");
+      if (iconBtns[0]) iconBtns[0].addEventListener("click", function () { whToast("在结果中搜索（演示）"); });
+      if (iconBtns[1]) iconBtns[1].addEventListener("click", function () { render(); whToast("列表已刷新"); });
+
+      render();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>基础数据 - 新能源物资供应链管理系统</title>
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .bd-tabs { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:0; border:1px solid #e8edf4; border-radius:4px; overflow:hidden; margin-bottom:8px; }
+    .bd-tab { height:34px; border:0; border-right:1px solid #e8edf4; background:#f7f9fc; color:#4b5563; font-size:12px; cursor:pointer; }
+    .bd-tab:nth-child(5n) { border-right:0; }
+    .bd-tab.is-active { background:#1677ff; color:#fff; font-weight:600; }
+    .bd-kpis { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin-bottom:8px; }
+    .bd-kpi { border:1px solid #e8edf4; border-radius:4px; background:#fff; min-height:64px; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+    .bd-kpi .k { font-size:11px; color:#8b9ab0; margin-bottom:6px; }
+    .bd-kpi .v { font-size:22px; color:#1677ff; font-weight:700; line-height:1; }
+    .bd-tip { border:1px dashed #91caff; background:#e6f4ff; color:#0958d9; border-radius:4px; padding:8px 10px; font-size:12px; margin-bottom:8px; }
+    .bd-filters { border:1px solid #e8edf4; border-radius:4px; background:#fff; padding:8px; margin-bottom:8px; }
+    .bd-filters .row { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px; }
+    .bd-filters input,.bd-filters select { width:100%; height:28px; border:1px solid #d9e0ea; border-radius:4px; padding:0 8px; font-size:12px; color:#334155; }
+    .bd-toolbar { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+    .bd-btn { height:28px; border:1px solid #d9e0ea; border-radius:4px; background:#fff; color:#334155; font-size:12px; padding:0 10px; cursor:pointer; }
+    .bd-btn.pri { background:#1677ff; border-color:#1677ff; color:#fff; }
+    .bd-btn.ok { background:#52c41a; border-color:#52c41a; color:#fff; }
+    .bd-btn.warn { background:#fff7e6; border-color:#ffd591; color:#d46b08; }
+    .bd-op-link { color:#1677ff; text-decoration:none; font-weight:500; margin-right:8px; }
+    .bd-op-link:hover { text-decoration:underline; }
+    .bd-modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:2600;padding:16px}
+    .bd-modal-mask.show{display:flex}
+    .bd-modal{width:min(760px,96vw);max-height:88vh;overflow:auto;background:#fff;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+    .bd-modal-hd{padding:12px 16px;border-bottom:1px solid #edf2f8;font-size:16px;font-weight:600;color:#1f3551;display:flex;justify-content:space-between;align-items:center}
+    .bd-modal-bd{padding:12px 16px}
+    .bd-modal-ft{padding:10px 16px;border-top:1px solid #edf2f8;display:flex;justify-content:flex-end;gap:8px}
+    .bd-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .bd-form-item label{display:block;font-size:12px;color:#5b6b7f;margin-bottom:4px}
+    .bd-form-item input{width:100%;height:30px;border:1px solid #d9e0ea;border-radius:4px;padding:0 8px;font-size:12px;box-sizing:border-box}
+    .bd-toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#fff;padding:8px 12px;border-radius:6px;font-size:12px;display:none;z-index:2700}
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header"><div class="header-left"><button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40" /></a><div class="header-source-brand"><p>新能源供应链管理系统</p></div></div><div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar">用</div></div></header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <div class="nav-item" title="驾驶舱"><span class="nav-label">驾驶舱</span></div>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <div class="nav-item" title="物流管理"><span class="nav-label">物流管理</span></div>
+        <div class="nav-item" title="仓储管理"><span class="nav-label">仓储管理</span></div>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item nav-item--module-active" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title">基础数据配置中心（静态数据）</h1>
+          <div class="bd-tip">基础数据仅维护静态配置：供应商、产品、组织、项目公司/场站、字典、承运商、汇率税率、编码规则。台账类动态数据已迁移至各业务模块。</div>
+          <div class="bd-tabs" id="bdTabs"></div>
+          <div class="bd-kpis" id="bdKpis"></div>
+          <div class="bd-filters"><div class="row" id="bdFilters"></div></div>
+          <div class="bd-toolbar">
+            <button class="bd-btn pri" id="btnSearch">搜索</button><button class="bd-btn" id="btnReset">重置</button><button class="bd-btn pri" id="btnAdd">新增</button><button class="bd-btn" id="btnEdit">编辑</button><button class="bd-btn" id="btnView">查看</button><button class="bd-btn warn" id="btnDelete">删除</button><button class="bd-btn ok" id="btnExport">导出Excel</button>
+          </div>
+          <div class="carrier-table-wrap"><table class="carrier-table"><thead id="bdHead"></thead><tbody id="bdBody"></tbody></table></div>
+          <div class="carrier-pagination"><span id="bdTotal">共 0 条</span><span>每页</span><select><option>10 条/页</option></select><div class="carrier-page-btns"><button id="pagePrev">&lt;</button><button class="is-current" id="pageCurrent">1</button><button id="pageNext">&gt;</button></div></div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div class="bd-modal-mask" id="bdModalMask">
+    <div class="bd-modal">
+      <div class="bd-modal-hd"><span id="bdModalTitle">详情</span><button class="bd-btn" id="bdModalClose">关闭</button></div>
+      <div class="bd-modal-bd"><div class="bd-form-grid" id="bdFormGrid"></div></div>
+      <div class="bd-modal-ft"><button class="bd-btn" id="bdModalCancel">取消</button><button class="bd-btn pri" id="bdModalOk">保存</button></div>
+    </div>
+  </div>
+  <div class="bd-toast" id="bdToast"></div>
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script>
+    (function () {
+      var tabs = [
+        { key: "supplier", title: "供应商管理", kpis: [["供应商总数","128"],["正常合作","115"],["暂停合作","10"],["终止合作","3"]],
+          filters:["供应商编号","供应商名称","供应商类型","合作状态","联系人","联系电话"],
+          cols:["供应商编号","供应商名称","供应商类型","联系人","联系电话","地址","合作状态","备注","操作"],
+          rows:[["SUP-0001","大华","软件类","陈达","13800001111","杭州","正常合作","监控系统","查看"],["SUP-0002","东风","零部件生产商","李明","13800002222","武汉","正常合作","发电机配件","查看"]] },
+        { key: "product", title: "产品类别管理", kpis: [["产品总数","386"],["风机整机","22"],["零部件","301"],["本月新增","16"]],
+          filters:["产品编号","产品名称","产品类别","规格型号","单位","适用机型"],
+          cols:["产品编号","产品名称","产品类别","规格型号","单位","适用机型","备注","操作"],
+          rows:[["PRD-1001","风机整机A","风机整机","GW-5.0","台","5MW","主流机型","查看"],["PRD-2041","齿轮箱总成","齿轮箱","GBX-220","套","3MW/5MW","备件","查看"]] },
+        { key: "personnel", title: "人员数据", kpis: [["人员总数","912"],["在岗","876"],["离岗","36"],["本月入职","28"]],
+          filters:["人员编号","姓名","部门","岗位","状态","手机号"],
+          cols:["人员编号","姓名","所属部门","岗位","状态","手机号","邮箱","操作"],
+          rows:[["P-0011","张三","华北运维部","资产专责","在岗","13900001111","zs@demo.com","查看"],["P-0034","王芳","综合管理部","采购专责","在岗","13900002222","wf@demo.com","查看"]] },
+        { key: "department", title: "公司部门数据", kpis: [["部门总数","42"],["一级部门","12"],["二级部门","30"],["本月调整","2"]],
+          filters:["部门编号","部门名称","上级部门","负责人","状态","关键词"],
+          cols:["部门编号","部门名称","上级部门","负责人","联系电话","状态","备注","操作"],
+          rows:[["D-010","华北运维部","运维中心","马凯","13600001111","有效","区域运维","查看"],["D-021","经营发展中心","总部","刘静","13600002222","有效","经营分析","查看"]] },
+        { key: "company", title: "项目公司管理", kpis: [["公司总数","26"],["省公司","8"],["项目公司","18"],["下属场站","152"]],
+          filters:["公司编号","公司名称","公司类型","所属区域","负责人","联系电话"],
+          cols:["公司编号","公司名称","公司类型","所属区域","负责人","联系电话","地址","下属场站数","操作"],
+          rows:[["C-1001","河南能源","省公司","华北","周总","0371-88886666","郑州","23","查看"],["C-2008","天津能源","项目公司","华北","李总","022-66668888","天津","11","查看"]] },
+        { key: "station", title: "场站管理", kpis: [["场站总数","152"],["风电场","126"],["光伏电站","26"],["总装机(MW)","10240"]],
+          filters:["场站编号","场站名称","所属项目公司","场站类型","场站负责人","联系电话"],
+          cols:["场站编号","场站名称","所属项目公司","场站类型","装机容量(MW)","风机数量","场站负责人","联系电话","地址","经纬度","操作"],
+          rows:[["WT-0101","张北风电场","河北项目公司","风电场","500","180","赵凯","0313-88886666","张北","115.03,41.15","查看"],["WT-0220","连云港光伏站","江苏项目公司","光伏电站","120","0","钱峰","0518-66668888","连云港","119.22,34.61","查看"]] },
+        { key: "dict", title: "物资类别字典", kpis: [["字典总项","215"],["固定资产类","68"],["销售物资类","42"],["应急物资类","31"]],
+          filters:["类别编号","类别名称","上级类别","类别属性","状态","关键词"],
+          cols:["类别编号","类别名称","上级类别","类别属性","备注","操作"],
+          rows:[["DICT-01","固定资产类","一级","固定资产","电脑、仪器仪表","查看"],["DICT-05","应急物资类","一级","应急物资","应急储备物资","查看"]] },
+        { key: "carrier", title: "承运商管理", kpis: [["承运商总数","42"],["正常合作","36"],["暂停合作","6"],["覆盖区域","19"]],
+          filters:["承运商编号","承运商名称","承运商类型","联系人","联系电话","合作状态"],
+          cols:["承运商编号","承运商名称","承运商类型","联系人","联系电话","服务区域","合作状态","操作"],
+          rows:[["CAR-001","顺丰物流","快递","王晨","400-111-1111","全国","正常合作","查看"],["CAR-007","华北专线物流","专车","赵鑫","400-777-7777","华北/西北","暂停合作","查看"]] },
+        { key: "rateTax", title: "汇率税率配置", kpis: [["配置总数","18"],["有效","15"],["即将失效","2"],["已失效","1"]],
+          filters:["配置编号","配置类型","配置名称","生效日期","失效日期","状态"],
+          cols:["配置编号","配置类型","配置名称","配置值","生效日期","失效日期","状态","操作"],
+          rows:[["CFG-001","税率","增值税率","13","2026-01-01","2030-12-31","有效","查看"],["CFG-002","汇率","进口汇率(USD/CNY)","7.12","2026-04-01","2026-06-30","有效","查看"]] },
+        { key: "codeRule", title: "编码规则管理", kpis: [["编码规则","9"],["固定资产编码","3"],["物资编码","4"],["风机编码","2"]],
+          filters:["编码类型","编码前缀","编码规则","当前序号","状态","关键词"],
+          cols:["编码类型","编码前缀","编码规则","当前序号","操作"],
+          rows:[["固定资产编码","GD","GD-{YYYY}-{SEQ4}","1256","查看"],["物资编码","MZ","MZ-{CAT}-{SEQ5}","8921","查看"]] }
+      ];
+      var tabKey = "supplier";
+      var tabsEl = document.getElementById("bdTabs");
+      var kpiEl = document.getElementById("bdKpis");
+      var filtersEl = document.getElementById("bdFilters");
+      var headEl = document.getElementById("bdHead");
+      var bodyEl = document.getElementById("bdBody");
+      var totalEl = document.getElementById("bdTotal");
+      var filterStateByTab = {};
+      var selectedIndex = -1;
+      var filteredRows = [];
+      var page = 1;
+      var pageSize = 10;
+      var modalMask = document.getElementById("bdModalMask");
+      var modalTitle = document.getElementById("bdModalTitle");
+      var formGrid = document.getElementById("bdFormGrid");
+      var modalOk = document.getElementById("bdModalOk");
+      var modalCancel = document.getElementById("bdModalCancel");
+      function toast(msg){
+        var el = document.getElementById("bdToast");
+        el.textContent = msg;
+        el.style.display = "block";
+        clearTimeout(el._t);
+        el._t = setTimeout(function(){ el.style.display = "none"; }, 1800);
+      }
+      function getByKey(key) { return tabs.find(function (x) { return x.key === key; }) || tabs[0]; }
+      function option(v) { return '<option>' + v + "</option>"; }
+      function openModal(mode){
+        var c = getByKey(tabKey);
+        var row = selectedIndex >= 0 ? (c.rows[selectedIndex] || []) : [];
+        modalTitle.textContent = mode === "add" ? ("新增" + c.title.replace("管理","")) : (mode === "view" ? "查看详情" : "编辑");
+        var readOnly = mode === "view";
+        formGrid.innerHTML = c.cols.filter(function(x){ return x !== "操作"; }).map(function(col, idx){
+          var val = row[idx] || "";
+          return '<div class="bd-form-item"><label>'+col+'</label><input data-col-idx="'+idx+'" value="'+String(val).replace(/"/g,'&quot;')+'" '+(readOnly?'readonly style="background:#f5f5f5"':'')+' /></div>';
+        }).join("");
+        modalOk.style.display = readOnly ? "none" : "";
+        modalMask.classList.add("show");
+        modalOk.onclick = function(){
+          var vals = Array.prototype.slice.call(formGrid.querySelectorAll("input")).map(function(ip){ return ip.value.trim() || "—"; });
+          if (mode === "add") {
+            vals.push("查看");
+            c.rows.unshift(vals);
+          } else if (selectedIndex >= 0) {
+            c.rows[selectedIndex] = vals.concat(["查看"]);
+          }
+          modalMask.classList.remove("show");
+          toast(mode === "add" ? "新增成功（演示）" : "保存成功（演示）");
+          render();
+        };
+      }
+      function applyFilter(c){
+        var vals = filterStateByTab[tabKey] || [];
+        var keys = vals.map(function(x){ return (x || "").trim(); }).filter(function(x){ return x && x !== "全部"; });
+        filteredRows = c.rows.filter(function(r){
+          if (!keys.length) return true;
+          var s = r.join(" ");
+          return keys.every(function(k){ return s.indexOf(k) >= 0; });
+        });
+      }
+      function render() {
+        var c = getByKey(tabKey);
+        tabsEl.innerHTML = tabs.map(function (x) {
+          return '<button class="bd-tab' + (x.key === tabKey ? " is-active" : "") + '" data-tab="' + x.key + '">' + x.title + "</button>";
+        }).join("");
+        kpiEl.innerHTML = c.kpis.map(function (x) { return '<div class="bd-kpi"><div class="k">' + x[0] + '</div><div class="v">' + x[1] + "</div></div>"; }).join("");
+        filtersEl.innerHTML = c.filters.map(function (x, idx) {
+          return idx % 2 === 0 ? '<input placeholder="' + x + '">' : "<select>" + option(x) + option("全部") + "</select>";
+        }).join("");
+        var controls = Array.prototype.slice.call(filtersEl.querySelectorAll("input,select"));
+        var saved = filterStateByTab[tabKey] || [];
+        controls.forEach(function (ctrl, i) {
+          ctrl.value = saved[i] || "";
+        });
+        applyFilter(c);
+        headEl.innerHTML = "<tr>" + c.cols.map(function (x) { return "<th>" + x + "</th>"; }).join("") + "</tr>";
+        var start = (page - 1) * pageSize;
+        var list = filteredRows.slice(start, start + pageSize);
+        bodyEl.innerHTML = list.map(function (r, i) {
+          var realIndex = start + i;
+          return '<tr data-idx="'+realIndex+'">' + r.map(function (td, tdIdx) {
+            if (tdIdx === r.length - 1) return '<td><a href="#" class="bd-op-link" data-act="view">查看</a><a href="#" class="bd-op-link" data-act="edit">编辑</a><a href="#" class="bd-op-link" data-act="del">删除</a></td>';
+            return "<td>" + td + "</td>";
+          }).join("") + "</tr>";
+        }).join("");
+        totalEl.textContent = "共 " + filteredRows.length + " 条";
+        document.getElementById("pageCurrent").textContent = String(page);
+      }
+      var qs = new URLSearchParams(window.location.search);
+      var qsTab = (qs.get("tab") || "").trim();
+      if (qsTab && tabs.some(function (x) { return x.key === qsTab; })) tabKey = qsTab;
+      tabsEl.addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-tab]");
+        if (!btn) return;
+        tabKey = btn.getAttribute("data-tab");
+        page = 1;
+        selectedIndex = -1;
+        render();
+      });
+      document.getElementById("btnSearch").addEventListener("click", function(){
+        filterStateByTab[tabKey] = Array.prototype.slice.call(filtersEl.querySelectorAll("input,select")).map(function(x){ return x.value || ""; });
+        page = 1;
+        render();
+        toast("已按条件搜索（演示）");
+      });
+      document.getElementById("btnReset").addEventListener("click", function(){ filterStateByTab[tabKey] = []; page = 1; render(); toast("筛选已重置（演示）"); });
+      document.getElementById("btnExport").addEventListener("click", function(){ toast("已导出Excel（演示）"); });
+      document.getElementById("btnAdd").addEventListener("click", function(){ openModal("add"); });
+      document.getElementById("btnView").addEventListener("click", function(){ if(selectedIndex<0){toast("请先选择一行");return;} openModal("view"); });
+      document.getElementById("btnEdit").addEventListener("click", function(){ if(selectedIndex<0){toast("请先选择一行");return;} openModal("edit"); });
+      document.getElementById("btnDelete").addEventListener("click", function(){
+        if(selectedIndex<0){toast("请先选择一行");return;}
+        if (window.confirm("确认删除当前记录？")) {
+          getByKey(tabKey).rows.splice(selectedIndex,1);
+          selectedIndex = -1;
+          render();
+          toast("删除成功（演示）");
+        }
+      });
+      bodyEl.addEventListener("click", function(e){
+        var tr = e.target.closest("tr[data-idx]");
+        if (tr) selectedIndex = Number(tr.getAttribute("data-idx"));
+        var act = e.target.getAttribute("data-act");
+        if (!act) return;
+        e.preventDefault();
+        if (act === "view") openModal("view");
+        if (act === "edit") openModal("edit");
+        if (act === "del") {
+          if (window.confirm("确认删除该记录？")) {
+            getByKey(tabKey).rows.splice(selectedIndex,1);
+            selectedIndex = -1;
+            render();
+            toast("删除成功（演示）");
+          }
+        }
+      });
+      document.getElementById("pagePrev").addEventListener("click", function(){ if(page>1){page--; render();}});
+      document.getElementById("pageNext").addEventListener("click", function(){
+        var maxPage = Math.max(1, Math.ceil(filteredRows.length / pageSize));
+        if(page<maxPage){page++; render();}
+      });
+      document.getElementById("bdModalClose").addEventListener("click", function(){ modalMask.classList.remove("show"); });
+      modalCancel.addEventListener("click", function(){ modalMask.classList.remove("show"); });
+      modalMask.addEventListener("click", function(e){ if(e.target===modalMask) modalMask.classList.remove("show"); });
+      render();
+    })();
+  </script>
+</body>
+</html>

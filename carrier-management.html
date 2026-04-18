@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>承运商管理 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="5" width="14" height="17" rx="1.5"/><path d="M8 9h8M8 12.5h8M8 16h6"/></svg></span>
+<span class="nav-label">我的任务</span>
+        </div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 10.5L12 3l9 7.5V20a1.5 1.5 0 0 1-1.5 1.5H15v-7H9v7H4.5A1.5 1.5 0 0 1 3 20v-9.5z"/></svg></span>
+          <span class="nav-label">首页</span>
+        </a>
+        <a class="nav-item" href="cockpit.html" data-nav="cockpit" title="驾驶舱">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1"/></svg></span>
+          <span class="nav-label">驾驶舱</span>
+        </a>
+        <div class="nav-item" title="采购管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6h14l-1.2 9H7.2L6 6z"/><path d="M6 6V5a1 1 0 0 1 1-1h2"/><circle cx="9" cy="20" r="1.25"/><circle cx="17" cy="20" r="1.25"/></svg></span>
+          <span class="nav-label">采购管理</span>
+        </div>
+        <a class="nav-item nav-item--module-active" href="carrier-management.html" title="物流管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1 16h11.5V8.5H5V7h11.5v5h2.5l3.5 4.5"/><circle cx="6.5" cy="17.5" r="1.75"/><circle cx="16.5" cy="17.5" r="1.75"/></svg></span>
+          <span class="nav-label">物流管理</span>
+        </a>
+        <a class="nav-item" href="warehouse.html" title="仓储管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 21h18V10.5L12 6 3 10.5V21z"/><path d="M9 21v-7h6v7"/></svg></span>
+          <span class="nav-label">仓储管理</span>
+        </a>
+        <div class="nav-item" title="物资采购">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6a2 2 0 0 1 2-2h6v16H6a2 2 0 0 1-2-2V6z"/><path d="M20 6a2 2 0 0 0-2-2h-6v16h6a2 2 0 0 0 2-2V6z"/><path d="M12 4v16"/><path d="M7 9h3M7 12.5h3M7 16h2M14 9h3M14 12.5h3M14 16h2"/></svg></span>
+          <span class="nav-label">物资采购</span>
+        </div>
+        <div class="nav-item" title="物资出库与处置">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 12a9 9 0 0 0-9-9 9.5 9.5 0 0 0-7 3"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.5 9.5 0 0 0 7-3"/><path d="M16 16h5v5"/></svg></span>
+          <span class="nav-label">物资出库与处置</span>
+        </div>
+        <div class="nav-item" title="绩效考核">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="3" width="12" height="18" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h5"/></svg></span>
+          <span class="nav-label">绩效考核</span>
+        </div>
+        <div class="nav-item" title="公告管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h12a2 2 0 0 1 2 2v10H6a2 2 0 0 0-2 2v2"/><path d="M4 6V5a1 1 0 0 1 1-1h2"/><path d="M8 10h8M8 14h6"/></svg></span>
+          <span class="nav-label">公告管理</span>
+        </div>
+        <div class="nav-item" title="综合业务管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg></span>
+          <span class="nav-label">综合业务管理</span>
+        </div>
+        <div class="nav-item" title="数据管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="5" rx="9" ry="2.5"/><path d="M3 5v6c0 1.6 4 3 9 3s9-1.4 9-3V5"/><path d="M3 11v6c0 1.6 4 3 9 3s9-1.4 9-3V11"/><path d="M3 17v2c0 1.6 4 3 9 3s9-1.4 9-3v-2"/></svg></span>
+          <span class="nav-label">数据管理</span>
+        </div>
+        <div class="nav-item" title="开发工具">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 18l6-6-6-6"/><path d="M8 6 2 12l6 6"/></svg></span>
+          <span class="nav-label">开发工具</span>
+        </div>
+        <div class="nav-item" title="设置">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3"/><path d="M12 1v2.5M12 20.5V23M4.2 4.2l1.8 1.8M18 18l1.8 1.8M1 12h2.5M20.5 12H23M4.2 19.8 6 18M18 6l1.8-1.8"/></svg></span>
+          <span class="nav-label">设置</span>
+        </div>
+        <div class="nav-item" title="系统管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="9" r="3.5"/><path d="M5 20.5v-1a7 7 0 0 1 14 0v1"/></svg></span>
+          <span class="nav-label">系统管理</span>
+        </div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+        <h1 class="carrier-page-title">承运商管理</h1>
+
+        <!-- 操作栏 -->
+        <div class="carrier-toolbar">
+          <button type="button" class="carrier-btn-add">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            新增承运商
+          </button>
+          <div class="carrier-toolbar-right">
+            <input
+              type="search"
+              class="carrier-search"
+              id="carrierSearch"
+              placeholder="请输入承运商编号/名称"
+              autocomplete="off"
+              aria-label="搜索承运商"
+            />
+            <select class="carrier-select" id="carrierStatusFilter" aria-label="状态筛选">
+              <option value="">全部</option>
+              <option value="enabled">合作中</option>
+              <option value="disabled">已终止</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 数据表格 -->
+        <div class="carrier-table-wrap">
+          <table class="carrier-table">
+            <thead>
+              <tr>
+                <th>承运商编号</th>
+                <th>承运商名称</th>
+                <th>统一社会信用代码</th>
+                <th>法定代表人</th>
+                <th>联系人/联系电话</th>
+                <th>状态</th>
+                <th>入库时间</th>
+                <th style="min-width: 220px">操作</th>
+              </tr>
+            </thead>
+            <tbody id="carrierTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- 分页 -->
+        <div class="carrier-pagination" role="navigation" aria-label="分页">
+          <span id="carrierTotalText">共 3 条</span>
+          <span>每页</span>
+          <select id="carrierPageSize" aria-label="每页条数">
+            <option value="10" selected>10 条/页</option>
+            <option value="20">20 条/页</option>
+            <option value="50">50 条/页</option>
+          </select>
+          <div class="carrier-page-btns">
+            <button type="button" aria-label="上一页">&lt;</button>
+            <button type="button" class="is-current" aria-current="page">1</button>
+            <button type="button" aria-label="下一页">&gt;</button>
+          </div>
+          <span class="carrier-goto">
+            前往
+            <input type="text" inputmode="numeric" value="1" aria-label="跳转页码" id="carrierGotoPage" />
+            页
+          </span>
+        </div>
+      
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- 新增/编辑承运商弹框（与基础页面同一套 modal 样式） -->
+  <div class="modal-mask" id="carrierModalMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="carrierModalTitle">
+      <div class="modal-header">
+        <h2 class="modal-title" id="carrierModalTitle">新增承运商</h2>
+        <button class="modal-close" id="btnCloseCarrierModal" aria-label="关闭">×</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="field full">
+          <label for="carrierId">承运商编号</label>
+          <input id="carrierId" type="text" placeholder="如：CYS2024001" />
+        </div>
+
+        <div class="field full">
+          <label for="carrierName">承运商名称</label>
+          <input id="carrierName" type="text" />
+        </div>
+
+        <div class="field full">
+          <label for="carrierCredit">统一社会信用代码</label>
+          <input id="carrierCredit" type="text" />
+        </div>
+
+        <div class="field full">
+          <label for="carrierLegal">法定代表人</label>
+          <input id="carrierLegal" type="text" />
+        </div>
+
+        <div class="field full">
+          <label for="carrierContact">联系人/联系电话</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <input id="carrierContact" type="text" placeholder="联系人" />
+            <input id="carrierPhone" type="text" placeholder="联系电话" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="carrierStatus">状态</label>
+          <select id="carrierStatus">
+            <option value="enabled">合作中</option>
+            <option value="disabled">已终止</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="carrierEntryTime">入库时间</label>
+          <input id="carrierEntryTime" type="date" />
+        </div>
+
+        <div class="field full" style="margin:0;padding:6px 0 2px;border-top:1px solid #e8eef7;font-size:12px;color:#7b8fa7;">扩展信息</div>
+
+        <div class="field">
+          <label for="carrierCapital">注册资本</label>
+          <input id="carrierCapital" type="text" />
+        </div>
+
+        <div class="field full">
+          <label for="carrierAddr">注册地址</label>
+          <input id="carrierAddr" type="text" />
+        </div>
+
+        <div class="field full">
+          <label for="carrierScope">经营范围</label>
+          <textarea id="carrierScope"></textarea>
+        </div>
+
+        <div class="field full">
+          <label for="carrierFiles">资质文件（可上传）</label>
+          <input id="carrierFiles" type="file" multiple />
+          <div class="help" id="carrierFilesHelp"></div>
+        </div>
+
+        <div class="field full">
+          <label for="carrierRemark">备注</label>
+          <textarea id="carrierRemark" placeholder="请输入备注（可选）"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="justify-content:flex-end;">
+        <div class="footer-actions">
+          <button class="btn" id="btnCancelCarrierModal" type="button">取消</button>
+          <button class="btn btn-primary" id="btnSaveCarrierModal" type="button">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 查看承运商弹框（字段与编辑弹框一致，仅只读） -->
+  <div class="modal-mask" id="carrierViewMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="carrierViewTitle">
+      <div class="modal-header">
+        <h2 class="modal-title" id="carrierViewTitle">查看承运商</h2>
+        <button class="modal-close" id="btnCloseCarrierView" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field full">
+          <label>承运商编号</label>
+          <div id="cvId" class="detail-readonly"></div>
+        </div>
+        <div class="field full">
+          <label>承运商名称</label>
+          <div id="cvName" class="detail-readonly"></div>
+        </div>
+        <div class="field full">
+          <label>统一社会信用代码</label>
+          <div id="cvCredit" class="detail-readonly"></div>
+        </div>
+        <div class="field full">
+          <label>法定代表人</label>
+          <div id="cvLegal" class="detail-readonly"></div>
+        </div>
+        <div class="field full">
+          <label>联系人/联系电话</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div id="cvContact" class="detail-readonly"></div>
+            <div id="cvPhone" class="detail-readonly"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>状态</label>
+          <div id="cvStatus" class="detail-readonly"></div>
+        </div>
+        <div class="field">
+          <label>入库时间</label>
+          <div id="cvEntryTime" class="detail-readonly"></div>
+        </div>
+
+        <div class="field full" style="margin:0;padding:6px 0 2px;border-top:1px solid #e8eef7;font-size:12px;color:#7b8fa7;">扩展信息</div>
+        <div class="field">
+          <label>注册资本</label>
+          <div id="cvCapital" class="detail-readonly"></div>
+        </div>
+        <div class="field full">
+          <label>注册地址</label>
+          <div id="cvAddr" class="detail-readonly"></div>
+        </div>
+        <div class="field full">
+          <label>经营范围</label>
+          <div id="cvScope" class="detail-readonly detail-readonly--multiline"></div>
+        </div>
+        <div class="field full">
+          <label>资质文件</label>
+          <div id="cvFiles" class="detail-readonly detail-readonly--multiline"></div>
+        </div>
+        <div class="field full">
+          <label>备注</label>
+          <div id="cvRemark" class="detail-readonly detail-readonly--multiline"></div>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content:flex-end;">
+        <div class="footer-actions">
+          <button class="btn" id="btnCancelCarrierView" type="button">关闭</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 启用/停用确认弹框 -->
+  <div class="modal-mask" id="carrierToggleConfirmMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="carrierToggleConfirmTitle" style="width:min(460px,92vw);">
+      <div class="modal-header">
+        <h2 class="modal-title" id="carrierToggleConfirmTitle">状态确认</h2>
+        <button class="modal-close" id="btnCloseCarrierToggleConfirm" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body" style="grid-template-columns:1fr;">
+        <div class="field full">
+          <div id="carrierToggleConfirmText" class="confirm-text"></div>
+        </div>
+      </div>
+      <div class="modal-footer" style="justify-content:flex-end;">
+        <div class="footer-actions">
+          <button class="btn" id="btnCancelCarrierToggleConfirm" type="button">取消</button>
+          <button class="btn btn-primary" id="btnOkCarrierToggleConfirm" type="button">确认</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var tbody = document.getElementById("carrierTableBody");
+      var totalEl = document.getElementById("carrierTotalText");
+      var filter = document.getElementById("carrierStatusFilter");
+      var search = document.getElementById("carrierSearch");
+
+      // ====== Modal styles + helpers（复用其它页面风格） ======
+      var modalMask = document.getElementById("carrierModalMask");
+      var viewMask = document.getElementById("carrierViewMask");
+      var toggleConfirmMask = document.getElementById("carrierToggleConfirmMask");
+      var modalTitle = document.getElementById("carrierModalTitle");
+      var btnClose = document.getElementById("btnCloseCarrierModal");
+      var btnCancel = document.getElementById("btnCancelCarrierModal");
+      var btnSave = document.getElementById("btnSaveCarrierModal");
+      var btnCloseView = document.getElementById("btnCloseCarrierView");
+      var btnCancelView = document.getElementById("btnCancelCarrierView");
+      var btnCloseToggleConfirm = document.getElementById("btnCloseCarrierToggleConfirm");
+      var btnCancelToggleConfirm = document.getElementById("btnCancelCarrierToggleConfirm");
+      var btnOkToggleConfirm = document.getElementById("btnOkCarrierToggleConfirm");
+      var toggleConfirmText = document.getElementById("carrierToggleConfirmText");
+      var carrierId = document.getElementById("carrierId");
+      var carrierName = document.getElementById("carrierName");
+      var carrierCredit = document.getElementById("carrierCredit");
+      var carrierLegal = document.getElementById("carrierLegal");
+      var carrierCapital = document.getElementById("carrierCapital");
+      var carrierAddr = document.getElementById("carrierAddr");
+      var carrierContact = document.getElementById("carrierContact");
+      var carrierPhone = document.getElementById("carrierPhone");
+      var carrierScope = document.getElementById("carrierScope");
+      var carrierFiles = document.getElementById("carrierFiles");
+      var carrierFilesHelp = document.getElementById("carrierFilesHelp");
+      var carrierRemark = document.getElementById("carrierRemark");
+      var carrierStatus = document.getElementById("carrierStatus");
+      var carrierEntryTime = document.getElementById("carrierEntryTime");
+
+      // ====== 演示数据：承运商档案 ======
+      var carrierStore = [
+        {
+          id: "CYS2024001",
+          name: "华通物流有限公司",
+          creditCode: "91310112MA1ABCD123",
+          legalPerson: "张伟",
+          registeredCapital: "5000万元",
+          registeredAddress: "上海市浦东新区世纪大道 1000 号",
+          contactPerson: "张伟",
+          contactPhone: "138-0000-1001",
+          scope: "公路运输服务；仓储服务；货运代理",
+          attachments: ["资质-承运商.pdf", "营业执照.jpg"],
+          remark: "演示数据",
+          status: "enabled",
+          entryTime: "2026-03-10"
+        },
+        {
+          id: "CYS2024002",
+          name: "远达运输集团",
+          creditCode: "91310110MA5EFGHI456",
+          legalPerson: "李娜",
+          registeredCapital: "8000万元",
+          registeredAddress: "上海市徐汇区漕溪路 200 号",
+          contactPerson: "李娜",
+          contactPhone: "139-0000-2002",
+          scope: "冷链运输服务；区域配送；运输管理",
+          attachments: ["合作合同-框架协议.pdf"],
+          remark: "",
+          status: "enabled",
+          entryTime: "2026-03-11"
+        },
+        {
+          id: "CYS2023015",
+          name: "顺捷货运服务部",
+          creditCode: "91320104MA7JKLMA789",
+          legalPerson: "王强",
+          registeredCapital: "1200万元",
+          registeredAddress: "江苏省南京市建邺区紫金路 88 号",
+          contactPerson: "王强",
+          contactPhone: "137-0000-3015",
+          scope: "城市货运；临时仓储；快递配送",
+          attachments: [],
+          remark: "演示：已终止",
+          status: "disabled",
+          entryTime: "2026-01-20"
+        }
+      ];
+
+      function esc(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function statusLabel(status) {
+        return status === "enabled" ? "合作中" : "已终止";
+      }
+      function statusTagClass(status) {
+        return status === "enabled" ? "tag-status--enabled" : "tag-status--disabled";
+      }
+
+      function updateTotalVisible() {
+        var rows = tbody.querySelectorAll("tr");
+        var n = 0;
+        rows.forEach(function (row) {
+          if (row.style.display !== "none") n++;
+        });
+        totalEl.textContent = "共 " + n + " 条";
+      }
+
+      function renderTable() {
+        tbody.innerHTML = "";
+        carrierStore.forEach(function (c) {
+          var tr = document.createElement("tr");
+          tr.setAttribute("data-status", c.status);
+          var opToggleText = c.status === "enabled" ? "禁用" : "启用";
+          var tag = '<span class="tag-status ' + statusTagClass(c.status) + '">' + statusLabel(c.status) + "</span>";
+          tr.innerHTML =
+            "<td>" +
+            esc(c.id) +
+            "</td>" +
+            "<td>" +
+            esc(c.name) +
+            "</td>" +
+            "<td>" +
+            esc(c.creditCode) +
+            "</td>" +
+            "<td>" +
+            esc(c.legalPerson) +
+            "</td>" +
+            "<td>" +
+            esc(c.contactPerson) +
+            " / " +
+            esc(c.contactPhone) +
+            "</td>" +
+            "<td>" +
+            tag +
+            "</td>" +
+            "<td>" +
+            esc(c.entryTime) +
+            "</td>" +
+            '<td><div class="wh-ops">' +
+            '<a href="#" class="carrier-op" data-op="view" data-id="' +
+            esc(c.id) +
+            '" title="查看" aria-label="查看">查看</a>' +
+            '<a href="#" class="carrier-op" data-op="edit" data-id="' +
+            esc(c.id) +
+            '" title="编辑" aria-label="编辑">编辑</a>' +
+            '<a href="#" class="carrier-op" data-op="toggle" data-id="' +
+            esc(c.id) +
+            '" title="' +
+            opToggleText +
+            '" aria-label="' +
+            opToggleText +
+            '">' +
+            opToggleText +
+            "</a>" +
+            "</div></td>";
+          tbody.appendChild(tr);
+        });
+        applyFilter();
+      }
+
+      function applyFilter() {
+        var st = filter.value;
+        var q = (search.value || "").trim().toLowerCase();
+        tbody.querySelectorAll("tr").forEach(function (row) {
+          var status = row.getAttribute("data-status") || "";
+          var okStatus = !st || status === st;
+          var text = row.textContent.toLowerCase();
+          var okSearch = !q || text.indexOf(q) !== -1;
+          row.style.display = okStatus && okSearch ? "" : "none";
+        });
+        updateTotalVisible();
+      }
+
+      filter.addEventListener("change", applyFilter);
+      search.addEventListener("input", applyFilter);
+
+      // ====== 承运商 modal 交互 ======
+      var editingId = null;
+      var selectedFileNames = [];
+      var pendingToggleId = null;
+
+      function openModal(mode, carrier) {
+        editingId = mode === "edit" && carrier ? carrier.id : null;
+        selectedFileNames = [];
+        if (carrierFiles) carrierFiles.value = "";
+
+        modalTitle.textContent = mode === "add" ? "新增承运商" : "编辑承运商";
+
+        if (mode === "edit" && carrier) {
+          if (carrierId) {
+            carrierId.value = carrier.id || "";
+            carrierId.setAttribute("readonly", "readonly");
+          }
+          carrierName.value = carrier.name || "";
+          carrierCredit.value = carrier.creditCode || "";
+          carrierLegal.value = carrier.legalPerson || "";
+          carrierCapital.value = carrier.registeredCapital || "";
+          carrierAddr.value = carrier.registeredAddress || "";
+          carrierContact.value = carrier.contactPerson || "";
+          carrierPhone.value = carrier.contactPhone || "";
+          carrierScope.value = carrier.scope || "";
+          carrierRemark.value = carrier.remark || "";
+          if (carrierStatus) carrierStatus.value = carrier.status === "disabled" ? "disabled" : "enabled";
+          if (carrierEntryTime) carrierEntryTime.value = carrier.entryTime || "";
+          carrierFilesHelp.textContent = carrier.attachments && carrier.attachments.length ? "已存在：" + carrier.attachments.join("，") : "未选择文件";
+        } else {
+          if (carrierId) {
+            carrierId.value = "CYS" + fmtIdDate() + String(Math.floor(Math.random() * 900 + 100));
+            carrierId.removeAttribute("readonly");
+          }
+          carrierName.value = "";
+          carrierCredit.value = "";
+          carrierLegal.value = "";
+          carrierCapital.value = "";
+          carrierAddr.value = "";
+          carrierContact.value = "";
+          carrierPhone.value = "";
+          carrierScope.value = "";
+          carrierRemark.value = "";
+          if (carrierStatus) carrierStatus.value = "enabled";
+          if (carrierEntryTime) carrierEntryTime.value = new Date().toISOString().slice(0, 10);
+          carrierFilesHelp.textContent = "未选择文件";
+        }
+
+        modalMask.setAttribute("aria-hidden", "false");
+        modalMask.classList.add("show");
+      }
+
+      function closeModal() {
+        modalMask.setAttribute("aria-hidden", "true");
+        modalMask.classList.remove("show");
+      }
+      function openViewModal(carrier) {
+        if (!carrier || !viewMask) return;
+        document.getElementById("cvId").textContent = carrier.id || "";
+        document.getElementById("cvName").textContent = carrier.name || "";
+        document.getElementById("cvCredit").textContent = carrier.creditCode || "";
+        document.getElementById("cvLegal").textContent = carrier.legalPerson || "";
+        document.getElementById("cvContact").textContent = carrier.contactPerson || "";
+        document.getElementById("cvPhone").textContent = carrier.contactPhone || "";
+        document.getElementById("cvStatus").textContent = statusLabel(carrier.status);
+        document.getElementById("cvEntryTime").textContent = carrier.entryTime || "";
+        document.getElementById("cvCapital").textContent = carrier.registeredCapital || "";
+        document.getElementById("cvAddr").textContent = carrier.registeredAddress || "";
+        document.getElementById("cvScope").textContent = carrier.scope || "—";
+        document.getElementById("cvFiles").textContent = carrier.attachments && carrier.attachments.length ? carrier.attachments.join("，") : "—";
+        document.getElementById("cvRemark").textContent = carrier.remark || "—";
+        viewMask.setAttribute("aria-hidden", "false");
+        viewMask.classList.add("show");
+      }
+      function closeViewModal() {
+        if (!viewMask) return;
+        viewMask.setAttribute("aria-hidden", "true");
+        viewMask.classList.remove("show");
+      }
+      function openToggleConfirm(carrier) {
+        if (!carrier || !toggleConfirmMask) return;
+        pendingToggleId = carrier.id;
+        var targetAction = carrier.status === "enabled" ? "停用" : "启用";
+        if (toggleConfirmText) {
+          toggleConfirmText.textContent = "确认要" + targetAction + "承运商【" + (carrier.name || carrier.id || "") + "】吗？";
+        }
+        toggleConfirmMask.setAttribute("aria-hidden", "false");
+        toggleConfirmMask.classList.add("show");
+      }
+      function closeToggleConfirm() {
+        pendingToggleId = null;
+        if (!toggleConfirmMask) return;
+        toggleConfirmMask.setAttribute("aria-hidden", "true");
+        toggleConfirmMask.classList.remove("show");
+      }
+
+      function fmtIdDate() {
+        // YYYYMMDD，用于新增时生成演示编号
+        var d = new Date();
+        var y = d.getFullYear();
+        var m = String(d.getMonth() + 1).padStart(2, "0");
+        var day = String(d.getDate()).padStart(2, "0");
+        return "" + y + m + day;
+      }
+
+      if (carrierFiles) {
+        carrierFiles.addEventListener("change", function () {
+          var files = Array.prototype.slice.call(carrierFiles.files || []);
+          selectedFileNames = files.map(function (f) {
+            return f && f.name ? f.name : "";
+          }).filter(Boolean);
+          carrierFilesHelp.textContent = selectedFileNames.length ? "已选择：" + selectedFileNames.join("，") : "未选择文件";
+        });
+      }
+
+      if (btnClose) btnClose.addEventListener("click", closeModal);
+      if (btnCancel) btnCancel.addEventListener("click", closeModal);
+      if (modalMask) {
+        modalMask.addEventListener("click", function (e) {
+          if (e.target === modalMask) closeModal();
+        });
+      }
+      if (btnCloseView) btnCloseView.addEventListener("click", closeViewModal);
+      if (btnCancelView) btnCancelView.addEventListener("click", closeViewModal);
+      if (viewMask) {
+        viewMask.addEventListener("click", function (e) {
+          if (e.target === viewMask) closeViewModal();
+        });
+      }
+      if (btnCloseToggleConfirm) btnCloseToggleConfirm.addEventListener("click", closeToggleConfirm);
+      if (btnCancelToggleConfirm) btnCancelToggleConfirm.addEventListener("click", closeToggleConfirm);
+      if (toggleConfirmMask) {
+        toggleConfirmMask.addEventListener("click", function (e) {
+          if (e.target === toggleConfirmMask) closeToggleConfirm();
+        });
+      }
+      if (btnOkToggleConfirm) {
+        btnOkToggleConfirm.addEventListener("click", function () {
+          if (!pendingToggleId) return;
+          var carrier = carrierStore.find(function (x) { return x.id === pendingToggleId; });
+          if (carrier) {
+            carrier.status = carrier.status === "enabled" ? "disabled" : "enabled";
+            renderTable();
+          }
+          closeToggleConfirm();
+        });
+      }
+
+      if (btnSave) {
+        btnSave.addEventListener("click", function () {
+          var idVal = carrierId ? (carrierId.value || "").trim() : "";
+          var name = (carrierName.value || "").trim();
+          var credit = (carrierCredit.value || "").trim();
+          var legal = (carrierLegal.value || "").trim();
+          var capital = (carrierCapital.value || "").trim();
+          var addr = (carrierAddr.value || "").trim();
+          var contact = (carrierContact.value || "").trim();
+          var phone = (carrierPhone.value || "").trim();
+          var scope = (carrierScope.value || "").trim();
+          var remark = (carrierRemark.value || "").trim();
+
+          var attachments = selectedFileNames.slice();
+          if (!idVal || !name || !credit) {
+            alert("请至少填写：承运商编号、承运商名称、统一社会信用代码");
+            return;
+          }
+
+          if (editingId) {
+            var carrier = carrierStore.find(function (x) { return x.id === editingId; });
+            if (carrier) {
+              carrier.name = name;
+              carrier.creditCode = credit;
+              carrier.legalPerson = legal;
+              carrier.registeredCapital = capital;
+              carrier.registeredAddress = addr;
+              carrier.contactPerson = contact;
+              carrier.contactPhone = phone;
+              carrier.scope = scope;
+              carrier.remark = remark;
+              if (carrierStatus) carrier.status = carrierStatus.value === "disabled" ? "disabled" : "enabled";
+              if (carrierEntryTime && carrierEntryTime.value) carrier.entryTime = carrierEntryTime.value;
+              // 若本次选择了新文件，则覆盖；否则保留原文件
+              if (attachments.length) carrier.attachments = attachments;
+            }
+          } else {
+            // 校验编号唯一
+            var exists = carrierStore.some(function (x) { return x.id === idVal; });
+            if (exists) {
+              alert("承运商编号已存在，请更换后重试。");
+              return;
+            }
+            var et = (carrierEntryTime && carrierEntryTime.value) ? carrierEntryTime.value : new Date().toISOString().slice(0, 10);
+            var stNew = carrierStatus && carrierStatus.value === "disabled" ? "disabled" : "enabled";
+            carrierStore.unshift({
+              id: idVal,
+              name: name,
+              creditCode: credit,
+              legalPerson: legal,
+              registeredCapital: capital,
+              registeredAddress: addr,
+              contactPerson: contact,
+              contactPhone: phone,
+              scope: scope,
+              attachments: attachments,
+              remark: remark,
+              status: stNew,
+              entryTime: et
+            });
+          }
+
+          closeModal();
+          renderTable();
+        });
+      }
+
+      // 表格操作：编辑/禁用启用
+      tbody.addEventListener("click", function (e) {
+        var a = e.target && e.target.closest ? e.target.closest("a.carrier-op") : null;
+        if (!a) return;
+        e.preventDefault();
+        var op = a.getAttribute("data-op");
+        var id = a.getAttribute("data-id");
+        var carrier = carrierStore.find(function (x) { return x.id === id; });
+        if (!carrier) return;
+
+        if (op === "view") {
+          openViewModal(carrier);
+        } else if (op === "edit") {
+          openModal("edit", carrier);
+        } else if (op === "toggle") {
+          openToggleConfirm(carrier);
+        }
+      });
+
+      document.querySelector(".carrier-btn-add").addEventListener("click", function () {
+        openModal("add");
+      });
+
+      // ====== Modal 基础样式（为保证与其它页面一致，内联定义） ======
+      (function ensureModalCss() {
+        // 如果其它页面已经提供了 modal 样式，这里不会重复插入（避免覆盖）。
+        // 但当前 carrier-management.html 没有引入对应 modal 样式，因此补齐。
+        if (document.getElementById("carrierModalStyle")) return;
+        var st = document.createElement("style");
+        st.id = "carrierModalStyle";
+        st.textContent =
+          ".modal-mask{position:fixed;inset:0;background:rgba(6,20,40,0.5);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;}"+
+          ".modal-mask.show{display:flex;}"+
+          ".modal{width:min(900px,96vw);background:#fff;border-radius:12px;border:1px solid #dbe6f3;box-shadow:0 18px 46px rgba(9,24,45,0.28);overflow:hidden;}"+
+          ".modal-header{height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid #e8eef7;}"+
+          ".modal-title{margin:0;font-size:17px;color:#1f3551;}"+
+          ".modal-close{border:none;background:transparent;cursor:pointer;font-size:22px;line-height:1;color:#6a819f;}"+
+          ".modal-body{padding:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px 14px;}"+
+          ".field.full{grid-column:1/-1;}"+
+          ".field label{display:block;margin:0 0 6px;font-size:13px;color:#516a87;}"+
+          ".field input,.field select,.field textarea{width:100%;height:34px;border:1px solid #d7e1ee;border-radius:6px;padding:0 10px;font-size:14px;color:#223a55;background:#fff;}"+
+          ".detail-readonly{min-height:34px;display:flex;align-items:center;border:1px solid #d7e1ee;border-radius:6px;padding:6px 10px;background:#fff;color:#223a55;line-height:1.5;}"+
+          ".detail-readonly--multiline{align-items:flex-start;white-space:pre-wrap;word-break:break-word;}"+
+          ".confirm-text{font-size:13px;color:#2a3d56;line-height:1.7;padding:2px 0;}"+
+          ".field textarea{height:88px;padding:8px 10px;resize:vertical;}"+
+          ".help{font-size:12px;color:#7d8ea2;margin-top:4px;}"+
+          ".modal-footer{height:54px;border-top:1px solid #e8eef7;display:flex;align-items:center;justify-content:space-between;padding:0 14px;}"+
+          ".footer-tip{font-size:12px;color:#7b8fa7;}"+
+          ".footer-actions{display:flex;gap:8px;}"+
+          ".btn{border:1px solid #d7e1ee;background:#fff;color:#2b4664;border-radius:6px;padding:7px 14px;font-size:14px;cursor:pointer;}"+
+          ".btn-primary{background:#1890ff;color:#fff;border-color:#1890ff;}";
+        document.head.appendChild(st);
+      })();
+
+      renderTable();
+    })();
+  </script>
+</body>
+</html>

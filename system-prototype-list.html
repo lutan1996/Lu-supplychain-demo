@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>系统管理 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .sysx .main-scroll { overflow: hidden; }
+    .sysx .carrier-main-inner { padding: 10px 12px 12px; overflow: hidden; }
+    .sysx .carrier-page-title { margin-bottom: 8px; font-size: 18px; }
+    .sx-filter-bar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: 10px 12px;
+      margin-bottom: 8px;
+    }
+    .sx-search {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(160px, 1fr));
+      gap: 8px;
+    }
+    .sx-filter-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .sx-item { display: grid; grid-template-columns: 58px 1fr; align-items: center; gap: 6px; }
+    .sx-item label { font-size: 12px; color: #546b86; }
+    .sx-item input, .sx-item select { height: 26px; border: 1px solid #dbe6f3; border-radius: 2px; padding: 0 6px; font-size: 12px; }
+    .sx-tools { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .sx-btn { border: 1px solid #dbe6f3; background: #fff; border-radius: 2px; color: #4d6480; font-size: 12px; padding: 4px 8px; cursor: pointer; }
+    .sx-btn.primary { background: #1890ff; border-color: #1890ff; color: #fff; }
+    .sx-btn-add { background: #e8f4ff; border-color: #cfe5fb; color: #3e8ad9; }
+    .sx-btn-edit { background: #eef9ea; border-color: #d8f0d2; color: #69a95a; }
+    .sx-btn-del { background: #fff0f0; border-color: #f8d7d7; color: #d97f7f; }
+    .sx-btn-exp { background: #fff6e8; border-color: #f5e2c6; color: #b08a57; }
+    .sx-layout { display: grid; grid-template-columns: 170px 1fr; gap: 8px; height: calc(100vh - 176px); }
+    .sx-tree { border: 1px solid #e7ecf3; border-radius: 3px; padding: 6px; overflow: hidden; }
+    .sx-tree ul { list-style: none; margin: 0; padding: 0; }
+    .sx-tree li { font-size: 11px; color: #4c6077; line-height: 1.7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sx-tree li::before { content: "• "; color: #9ab0c9; }
+    .sx-table-box { border: 1px solid #e7ecf3; border-radius: 3px; overflow: hidden; display: flex; flex-direction: column; }
+    .sx-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 11px; }
+    .sx-table th, .sx-table td { border-bottom: 1px solid #edf1f6; padding: 5px 4px; text-align: center; color: #3f546f; }
+    .sx-table thead { background: #f6f8fb; }
+    .sx-table td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sx-status { display: inline-block; padding: 1px 5px; border-radius: 2px; font-size: 10px; }
+    .sx-on { background: #e6f4ff; color: #1677ff; }
+    .sx-ok { background: #f6ffed; color: #389e0d; }
+    .sx-off { background: #fff1f0; color: #cf1322; }
+    .sx-ops a { color: #79a9da; text-decoration: none; margin: 0 2px; }
+    .sx-foot { margin-top: auto; display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 6px; font-size: 11px; color: #617894; }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics sysx">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar" title="用户">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit-analytics.html"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item nav-item--module-active" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner" data-list-form-demo="1">
+          <h1 class="carrier-page-title" id="sxTitle">系统管理</h1>
+          <div class="sx-filter-bar">
+            <div class="sx-search" id="sxSearch"></div>
+            <div class="sx-filter-actions">
+              <button class="sx-btn primary" type="button" id="sxSearchBtn">搜索</button>
+              <button class="sx-btn" type="button" id="sxResetBtn">重置</button>
+            </div>
+          </div>
+          <div class="sx-tools">
+            <button class="sx-btn sx-btn-add" type="button">新增</button>
+            <button class="sx-btn sx-btn-edit" type="button">修改</button>
+            <button class="sx-btn sx-btn-del" type="button">删除</button>
+            <button class="sx-btn sx-btn-exp" type="button">导出</button>
+          </div>
+          <div class="sx-layout">
+            <div class="sx-tree" id="sxTree"><ul id="sxTreeList"></ul></div>
+            <div class="sx-table-box">
+              <table class="sx-table">
+                <thead><tr id="sxHead"></tr></thead>
+                <tbody id="sxBody"></tbody>
+              </table>
+              <div class="sx-foot">共 <span id="sxTotal">0</span> 条 <span class="sx-status sx-on">1</span> 10条/页</div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/demo-list-form-modal.js"></script>
+   <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var scene = "user";
+      var sceneByLabel = {
+        "用户管理": "user",
+        "角色管理": "role",
+        "代码生成": "codegen",
+        "菜单管理": "menu",
+        "部门管理": "dept",
+        "岗位管理": "post",
+        "字典管理": "dict",
+        "参数设置": "params",
+        "通知公告": "notice",
+        "文件管理": "file",
+        "客户端管理": "client"
+      };
+      try {
+        var sp0 = new URLSearchParams(window.location.search || "");
+        var byScene0 = (sp0.get("scene") || "").trim();
+        var byLabel0 = (sp0.get("pageSub") || "").trim();
+        var byStore0 = "";
+        try { byStore0 = (sessionStorage.getItem("demoSystemScene") || "").trim(); } catch (e0) {}
+        if (byScene0) scene = byScene0;
+        else if (byStore0) scene = byStore0;
+        else if (byLabel0 && sceneByLabel[byLabel0]) scene = sceneByLabel[byLabel0];
+        else {
+          try {
+            var nsp = new URLSearchParams(String(window.name || ""));
+            var byNameScene = (nsp.get("scene") || "").trim();
+            var byNameLabel = (nsp.get("pageSub") || "").trim();
+            if (byNameScene) scene = byNameScene;
+            else if (byNameLabel && sceneByLabel[byNameLabel]) scene = sceneByLabel[byNameLabel];
+          } catch (e1) {}
+        }
+      } catch (e) {}
+      var cfgMap = {
+        user: {
+          title: "用户管理",
+          fields: ["用户名称", "手机号码", "状态", "创建时间"],
+          cols: ["用户名称", "用户昵称", "部门", "手机", "状态", "创建时间", "操作"],
+          rows: [
+            ["admin", "管理员", "信息中心", "18800000001", "正常", "2024-11-12 09:00:00"],
+            ["zhangsan", "张三", "计划物资部", "18800000002", "正常", "2024-11-13 10:12:00"],
+            ["lisi", "李四", "人力资源部", "18800000003", "停用", "2024-11-14 11:18:00"],
+            ["wangwu", "王五", "采购管理部", "18800000004", "正常", "2024-11-15 12:20:00"],
+            ["zhaoliu", "赵六", "系统管理部", "18800000005", "正常", "2024-11-16 14:22:00"]
+          ]
+        },
+        role: {
+          title: "角色管理",
+          fields: ["角色名称", "权限字符", "状态"],
+          cols: ["角色名称", "权限字符", "显示顺序", "状态", "创建时间", "操作"],
+          rows: [
+            ["超级管理员", "admin", "1", "正常", "2024-11-12 09:00:00"],
+            ["普通角色", "common", "2", "正常", "2024-11-13 10:00:00"],
+            ["采购经理", "purchase:manager", "3", "停用", "2024-11-15 15:00:00"],
+            ["仓储管理员", "warehouse:admin", "4", "正常", "2024-11-16 10:00:00"],
+            ["物流专员", "logistics:staff", "5", "正常", "2024-11-17 11:00:00"]
+          ]
+        },
+        codegen: {
+          title: "代码生成",
+          fields: ["表名称", "表描述"],
+          cols: ["编号", "表名称", "表描述", "实体", "创建时间", "操作"],
+          rows: [
+            ["1", "sys_user", "用户信息表", "SysUser", "2024-11-12 09:00:00"],
+            ["2", "sys_role", "角色信息表", "SysRole", "2024-11-12 09:10:00"],
+            ["3", "sys_menu", "菜单信息表", "SysMenu", "2024-11-12 09:20:00"],
+            ["4", "sys_dept", "部门信息表", "SysDept", "2024-11-12 09:30:00"],
+            ["5", "sys_post", "岗位信息表", "SysPost", "2024-11-12 09:40:00"]
+          ]
+        },
+        menu: {
+          title: "菜单管理",
+          fields: ["菜单名称", "状态"],
+          cols: ["菜单名称", "图标", "排序", "权限标识", "状态", "创建时间", "操作"],
+          rows: [
+            ["系统管理", "fa-gear", "1", "system", "正常", "2024-11-12 09:00:00"],
+            ["用户管理", "fa-user", "2", "system:user:list", "正常", "2024-11-12 09:01:00"],
+            ["角色管理", "fa-users", "3", "system:role:list", "正常", "2024-11-12 09:02:00"],
+            ["菜单管理", "fa-bars", "4", "system:menu:list", "正常", "2024-11-12 09:03:00"],
+            ["部门管理", "fa-sitemap", "5", "system:dept:list", "停用", "2024-11-12 09:04:00"]
+          ]
+        },
+        dept: {
+          title: "部门管理",
+          fields: ["部门名称", "状态"],
+          cols: ["部门名称", "负责人", "排序", "状态", "创建时间", "操作"],
+          rows: [
+            ["信息中心", "王主管", "1", "正常", "2024-11-12 09:00:00"],
+            ["计划物资部", "李主任", "2", "正常", "2024-11-12 09:10:00"],
+            ["人力资源部", "赵经理", "3", "停用", "2024-11-12 09:20:00"],
+            ["采购管理部", "张经理", "4", "正常", "2024-11-12 09:30:00"],
+            ["物流管理部", "孙经理", "5", "正常", "2024-11-12 09:40:00"]
+          ]
+        },
+        post: {
+          title: "岗位管理",
+          fields: ["岗位编码", "岗位名称", "状态"],
+          cols: ["岗位编码", "岗位名称", "部门", "排序", "状态", "创建时间", "操作"],
+          rows: [
+            ["ceo", "董事长", "总部", "1", "正常", "2024-11-12 09:00:00"],
+            ["pm", "采购经理", "计划物资部", "2", "正常", "2024-11-12 09:05:00"],
+            ["op", "运维工程师", "信息中心", "3", "停用", "2024-11-12 09:10:00"],
+            ["wh", "仓储主管", "仓储管理部", "4", "正常", "2024-11-12 09:15:00"],
+            ["lg", "物流专员", "物流管理部", "5", "正常", "2024-11-12 09:20:00"]
+          ]
+        },
+        dict: {
+          title: "字典管理",
+          fields: ["字典名称", "字典类型"],
+          cols: ["字典名称", "字典类型", "备注", "创建时间", "操作"],
+          rows: [
+            ["用户性别", "sys_user_sex", "系统预置", "2024-11-12 09:00:00"],
+            ["采购状态", "purchase_status", "采购管理状态字典", "2024-11-12 09:10:00"],
+            ["通知类型", "notice_type", "通知公告类型", "2024-11-12 09:20:00"],
+            ["参数类别", "sys_config_type", "系统参数类别", "2024-11-12 09:30:00"],
+            ["流程状态", "flow_status", "流程状态字典", "2024-11-12 09:40:00"]
+          ]
+        },
+        params: {
+          title: "参数设置",
+          fields: ["参数名称", "参数键名", "系统内置"],
+          cols: ["参数名称", "参数键名", "参数值", "系统内置", "创建时间", "操作"],
+          rows: [
+            ["主框架页-默认皮肤样式名称", "sys.index.skinName", "skin-blue", "是", "2024-11-12 09:00:00"],
+            ["账号自助-验证码开关", "sys.account.captchaEnabled", "true", "是", "2024-11-12 09:10:00"],
+            ["用户管理-初始密码", "sys.user.initPassword", "123456", "是", "2024-11-12 09:20:00"],
+            ["登录页-记住账号", "sys.login.rememberMe", "true", "否", "2024-11-12 09:30:00"],
+            ["附件上传-大小限制", "sys.file.maxSize", "50MB", "否", "2024-11-12 09:40:00"]
+          ]
+        },
+        notice: {
+          title: "通知公告",
+          fields: ["公告标题", "操作人员", "类型"],
+          cols: ["公告标题", "公告类型", "状态", "创建者", "创建时间", "操作"],
+          rows: [
+            ["关于采购流程优化通知", "通知", "正常", "admin", "2024-11-12 09:00:00"],
+            ["系统维护公告", "公告", "正常", "admin", "2024-11-13 10:00:00"],
+            ["月度采购计划填报提醒", "通知", "停用", "admin", "2024-11-14 11:30:00"],
+            ["采购规范更新说明", "公告", "正常", "admin", "2024-11-15 12:30:00"],
+            ["系统升级通知", "通知", "正常", "admin", "2024-11-16 13:30:00"]
+          ]
+        },
+        file: {
+          title: "文件管理",
+          fields: ["文件名", "文件类型"],
+          cols: ["文件名", "后缀", "大小", "上传时间", "操作"],
+          rows: [
+            ["采购流程说明书", "pdf", "1.8MB", "2024-11-12 09:00:00"],
+            ["系统菜单配置", "xlsx", "245KB", "2024-11-13 10:00:00"],
+            ["角色权限导入模板", "xls", "121KB", "2024-11-14 11:00:00"],
+            ["采购审批流程图", "png", "320KB", "2024-11-15 12:00:00"],
+            ["系统参数手册", "docx", "860KB", "2024-11-16 13:00:00"]
+          ]
+        },
+        client: {
+          title: "客户端管理",
+          fields: ["客户端ID", "客户端key", "状态"],
+          cols: ["客户端ID", "客户端key", "设备类型", "token有效期", "状态", "操作"],
+          rows: [
+            ["web_app", "a1b2c3d4", "PC", "24h", "正常"],
+            ["mobile_app", "m1n2o3p4", "APP", "12h", "正常"],
+            ["admin_cli", "q1w2e3r4", "服务端", "8h", "停用"],
+            ["iot_gate", "z9x8c7v6", "IoT", "48h", "正常"],
+            ["mini_app", "k7l8m9n0", "小程序", "6h", "正常"]
+          ]
+        }
+      };
+      var cfg = cfgMap[scene] || cfgMap.user;
+      document.getElementById("sxTitle").textContent = cfg.title;
+      var s = document.getElementById("sxSearch");
+      cfg.fields.forEach(function (f) {
+        var d = document.createElement("div");
+        d.className = "sx-item";
+        d.innerHTML = "<label>" + (f || " ") + "</label>" + (f ? "<input placeholder='请输入" + f + "' />" : "<input style='visibility:hidden' />");
+        s.appendChild(d);
+      });
+      var tree = document.getElementById("sxTreeList");
+      var treeText = ["龙源电力", "内蒙古公司", "河北公司", "天津公司", "人力资源部", "计划物资部", "信息中心", "系统管理员"];
+      for (var i = 0; i < treeText.length; i += 1) {
+        var li = document.createElement("li"); li.textContent = treeText[i]; tree.appendChild(li);
+      }
+      if (!(scene === "user" || scene === "dept" || scene === "post" || scene === "menu")) {
+        document.getElementById("sxTree").style.visibility = "hidden";
+      }
+      var head = document.getElementById("sxHead");
+      cfg.cols.forEach(function (x) { var th = document.createElement("th"); th.textContent = x; head.appendChild(th); });
+      var body = document.getElementById("sxBody");
+      (cfg.rows || []).forEach(function (row) {
+        var tr = document.createElement("tr");
+        cfg.cols.forEach(function (col, idx) {
+          var td = document.createElement("td");
+          if (col === "状态") {
+            var val = row[idx] || "正常";
+            var cls = val === "停用" ? "sx-off" : "sx-on";
+            td.innerHTML = "<span class='sx-status " + cls + "'>" + val + "</span>";
+          } else if (col === "系统内置") {
+            var flag = row[idx] || "否";
+            var c2 = flag === "是" ? "sx-ok" : "sx-off";
+            td.innerHTML = "<span class='sx-status " + c2 + "'>" + flag + "</span>";
+          } else if (col === "操作") {
+            td.className = "sx-ops";
+            td.innerHTML =
+              "<button type='button' class='sx-btn sx-btn-edit'>修改</button> " +
+              "<button type='button' class='sx-btn sx-btn-del'>删除</button> " +
+              "<button type='button' class='sx-btn'>查看</button>";
+          } else {
+            td.textContent = row[idx] != null ? row[idx] : "";
+          }
+          tr.appendChild(td);
+        });
+        body.appendChild(tr);
+      });
+      document.getElementById("sxTotal").textContent = String((cfg.rows || []).length);
+      var sxResetBtn = document.getElementById("sxResetBtn");
+      if (sxResetBtn) {
+        sxResetBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelectorAll("#sxSearch input, #sxSearch select").forEach(function (el) {
+            el.value = "";
+          });
+        });
+      }
+      window.__sxCfg = cfg;
+
+      var M = window.DemoListFormModal;
+      if (M) {
+        var root = document.querySelector("[data-list-form-demo]");
+        if (root) {
+          root.addEventListener("click", function (e) {
+            var tr = e.target.closest("#sxBody tr");
+            if (!tr) return;
+            var cols = window.__sxCfg.cols;
+            var map = M.collectRowMapFromTr(tr, cols);
+            var mod = document.getElementById("sxTitle").textContent.trim();
+            if (e.target.closest(".sx-btn-del")) {
+              e.preventDefault();
+              M.openDeleteConfirm(cols, map, function () {
+                var idx = Array.prototype.indexOf.call(tr.parentNode.children, tr);
+                window.__sxCfg.rows.splice(idx, 1);
+                tr.remove();
+                document.getElementById("sxTotal").textContent = String(window.__sxCfg.rows.length);
+              });
+              return;
+            }
+            if (e.target.closest(".sx-btn-edit")) {
+              e.preventDefault();
+              M.openEditForm(mod, cols, map, function (newMap) {
+                var idx = Array.prototype.indexOf.call(tr.parentNode.children, tr);
+                for (var j = 0; j < cols.length; j++) {
+                  var c = cols[j];
+                  if (!c || c === "操作") continue;
+                  if (newMap[c] != null) window.__sxCfg.rows[idx][j] = newMap[c];
+                }
+                cfg.cols.forEach(function (col, j) {
+                  if (col === "操作") return;
+                  var td = tr.children[j];
+                  if (!td) return;
+                  var v = window.__sxCfg.rows[idx][j];
+                  if (col === "状态") {
+                    var cls = v === "停用" ? "sx-off" : "sx-on";
+                    td.innerHTML = "<span class='sx-status " + cls + "'>" + v + "</span>";
+                  } else if (col === "系统内置") {
+                    var c2 = v === "是" ? "sx-ok" : "sx-off";
+                    td.innerHTML = "<span class='sx-status " + c2 + "'>" + v + "</span>";
+                  } else td.textContent = v;
+                });
+              });
+              return;
+            }
+            if (e.target.closest(".sx-btn") && (e.target.textContent || "").trim() === "查看") {
+              e.preventDefault();
+              M.openDetailModal(mod, cols, map);
+            }
+          });
+          var tools = document.querySelector(".sx-tools");
+          if (tools) {
+            tools.addEventListener("click", function (e) {
+              var b = e.target.closest("button");
+              if (!b || !tools.contains(b)) return;
+              var t = (b.textContent || "").trim();
+              if (t === "新增") {
+                e.preventDefault();
+                M.openAddForm(window.__sxCfg.title, window.__sxCfg.cols, function (map) {
+                  var newRow = [];
+                  window.__sxCfg.cols.forEach(function (col) {
+                    if (!col || col === "操作") return;
+                    newRow.push(map[col] != null ? map[col] : "");
+                  });
+                  window.__sxCfg.rows.push(newRow);
+                  var body = document.getElementById("sxBody");
+                  var tr = document.createElement("tr");
+                  window.__sxCfg.cols.forEach(function (col) {
+                    var td = document.createElement("td");
+                    if (col === "状态") {
+                      var val = map[col] || "正常";
+                      var cl = val === "停用" ? "sx-off" : "sx-on";
+                      td.innerHTML = "<span class='sx-status " + cl + "'>" + val + "</span>";
+                    } else if (col === "系统内置") {
+                      var fg = map[col] || "否";
+                      var c3 = fg === "是" ? "sx-ok" : "sx-off";
+                      td.innerHTML = "<span class='sx-status " + c3 + "'>" + fg + "</span>";
+                    } else if (col === "操作") {
+                      td.className = "sx-ops";
+                      td.innerHTML =
+                        "<button type='button' class='sx-btn sx-btn-edit'>修改</button> " +
+                        "<button type='button' class='sx-btn sx-btn-del'>删除</button> " +
+                        "<button type='button' class='sx-btn'>查看</button>";
+                    } else td.textContent = map[col] != null ? map[col] : "";
+                    tr.appendChild(td);
+                  });
+                  body.appendChild(tr);
+                  document.getElementById("sxTotal").textContent = String(window.__sxCfg.rows.length);
+                });
+              }
+            });
+          }
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

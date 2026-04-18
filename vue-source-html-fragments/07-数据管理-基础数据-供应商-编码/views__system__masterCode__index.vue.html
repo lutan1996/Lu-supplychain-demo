@@ -1,0 +1,281 @@
+<!-- 来源: src/views/system/masterCode/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <transition>
+      <div class="mb-[10px]">
+        <el-card shadow="hover">
+          <el-form>
+            <el-form-item label="数据来源" prop="dataSource">
+              <el-input placeholder="请输入数据来源" clearable />
+            </el-form-item>
+            <el-form-item label="厂家物料码" prop="manufacturerItemCode" label-width="auto">
+              <el-input placeholder="请输入厂家物料码" clearable />
+            </el-form-item>
+            <el-form-item label="物资分类码(A码)" prop="materialClassificationCode" label-width="auto">
+              <el-input placeholder="请输入物资分类码(A码)" clearable />
+            </el-form-item>
+            <el-form-item label="物料名称" prop="itemName">
+              <el-input placeholder="请输入物料名称" clearable />
+            </el-form-item>
+            <el-form-item label="物料码" prop="itemCode"  label-width="auto">
+              <el-input placeholder="请输入物料码" clearable />
+            </el-form-item>
+           
+            <el-form-item>
+              <el-button type="primary" icon="Search">搜索</el-button>
+              <el-button icon="Refresh">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </div>
+    </transition>
+
+    <el-card shadow="never">
+      <template>
+        <el-row class="mb8">
+          <el-col>
+            <el-button type="primary" plain icon="Plus">新增</el-button>
+          </el-col>
+          <el-col>
+            <el-button type="success" plain icon="Edit">修改</el-button>
+          </el-col>
+          <el-col>
+            <el-button type="danger" plain icon="Delete">删除</el-button>
+          </el-col>
+          <el-col>
+            <el-button type="warning" plain icon="Download">导出</el-button>
+          </el-col>
+          <right-toolbar></right-toolbar>
+        </el-row>
+      </template>
+
+      <el-table>
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="数据来源" align="center" prop="dataSource" />
+        <el-table-column label="厂家物料码" min-width="100" align="center" prop="manufacturerItemCode" />
+        <el-table-column label="物资分类码(A码)" min-width="150"  align="center" prop="materialClassificationCode" />
+        <el-table-column label="物料名称" align="center" prop="itemName" />
+        <el-table-column label="物料码" align="center" prop="itemCode" />
+        <el-table-column label="特征值1" align="center" prop="feature1" />
+        <el-table-column label="特征值2" align="center" prop="feature2" />
+        <el-table-column label="特征值3" align="center" prop="feature3" />
+        <el-table-column label="特征值4" align="center" prop="feature4" />
+        <el-table-column label="特征值5" align="center" prop="feature5" />
+        <el-table-column label="特征值6" align="center" prop="feature6" />
+        <el-table-column label="特征值7" align="center" prop="feature7" />
+        <el-table-column label="特征值8" align="center" prop="feature8" />
+        <el-table-column label="特征值9" align="center" prop="feature9" />
+        <el-table-column label="特征值10" align="center" prop="feature10" />
+        <el-table-column label="特征值11" align="center" prop="feature11" />
+        <el-table-column label="特征值12" align="center" prop="feature12" />
+        <el-table-column label="特征值13" align="center" prop="feature13" />
+        <el-table-column label="特征值14" align="center" prop="feature14" />
+        <el-table-column label="特征值15" align="center" prop="feature15" />
+        <el-table-column label="特征值16" align="center" prop="feature16" />
+        <el-table-column label="特征值17" align="center" prop="feature17" />
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template="scope">
+            <el-tooltip content="修改" placement="top">
+              <el-button link type="primary" icon="Edit"></el-button>
+            </el-tooltip>
+            <el-tooltip content="删除" placement="top">
+              <el-button link type="primary" icon="Delete"></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination />
+    </el-card>
+    <!-- 添加或修改主数据列对话框 -->
+    <el-dialog width="1100px" append-to-body>
+      <el-form label-width="auto">
+        <el-row>
+          <el-col>
+            <el-form-item label="数据来源" prop="dataSource">
+              <el-input placeholder="请输入数据来源" />
+            </el-form-item>
+          </el-col>
+          
+          <el-col>
+            <el-form-item label="物料名称" prop="itemName">
+              <el-input placeholder="请输入物料名称" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="厂家物料码" >
+              <el-input placeholder="请输入厂家物料码" />
+            </el-form-item>
+          </el-col>
+          <!-- <el-col>
+            <el-form-item label="型号" prop="zbscMasterSuppliersId">
+              <el-select placeholder="请选择型号" clearable filterable style="width: 100%">
+                <el-option />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-button type="primary" plain icon="Plus">新增型号</el-button> -->
+
+        </el-row>
+        
+        
+        <!-- 
+        <el-form-item label="物资分类码(A码)" prop="materialClassificationCode">
+          <el-input placeholder="请输入物资分类码(A码)" />
+        </el-form-item>
+        
+        <el-form-item label="物料码" prop="itemCode">
+          <el-input placeholder="请输入物料码" />
+        </el-form-item> -->
+        <el-row>
+          <el-col>
+            <el-form-item label="特征值1" >
+              <!-- <el-input placeholder="请输入特征值1" /> -->
+              <el-select placeholder="请选择特征值1" clearable filterable style="width: 100%">
+                <el-option />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-button type="primary" plain icon="Plus">新增品牌</el-button>
+
+          </el-col>
+
+          <el-col>
+            <el-form-item label="特征值2" >
+              <!-- <el-input placeholder="请输入特征值2" /> -->
+              
+              <el-select placeholder="请选择特征值2" clearable filterable style="width: 100%">
+                <el-option />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-button type="primary" plain icon="Plus">新增型号</el-button>
+
+          </el-col>
+          <el-col>
+            <el-form-item label="特征值3">
+              <el-input placeholder="请输入特征值3" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <el-form-item label="特征值4">
+              <el-input placeholder="请输入特征值4" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="特征值5">
+              <el-input placeholder="请输入特征值5" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="特征值6">
+              <el-input placeholder="请输入特征值6" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <el-form-item label="特征值7">
+              <el-input placeholder="请输入特征值7" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="特征值8">
+              <el-input placeholder="请输入特征值8" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="特征值9">
+              <el-input placeholder="请输入特征值9" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <el-form-item label="特征值10">
+              <el-input placeholder="请输入特征值10" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="特征值11">
+              <el-input placeholder="请输入特征值11" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="特征值12">
+              <el-input placeholder="请输入特征值12" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col>
+            <el-form-item label="特征值13">
+              <el-input placeholder="请输入特征值13" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="特征值14">
+              <el-input placeholder="请输入特征值14" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="特征值15">
+              <el-input placeholder="请输入特征值15" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      
+        <el-row>
+          <el-col>
+            <el-form-item label="特征值16" >
+              <el-input placeholder="请输入特征值16" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="特征值17">
+              <el-input placeholder="请输入特征值17" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+    
+    <!-- 添加或修改供应商数据对话框 -->
+    <el-dialog width="500px" append-to-body>
+      <el-form label-width="auto">
+        <el-form-item label="供应商数据" prop="suppliers">
+          <el-input placeholder="请输入供应商数据" />
+        </el-form-item>
+        <el-form-item label="类别" prop="state">
+          <!-- <el-input placeholder="请输入状态(0 品牌,1 型号)" /> -->
+          <el-select disabled clearable>
+                <el-option placeholder="请选择类别"> </el-option>
+              </el-select>
+        </el-form-item>
+        <el-form-item label="品牌" prop="state">
+          <!-- <el-input placeholder="请输入状态(0 品牌,1 型号)" /> -->
+          <el-select clearable>
+                <el-option placeholder="请选择品牌"> </el-option>
+              </el-select>
+        </el-form-item>
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>

@@ -1,0 +1,142 @@
+<!-- 来源: src/views/system/tenant/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <transition>
+      <div class="mb-[10px]">
+        <el-card shadow="hover">
+          <el-form>
+            <el-form-item label="租户编号" prop="tenantId">
+              <el-input placeholder="请输入租户编号" clearable />
+            </el-form-item>
+            <el-form-item label="联系人" prop="contactUserName">
+              <el-input placeholder="请输入联系人" clearable />
+            </el-form-item>
+            <el-form-item label="联系电话" prop="contactPhone">
+              <el-input placeholder="请输入联系电话" clearable />
+            </el-form-item>
+            <el-form-item label="企业名称" prop="companyName">
+              <el-input placeholder="请输入企业名称" clearable />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="Search">搜索</el-button>
+              <el-button icon="Refresh">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </div>
+    </transition>
+
+    <el-card shadow="hover">
+      <template>
+        <el-row class="mb8">
+          <el-col>
+            <el-button type="primary" plain icon="Plus">新增</el-button>
+          </el-col>
+          <el-col>
+            <el-button type="success" plain icon="Edit"
+              >修改</el-button
+            >
+          </el-col>
+          <el-col>
+            <el-button type="danger" plain icon="Delete">
+              删除
+            </el-button>
+          </el-col>
+          <el-col>
+            <el-button type="warning" plain icon="Download">导出</el-button>
+          </el-col>
+          <right-toolbar></right-toolbar>
+        </el-row>
+      </template>
+
+      <el-table>
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="id" align="center" prop="id" />
+        <el-table-column label="租户编号" align="center" prop="tenantId" />
+        <el-table-column label="联系人" align="center" prop="contactUserName" />
+        <el-table-column label="联系电话" align="center" prop="contactPhone" />
+        <el-table-column label="企业名称" align="center" prop="companyName" />
+        <el-table-column label="社会信用代码" align="center" prop="licenseNumber" />
+        <el-table-column label="过期时间" align="center" prop="expireTime" width="180">
+          <template="scope">
+            <span>（动态文本）</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="租户状态" align="center" prop="status">
+          <template="scope">
+            <el-switch active-value="0" inactive-value="1"></el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column width="150" label="操作" align="center" fixed="right" class-name="small-padding fixed-width">
+          <template="scope">
+            <el-tooltip content="修改" placement="top">
+              <el-button link type="primary" icon="Edit"></el-button>
+            </el-tooltip>
+            <el-tooltip content="同步套餐" placement="top">
+              <el-button link type="primary" icon="Refresh">
+              </el-button>
+            </el-tooltip>
+            <el-tooltip content="删除" placement="top">
+              <el-button link type="primary" icon="Delete"></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination />
+    </el-card>
+    <!-- 添加或修改租户对话框 -->
+    <el-dialog width="500px" append-to-body>
+      <el-form label-width="80px">
+        <el-form-item label="企业名称" prop="companyName">
+          <el-input placeholder="请输入企业名称" />
+        </el-form-item>
+        <el-form-item label="联系人" prop="contactUserName">
+          <el-input placeholder="请输入联系人" />
+        </el-form-item>
+        <el-form-item label="联系电话" prop="contactPhone">
+          <el-input placeholder="请输入联系电话" />
+        </el-form-item>
+        <el-form-item label="用户名" prop="username">
+          <el-input placeholder="请输入系统用户名" maxlength="30" />
+        </el-form-item>
+        <el-form-item label="用户密码" prop="password">
+          <el-input type="password" placeholder="请输入系统用户密码" maxlength="20" />
+        </el-form-item>
+        <el-form-item label="租户套餐" prop="packageId">
+          <el-select placeholder="请选择租户套餐" clearable style="width: 100%">
+            <el-option />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="过期时间" prop="expireTime">
+          <el-date-picker clearable type="datetime" value-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择过期时间">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="用户数量" prop="accountCount">
+          <el-input placeholder="请输入用户数量" />
+        </el-form-item>
+        <el-form-item label="绑定域名" prop="domain">
+          <el-input placeholder="请输入绑定域名" />
+        </el-form-item>
+        <el-form-item label="企业地址" prop="address">
+          <el-input placeholder="请输入企业地址" />
+        </el-form-item>
+        <el-form-item label="企业代码" prop="licenseNumber">
+          <el-input placeholder="请输入统一社会信用代码" />
+        </el-form-item>
+        <el-form-item label="企业简介" prop="intro">
+          <el-input type="textarea" placeholder="请输入企业简介" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input placeholder="请输入备注" />
+        </el-form-item>
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>

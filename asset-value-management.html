@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>财务价值管理</title>
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+</head>
+<body class="page-source-navbar page-subpage">
+  <div class="app">
+    <header class="header"><div class="header-left"><button class="header-hamburger"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="header-logo" href="#"><img src="assets/logo-chenergy.png" width="220" height="40" alt="" /></a><div class="header-source-brand"><p>新能源供应链管理系统</p></div></div><div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar">用</div></div></header>
+    <div class="layout"><aside class="sidebar"><div class="nav-item nav-item--module-active"><span class="nav-label">我的资产</span></div></aside><main class="main-scroll"><div class="subpage-panel">
+      <h1 class="subpage-title">财务价值管理（XQ-040）</h1>
+      <div class="subpage-toolbar"><input class="subpage-search" id="q" placeholder="资产编号/资产名称" /><button class="btn btn-primary" id="btnQuery">查询</button><button class="btn" id="btnExport">导出</button></div>
+      <div class="subpage-table-wrap"><table class="subpage-table"><thead><tr><th>资产编号</th><th>资产名称</th><th>原值</th><th>净值</th><th>使用年限</th><th>折旧率</th><th>保管部门</th><th>状态变化</th></tr></thead><tbody id="tb">
+        <tr><td>GD-2026-0001</td><td>主齿轮箱检测仪</td><td>32500</td><td>28750</td><td>2</td><td>11.5%</td><td>华北运维部</td><td>本月折旧 -312.50</td></tr>
+        <tr><td>GD-2025-0088</td><td>叶片红外检测仪</td><td>86000</td><td>73100</td><td>3</td><td>15.0%</td><td>经营发展中心</td><td>状态变更：在用→闲置</td></tr>
+      </tbody></table></div>
+    </div></main></div>
+  </div>
+  <script src="js/sidebar-actions.js"></script><script src="js/subpage-feature-title.js"></script><script src="js/subpage-clock.js"></script>
+  <script>
+    document.getElementById("btnQuery").addEventListener("click", function(){ alert("已按条件查询（演示）"); });
+    document.getElementById("btnExport").addEventListener("click", function(){ alert("已导出财务价值数据（演示）"); });
+  </script>
+</body>
+</html>

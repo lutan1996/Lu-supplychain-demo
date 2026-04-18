@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>闲置物资 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/warehouse-modal.css" />
+  <style>
+    .tag-status--pending { background: #fff7e6; color: #d48806; }
+    .tag-status--allocated { background: #e6f4ff; color: #1677ff; }
+    .tag-status--scrapped { background: #f2f3f5; color: #5c6066; }
+    .tag-stagnant { background: #fff1f0; color: #cf1322; margin-left: 6px; }
+    .cell-num { font-variant-numeric: tabular-nums; font-weight: 500; color: #1f2d3d; }
+    .wh-ops { display: flex; align-items: center; gap: 10px; }
+    .wh-ops a { color: #1677ff; text-decoration: none; font-size: 13px; }
+    .wh-ops a:hover { opacity: .85; }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit.html" title="驾驶舱"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html" title="物流管理"><span class="nav-label">物流管理</span></a>
+        <div class="nav-item nav-item--module-active" id="navWarehouse" data-nav="warehouse" title="仓储管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 21h18V10.5L12 6 3 10.5V21z"/><path d="M9 21v-7h6v7"/></svg></span>
+          <span class="nav-label">仓储管理</span>
+        </div>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+
+      <aside
+        id="warehouseSecondaryPanel"
+        class="warehouse-secondary-panel"
+        aria-label="仓储管理子菜单"
+        aria-hidden="true"
+        hidden
+      >
+        <div class="warehouse-secondary-inner">
+          <div class="warehouse-secondary-row warehouse-secondary-row--pipe" id="masterSecondaryRow">
+            <button type="button" class="warehouse-secondary-link" data-action="slot" data-label="货位管理">货位管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="receive" data-label="收货入库">收货入库</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="scan" data-label="扫码领用">扫码领用</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="inventory-check" data-label="盘库管理">盘库管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="stock" data-label="库存管理">库存管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="maintenance" data-label="库内保养">库内保养</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="idle" data-label="闲置物资">闲置物资</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="warehouse" data-label="仓库管理">仓库管理</button>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title">闲置物资</h1>
+
+          <div class="carrier-toolbar">
+            <button type="button" class="carrier-btn-add" id="btnRegisterIdle">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              登记闲置
+            </button>
+            <div class="carrier-toolbar-right">
+              <select class="carrier-select" id="filterWarehouse" aria-label="按仓库筛选">
+                <option value="">全部仓库</option>
+                <option value="华北主仓">华北主仓</option>
+                <option value="华东备件仓">华东备件仓</option>
+                <option value="华南应急仓">华南应急仓</option>
+              </select>
+              <select class="carrier-select" id="filterCategory" aria-label="按物资分类筛选">
+                <option value="">全部分类</option>
+                <option value="主机部件">主机部件</option>
+                <option value="电气备件">电气备件</option>
+                <option value="通用耗材">通用耗材</option>
+              </select>
+              <select class="carrier-select" id="filterDuration" aria-label="按闲置时长筛选">
+                <option value="">全部时长</option>
+                <option value="30">超过30天</option>
+                <option value="60">超过60天</option>
+                <option value="90">超过90天</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="carrier-table-wrap">
+            <table class="carrier-table">
+              <thead>
+                <tr>
+                  <th>物资编码</th>
+                  <th>物资名称</th>
+                  <th>规格型号</th>
+                  <th>入库日期</th>
+                  <th>最后出库日期</th>
+                  <th>闲置天数</th>
+                  <th>闲置认定标准（第58条）</th>
+                  <th>当前状态</th>
+                  <th style="min-width: 240px;">操作</th>
+                </tr>
+              </thead>
+              <tbody id="idleTableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="carrier-pagination" role="navigation" aria-label="分页">
+            <span id="idleTotalText">共 0 条</span>
+            <span>每页</span>
+            <select aria-label="每页条数">
+              <option value="10" selected>10 条/页</option>
+              <option value="20">20 条/页</option>
+              <option value="50">50 条/页</option>
+            </select>
+            <div class="carrier-page-btns">
+              <button type="button" aria-label="上一页">&lt;</button>
+              <button type="button" class="is-current" aria-current="page">1</button>
+              <button type="button" aria-label="下一页">&gt;</button>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="wh-modal-mask modal-mask" id="idleTransferMask" aria-hidden="true">
+    <div class="wh-modal-box" role="dialog" aria-modal="true" aria-labelledby="idleXferTitle">
+      <div class="wh-modal-head">
+        <h3 class="wh-modal-title" id="idleXferTitle">调拨申请</h3>
+        <button type="button" class="wh-modal-close" id="btnIdleXferClose" aria-label="关闭">×</button>
+      </div>
+      <div class="wh-modal-body" style="display:grid;gap:10px;grid-template-columns:1fr 1fr;">
+        <div class="wh-field" style="grid-column:1/-1;">
+          <label class="wh-label" for="idleRecvUnit">接收单位</label>
+          <select id="idleRecvUnit" class="wh-input">
+            <option>龙源内部</option>
+            <option>集团内部</option>
+            <option>外部</option>
+          </select>
+        </div>
+        <div class="wh-field" style="grid-column:1/-1;">
+          <label class="wh-label" for="idleDispose">处置方式</label>
+          <select id="idleDispose" class="wh-input">
+            <option>转让</option>
+            <option>租赁</option>
+            <option>调剂</option>
+          </select>
+        </div>
+        <div class="wh-field" style="grid-column:1/-1;">
+          <label class="wh-label" for="idleRecvPerson">接收人</label>
+          <input id="idleRecvPerson" class="wh-input" type="text" placeholder="姓名" />
+        </div>
+        <div class="wh-field">
+          <label class="wh-label" for="idleXferQty">调拨数量</label>
+          <input id="idleXferQty" class="wh-input" type="number" min="1" value="1" />
+        </div>
+        <div class="wh-field">
+          <label class="wh-label" for="idleXferDate">调拨日期</label>
+          <input id="idleXferDate" class="wh-input" type="date" />
+        </div>
+      </div>
+      <div class="wh-modal-foot">
+        <button type="button" class="wh-btn wh-btn--ghost" id="btnIdleXferCancel">取消</button>
+        <button type="button" class="wh-btn wh-btn--primary" id="btnIdleXferOk">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/warehouse-submenu.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      // 库存管理台账（演示数据来源）
+      var stockLedger = [
+        {
+          materialCode: "MAT-GX-001",
+          materialName: "齿轮箱",
+          spec: "GW-GX-3.2MW",
+          qty: 5,
+          warehouse: "华北主仓",
+          location: "A-01-03",
+          category: "主机部件",
+          inboundDate: "2022-01-10",
+          lastOutboundDate: "2025-12-20",
+          status: "pending",
+          stagnant: false
+        },
+        {
+          materialCode: "MAT-BLQ-002",
+          materialName: "变流器",
+          spec: "BLQ-1500V",
+          qty: 9,
+          warehouse: "华东备件仓",
+          location: "B-03-02",
+          category: "电气备件",
+          inboundDate: "2024-08-15",
+          lastOutboundDate: "2026-02-25",
+          status: "pending"
+        },
+        {
+          materialCode: "MAT-HC-004",
+          materialName: "液压油",
+          spec: "L-HM 46",
+          qty: 26,
+          warehouse: "华南应急仓",
+          location: "C-02-09",
+          category: "通用耗材",
+          inboundDate: "2021-12-01",
+          lastOutboundDate: "2021-12-01",
+          status: "pending",
+          stagnant: true
+        },
+        {
+          materialCode: "MAT-DJ-003",
+          materialName: "偏航电机",
+          spec: "YH-DJ-7.5kW",
+          qty: 0,
+          warehouse: "华北主仓",
+          location: "A-04-01",
+          category: "电气备件",
+          inboundDate: "2023-11-12",
+          lastOutboundDate: "2026-03-12",
+          status: "allocated"
+        }
+      ];
+
+      var adjustmentOrders = []; // 调拨生成的调剂单
+      var idleThreshold = 1095; // 满 3 年（约 1095 天）未出库认定呆滞
+      var today = new Date("2026-03-23"); // 演示基准日期
+      var xferTargetCode = null;
+      var xferMask = document.getElementById("idleTransferMask");
+
+      var refs = {
+        tbody: document.getElementById("idleTableBody"),
+        total: document.getElementById("idleTotalText"),
+        filterWarehouse: document.getElementById("filterWarehouse"),
+        filterCategory: document.getElementById("filterCategory"),
+        filterDuration: document.getElementById("filterDuration"),
+        btnRegister: document.getElementById("btnRegisterIdle")
+      };
+
+      function daysBetween(a, b) {
+        var x = Date.parse(a + "T00:00:00");
+        var y = Date.parse(b.toISOString().slice(0, 10) + "T00:00:00");
+        return Math.max(0, Math.floor((y - x) / 86400000));
+      }
+
+      function statusMeta(code) {
+        if (code === "allocated") return { cls: "tag-status--allocated", text: "已调拨" };
+        if (code === "scrapped") return { cls: "tag-status--scrapped", text: "已报废" };
+        return { cls: "tag-status--pending", text: "待处理" };
+      }
+
+      function noOutboundRecord(item) {
+        if (!item.lastOutboundDate || !item.inboundDate) return true;
+        return item.lastOutboundDate <= item.inboundDate;
+      }
+
+      function identifyIdleMaterials() {
+        return stockLedger
+          .map(function (item) {
+            return Object.assign({}, item, {
+              idleDays: daysBetween(item.lastOutboundDate, today),
+              inboundDays: daysBetween(item.inboundDate, today),
+              isStagnant: item.stagnant === true || (daysBetween(item.inboundDate, today) >= idleThreshold && noOutboundRecord(item) && item.qty > 0)
+            });
+          })
+          .filter(function (item) {
+            return item.inboundDays >= idleThreshold && item.qty > 0;
+          });
+      }
+
+      function applyFilters() {
+        var wh = refs.filterWarehouse.value;
+        var cat = refs.filterCategory.value;
+        var dur = Number(refs.filterDuration.value || 0);
+        var rows = identifyIdleMaterials().filter(function (x) {
+          var hitWh = !wh || x.warehouse === wh;
+          var hitCat = !cat || x.category === cat;
+          var hitDur = !dur || x.idleDays > dur;
+          return hitWh && hitCat && hitDur;
+        });
+        render(rows);
+      }
+
+      function render(rows) {
+        refs.tbody.innerHTML = "";
+        if (!rows.length) {
+          refs.tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#8ca0b8;padding:26px;">暂无闲置物资</td></tr>';
+          refs.total.textContent = "共 0 条";
+          return;
+        }
+        rows.forEach(function (x) {
+          var st = statusMeta(x.status);
+          var tr = document.createElement("tr");
+          tr.setAttribute("data-code", x.materialCode);
+          var stagTag = x.isStagnant ? '<span class="tag-status tag-stagnant">呆滞物资</span>' : "";
+          tr.innerHTML =
+            "<td>" + x.materialCode + "</td>" +
+            "<td>" + x.materialName + stagTag + "</td>" +
+            "<td>" + x.spec + "</td>" +
+            "<td>" + x.inboundDate + "</td>" +
+            "<td>" + x.lastOutboundDate + "</td>" +
+            '<td class="cell-num">' + x.idleDays + "</td>" +
+            "<td>第58条第（三）项：入库满3年未使用</td>" +
+            '<td><span class="tag-status ' + st.cls + '">' + st.text.replace("已调拨", "调剂中").replace("待处理", "待调剂").replace("已报废", "已处置") + "</span></td>" +
+            '<td><div class="wh-ops">' +
+            '<a href="#" data-action="view">查看详情</a>' +
+            '<a href="#" data-action="allocate">发起调拨申请</a>' +
+            "</div></td>";
+          refs.tbody.appendChild(tr);
+        });
+        refs.total.textContent = "共 " + rows.length + " 条";
+      }
+
+      function generateAdjustNo() {
+        return "TJ" + today.toISOString().slice(0, 10).replace(/-/g, "") + String(Math.floor(Math.random() * 900 + 100));
+      }
+
+      refs.btnRegister.addEventListener("click", function () {
+        showActionPrompt("登记闲置", "请输入物资编码：", "", function (code) {
+          if (!code) return;
+          code = code.trim();
+          var item = stockLedger.find(function (x) { return x.materialCode === code; });
+          if (!item) {
+            alert("未找到该物资编码。");
+            return;
+          }
+          item.status = "pending";
+          applyFilters();
+        });
+      });
+
+      refs.tbody.addEventListener("click", function (e) {
+        var a = e.target.closest("a[data-action]");
+        if (!a) return;
+        e.preventDefault();
+        var action = a.getAttribute("data-action");
+        var tr = a.closest("tr");
+        if (!tr) return;
+        var code = tr.getAttribute("data-code");
+        var item = stockLedger.find(function (x) { return x.materialCode === code; });
+        if (!item) return;
+
+        if (action === "view") {
+          alert(
+            "物资编码：" + item.materialCode + "\n" +
+            "库存数量：" + item.qty + "\n" +
+            "最后出库时间：" + item.lastOutboundDate + "\n" +
+            "闲置时长：" + daysBetween(item.lastOutboundDate, today) + " 天"
+          );
+          return;
+        }
+
+        if (action === "allocate") {
+          if (item.qty <= 0) {
+            alert("库存为 0，无法发起调拨。");
+            return;
+          }
+          xferTargetCode = code;
+          document.getElementById("idleRecvUnit").selectedIndex = 0;
+          document.getElementById("idleDispose").selectedIndex = 2;
+          document.getElementById("idleRecvPerson").value = "张三";
+          document.getElementById("idleXferQty").value = "1";
+          document.getElementById("idleXferDate").value = today.toISOString().slice(0, 10);
+          openXfer();
+          return;
+        }
+      });
+
+      function closeXfer() {
+        xferMask.classList.remove("show");
+        xferMask.setAttribute("aria-hidden", "true");
+        xferTargetCode = null;
+        document.body.style.overflow = "";
+      }
+      function openXfer() {
+        xferMask.classList.add("show");
+        xferMask.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+      document.getElementById("btnIdleXferClose").addEventListener("click", closeXfer);
+      document.getElementById("btnIdleXferCancel").addEventListener("click", closeXfer);
+      xferMask.addEventListener("click", function (e) {
+        if (e.target === xferMask) closeXfer();
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && xferMask.classList.contains("show")) closeXfer();
+      });
+      document.getElementById("btnIdleXferOk").addEventListener("click", function () {
+        if (!xferTargetCode) return;
+        var item = stockLedger.find(function (x) { return x.materialCode === xferTargetCode; });
+        if (!item) return;
+        var unitType = document.getElementById("idleRecvUnit").value;
+        var method = document.getElementById("idleDispose").value;
+        var receiver = (document.getElementById("idleRecvPerson").value || "").trim();
+        var n = Number(document.getElementById("idleXferQty").value);
+        if (!receiver) {
+          alert("请填写接收人。");
+          return;
+        }
+        if (!n || n <= 0 || n > item.qty) {
+          alert("调拨数量不合法。");
+          return;
+        }
+        var adjustNo = generateAdjustNo();
+        adjustmentOrders.push({
+          adjustNo: adjustNo,
+          materialCode: item.materialCode,
+          qty: n,
+          receiver: receiver,
+          unitType: unitType,
+          method: method,
+          sourceWarehouse: item.warehouse,
+          createdAt: document.getElementById("idleXferDate").value || today.toISOString().slice(0, 10)
+        });
+        item.qty -= n;
+        item.status = "allocated";
+        closeXfer();
+        applyFilters();
+      });
+
+      refs.filterWarehouse.addEventListener("change", applyFilters);
+      refs.filterCategory.addEventListener("change", applyFilters);
+      refs.filterDuration.addEventListener("change", applyFilters);
+
+      applyFilters();
+    })();
+  </script>
+</body>
+</html>

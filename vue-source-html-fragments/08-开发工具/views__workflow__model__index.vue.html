@@ -1,0 +1,125 @@
+<!-- 来源: src/views/workflow/model/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <el-row>
+      <!-- 流程分类树 -->
+      <el-col style="">
+        <el-card shadow="hover">
+          <el-input placeholder="请输入流程分类名" prefix-icon="Search" clearable />
+          <el-tree
+            class="mt-2"
+            node-key="id"
+            highlight-current
+            default-expand-all
+          ></el-tree>
+        </el-card>
+      </el-col>
+      <el-col>
+        <transition>
+          <div class="mb-[10px]">
+            <el-card shadow="hover">
+              <el-form>
+                <el-form-item label="模型名称" prop="name">
+                  <el-input placeholder="请输入模型名称" clearable />
+                </el-form-item>
+                <el-form-item label="模型KEY" prop="key">
+                  <el-input placeholder="请输入模型KEY" clearable />
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" icon="Search">搜索</el-button>
+                  <el-button icon="Refresh">重置</el-button>
+                </el-form-item>
+              </el-form>
+            </el-card>
+          </div>
+        </transition>
+        <el-card shadow="hover">
+          <template>
+            <el-row class="mb8">
+              <el-col>
+                <el-button type="primary" plain icon="Plus">新增</el-button>
+              </el-col>
+              <el-col>
+                <el-button type="success" plain icon="Edit">修改</el-button>
+              </el-col>
+              <el-col>
+                <el-button type="danger" plain icon="Delete">删除</el-button>
+              </el-col>
+              <el-col>
+                <el-button type="primary" plain icon="Download">导出</el-button>
+              </el-col>
+              <right-toolbar></right-toolbar>
+            </el-row>
+          </template>
+
+          <el-table border>
+            <el-table-column type="selection" width="55" align="center" />
+            <el-table-column fixed align="center" type="index" label="序号" width="80"></el-table-column>
+            <el-table-column align="center" prop="name" label="模型名称" width="200"></el-table-column>
+            <el-table-column align="center" prop="key" label="模型KEY"></el-table-column>
+            <el-table-column align="center" prop="version" label="版本号" width="90">
+              <template="scope"> v（动态文本）.0</template>
+            </el-table-column>
+            <el-table-column align="center" prop="metaInfo" label="备注说明" min-width="130"></el-table-column>
+            <el-table-column align="center" prop="createTime" label="创建时间" width="160"></el-table-column>
+            <el-table-column align="center" prop="lastUpdateTime" label="更新时间" width="160"></el-table-column>
+            <el-table-column fixed="right" label="操作" align="center" width="170" class-name="small-padding fixed-width">
+              <template="scope">
+                <el-row class="mb8">
+                  <el-col>
+                    <el-button link type="primary" size="small" icon="Pointer">设计流程</el-button>
+                  </el-col>
+                  <el-col>
+                    <el-button link type="primary" size="small" icon="Delete">删除</el-button>
+                  </el-col>
+                </el-row>
+                <el-row class="mb8">
+                  <el-col>
+                    <el-button link type="primary" size="small" icon="ScaleToOriginal">
+                      流程部署
+                    </el-button>
+                  </el-col>
+                  <el-col>
+                    <el-button link type="primary" size="small" icon="CopyDocument"> 复制模型 </el-button>
+                  </el-col>
+                </el-row>
+              </template>
+            </el-table-column>
+          </el-table>
+          <pagination
+          />
+        </el-card>
+      </el-col>
+    </el-row>
+    <!-- 设计流程开始 -->
+    <Design></Design>
+    <!-- 设计流程结束 -->
+    <!-- 添加模型对话框 -->
+    <el-dialog width="650px" append-to-body>
+      <el-form label-width="100px">
+        <el-form-item label="模型名称：" prop="name">
+          <el-input maxlength="20" show-word-limit />
+        </el-form-item>
+        <el-form-item label="模型KEY：" prop="key">
+          <el-input maxlength="20" show-word-limit />
+        </el-form-item>
+        <el-form-item label="流程分类" prop="categoryCode">
+          <el-tree-select
+            value-key="categoryCode"
+            placeholder="请选择流程分类"
+            check-strictly
+          />
+        </el-form-item>
+        <el-form-item label="备注：" prop="description">
+          <el-input type="textarea" maxlength="200" show-word-limit></el-input>
+        </el-form-item>
+      </el-form>
+      <template>
+        <span class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>

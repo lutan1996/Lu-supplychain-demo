@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>开发工具 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .dt-page .main-scroll { background: #f0f2f5; }
+    .dt-page .carrier-main-inner { padding: 12px 14px 16px; max-width: 100%; }
+    .dt-card {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 16px 16px 14px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+    .dt-title { margin: 0 0 14px; font-size: 18px; font-weight: 600; color: #1f1f1f; }
+    .dt-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 14px;
+      border-radius: 4px;
+      overflow: hidden;
+      width: fit-content;
+      border: 1px solid #d9d9d9;
+    }
+    .dt-tab {
+      padding: 8px 28px;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      background: #fff;
+      color: #666;
+      font-family: inherit;
+    }
+    .dt-tab.is-active { background: #1890ff; color: #fff; }
+    .dt-filter-bar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f0f0f0;
+      margin-bottom: 0;
+    }
+    .dt-filter-grid {
+      flex: 1;
+      min-width: min(100%, 720px);
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 10px 14px;
+    }
+    .dt-field { display: grid; grid-template-columns: 100px minmax(260px, 1fr); align-items: center; gap: 8px; }
+    .dt-field label { font-size: 13px; color: #4c6077; text-align: right; white-space: nowrap; }
+    .dt-field input, .dt-field select {
+      width: 100%;
+      height: 32px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      padding: 0 10px;
+      font-size: 13px;
+      box-sizing: border-box;
+    }
+    .dt-field input:focus { border-color: #1890ff; outline: none; box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.12); }
+    .dt-range { display: flex; align-items: center; gap: 8px; grid-column: 1 / -1; }
+    .dt-range .dt-field { grid-template-columns: 100px minmax(200px, 1fr) auto minmax(200px, 1fr); flex: 1; display: contents; }
+    .dt-range span { color: #666; font-size: 13px; }
+    .dt-filter-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .dt-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 32px;
+      padding: 0 14px;
+      font-size: 13px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      border: 1px solid #d9d9d9;
+      background: #fff;
+      color: rgba(0, 0, 0, 0.88);
+      box-sizing: border-box;
+    }
+    .dt-btn:hover { border-color: #1890ff; color: #1890ff; }
+    .dt-btn-primary { background: #1890ff; border-color: #1890ff; color: #fff; }
+    .dt-btn-primary:hover { background: #40a9ff; border-color: #40a9ff; color: #fff; }
+    .dt-btn-add { color: #1890ff; border-color: #69c0ff; background: rgba(24, 144, 255, 0.08); }
+    .dt-btn-edit { color: #52c41a; border-color: #b7eb8f; background: #f6ffed; opacity: 0.85; }
+    .dt-btn-del { color: #ff4d4f; border-color: #ffccc7; background: #fff2f0; opacity: 0.85; }
+    .dt-btn-exp { color: #d48806; border-color: #ffd591; background: #fffbe6; }
+    .dt-btn-exp-purple { color: #722ed1; border-color: #d3adf7; background: #f9f0ff; }
+    .dt-btn-ghost { background: #fff; }
+    .dt-toolbar-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 12px 0;
+    }
+    .dt-tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .dt-toolbar-icons { display: flex; gap: 8px; }
+    .dt-icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid #d9d9d9;
+      background: #fff;
+      color: #666;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dt-icon-btn:hover { border-color: #1890ff; color: #1890ff; }
+    .dt-split {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 12px;
+      align-items: start;
+      margin-top: 4px;
+    }
+    @media (max-width: 900px) {
+      .dt-split { grid-template-columns: 1fr; }
+    }
+    .dt-tree-panel {
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+      padding: 10px;
+      background: #fafafa;
+      max-height: calc(100vh - 220px);
+      overflow: auto;
+    }
+    .dt-tree-search { margin-bottom: 10px; }
+    .dt-tree-search input {
+      width: 100%;
+      height: 30px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      padding: 0 10px 0 30px;
+      font-size: 12px;
+      box-sizing: border-box;
+    }
+    .dt-tree-wrap { position: relative; }
+    .dt-tree-wrap .fa-magnifying-glass { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #bfbfbf; font-size: 12px; }
+    .dt-tree-title { font-size: 12px; font-weight: 600; color: #333; margin-bottom: 6px; }
+    .dt-tree-panel ul { list-style: none; margin: 0; padding: 0 0 0 4px; font-size: 12px; color: #333; line-height: 1.85; }
+    .dt-tree-panel li { cursor: default; padding: 2px 4px; border-radius: 2px; }
+    .dt-tree-panel li:hover { background: #e6f4ff; }
+    .dt-main-right { min-width: 0; }
+    .dt-table-wrap {
+      border: 1px solid #e8e8e8;
+      border-radius: 4px;
+      overflow: auto;
+      max-height: calc(100vh - 280px);
+    }
+    .dt-table { width: 100%; min-width: max-content; border-collapse: collapse; font-size: 12px; }
+    .dt-table thead { position: sticky; top: 0; z-index: 1; }
+    .dt-table th { background: #fafafa; font-weight: 600; color: #262626; padding: 10px 8px; border-bottom: 1px solid #f0f0f0; text-align: center; }
+    .dt-table td { padding: 8px; border-bottom: 1px solid #f0f0f0; text-align: center; color: #595959; vertical-align: middle; }
+    .dt-table tbody tr:nth-child(even) { background: #fafafa; }
+    .dt-table td.dt-td-left { text-align: left; }
+    .dt-th-op, .dt-ops { min-width: 120px; }
+    .dt-ops-inner { display: inline-flex; flex-wrap: nowrap; gap: 6px; justify-content: center; align-items: center; }
+    .dt-op { border: none; background: none; color: #1890ff; cursor: pointer; font-size: 12px; padding: 2px 4px; }
+    .dt-op:hover { text-decoration: underline; }
+    .dt-op-danger { color: #ff4d4f; }
+    .dt-op-icon {
+      display: inline-flex;
+      width: 28px;
+      height: 26px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      color: #1890ff;
+      border: 1px solid #91caff;
+      background: #e6f4ff;
+      cursor: pointer;
+    }
+    .dt-op-icon.danger { color: #cf1322; border-color: #ffccc7; background: #fff2f0; }
+    .dt-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; background: #f6ffed; color: #389e0d; border: 1px solid #b7eb8f; }
+    .dt-badge-blue { background: #e6f4ff; color: #1677ff; border-color: #91caff; }
+    .dt-badge-gray { background: #f5f5f5; color: #666; border-color: #d9d9d9; }
+    .dt-badge-red { background: #fff2f0; color: #cf1322; border-color: #ffccc7; }
+    .dt-empty { text-align: center; padding: 48px 16px; color: #8c8c8c; font-size: 14px; }
+    .dt-foot {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 8px;
+      font-size: 12px;
+      color: #666;
+      border-top: 1px solid #f0f0f0;
+      flex-wrap: wrap;
+    }
+    .dt-page-num { min-width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center; background: #1890ff; color: #fff; border-radius: 4px; }
+    /* 缓存监控 */
+    .dt-cache-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px 20px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 900px) { .dt-cache-grid { grid-template-columns: repeat(2, 1fr); } }
+    .dt-cache-item { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; border-bottom: 1px dashed #f0f0f0; padding-bottom: 8px; }
+    .dt-cache-item label { color: #8c8c8c; }
+    .dt-cache-item span { color: #262626; font-weight: 500; }
+    .dt-cache-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+    @media (max-width: 768px) { .dt-cache-panels { grid-template-columns: 1fr; } }
+    .dt-cache-card { border: 1px solid #e8e8e8; border-radius: 8px; padding: 14px; background: #fff; }
+    .dt-cache-card h3 { margin: 0 0 12px; font-size: 14px; font-weight: 600; color: #333; display: flex; align-items: center; gap: 8px; }
+    .dt-pie {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto;
+      border-radius: 50%;
+      background: conic-gradient(#1890ff 0% 35%, #52c41a 35% 55%, #faad14 55% 70%, #722ed1 70% 85%, #13c2c2 85% 100%);
+      position: relative;
+    }
+    .dt-pie::after {
+      content: "";
+      position: absolute;
+      inset: 45px;
+      background: #fff;
+      border-radius: 50%;
+    }
+    .dt-gauge {
+      height: 140px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 8px;
+    }
+    .dt-gauge-arc {
+      width: 180px;
+      height: 90px;
+      border: 12px solid #e6f4ff;
+      border-bottom: none;
+      border-radius: 90px 90px 0 0;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .dt-gauge-arc::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 3px;
+      height: 70px;
+      background: #1890ff;
+      transform-origin: bottom center;
+      transform: translateX(-50%) rotate(-55deg);
+      border-radius: 2px;
+    }
+    .dt-gauge-val { margin-top: 8px; font-size: 16px; font-weight: 600; color: #1890ff; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics dt-page">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar" title="用户">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit-analytics.html"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item nav-item--module-active" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <div class="dt-card" id="dtCard">
+            <h1 class="dt-title" id="dtTitle">开发工具</h1>
+            <div class="dt-tabs hidden" id="dtTabs" role="tablist">
+              <button type="button" class="dt-tab is-active" data-tab="todo">待办任务页签</button>
+              <button type="button" class="dt-tab" data-tab="done">已办任务页签</button>
+            </div>
+            <div id="dtSplit" class="dt-split hidden">
+              <aside class="dt-tree-panel">
+                <div class="dt-tree-wrap dt-tree-search">
+                  <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                  <input type="search" id="dtTreeSearchInput" placeholder="请输入流程分类名称" />
+                </div>
+                <div class="dt-tree-title">顶级节点</div>
+                <ul id="dtTreeList"></ul>
+              </aside>
+              <div class="dt-main-right">
+                <div id="dtInnerFilter"></div>
+                <div id="dtInnerToolbar"></div>
+                <div class="dt-table-wrap" id="dtTableOuter">
+                  <table class="dt-table"><thead><tr id="dtHead"></tr></thead><tbody id="dtBody"></tbody></table>
+                  <div class="dt-empty hidden" id="dtEmpty">暂无数据</div>
+                  <div class="dt-foot" id="dtFoot"></div>
+                </div>
+              </div>
+            </div>
+            <div id="dtStandard">
+              <div class="dt-filter-bar" id="dtFilterBar">
+                <div class="dt-filter-grid" id="dtFilters"></div>
+                <div class="dt-filter-actions">
+                  <button type="button" class="dt-btn dt-btn-primary" id="dtSearchBtn"><i class="fa-solid fa-magnifying-glass"></i> 搜索</button>
+                  <button type="button" class="dt-btn dt-btn-ghost" id="dtResetBtn"><i class="fa-solid fa-rotate-left"></i> 重置</button>
+                </div>
+              </div>
+              <div class="dt-toolbar-row" id="dtToolbarRow">
+                <div class="dt-tools" id="dtTools"></div>
+                <div class="dt-toolbar-icons" id="dtToolbarIcons">
+                  <button type="button" class="dt-icon-btn" aria-label="查询"><i class="fa-solid fa-magnifying-glass"></i></button>
+                  <button type="button" class="dt-icon-btn" aria-label="刷新"><i class="fa-solid fa-rotate-right"></i></button>
+                </div>
+              </div>
+              <div class="dt-table-wrap" id="dtTableWrap">
+                <table class="dt-table"><thead><tr id="dtHeadStd"></tr></thead><tbody id="dtBodyStd"></tbody></table>
+                <div class="dt-empty hidden" id="dtEmptyStd">暂无数据</div>
+                <div class="dt-foot" id="dtFootStd"></div>
+              </div>
+            </div>
+            <div id="dtCache" class="hidden">
+              <div class="dt-cache-card">
+                <h3><i class="fa-solid fa-display"></i> 基本信息</h3>
+                <div class="dt-cache-grid" id="dtCacheBasic"></div>
+              </div>
+              <div class="dt-cache-panels">
+                <div class="dt-cache-card">
+                  <h3><i class="fa-solid fa-clock"></i> 命令统计</h3>
+                  <div class="dt-pie" aria-hidden="true"></div>
+                  <p style="text-align:center;font-size:11px;color:#8c8c8c;margin-top:8px;">get / set / ping / info / hget …</p>
+                </div>
+                <div class="dt-cache-card">
+                  <h3><i class="fa-solid fa-gauge-high"></i> 内存信息</h3>
+                  <div class="dt-gauge">
+                    <div class="dt-gauge-arc"></div>
+                    <div class="dt-gauge-val">内存消耗 1.95M</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+(function () {
+  var TREE_NODES = [
+    "OA", "非招标采委会", "重新采购审批单", "公司级集采计划审批单", "终止采购审批单", "采购计划审批单",
+    "长协采购结果使用审批单", "采购项目审定结果通知(非招标)", "本部月度非招标采购计划申报", "本部月度招标采购计划申报",
+    "15万以下采购结果审定(项目单位)", "本部采购文件审查纪要", "招标采委会资料审批", "test", "test1"
+  ];
+  var SCENES = {
+    onlineUser: {
+      title: "在线用户",
+      toolbarIcons: false,
+      showToolbar: false,
+      filters: [
+        { key: "addr", label: "登录地址", ph: "请输入登录地址" },
+        { key: "user", label: "用户名称", ph: "请输入用户名称" }
+      ],
+      cols: ["序号", "会话编号", "登录名称", "客户端", "设备类型", "所属部门", "主机", "登录地点", "操作系统", "浏览器", "登录时间", "操作"],
+      rows: [[
+        "1", "eyJ0eXAiOiJK…", "admin", "e5cd7e4891…", "PC", "龙源电力", "10.170.86.61", "内网IP",
+        "Windows 10 …", "MSEdge", "2026-04-01 08:57:54", "__trash__"
+      ]],
+      opTrashOnly: true
+    },
+    tenant: {
+      title: "租户管理",
+      filters: [
+        { key: "no", label: "租户编号", ph: "请输入租户编号" },
+        { key: "contact", label: "联系人", ph: "请输入联系人" },
+        { key: "phone", label: "联系电话", ph: "请输入联系电话" },
+        { key: "corp", label: "企业名称", ph: "请输入企业名称" }
+      ],
+      tools: ["add", "edit", "del", "export"],
+      cols: ["租户编号", "联系人", "联系电话", "企业名称", "社会信用代码", "过期时间", "用户状态", "操作"],
+      rows: [],
+      empty: true
+    },
+    testForm: {
+      title: "测试单表",
+      filters: [
+        { key: "d1", label: "部门id", ph: "请输入部门id" },
+        { key: "d2", label: "用户id", ph: "请输入用户id" },
+        { key: "d3", label: "排序号", ph: "请输入排序号" },
+        { key: "d4", label: "key键", ph: "请输入key键" },
+        { key: "d5", label: "值", ph: "请输入值" }
+      ],
+      tools: ["add", "edit", "del", "export"],
+      cols: ["", "主键", "部门id", "用户id", "排序号", "key键", "值", "操作"],
+      checkboxCol: true,
+      rows: [
+        ["", "1", "102", "4", "1", "测试数据权限", "测试", "__icons__"],
+        ["", "2", "102", "4", "2", "子节点1", "111", "__icons__"],
+        ["", "3", "102", "4", "3", "子节点2", "222", "__icons__"],
+        ["", "4", "108", "3", "4", "测试树1", "demo", "__icons__"],
+        ["", "5", "108", "3", "13", "测试数据", "demo", "__icons__"]
+      ]
+    },
+    testTree: {
+      title: "测试树表",
+      filters: [{ key: "n", label: "树节点名", ph: "请输入树节点名" }],
+      tools: ["add", "expand"],
+      cols: ["父id", "部门id", "用户id", "树节点名", "操作"],
+      rows: [
+        ["0", "102", "4", "▼ 测试数据权限", "__tree__"],
+        ["1", "102", "4", "　子节点1", "__tree__"],
+        ["1", "102", "4", "　子节点2", "__tree__"],
+        ["0", "108", "3", "▼ 测试树1", "__tree__"],
+        ["4", "108", "3", "　子节点11", "__tree__"]
+      ]
+    },
+    flowCategory: {
+      title: "流程分类",
+      filters: [
+        { key: "n", label: "分类名称", ph: "请输入分类名称" },
+        { key: "c", label: "分类编码", ph: "请输入分类编码" }
+      ],
+      tools: ["add", "expand"],
+      cols: ["分类名称", "分类编码", "排序", "操作"],
+      rows: [
+        ["OA", "OA", "0", "__triple__"],
+        ["非招标采委会", "FB", "0", "__triple__"],
+        ["重新采购审批单", "cxcgspd", "0", "__triple__"],
+        ["公司级集采计划审批单", "qingjialiuchengm", "0", "__triple__"],
+        ["终止采购审批单", "HT", "0", "__triple__"],
+        ["采购计划审批单", "CGJH", "0", "__triple__"],
+        ["长协采购结果使用审批单", "cxcgjgsyspd", "0", "__triple__"],
+        ["采购项目审定结果通知(非招标)", "cgxsdjgtzF", "0", "__triple__"],
+        ["本部月度非招标采购计划申报表", "bbydfzbcgjhsb", "0", "__triple__"],
+        ["本部月度招标采购计划申报", "bbydzbcgjhsb", "0", "__triple__"],
+        ["15万以下采购结果审定(项目单位)", "wyxcgjgsd", "0", "__triple__"],
+        ["本部采购文件审查纪要", "cgwjjysc", "0", "__triple__"],
+        ["招标采委会资料审批", "zbcwhzlsp", "0", "__triple__"],
+        ["test", "test", "10", "__triple__"]
+      ]
+    },
+    leave: {
+      title: "请假申请",
+      filterRange: { label: "请假天数", leftPh: "请输入请假天数", rightPh: "请输入请假天数" },
+      tools: ["add", "export"],
+      cols: ["", "请假类型", "开始时间", "结束时间", "请假天数", "请假原因", "流程状态", "操作"],
+      checkboxCol: true,
+      rows: [
+        ["", "调休", "2025-02-01", "2025-02-02", "1", "", '<span class="dt-badge-blue">待审核</span>', "__leave_ops__"],
+        ["", "事假", "2025-02-10", "2025-02-12", "2", "事假说明", '<span class="dt-badge">已完成</span>', "__leave_ops__"],
+        ["", "病假", "2025-01-15", "2025-01-16", "1", "", '<span class="dt-badge-gray">草稿</span>', "__leave_ops__"]
+      ]
+    },
+    tenantPackage: {
+      title: "租户套餐管理",
+      filters: [{ key: "pkg", label: "套餐名称", ph: "请输入套餐名称" }],
+      tools: ["add", "edit", "del", "export"],
+      cols: ["", "套餐名称", "备注", "状态", "操作"],
+      checkboxCol: true,
+      rows: [],
+      empty: true,
+      loading: true
+    },
+    modelManage: {
+      title: "模型管理",
+      split: true,
+      treeSearchPh: "请输入流程分类名称",
+      filters: [
+        { key: "mn", label: "模型名称", ph: "请输入模型名称" },
+        { key: "mk", label: "模型 KEY", ph: "请输入模型 KEY" }
+      ],
+      tools: ["add", "edit", "del", "exportPurple"],
+      cols: ["", "序号", "模型名称", "模型KEY", "版本号", "备注说明", "创建时间", "更新时间", "操作"],
+      checkboxCol: true,
+      rows: [
+        ["", "1", "test1", "test1", "v1.0", "test1", "2025-09-12 17:26:12", "2025-09-12 17:33:52", "__model_ops__"],
+        ["", "3", "招标采委会资料审批", "zbcwhzlsp", "v6.0", "", "2024-11-20 14:52:19", "2025-09-12 15:44:57", "__model_ops__"],
+        ["", "5", "本部月度招标采购计划申报", "bbydzbcgjhsb", "v3.0", "", "2024-11-13 17:15:23", "2024-12-04 14:34:32", "__model_ops__"]
+      ]
+    },
+    processDefine: {
+      title: "流程定义",
+      split: true,
+      treeSearchPh: "请输入流程分类名",
+      subTabs: true,
+      filters: [
+        { key: "pn", label: "流程定义名称", ph: "请输入流程定义名称" },
+        { key: "pk", label: "流程定义KEY", ph: "请输入流程定义KEY" }
+      ],
+      tools: ["del", "deploy"],
+      cols: ["", "序号", "流程定义名称", "标识KEY", "版本号", "流程XML", "流程图片", "状态", "部署时间", "表名/表单KEY", "操作"],
+      checkboxCol: true,
+      rows: [
+        ["", "1", "test1", "test1", "v1.0", '<span class="dt-op">test1-test1.bpmn…</span>', '<span class="dt-op">查看</span>', '<span class="dt-badge">激活</span>', "2025-02-26 16:33:54", "zbsc_tender…", "__pd_ops__"],
+        ["", "2", "招标采委会资料审批", "zbcwhzlsp", "v6.0", '<span class="dt-op">…bpmn20.xml</span>', '<span class="dt-op">查看</span>', '<span class="dt-badge">激活</span>', "2024-11-20 14:52:19", "—", "__pd_ops__"]
+      ]
+    },
+    flowInstance: {
+      title: "流程实例",
+      split: true,
+      filters: [
+        { key: "pn", label: "流程定义名称", ph: "请输入流程定义名称" },
+        { key: "pk", label: "流程定义KEY", ph: "请输入流程定义KEY" }
+      ],
+      tools: ["changeAssignee"],
+      cols: ["", "序号", "流程定义名称", "流程定义KEY", "任务名称", "办理人", "流程状态", "创建时间", "操作"],
+      checkboxCol: true,
+      rows: [
+        ["", "1", "重新采购审批单v4.0", "cxcgspd", "申请人", '<span class="dt-badge">管理员</span>', '<span class="dt-badge-blue">待审核</span>', "2025-02-26 10:16:41", "__fi_ops__"],
+        ["", "2", "公司级集采计划审批单v5.0", "cgfzb", "专业部门", '<span class="dt-badge">胡春</span>', '<span class="dt-badge-red">已撤销</span>', "2025-02-25 09:00:00", "__fi_ops__"]
+      ]
+    },
+    pendingTask: {
+      title: "待办任务",
+      tabs: true,
+      filters: [
+        { key: "tn", label: "任务名称", ph: "请输入任务名称" },
+        { key: "pn", label: "流程定义名称", ph: "请输入流程定义名称" },
+        { key: "pk", label: "流程定义KEY", ph: "请输入流程定义KEY" }
+      ],
+      tools: ["changeAssignee"],
+      cols: ["", "序号", "流程定义名称", "流程定义KEY", "任务名称", "办理人", "流程状态", "创建时间", "操作"],
+      checkboxCol: true,
+      rows: [
+        ["", "1", "重新采购审批单v4.0", "cxcgspd", "申请人", '<span class="dt-badge">管理员</span>', '<span class="dt-badge-blue">待审核</span>', "2025-02-26 10:16:41", "__pt_ops__"],
+        ["", "2", "公司级集采计划审批单v5.0", "cgfzb", "项目单位审查意见", '<span class="dt-badge">程秀</span>', '<span class="dt-badge-red">已撤销</span>', "2025-02-25 11:05:00", "__pt_ops__"]
+      ]
+    },
+    cacheMonitor: {
+      title: "缓存监控",
+      type: "cache",
+      cacheItems: [
+        ["Redis版本", "7.0.9"], ["运行模式", "单机"], ["端口", "6379"], ["客户端数", "27"],
+        ["运行时间(天)", "317"], ["使用内存", "1.95M"], ["使用CPU", "8.21"], ["内存配置", "0B"],
+        ["AOF是否开启", "否"], ["RDB是否成功", "ok"], ["Key数量", "98"], ["网络入口/出口", "0.00kbps/0.00kbps"]
+      ]
+    },
+    formManage: {
+      title: "表单管理",
+      filters: [{ key: "fn", label: "表单名称", ph: "请输入表单名称" }],
+      tools: ["add", "edit", "del", "export"],
+      cols: ["", "表单名称", "表单类型", "地址", "备注", "操作"],
+      checkboxCol: true,
+      rows: [
+        ["", "请假申请", '<span class="dt-badge">自定义表单</span>', "/workflow/leaveEdit/index", "", "__icons__"],
+        ["", "非招标采委会资料审批", '<span class="dt-badge">自定义表单</span>', "/workflow/NBPCommApprova/index", "", "__icons__"],
+        ["", "重新采购审批单", '<span class="dt-badge">自定义表单</span>', "/workflow/rePurchaseApprovalForm/index", "", "__icons__"],
+        ["", "公司级集采计划审批单", '<span class="dt-badge">自定义表单</span>', "/workflow/approvalFormForCompanyLevelCentralized/index", "", "__icons__"],
+        ["", "终止采购审批单", '<span class="dt-badge">自定义表单</span>', "/workflow/TerminationPurchaseApprovalForm/index", "", "__icons__"],
+        ["", "采购计划审批单", '<span class="dt-badge">自定义表单</span>', "/workflow/PurchasePlanApprovalForm/index", "", "__icons__"],
+        ["", "长协采购结果使用审批单", '<span class="dt-badge">自定义表单</span>', "/workflow/purchaseApprovalForm/index", "", "__icons__"],
+        ["", "采购项目审定结果通知(非招标)", '<span class="dt-badge">自定义表单</span>', "/workflow/noticeOfApprovalResultsForProcurementProjects/index", "", "__icons__"],
+        ["", "本部月度非招标采购计划申报表", '<span class="dt-badge">自定义表单</span>', "/workflow/monthlyNonBiddingProcurementPlanApplication/index", "", "__icons__"],
+        ["", "本部月度招标采购计划申报", '<span class="dt-badge">自定义表单</span>', "/workflow/monthlyBiddingAndProcurementPlanApplication/index", "", "__icons__"]
+      ]
+    },
+    plusSite: {
+      title: "PLUS官网",
+      type: "placeholder",
+      message: "跳转至 PLUS 官网（演示环境占位）"
+    },
+    notFound404: {
+      title: "404",
+      type: "placeholder",
+      message: "页面不存在 · 404 占位"
+    }
+  };
+
+  var sceneByLabel = {
+    "在线用户": "onlineUser", "租户管理": "tenant", "测试单表": "testForm", "测试树表": "testTree",
+    "流程分类": "flowCategory", "请假申请": "leave", "租户套餐管理": "tenantPackage", "模型管理": "modelManage",
+    "流程定义": "processDefine", "流程实例": "flowInstance", "待办任务": "pendingTask", "待办任务页签": "pendingTask", "已办任务页签": "pendingTask",
+    "缓存监控": "cacheMonitor", "表单管理": "formManage", "PLUS官网": "plusSite"
+  };
+
+  /* scene：离线演示壳会注入 window.__DEMO_DEVTOOLS_SCENE__（iframe 与父页 sessionStorage 隔离，仅靠父页 session 无效） */
+  var scene = "onlineUser";
+  (function resolveDevtoolsScene() {
+    try {
+      var inj = typeof window.__DEMO_DEVTOOLS_SCENE__ === "string" ? window.__DEMO_DEVTOOLS_SCENE__.trim() : "";
+      if (inj && SCENES[inj]) {
+        scene = inj;
+        return;
+      }
+    } catch (eInj) {}
+    var bodyEl = document.body;
+    if (bodyEl) {
+      var ds0 = (bodyEl.getAttribute("data-scene") || "").trim();
+      if (ds0 && SCENES[ds0]) {
+        scene = ds0;
+        return;
+      }
+    }
+    try {
+      var sp = new URLSearchParams(window.location.search || "");
+      var sUrl = (sp.get("scene") || "").trim();
+      if (sUrl && SCENES[sUrl]) {
+        scene = sUrl;
+        return;
+      }
+    } catch (eUrl) {}
+    try {
+      var nm = window.name || "";
+      if (nm) {
+        var spn = new URLSearchParams(nm);
+        var sn = (spn.get("scene") || "").trim();
+        if (sn && SCENES[sn]) {
+          scene = sn;
+          return;
+        }
+      }
+    } catch (eName) {}
+    try {
+      var stDev = (sessionStorage.getItem("demoDevtoolsScene") || "").trim();
+      if (stDev && SCENES[stDev]) {
+        scene = stDev;
+        return;
+      }
+    } catch (eDev) {}
+    try {
+      var stDemo = (sessionStorage.getItem("demoScene") || "").trim();
+      if (stDemo && SCENES[stDemo]) {
+        scene = stDemo;
+        return;
+      }
+    } catch (eDemo) {}
+    try {
+      var sp2 = new URLSearchParams(window.location.search || "");
+      var subQ = (sp2.get("pageSub") || "").trim();
+      if (subQ && sceneByLabel[subQ]) {
+        scene = sceneByLabel[subQ];
+        return;
+      }
+    } catch (eSub) {}
+    try {
+      var subS = (sessionStorage.getItem("pageSub") || "").trim();
+      if (subS && sceneByLabel[subS]) {
+        scene = sceneByLabel[subS];
+        return;
+      }
+    } catch (ePs) {}
+  })();
+
+  var cfg = SCENES[scene] || SCENES.onlineUser;
+
+  function toolBtn(kind) {
+    var map = {
+      add: { cls: "dt-btn dt-btn-add", icon: "fa-plus", text: "新增" },
+      edit: { cls: "dt-btn dt-btn-edit", icon: "fa-pen", text: "修改" },
+      del: { cls: "dt-btn dt-btn-del", icon: "fa-trash", text: "删除" },
+      export: { cls: "dt-btn dt-btn-exp", icon: "fa-download", text: "导出" },
+      exportPurple: { cls: "dt-btn dt-btn-exp-purple", icon: "fa-download", text: "导出" },
+      expand: { cls: "dt-btn dt-btn-ghost", icon: "fa-up-down-left-right", text: "展开/折叠" },
+      deploy: { cls: "dt-btn dt-btn-primary", icon: "fa-upload", text: "部署流程文件" },
+      changeAssignee: { cls: "dt-btn dt-btn-add", icon: "fa-user-pen", text: "修改办理人" }
+    };
+    var m = map[kind];
+    if (!m) return null;
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = m.cls;
+    b.innerHTML = '<i class="fa-solid ' + m.icon + '"></i> ' + m.text;
+    return b;
+  }
+
+  function renderOpCell(kind) {
+    if (kind === "__trash__") return '<button type="button" class="dt-op-icon danger" title="强退"><i class="fa-solid fa-trash"></i></button>';
+    if (kind === "__icons__") return '<span class="dt-ops-inner"><button type="button" class="dt-op-icon" title="编辑"><i class="fa-regular fa-pen-to-square"></i></button><button type="button" class="dt-op-icon danger" title="删除"><i class="fa-regular fa-trash-can"></i></button></span>';
+    if (kind === "__tree__") return '<span class="dt-ops-inner"><button type="button" class="dt-op-icon" title="编辑"><i class="fa-regular fa-pen-to-square"></i></button><button type="button" class="dt-op-icon" title="新增子节点"><i class="fa-solid fa-plus"></i></button><button type="button" class="dt-op-icon danger" title="删除"><i class="fa-regular fa-trash-can"></i></button></span>';
+    if (kind === "__triple__") return '<span class="dt-ops-inner"><button type="button" class="dt-op-icon" title="编辑"><i class="fa-regular fa-pen-to-square"></i></button><button type="button" class="dt-op-icon" title="新增"><i class="fa-solid fa-plus"></i></button><button type="button" class="dt-op-icon danger" title="删除"><i class="fa-regular fa-trash-can"></i></button></span>';
+    if (kind === "__leave_ops__") return '<span class="dt-ops-inner"><button type="button" class="dt-op">查看</button><button type="button" class="dt-op">撤回</button><button type="button" class="dt-op">修改</button><button type="button" class="dt-op dt-op-danger">删除</button></span>';
+    if (kind === "__model_ops__") return '<span class="dt-ops-inner"><button type="button" class="dt-op">设计流程</button><button type="button" class="dt-op dt-op-danger">删除</button><button type="button" class="dt-op">流程部署</button><button type="button" class="dt-op">复制模型</button></span>';
+    if (kind === "__pd_ops__") return '<span class="dt-ops-inner"><button type="button" class="dt-op">挂起流程</button><button type="button" class="dt-op">历史版本</button><button type="button" class="dt-op dt-op-danger">删除</button><button type="button" class="dt-op">转换模型</button><button type="button" class="dt-op">绑定业务</button></span>';
+    if (kind === "__fi_ops__" || kind === "__pt_ops__") return '<span class="dt-ops-inner"><button type="button" class="dt-op"><i class="fa-regular fa-eye"></i> 查看</button><button type="button" class="dt-op"><i class="fa-regular fa-file-lines"></i> 流程变量</button></span>';
+    return "";
+  }
+
+  function buildFilters(container, c) {
+    container.innerHTML = "";
+    (c.filters || []).forEach(function (f) {
+      var wrap = document.createElement("div");
+      wrap.className = "dt-field";
+      wrap.innerHTML = "<label>" + f.label + "</label><input type=\"text\" placeholder=\"" + (f.ph || "") + "\" />";
+      container.appendChild(wrap);
+    });
+  }
+
+  function fillTable(headId, bodyId, footId, emptyId, c) {
+    var head = document.getElementById(headId);
+    var body = document.getElementById(bodyId);
+    var foot = document.getElementById(footId);
+    var empty = document.getElementById(emptyId);
+    head.innerHTML = "";
+    body.innerHTML = "";
+    (c.cols || []).forEach(function (col) {
+      var th = document.createElement("th");
+      th.innerHTML = col === "" ? "" : col;
+      if (col === "操作") th.className = "dt-th-op";
+      head.appendChild(th);
+    });
+    var rows = c.rows || [];
+    if (c.empty && (!rows || rows.length === 0)) {
+      empty.classList.remove("hidden");
+      foot.innerHTML = '<span>共 <strong>0</strong> 条</span><select class="dt-btn" style="height:28px"><option>10 条/页</option></select><button type="button" class="dt-btn">&lt;</button><span class="dt-page-num">1</span><button type="button" class="dt-btn">&gt;</button><span>前往</span><input class="dt-btn" style="width:40px;text-align:center;height:28px" value="1"/><span>页</span>';
+      if (c.loading) empty.textContent = "加载中…";
+      return;
+    }
+    empty.classList.add("hidden");
+    rows.forEach(function (row) {
+      var tr = document.createElement("tr");
+      row.forEach(function (cell, i) {
+        var td = document.createElement("td");
+        var colName = c.cols[i];
+        if (colName === "操作" || String(cell).indexOf("__") === 0) {
+          td.className = "dt-ops";
+          td.innerHTML = renderOpCell(cell);
+        } else if (colName === "") {
+          td.innerHTML = "<input type=\"checkbox\" aria-label=\"选择行\" />";
+        } else if (String(cell).indexOf("<") === 0) {
+          td.innerHTML = cell;
+        } else {
+          td.textContent = cell;
+          if (["分类名称", "树节点名", "表单名称", "地址", "流程XML"].indexOf(colName) >= 0) td.classList.add("dt-td-left");
+        }
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+    foot.innerHTML = '<span>共 <strong>' + rows.length + '</strong> 条</span><select class="dt-btn" style="height:28px"><option>10 条/页</option></select><button type="button" class="dt-btn">&lt;</button><span class="dt-page-num">1</span><button type="button" class="dt-btn">&gt;</button><span>前往</span><input class="dt-btn" style="width:40px;text-align:center;height:28px" value="1"/><span>页</span>';
+  }
+
+  document.getElementById("dtTitle").textContent = cfg.title;
+  document.title = cfg.title + " - 新能源物资供应链管理系统";
+
+  if (cfg.type === "placeholder") {
+    document.getElementById("dtFilterBar").classList.add("hidden");
+    document.getElementById("dtToolbarRow").classList.add("hidden");
+    document.getElementById("dtTableWrap").innerHTML =
+      '<div style="padding:80px 20px;text-align:center;color:#595959;font-size:15px;line-height:1.9;">' +
+      (cfg.message || "功能开发中") +
+      "</div>";
+    document.getElementById("dtCache").classList.add("hidden");
+    document.getElementById("dtSplit").classList.add("hidden");
+    document.getElementById("dtTabs").classList.add("hidden");
+    return;
+  }
+
+  if (cfg.type === "cache") {
+    document.getElementById("dtStandard").classList.add("hidden");
+    document.getElementById("dtSplit").classList.add("hidden");
+    document.getElementById("dtTabs").classList.add("hidden");
+    document.getElementById("dtCache").classList.remove("hidden");
+    var cg = document.getElementById("dtCacheBasic");
+    cg.innerHTML = "";
+    (cfg.cacheItems || []).forEach(function (pair) {
+      var d = document.createElement("div");
+      d.className = "dt-cache-item";
+      d.innerHTML = "<label>" + pair[0] + "</label><span>" + pair[1] + "</span>";
+      cg.appendChild(d);
+    });
+    return;
+  }
+
+  document.getElementById("dtCache").classList.add("hidden");
+
+  if (cfg.tabs) {
+    document.getElementById("dtTabs").classList.remove("hidden");
+    document.querySelectorAll(".dt-tab").forEach(function (t) {
+      t.addEventListener("click", function () {
+        document.querySelectorAll(".dt-tab").forEach(function (x) { x.classList.remove("is-active"); });
+        t.classList.add("is-active");
+      });
+    });
+  } else {
+    document.getElementById("dtTabs").classList.add("hidden");
+  }
+
+  var std = document.getElementById("dtStandard");
+  var split = document.getElementById("dtSplit");
+
+  if (cfg.split) {
+    std.classList.add("hidden");
+    split.classList.remove("hidden");
+    document.getElementById("dtTreeSearchInput").placeholder = cfg.treeSearchPh || "请输入流程分类名称";
+    var ul = document.getElementById("dtTreeList");
+    ul.innerHTML = "";
+    TREE_NODES.forEach(function (n) {
+      var li = document.createElement("li");
+      li.textContent = n;
+      ul.appendChild(li);
+    });
+    var innerF = document.getElementById("dtInnerFilter");
+    innerF.innerHTML = "";
+    var fb = document.createElement("div");
+    fb.className = "dt-filter-bar";
+    var fg = document.createElement("div");
+    fg.className = "dt-filter-grid";
+    (cfg.filters || []).forEach(function (f) {
+      var w = document.createElement("div");
+      w.className = "dt-field";
+      w.innerHTML = "<label>" + f.label + "</label><input type=\"text\" placeholder=\"" + (f.ph || "") + "\" />";
+      fg.appendChild(w);
+    });
+    fb.appendChild(fg);
+    var fa = document.createElement("div");
+    fa.className = "dt-filter-actions";
+    var sb = document.createElement("button");
+    sb.type = "button";
+    sb.className = "dt-btn dt-btn-primary";
+    sb.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> 搜索';
+    var rb = document.createElement("button");
+    rb.type = "button";
+    rb.className = "dt-btn dt-btn-ghost";
+    rb.innerHTML = '<i class="fa-solid fa-rotate-left"></i> 重置';
+    fa.appendChild(sb);
+    fa.appendChild(rb);
+    fb.appendChild(fa);
+    innerF.appendChild(fb);
+    rb.addEventListener("click", function (e) {
+      e.preventDefault();
+      innerF.querySelectorAll(".dt-filter-grid input").forEach(function (i) { i.value = ""; });
+    });
+    if (cfg.subTabs) {
+      var subT = document.createElement("div");
+      subT.className = "dt-tabs";
+      subT.style.marginTop = "10px";
+      subT.innerHTML = '<button type="button" class="dt-tab is-active">运行中页签</button><button type="button" class="dt-tab">已完成页签</button>';
+      innerF.appendChild(subT);
+      subT.querySelectorAll(".dt-tab").forEach(function (t) {
+        t.addEventListener("click", function () {
+          subT.querySelectorAll(".dt-tab").forEach(function (x) { x.classList.remove("is-active"); });
+          t.classList.add("is-active");
+        });
+      });
+    }
+    var innerT = document.getElementById("dtInnerToolbar");
+    innerT.className = "dt-toolbar-row";
+    innerT.innerHTML = "";
+    var tools = document.createElement("div");
+    tools.className = "dt-tools";
+    (cfg.tools || []).forEach(function (k) {
+      var b = toolBtn(k);
+      if (b) tools.appendChild(b);
+    });
+    innerT.appendChild(tools);
+    var icons = document.createElement("div");
+    icons.className = "dt-toolbar-icons";
+    icons.innerHTML = '<button type="button" class="dt-icon-btn"><i class="fa-solid fa-magnifying-glass"></i></button><button type="button" class="dt-icon-btn"><i class="fa-solid fa-rotate-right"></i></button>';
+    innerT.appendChild(icons);
+    fillTable("dtHead", "dtBody", "dtFoot", "dtEmpty", cfg);
+  } else {
+    split.classList.add("hidden");
+    std.classList.remove("hidden");
+    var filt = document.getElementById("dtFilters");
+    filt.innerHTML = "";
+    if (cfg.filterRange) {
+      document.getElementById("dtFilterBar").style.display = "";
+      filt.innerHTML = "";
+      var fr = document.createElement("div");
+      fr.className = "dt-field";
+      fr.style.gridColumn = "1 / -1";
+      fr.style.display = "flex";
+      fr.style.alignItems = "center";
+      fr.style.flexWrap = "wrap";
+      fr.style.gap = "10px";
+      fr.innerHTML =
+        '<label style="min-width:100px">' + cfg.filterRange.label + '</label>' +
+        '<input type="text" placeholder="' + cfg.filterRange.leftPh + '" style="width:140px;height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 10px;box-sizing:border-box" />' +
+        '<span style="color:#666;font-size:13px">至</span>' +
+        '<input type="text" placeholder="' + cfg.filterRange.rightPh + '" style="width:140px;height:32px;border:1px solid #d9d9d9;border-radius:4px;padding:0 10px;box-sizing:border-box" />';
+      filt.appendChild(fr);
+    } else {
+      document.getElementById("dtFilterBar").style.display = "";
+      buildFilters(filt, cfg);
+    }
+    var toolsEl = document.getElementById("dtTools");
+    toolsEl.innerHTML = "";
+    if (cfg.showToolbar === false) {
+      document.getElementById("dtToolbarRow").classList.add("hidden");
+    } else {
+      document.getElementById("dtToolbarRow").classList.remove("hidden");
+      (cfg.tools || []).forEach(function (k) {
+        var b = toolBtn(k);
+        if (b) toolsEl.appendChild(b);
+      });
+    }
+    document.getElementById("dtToolbarIcons").style.display = cfg.toolbarIcons === false ? "none" : "flex";
+    fillTable("dtHeadStd", "dtBodyStd", "dtFootStd", "dtEmptyStd", cfg);
+  }
+
+  if (!cfg.split && cfg.type !== "cache") {
+    var resetStd = document.getElementById("dtResetBtn");
+    if (resetStd) {
+      resetStd.addEventListener("click", function (e) {
+        e.preventDefault();
+        document.querySelectorAll("#dtFilters input").forEach(function (inp) { inp.value = ""; });
+      });
+    }
+  }
+})();
+  </script>
+</body>
+</html>

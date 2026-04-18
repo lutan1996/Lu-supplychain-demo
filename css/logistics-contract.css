@@ -1,0 +1,22 @@
+/**
+ * 物流合同页：承运商布局 + 合同状态标签
+ */
+.tag-status--contract-active {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.tag-status--contract-expiring {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.tag-status--contract-expired {
+  background: #eeeeee;
+  color: #616161;
+}
+
+.carrier-table td.cell-amount {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}

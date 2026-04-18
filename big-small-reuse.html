@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>以大代小 & 循环再利用 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .tabs{display:flex;gap:8px;margin-bottom:10px}.tabs button{height:34px;padding:0 14px;border:1px solid #dbe6f3;background:#fff;border-radius:6px;cursor:pointer}.tabs .on{background:#1890ff;border-color:#1890ff;color:#fff}
+    .toolbar{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+    .toolbar .right{display:flex;gap:8px;flex-wrap:wrap}
+    .tag-gray{background:#f2f3f5;color:#606266}.tag-blue{background:#e6f4ff;color:#1677ff}.tag-green{background:#f6ffed;color:#389e0d}.tag-red{background:#fff1f0;color:#cf1322}.tag-orange{background:#fff7e6;color:#d48806}
+    .modal-mask{position:fixed;inset:0;background:rgba(20,25,35,.38);display:none;align-items:center;justify-content:center;z-index:10040;padding:16px}.modal-mask.show{display:flex}
+    .modal{width:min(900px,96vw);background:#f1f4f7;border-radius:14px;padding:20px}
+    .modal h3{margin:0 0 12px;font-size:26px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}
+    .grid label{font-size:13px;color:#516a87;display:block;margin-bottom:4px}.grid input,.grid select,.grid textarea{width:100%;height:36px;border:2px solid #0b6d7a;border-radius:12px;padding:0 10px;background:#eef4f8}.grid textarea{height:74px;padding:8px 10px}
+    .mops{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}.mops button{border:none;border-radius:999px;padding:10px 22px;font-size:20px;font-weight:700;cursor:pointer}.mops .c{background:#8dd8ea;color:#0e4e5e}.mops .o{background:#076f80;color:#e8ffff}
+    /* 侧栏与全站一致：自顶向下连续排列，条目多时可滚动，避免大块留白或底对齐错觉 */
+    .page-big-small-reuse .sidebar { justify-content: flex-start; align-content: flex-start; }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics page-big-small-reuse">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header"><div class="header-left"><button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40" /></a><div class="header-source-brand"><p>新能源供应链管理系统</p></div></div><div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar">用</div></div></header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="5" width="14" height="17" rx="1.5"/><path d="M8 9h8M8 12.5h8M8 16h6"/></svg></span>
+<span class="nav-label">我的任务</span>
+        </div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 10.5L12 3l9 7.5V20a1.5 1.5 0 0 1-1.5 1.5H15v-7H9v7H4.5A1.5 1.5 0 0 1 3 20v-9.5z"/></svg></span>
+          <span class="nav-label">首页</span>
+        </a>
+        <div class="nav-item" data-nav="cockpit" title="驾驶舱">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1"/></svg></span>
+          <span class="nav-label">驾驶舱</span>
+        </div>
+        <div class="nav-item" title="采购管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6h14l-1.2 9H7.2L6 6z"/><path d="M6 6V5a1 1 0 0 1 1-1h2"/><circle cx="9" cy="20" r="1.25"/><circle cx="17" cy="20" r="1.25"/></svg></span>
+          <span class="nav-label">采购管理</span>
+        </div>
+        <a class="nav-item" href="carrier-management.html" title="物流管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1 16h11.5V8.5H5V7h11.5v5h2.5l3.5 4.5"/><circle cx="6.5" cy="17.5" r="1.75"/><circle cx="16.5" cy="17.5" r="1.75"/></svg></span>
+          <span class="nav-label">物流管理</span>
+        </a>
+        <a class="nav-item" href="warehouse.html" title="仓储管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 21h18V10.5L12 6 3 10.5V21z"/><path d="M9 21v-7h6v7"/></svg></span>
+          <span class="nav-label">仓储管理</span>
+        </a>
+        <div class="nav-item" title="物资采购">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6a2 2 0 0 1 2-2h6v16H6a2 2 0 0 1-2-2V6z"/><path d="M20 6a2 2 0 0 0-2-2h-6v16h6a2 2 0 0 0 2-2V6z"/><path d="M12 4v16"/><path d="M7 9h3M7 12.5h3M7 16h2M14 9h3M14 12.5h3M14 16h2"/></svg></span>
+          <span class="nav-label">物资采购</span>
+        </div>
+        <div class="nav-item nav-item--module-active" title="物资出库与处置">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 12a9 9 0 0 0-9-9 9.5 9.5 0 0 0-7 3"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.5 9.5 0 0 0 7-3"/><path d="M16 16h5v5"/></svg></span>
+          <span class="nav-label">物资出库与处置</span>
+        </div>
+        <div class="nav-item" title="绩效考核">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="3" width="12" height="18" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h5"/></svg></span>
+          <span class="nav-label">绩效考核</span>
+        </div>
+        <div class="nav-item" title="公告管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h12a2 2 0 0 1 2 2v10H6a2 2 0 0 0-2 2v2"/><path d="M4 6V5a1 1 0 0 1 1-1h2"/><path d="M8 10h8M8 14h6"/></svg></span>
+          <span class="nav-label">公告管理</span>
+        </div>
+        <div class="nav-item" title="综合业务管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg></span>
+          <span class="nav-label">综合业务管理</span>
+        </div>
+        <div class="nav-item" title="数据管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="5" rx="9" ry="2.5"/><path d="M3 5v6c0 1.6 4 3 9 3s9-1.4 9-3V5"/><path d="M3 11v6c0 1.6 4 3 9 3s9-1.4 9-3V11"/><path d="M3 17v2c0 1.6 4 3 9 3s9-1.4 9-3v-2"/></svg></span>
+          <span class="nav-label">数据管理</span>
+        </div>
+        <div class="nav-item" title="开发工具">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 18l6-6-6-6"/><path d="M8 6 2 12l6 6"/></svg></span>
+          <span class="nav-label">开发工具</span>
+        </div>
+        <div class="nav-item" title="设置">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3"/><path d="M12 1v2.5M12 20.5V23M4.2 4.2l1.8 1.8M18 18l1.8 1.8M1 12h2.5M20.5 12H23M4.2 19.8 6 18M18 6l1.8-1.8"/></svg></span>
+          <span class="nav-label">设置</span>
+        </div>
+        <div class="nav-item" title="系统管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="9" r="3.5"/><path d="M5 20.5v-1a7 7 0 0 1 14 0v1"/></svg></span>
+          <span class="nav-label">系统管理</span>
+        </div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title">以大代小 & 循环再利用</h1>
+          <div class="tabs"><button class="on" id="tabA">以大代小项目</button><button id="tabB">循环再利用物资</button></div>
+
+          <div id="panelA">
+            <div class="toolbar">
+              <div class="right"><input id="aName" class="carrier-search" placeholder="项目名称搜索" /><select class="carrier-select"><option>全部状态</option><option>规划中</option><option>进行中</option><option>已完成</option><option>已终止</option></select><input class="carrier-search" placeholder="年份" /></div>
+              <button class="carrier-btn-add" id="btnAddProj">新增项目</button>
+            </div>
+            <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>项目编号</th><th>项目名称</th><th>项目类型</th><th>旧设备</th><th>新设备</th><th>旧件去向</th><th>负责人</th><th>开始日期</th><th>完成日期</th><th>项目状态</th><th>操作</th></tr></thead><tbody id="tbA"></tbody></table></div>
+            </div>
+
+          <div id="panelB" style="display:none;">
+            <div class="toolbar">
+              <div class="right"><input class="carrier-search" placeholder="物资名称" /><select class="carrier-select"><option>全部分类</option><option>A类</option><option>B类</option><option>C类</option></select><select class="carrier-select"><option>全部层级</option><option>一级</option><option>二级</option><option>三级</option></select><select class="carrier-select"><option>全部状态</option><option>待入库</option><option>已入库</option><option>已销售</option></select></div>
+              <button class="carrier-btn-add" id="btnAddReuse">登记再利用</button>
+            </div>
+            <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>登记编号</th><th>原设备</th><th>修复后物资名称</th><th>数量</th><th>修复成本</th><th>物资分类</th><th>销售层级</th><th>入库仓库</th><th>登记人</th><th>入库日期</th><th>再利用状态</th><th>操作</th></tr></thead><tbody id="tbB"></tbody></table></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="mA"><div class="modal"><h3>新增项目</h3><div class="grid"><div><label>项目名称</label><input /></div><div><label>旧设备</label><input /></div><div><label>新设备</label><input /></div><div><label>旧件去向</label><select><option>内部循环</option><option>外部循环</option><option>报废</option></select></div><div><label>负责人</label><input /></div><div><label>开始日期</label><input type="date" /></div><div><label>预计完成日期</label><input type="date" /></div><div class="full"><label>备注</label><textarea></textarea></div></div><div class="mops"><button class="c" id="mAC">取消</button><button class="o">保存</button></div></div></div>
+  <div class="modal-mask" id="mB"><div class="modal"><h3>登记再利用</h3><div class="grid"><div><label>原设备</label><input /></div><div><label>修复后物资名称</label><input /></div><div><label>数量</label><input type="number" value="1" /></div><div><label>修复成本（元）</label><input type="number" /></div><div><label>物资分类</label><select><option>A类</option><option>B类</option><option>C类</option></select></div><div><label>销售层级</label><select><option>一级</option><option>二级</option><option>三级</option></select></div><div><label>入库仓库</label><select><option>华北主仓</option><option>华东备件仓</option></select></div><div class="full"><label>备注</label><textarea></textarea></div></div><div class="mops"><button class="c" id="mBC">取消</button><button class="o">确认入库</button></div></div></div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script>
+    (function () {
+      var aRows=[["XD2026001","风场主机扩容","以大代小","旧齿轮箱A","新齿轮箱C","内部循环","张明","2026-03-01","","进行中","<a href='#'>查看详情</a> <a href='#'>编辑</a> <a href='#'>删除</a>"],["XD2026002","华东电控替换","以大代小","旧主控柜V2","新主控柜V5","报废","李娜","2026-01-08","2026-03-12","已完成","<a href='#'>查看详情</a>"]];
+      var bRows=[["HX2026001","旧齿轮箱A","修复齿轮箱组件","2","48000","A类","一级","华北主仓","王磊","2026-03-20","已入库","<a href='#'>查看详情</a> <a href='#'>编辑</a> <a href='#'>销售</a>"],["HX2026002","旧主控柜V2","修复主控模块","1","15000","B类","二级","华东备件仓","张明","2026-03-22","待入库","<a href='#'>查看详情</a> <a href='#'>编辑</a> <a href='#'>删除</a>"]];
+      document.getElementById("tbA").innerHTML=aRows.map(function(r){return "<tr>"+r.map(function(c,i){if(i===9){var cls=c==="已完成"?"tag-green":"tag-blue";return "<td><span class='tag-status "+cls+"'>"+c+"</span></td>";} return "<td>"+c+"</td>";}).join("")+"</tr>";}).join("");
+      document.getElementById("tbB").innerHTML=bRows.map(function(r){return "<tr>"+r.map(function(c,i){if(i===10){var cls=c==="已入库"?"tag-green":"tag-orange";return "<td><span class='tag-status "+cls+"'>"+c+"</span></td>";} return "<td>"+c+"</td>";}).join("")+"</tr>";}).join("");
+      function sw(a){document.getElementById("panelA").style.display=a?"block":"none";document.getElementById("panelB").style.display=a?"none":"block";document.getElementById("tabA").className=a?"on":"";document.getElementById("tabB").className=a?"":"on";}
+      document.getElementById("tabA").onclick=function(){sw(true)};document.getElementById("tabB").onclick=function(){sw(false)};
+      document.getElementById("btnAddProj").onclick=function(){document.getElementById("mA").classList.add("show")};
+      document.getElementById("btnAddReuse").onclick=function(){document.getElementById("mB").classList.add("show")};
+      document.getElementById("mAC").onclick=function(){document.getElementById("mA").classList.remove("show")};
+      document.getElementById("mBC").onclick=function(){document.getElementById("mB").classList.remove("show")};
+    })();
+  </script>
+</body>
+</html>

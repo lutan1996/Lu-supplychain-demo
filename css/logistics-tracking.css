@@ -1,0 +1,94 @@
+/**
+ * 物流跟踪页：在 carrier-management.css 基础上补充筛选栏与状态标签
+ */
+/* 筛选栏：一行内 运单号 / 承运商 / 状态 / 查询 */
+.carrier-toolbar--filter-only {
+  justify-content: flex-start;
+}
+
+.carrier-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  width: 100%;
+}
+
+.carrier-filter-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.carrier-filter-field label {
+  font-size: 14px;
+  color: var(--carrier-text-secondary);
+  white-space: nowrap;
+}
+
+/* 运单号输入可略宽 */
+.carrier-search--waybill {
+  width: 200px;
+  max-width: 100%;
+}
+
+.carrier-select--wide {
+  min-width: 160px;
+}
+
+/* 查询按钮：与承运商页「新增」同款蓝底白字 */
+.carrier-btn-query {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  background: var(--carrier-primary);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-left: 4px;
+}
+
+.carrier-btn-query:hover {
+  background: #40a9ff;
+}
+
+.carrier-btn-query:active {
+  background: #096dd9;
+}
+
+/* 物流状态标签 */
+.tag-status--transit {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.tag-status--signed {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.tag-status--exception {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.tag-status--pending-ship {
+  background: #e8f4ff;
+  color: #1769c5;
+}
+
+.tag-status--dispatching {
+  background: #f3f0ff;
+  color: #5e35b1;
+}
+
+.carrier-table .cell-source,
+.carrier-table .cell-updated-at {
+  white-space: nowrap;
+}

@@ -1,0 +1,152 @@
+<!-- 来源: src/views/system/post/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <el-row>
+      <!-- 部门树 -->
+      <el-col style="">
+        <el-card shadow="hover">
+          <el-input placeholder="请输入部门名称" prefix-icon="Search" clearable />
+          <el-tree
+            class="mt-2"
+            node-key="id"
+            highlight-current
+            default-expand-all
+          />
+        </el-card>
+      </el-col>
+      <el-col>
+        <transition>
+          <div class="mb-[10px]">
+            <el-card shadow="hover">
+              <el-form>
+                <el-form-item label="岗位编码" prop="postCode">
+                  <el-input placeholder="请输入岗位编码" clearable />
+                </el-form-item>
+                <el-form-item label="类别编码" prop="postCategory">
+                  <el-input
+                    placeholder="请输入类别编码"
+                    clearable
+                    style="width: 200px"
+                  />
+                </el-form-item>
+                <el-form-item label="岗位名称" prop="postName">
+                  <el-input placeholder="请输入岗位名称" clearable />
+                </el-form-item>
+                <el-form-item label="部门" prop="deptId">
+                  <el-tree-select
+                    value-key="id"
+                    placeholder="请选择部门"
+                    check-strictly
+                  />
+                </el-form-item>
+                <el-form-item label="状态" prop="status">
+                  <el-select placeholder="岗位状态" clearable>
+                    <el-option />
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" icon="Search">搜索</el-button>
+                  <el-button icon="Refresh">重置</el-button>
+                </el-form-item>
+              </el-form>
+            </el-card>
+          </div>
+        </transition>
+        <el-card shadow="hover">
+          <template>
+            <el-row class="mb8">
+              <el-col>
+                <el-button type="primary" plain icon="Plus">新增</el-button>
+              </el-col>
+              <el-col>
+                <el-button type="success" plain icon="Edit"
+                  >修改</el-button
+                >
+              </el-col>
+              <el-col>
+                <el-button type="danger" plain icon="Delete">
+                  删除
+                </el-button>
+              </el-col>
+              <el-col>
+                <el-button type="warning" plain icon="Download">导出</el-button>
+              </el-col>
+              <right-toolbar></right-toolbar>
+            </el-row>
+          </template>
+          <el-table>
+            <el-table-column type="selection" width="55" align="center" />
+            <el-table-column label="岗位编号" align="center" prop="postId" />
+            <el-table-column label="岗位编码" align="center" prop="postCode" />
+            <el-table-column label="类别编码" align="center" prop="postCategory" />
+            <el-table-column label="岗位名称" align="center" prop="postName" />
+            <el-table-column label="部门" align="center" prop="deptName" />
+            <el-table-column label="排序" align="center" prop="postSort" />
+            <el-table-column label="状态" align="center" prop="status">
+              <template="scope">
+                <dict-tag />
+              </template>
+            </el-table-column>
+            <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+              <template="scope">
+                <span>（动态文本）</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="180" align="center" class-name="small-padding fixed-width">
+              <template="scope">
+                <el-tooltip content="修改" placement="top">
+                  <el-button link type="primary" icon="Edit"></el-button>
+                </el-tooltip>
+                <el-tooltip content="删除" placement="top">
+                  <el-button link type="primary" icon="Delete"></el-button>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <pagination
+          />
+        </el-card>
+
+        <!-- 添加或修改岗位对话框 -->
+        <el-dialog width="500px" append-to-body>
+          <el-form label-width="80px">
+            <el-form-item label="岗位名称" prop="postName">
+              <el-input placeholder="请输入岗位名称" />
+            </el-form-item>
+            <el-form-item label="部门" prop="deptId">
+              <el-tree-select
+                value-key="id"
+                placeholder="请选择部门"
+                check-strictly
+              />
+            </el-form-item>
+            <el-form-item label="岗位编码" prop="postCode">
+              <el-input placeholder="请输入编码名称" />
+            </el-form-item>
+            <el-form-item label="类别编码" prop="postCategory">
+              <el-input placeholder="请输入类别编码" />
+            </el-form-item>
+            <el-form-item label="岗位顺序" prop="postSort">
+              <el-input-number controls-position="right" />
+            </el-form-item>
+            <el-form-item label="岗位状态" prop="status">
+              <el-radio-group>
+                <el-radio>（动态文本）</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="备注" prop="remark">
+              <el-input type="textarea" placeholder="请输入内容" />
+            </el-form-item>
+          </el-form>
+          <template>
+            <div class="dialog-footer">
+              <el-button type="primary">确 定</el-button>
+              <el-button>取 消</el-button>
+            </div>
+          </template>
+        </el-dialog>
+      </el-col>
+    </el-row>
+  </div>

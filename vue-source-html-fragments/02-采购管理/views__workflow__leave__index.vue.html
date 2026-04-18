@@ -1,0 +1,91 @@
+<!-- 来源: src/views/workflow/leave/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <transition>
+      <div class="search">
+        <el-form>
+          <el-form-item label="请假天数" prop="startLeaveDays">
+            <el-input placeholder="请输入请假天数" clearable />
+          </el-form-item>
+          <el-form-item prop="endLeaveDays"> 至 </el-form-item>
+          <el-form-item prop="endLeaveDays">
+            <el-input placeholder="请输入请假天数" clearable />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="Search">搜索</el-button>
+            <el-button icon="Refresh">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </transition>
+
+    <el-card shadow="never">
+      <template>
+        <el-row class="mb8">
+          <el-col>
+            <el-button type="primary" plain icon="Plus">新增</el-button>
+          </el-col>
+          <el-col>
+            <el-button type="warning" plain icon="Download">导出</el-button>
+          </el-col>
+          <right-toolbar></right-toolbar>
+        </el-row>
+      </template>
+
+      <el-table>
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="主键" align="center" prop="id" />
+        <el-table-column label="请假类型" align="center">
+          <template="scope">
+            <el-tag>（动态文本）</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="开始时间" align="center" prop="startDate">
+          <template="scope">
+            <span>（动态文本）</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="结束时间" align="center" prop="endDate">
+          <template="scope">
+            <span>（动态文本）</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="请假天数" align="center" prop="leaveDays" />
+        <el-table-column label="请假原因" align="center" prop="remark" />
+        <el-table-column align="center" label="流程状态" min-width="70">
+          <template="scope">
+            <dict-tag></dict-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template="scope">
+            <el-button
+              size="small"
+              link
+              type="primary"
+              icon="Edit"
+              >修改</el-button
+            >
+            <el-button
+              size="small"
+              link
+              type="primary"
+              icon="Delete"
+              >删除</el-button
+            >
+            <el-button link type="primary" size="small" icon="View">查看</el-button>
+            <el-button
+              link
+              size="small"
+              type="primary"
+              icon="Notification"
+              >撤销</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination />
+    </el-card>
+  </div>

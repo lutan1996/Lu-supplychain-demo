@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>退役及报废申请 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .tag-status--pending { background: #fff7e6; color: #d48806; }
+    .tag-status--approved { background: #f6ffed; color: #389e0d; }
+    .tag-status--rejected { background: #fff1f0; color: #cf1322; }
+    /* 报废计划表「审批状态」列：加宽 + 标签单行不换行 */
+    #planTable th:nth-child(11),
+    #planTable td:nth-child(11) {
+      min-width: 108px;
+      width: 9%;
+      max-width: 140px;
+      white-space: nowrap;
+      box-sizing: border-box;
+      vertical-align: middle;
+    }
+    #planTable .tag-status {
+      display: inline-block;
+      white-space: nowrap;
+      padding: 2px 10px;
+      line-height: 1.35;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid transparent;
+      vertical-align: middle;
+    }
+    #planTable .tag-status--pending {
+      border-color: #ffd591;
+    }
+    #planTable .tag-status--approved {
+      border-color: #b7eb8f;
+    }
+    #planTable .tag-status--rejected {
+      border-color: #ffa39e;
+    }
+    .wh-ops { display: flex; align-items: center; gap: 10px; }
+    .wh-ops a { color: #1677ff; text-decoration: none; font-size: 13px; }
+    .wh-ops a:hover { opacity: .85; }
+    .cell-num { font-variant-numeric: tabular-nums; font-weight: 500; color: #1f2d3d; }
+
+    /* 报废申请详情弹窗（参考设计稿） */
+    #viewModalMask .modal--scrap-detail {
+      width: min(960px, 98vw);
+      border-radius: 8px;
+      border: 1px solid #b3d4fc;
+      box-shadow: 0 12px 40px rgba(9, 40, 90, 0.22);
+    }
+    #viewModalMask .scrap-detail-header {
+      height: 48px;
+      padding: 0 16px;
+      background: linear-gradient(180deg, #1890ff 0%, #1677ff 100%);
+      border-bottom: none;
+      align-items: center;
+    }
+    #viewModalMask .scrap-detail-header .modal-title {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    #viewModalMask .scrap-detail-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #viewModalMask .btn-scrap-progress {
+      border: 1px solid #389e0d;
+      background: #73d13d;
+      color: #1f1f1f;
+      border-radius: 4px;
+      padding: 5px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    #viewModalMask .btn-scrap-progress:hover { filter: brightness(1.05); }
+    #viewModalMask .btn-scrap-approve,
+    #viewModalMask .btn-scrap-reject {
+      border: 1px solid #d46b08;
+      background: #ffa940;
+      color: #1f1f1f;
+      border-radius: 4px;
+      padding: 5px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    #viewModalMask .btn-scrap-approve:hover,
+    #viewModalMask .btn-scrap-reject:hover { filter: brightness(1.05); }
+    #viewModalMask .scrap-detail-close {
+      color: #fff !important;
+      font-size: 22px;
+      line-height: 1;
+      padding: 0 4px;
+      margin-left: 4px;
+      opacity: 0.95;
+    }
+    #viewModalMask .scrap-detail-close:hover { opacity: 1; }
+    #viewModalMask .scrap-detail-body {
+      padding: 0;
+      display: block;
+      background: #fff;
+    }
+    #viewModalMask .scrap-detail-body .scrap-detail-inner {
+      padding: 16px 18px 18px;
+    }
+    #viewModalMask .scrap-detail-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 28px;
+      padding-bottom: 14px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid #e8e8e8;
+      font-size: 14px;
+      color: #262626;
+    }
+    #viewModalMask .scrap-detail-meta .label {
+      color: #595959;
+      margin-right: 6px;
+    }
+    #viewModalMask .scrap-detail-meta .val-no {
+      color: #1677ff;
+      font-weight: 500;
+    }
+    #viewModalMask .scrap-detail-line {
+      font-size: 14px;
+      color: #262626;
+      margin-bottom: 12px;
+      line-height: 1.65;
+    }
+    #viewModalMask .scrap-detail-line:last-of-type { margin-bottom: 16px; }
+    #viewModalMask .scrap-detail-line .label { color: #595959; margin-right: 6px; }
+    #viewModalMask .scrap-detail-table-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #262626;
+      margin: 0 0 8px;
+    }
+    #viewModalMask .scrap-detail-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      border: 1px solid #e8e8e8;
+    }
+    #viewModalMask .scrap-detail-table th,
+    #viewModalMask .scrap-detail-table td {
+      border: 1px solid #e8e8e8;
+      padding: 10px 8px;
+      text-align: center;
+      color: #262626;
+    }
+    #viewModalMask .scrap-detail-table thead th {
+      background: #f5f5f5;
+      font-weight: 600;
+      color: #434343;
+    }
+    #viewModalMask .scrap-detail-table .cell-num-r {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    #viewModalMask .scrap-detail-table tfoot td {
+      background: #e6f7ff;
+      font-weight: 600;
+      color: #262626;
+    }
+    #viewModalMask .scrap-detail-extra {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px dashed #e8e8e8;
+      font-size: 13px;
+      color: #434343;
+      line-height: 1.7;
+    }
+    #viewModalMask .scrap-detail-extra .ex-row { margin-bottom: 8px; }
+    #viewModalMask .scrap-detail-extra .ex-row b { color: #595959; }
+    #viewModalMask .scrap-detail-footer {
+      border-top: 1px solid #e8e8e8;
+      background: #fafafa;
+      justify-content: flex-end;
+    }
+
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 20, 40, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+    .modal-mask.show { display: flex; }
+    .modal {
+      width: min(820px, 96vw);
+      background: #fff;
+      border: 1px solid #dbe6f3;
+      border-radius: 12px;
+      box-shadow: 0 18px 46px rgba(9, 24, 45, 0.28);
+      overflow: hidden;
+    }
+    .modal-header {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      border-bottom: 1px solid #e8eef7;
+    }
+    .modal-title { margin: 0; font-size: 17px; color: #1f3551; }
+    .modal-close {
+      border: none; background: transparent; cursor: pointer; font-size: 22px; color: #6a819f;
+    }
+    .modal-body {
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 14px;
+    }
+    .field.full { grid-column: 1 / -1; }
+    .field label {
+      display: block; margin: 0 0 6px; font-size: 13px; color: #516a87;
+    }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      height: 34px;
+      border: 1px solid #d7e1ee;
+      border-radius: 6px;
+      padding: 0 10px;
+      font-size: 14px;
+      color: #223a55;
+      background: #fff;
+    }
+    .field textarea {
+      height: 84px; padding: 8px 10px; resize: vertical;
+    }
+    .hint { margin-top: 4px; font-size: 12px; color: #7f92a8; }
+    .modal-footer {
+      height: 54px;
+      border-top: 1px solid #e8eef7;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 0 14px;
+    }
+    .btn {
+      border: 1px solid #d7e1ee;
+      background: #fff;
+      color: #2b4664;
+      border-radius: 6px;
+      padding: 7px 14px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: #1890ff;
+      color: #fff;
+      border-color: #1890ff;
+    }
+    .apply-tip {
+      margin: 0 14px 10px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      background: #f5f5f5;
+      color: #6b7280;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .btn-progress {
+      border: 1px solid #d7e1ee;
+      background: #f7fbff;
+      color: #2b4664;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-right: 8px;
+    }
+    .view-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 12px;
+      font-size: 13px;
+      color: #223a55;
+      line-height: 1.6;
+    }
+    .view-grid .full { grid-column: 1 / -1; }
+    .view-item {
+      background: #fafcff;
+      border: 1px solid #e8eef7;
+      border-radius: 6px;
+      padding: 7px 9px;
+    }
+    .view-item b { color: #4c6077; font-weight: 600; }
+    .flow-tabs {
+      display: flex;
+      gap: 16px;
+      border-bottom: 1px solid #e8eef7;
+      margin-bottom: 12px;
+    }
+    .flow-tab {
+      border: none;
+      background: transparent;
+      padding: 8px 0;
+      font-size: 13px;
+      color: #4c6077;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    .flow-tab.is-active { color: #1677ff; border-bottom-color: #1677ff; }
+    .flow-pane { display: none; }
+    .flow-pane.is-active { display: block; }
+    .flow-wrap {
+      position: relative;
+      border: 1px solid #ebeff6;
+      border-radius: 8px;
+      padding: 18px;
+      overflow: auto;
+      min-height: 240px;
+      background: #fff;
+    }
+    .flow-line {
+      position: absolute;
+      left: 80px;
+      right: 80px;
+      top: 122px;
+      height: 2px;
+      background: #6fbf73;
+      z-index: 1;
+    }
+    .flow-nodes { position: relative; z-index: 2; display: flex; justify-content: space-between; gap: 24px; margin-top: 70px; }
+    .flow-node {
+      min-width: 92px;
+      min-height: 52px;
+      border: 1px solid #7ac57f;
+      border-radius: 10px;
+      background: #edf9ee;
+      color: #256d2a;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6px;
+      cursor: default;
+      position: relative;
+    }
+    .flow-node.is-pending { border-color: #e6b64a; background: #fff7e6; color: #8a6400; }
+    .flow-dot {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid #7ac57f; background: #d9f2dc;
+      align-self: center;
+      margin-top: 17px;
+    }
+    .flow-dot.end { border-color: #f05f5f; background: #ffd6d6; }
+    .flow-tooltip {
+      position: absolute;
+      display: none;
+      background: rgba(22, 25, 30, 0.92);
+      color: #fff;
+      font-size: 12px;
+      line-height: 1.6;
+      padding: 8px 10px;
+      border-radius: 6px;
+      max-width: 260px;
+      z-index: 20;
+      pointer-events: none;
+      white-space: pre-line;
+    }
+    .flow-info-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .flow-info-table th, .flow-info-table td {
+      border: 1px solid #edf1f7;
+      padding: 8px 6px;
+      text-align: left;
+      vertical-align: top;
+      color: #334155;
+    }
+    .flow-info-table th {
+      background: #f8fafc;
+      color: #64748b;
+      font-weight: 600;
+    }
+    /* 报废申请列表：紧凑展示全部字段，尽量避免横向滚动条 */
+    #panelScrapApply .carrier-table-wrap {
+      overflow-x: hidden;
+    }
+    #panelScrapApply .carrier-table {
+      table-layout: fixed;
+      font-size: 11px;
+    }
+    #panelScrapApply .carrier-table thead th,
+    #panelScrapApply .carrier-table tbody td {
+      padding: 6px 6px;
+      white-space: normal;
+      word-break: break-all;
+      line-height: 1.35;
+      vertical-align: top;
+    }
+    #panelScrapApply .carrier-table .wh-ops {
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    #panelScrapApply .carrier-table .wh-ops a {
+      font-size: 12px;
+    }
+    /* 报废计划管理 */
+    .plan-stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin:6px 0 12px; }
+    .plan-stat { border:1px solid #e6edf7; background:#fff; border-radius:8px; padding:10px 12px; min-height:70px; }
+    .plan-stat .k { font-size:12px; color:#64748b; margin-bottom:6px; }
+    .plan-stat .v { font-size:22px; line-height:1.1; font-weight:700; color:#0f172a; }
+    .plan-tabbar { display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+    .plan-tab { border:1px solid #dbe6f3; background:#fff; color:#334155; border-radius:16px; padding:4px 12px; font-size:12px; cursor:pointer; }
+    .plan-tab.is-active { color:#1677ff; border-color:#91caff; background:#e6f4ff; font-weight:600; }
+    .plan-search { border:1px solid #e6edf7; border-radius:8px; background:#fbfdff; padding:10px 12px; margin-bottom:10px; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; }
+    .plan-search .f label { display:block; font-size:12px; color:#64748b; margin-bottom:4px; }
+    .plan-search .f input, .plan-search .f select { width:100%; height:30px; border:1px solid #dbe6f3; border-radius:6px; padding:0 8px; font-size:12px; background:#fff; color:#334155; }
+    .plan-search .f.range { display:grid; grid-template-columns:1fr 14px 1fr; align-items:end; gap:4px; }
+    .plan-search .f.range span { text-align:center; color:#94a3b8; font-size:12px; margin-bottom:6px; }
+    .btn-green { background:#52c41a; border-color:#52c41a; color:#fff; }
+    .btn-green:hover { background:#73d13d; border-color:#73d13d; color:#fff; }
+    .btn-warn { background:#fff7e6; border-color:#ffd591; color:#d46b08; }
+    .asset-select-wrap { border:1px solid #e6edf7; border-radius:8px; overflow:hidden; margin-top:8px; }
+    .asset-select-filter { display:grid; grid-template-columns:1.4fr 1fr 1fr auto; gap:8px; padding:8px; border-bottom:1px solid #edf2f7; background:#f8fbff; }
+    .asset-select-filter input, .asset-select-filter select { width:100%; height:30px; border:1px solid #dbe6f3; border-radius:6px; padding:0 8px; font-size:12px; background:#fff; }
+    .asset-table-wrap { max-height:220px; overflow:auto; }
+    .asset-table { width:100%; border-collapse:collapse; font-size:12px; table-layout:fixed; background:#fff; }
+    .asset-table th, .asset-table td { border:1px solid #edf1f7; padding:6px; text-align:left; word-break:break-all; vertical-align:top; }
+    .asset-table tbody td { color:#1e293b; }
+    .asset-table th { background:#f8fafc; color:#64748b; position:sticky; top:0; z-index:1; white-space:nowrap; }
+    .asset-row-selected { background:#f0f9ff; }
+    .asset-row-selected td { color:#0f172a; }
+    .asset-table .asset-qty-input {
+      width:100%; min-width:44px; max-width:76px; height:28px; border:1px solid #dbe6f3; border-radius:4px;
+      padding:0 6px; font-size:12px; color:#0f172a; background:#fff; box-sizing:border-box;
+    }
+    .asset-table .asset-qty-input:disabled { background:#f1f5f9; color:#64748b; border-color:#e2e8f0; }
+    .plan-summary { display:flex; flex-wrap:wrap; gap:12px; margin-top:8px; font-size:12px; color:#334155; }
+    .plan-summary b { color:#0f172a; }
+    .tag-eval { margin-top:8px; font-size:12px; padding:8px 10px; border-radius:6px; border:1px solid #b7eb8f; background:#f6ffed; color:#389e0d; }
+    .tag-eval.warn { border-color:#ffe58f; background:#fffbe6; color:#d48806; font-weight:600; }
+    .view-mini-table { width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; }
+    .view-mini-table th, .view-mini-table td { border:1px solid #edf1f7; padding:6px; text-align:left; }
+    .view-mini-table th { background:#f8fafc; color:#64748b; }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit.html"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item nav-item--module-active"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item"><span class="nav-label">设置</span></div>
+        <div class="nav-item"><span class="nav-label">系统管理</span></div>
+      </aside>
+
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title">退役及报废申请</h1>
+
+          <div class="module-hub-tabs" style="display:flex;gap:6px;margin-bottom:12px;">
+            <button type="button" class="is-active" id="tabScrapPlan" style="padding:6px 14px;border:1px solid #1890ff;background:#1890ff;color:#fff;border-radius:4px;cursor:pointer;">报废计划列表</button>
+            <button type="button" id="tabScrapApply" style="padding:6px 14px;border:1px solid #d9d9d9;background:#fff;color:#333;border-radius:4px;cursor:pointer;">报废申请列表</button>
+          </div>
+
+          <div id="panelScrapPlan">
+            <h2 style="font-size:16px;margin:0 0 8px;color:#1f2937;">报废计划管理</h2>
+            <div class="plan-stats">
+              <div class="plan-stat"><div class="k">本年计划数</div><div class="v" id="statYearTotal">0</div></div>
+              <div class="plan-stat"><div class="k">待提交</div><div class="v" id="statDraft">0</div></div>
+              <div class="plan-stat"><div class="k">审批中</div><div class="v" id="statReview">0</div></div>
+              <div class="plan-stat"><div class="k">已通过</div><div class="v" id="statApproved">0</div></div>
+            </div>
+            <div class="plan-tabbar" id="planTabBar">
+              <button type="button" class="plan-tab is-active" data-plan-tab="all">全部计划</button>
+              <button type="button" class="plan-tab" data-plan-tab="draft">待提交</button>
+              <button type="button" class="plan-tab" data-plan-tab="review">审批中</button>
+              <button type="button" class="plan-tab" data-plan-tab="approved">已通过</button>
+              <button type="button" class="plan-tab" data-plan-tab="rejected">已驳回</button>
+              <button type="button" class="plan-tab" data-plan-tab="history">历年计划</button>
+            </div>
+            <div class="plan-search">
+              <div class="f"><label>计划编号</label><input id="qPlanNo" placeholder="如 BF-2026-001" /></div>
+              <div class="f"><label>计划年度</label><select id="qPlanYear"><option value="">全部</option></select></div>
+              <div class="f"><label>申请部门</label><select id="qPlanDept"><option value="">全部</option></select></div>
+              <div class="f"><label>申请人</label><input id="qPlanUser" placeholder="申请人" /></div>
+              <div class="f range">
+                <label style="grid-column:1 / -1;">提交日期范围</label>
+                <input id="qDateStart" type="date" />
+                <span>-</span>
+                <input id="qDateEnd" type="date" />
+              </div>
+            </div>
+            <div class="carrier-toolbar">
+              <div class="toolbar-left">
+                <button type="button" class="btn-sub" id="btnPlanSearch">搜索</button>
+                <button type="button" class="btn-sub" id="btnPlanReset">重置</button>
+                <button type="button" class="carrier-btn-add btn-green" id="btnOpenPlanModal"><i class="fa-solid fa-plus"></i> 新增报废计划</button>
+                <button type="button" class="btn-sub" id="btnPlanExport">导出</button>
+                <button type="button" class="btn-sub btn-warn" id="btnPlanRemind">提醒填报</button>
+              </div>
+            </div>
+            <div class="carrier-table-wrap">
+              <table class="carrier-table" id="planTable">
+                <thead>
+                  <tr>
+                    <th style="width:42px;"><input type="checkbox" id="planCheckAll" /></th>
+                    <th style="width:52px;">序号</th>
+                    <th>计划编号</th>
+                    <th style="width:74px;">计划年度</th>
+                    <th style="width:96px;">申请部门</th>
+                    <th style="width:70px;">申请人</th>
+                    <th style="width:70px;">物资数量</th>
+                    <th style="width:98px;">原值合计(元)</th>
+                    <th style="width:98px;">净值合计(元)</th>
+                    <th style="width:96px;">提交日期</th>
+                    <th style="min-width:108px;width:9%;">审批状态</th>
+                    <th style="min-width:190px;">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="planTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="panelScrapApply" style="display:none;">
+          <div class="carrier-toolbar">
+            <button type="button" class="carrier-btn-add" id="btnCreateApply">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              新增报废申请
+            </button>
+            <div class="carrier-toolbar-right">
+              <input
+                type="search"
+                class="carrier-search"
+                id="filterApplyNo"
+                placeholder="按申请单号搜索"
+                autocomplete="off"
+                aria-label="按申请单号搜索"
+              />
+              <select class="carrier-select" id="filterStatus" aria-label="按状态筛选">
+                <option value="">全部状态</option>
+                <option value="pending">待评估</option>
+                <option value="approved">已通过</option>
+                <option value="rejected">已驳回</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="carrier-table-wrap">
+            <table class="carrier-table">
+              <thead>
+                <tr>
+                  <th>申请单号</th>
+                  <th>申请部门</th>
+                  <th>申请日期</th>
+                  <th>拟报废固定资产名称及数量</th>
+                  <th>拟报废固定资产清单</th>
+                  <th>拟报废固定资产堆放地点</th>
+                  <th>申请报废原因</th>
+                  <th>申请人员签字（电子签）</th>
+                  <th>申请部门负责人意见及签字</th>
+                  <th>管理处置部门专责意见及签字</th>
+                  <th>管理处置部门负责人意见及签字</th>
+                  <th>状态</th>
+                  <th style="width: 96px;">操作</th>
+                </tr>
+              </thead>
+              <tbody id="applyTableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="carrier-pagination" role="navigation" aria-label="分页">
+            <span id="applyTotalText">共 0 条</span>
+            <span>每页</span>
+            <select aria-label="每页条数">
+              <option value="10" selected>10 条/页</option>
+              <option value="20">20 条/页</option>
+              <option value="50">50 条/页</option>
+            </select>
+            <div class="carrier-page-btns">
+              <button type="button" aria-label="上一页">&lt;</button>
+              <button type="button" class="is-current" aria-current="page">1</button>
+              <button type="button" aria-label="下一页">&gt;</button>
+            </div>
+          </div>
+
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="applyModalMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="applyModalTitle">
+      <div class="modal-header">
+        <h2 class="modal-title" id="applyModalTitle">新增退役及报废申请</h2>
+        <button class="modal-close" id="btnCloseModal" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label for="applyDept">申请部门</label>
+          <input id="applyDept" type="text" value="设备运维部" />
+        </div>
+        <div class="field">
+          <label for="applyDate">申请日期</label>
+          <input id="applyDate" type="date" />
+        </div>
+        <div class="field">
+          <label for="assetNameQty">拟报废固定资产名称</label>
+          <select id="assetNameQty"></select>
+          <div class="hint">仅显示“在用”物资（来自基础数据台账）。</div>
+        </div>
+        <div class="field">
+          <label for="scrapQty">拟报废数量</label>
+          <input id="scrapQty" type="number" min="1" step="1" value="1" />
+        </div>
+        <div class="field">
+          <label for="assetList">拟报废固定资产清单</label>
+          <input id="assetList" type="text" placeholder="填写资产编码、规格、数量明细（可逗号分隔）" />
+        </div>
+        <div class="field">
+          <label for="stackLocation">拟报废固定资产堆放地点</label>
+          <input id="stackLocation" type="text" placeholder="例如：华北中心仓 D 区报废暂存点" />
+        </div>
+        <div class="field full">
+          <label for="scrapReason">申请报废原因</label>
+          <textarea id="scrapReason" placeholder="依据xxx制度，第xx条，该xx设备。。。，拟申请报废"></textarea>
+        </div>
+        <div class="field">
+          <label for="applicantSign">申请人员签字（电子签）</label>
+          <input id="applicantSign" type="text" value="张明（电子签）" />
+        </div>
+        <div class="field">
+          <label for="deptHeadOpinion">申请部门负责人意见及签字</label>
+          <input id="deptHeadOpinion" type="text" value="同意报废，王磊（电子签）" />
+        </div>
+        <div class="field">
+          <label for="manageSpecialOpinion">管理处置部门专责意见及签字</label>
+          <input id="manageSpecialOpinion" type="text" value="建议按流程处置，李娜（电子签）" />
+        </div>
+        <div class="field">
+          <label for="manageHeadOpinion">管理处置部门负责人意见及签字</label>
+          <input id="manageHeadOpinion" type="text" value="同意，周强（电子签）" />
+        </div>
+      </div>
+      <div class="apply-tip">
+        提示;(固定资产报废申请》签字后，由资产报度察定专业部门进行投成管定提示，会定报告，管理处置部门依据该申请及鉴定报告执行公司国定资产报废内部决策流程。
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="btnCancel">取消</button>
+        <button class="btn btn-primary" id="btnSubmitApply">提交申请</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="viewModalMask" aria-hidden="true">
+    <div class="modal modal--scrap-detail" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle">
+      <div class="modal-header scrap-detail-header">
+        <h2 class="modal-title" id="viewModalTitle">报废申请详情</h2>
+        <div class="scrap-detail-header-actions">
+          <button type="button" class="btn-scrap-progress" id="btnOpenProgress">流程进度</button>
+          <button type="button" class="btn-scrap-approve" id="btnViewApprove" style="display:none;">通过</button>
+          <button type="button" class="btn-scrap-reject" id="btnViewReject" style="display:none;">驳回</button>
+          <button class="modal-close scrap-detail-close" id="btnCloseViewModal" aria-label="关闭">×</button>
+        </div>
+      </div>
+      <div class="modal-body scrap-detail-body" style="display:block;">
+        <div id="viewGrid"></div>
+      </div>
+      <div class="modal-footer scrap-detail-footer">
+        <button class="btn" type="button" id="btnViewClose">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="progressModalMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="progressModalTitle" style="width:min(980px,97vw);">
+      <div class="modal-header">
+        <h2 class="modal-title" id="progressModalTitle">审批记录</h2>
+        <button class="modal-close" id="btnCloseProgressModal" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body" style="display:block;">
+        <div class="flow-tabs">
+          <button type="button" class="flow-tab is-active" data-flow-tab="diagram">流程图</button>
+          <button type="button" class="flow-tab" data-flow-tab="table">审批信息</button>
+        </div>
+        <div class="flow-pane is-active" data-flow-pane="diagram">
+          <div class="flow-wrap" id="flowWrap">
+            <div class="flow-line"></div>
+            <div class="flow-nodes">
+              <div class="flow-dot" aria-hidden="true"></div>
+              <div class="flow-node" data-flow-tip="">申请人</div>
+              <div class="flow-node" data-flow-tip="">申请部门负责人意见及签字</div>
+              <div class="flow-node" data-flow-tip="">管理处置部门专责意见及签字</div>
+              <div class="flow-node" data-flow-tip="">管理处置部门负责人意见及签字</div>
+              <div class="flow-node is-pending" data-flow-tip="">结束</div>
+              <div class="flow-dot end" aria-hidden="true"></div>
+            </div>
+            <div class="flow-tooltip" id="flowTooltip"></div>
+          </div>
+        </div>
+        <div class="flow-pane" data-flow-pane="table">
+          <table class="flow-info-table">
+            <thead>
+              <tr>
+                <th>序号</th>
+                <th>任务名称</th>
+                <th>办理人</th>
+                <th>状态</th>
+                <th>审批意见</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+                <th>耗时</th>
+                <th>附件</th>
+              </tr>
+            </thead>
+            <tbody id="progressInfoBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="btnProgressClose">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="planModalMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="planModalTitle" style="width:min(1160px,98vw);">
+      <div class="modal-header">
+        <h2 class="modal-title" id="planModalTitle">新增报废计划</h2>
+        <button class="modal-close" id="btnClosePlanModal" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body" style="display:block;">
+        <div class="apply-tip" style="margin:0 0 10px;">
+          💡 报废计划需在每年六七月份提交，计划审批通过后方可进行报废申请。只能选择本部门的物资。
+        </div>
+        <div class="plan-search" style="margin-bottom:8px;">
+          <div class="f"><label>计划年度</label><select id="planYearInput"></select></div>
+          <div class="f"><label>申请部门</label><input id="planDeptInput" readonly /></div>
+          <div class="f"><label>申请人</label><input id="planUserInput" readonly /></div>
+          <div class="f"><label>申请日期</label><input id="planDateInput" type="date" /></div>
+          <div class="f"><label>报废说明</label><input id="planRemarkInput" placeholder="填写报废计划说明" /></div>
+        </div>
+        <div style="font-size:13px;color:#334155;margin:4px 0 6px;">选择报废物资（从本部门资产中勾选）</div>
+        <div class="asset-select-wrap">
+          <div class="asset-select-filter">
+            <input id="assetKeyword" placeholder="资产名称/编号" />
+            <select id="assetTypeFilter"><option value="">资产类型(全部)</option></select>
+            <select id="assetLocationFilter"><option value="">存放地点(全部)</option></select>
+            <button type="button" class="btn-sub" id="btnAssetFilter">筛选</button>
+          </div>
+          <div class="asset-table-wrap">
+            <table class="asset-table">
+              <thead>
+                <tr>
+                  <th style="width:40px;"><input type="checkbox" id="assetCheckAll" /></th>
+                  <th>资产编号</th><th>资产名称</th><th>型号规格</th><th>存放地点</th><th>保管人</th><th>原值(元)</th><th>净值(元)</th><th>使用年限</th><th>资产状态</th><th style="width:72px;">数量</th>
+                </tr>
+              </thead>
+              <tbody id="assetPickBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="plan-summary">
+          <span>已选 <b id="pickedCount">0</b> 件物资</span>
+          <span>原值合计：<b id="pickedOrigin">¥ 0.00</b></span>
+          <span>净值合计：<b id="pickedNet">¥ 0.00</b></span>
+        </div>
+        <div class="tag-eval" id="evalTip">净值合计未超过100万元，无需进行资产评估</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="btnPlanCancel">取消</button>
+        <button class="btn" id="btnPlanSaveDraft">保存草稿</button>
+        <button class="btn btn-primary" id="btnPlanSubmit">提交审批</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="planDetailMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="planDetailTitle" style="width:min(1060px,97vw);">
+      <div class="modal-header">
+        <h2 class="modal-title" id="planDetailTitle">计划详情</h2>
+        <button class="modal-close" id="btnClosePlanDetail" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body" style="display:block;">
+        <div class="view-grid" id="planDetailGrid"></div>
+        <table class="view-mini-table">
+          <thead><tr><th>资产编号</th><th>资产名称</th><th>型号规格</th><th>存放地点</th><th>原值</th><th>净值</th><th>数量</th></tr></thead>
+          <tbody id="planDetailAssetBody"></tbody>
+        </table>
+        <div style="margin-top:8px;font-size:12px;color:#64748b;">审批流程：部门审批 → 总办会/董事会审批 → 通过后挂北交所拍卖</div>
+        <table class="view-mini-table" style="margin-top:8px;">
+          <thead><tr><th>节点</th><th>审批人</th><th>意见</th><th>时间</th><th>状态</th></tr></thead>
+          <tbody id="planDetailRecordBody"></tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="btnPlanDetailClose">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="planSubmitMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="planSubmitTitle" style="width:min(560px,95vw);">
+      <div class="modal-header">
+        <h2 class="modal-title" id="planSubmitTitle">提交审批确认</h2>
+        <button class="modal-close" id="btnClosePlanSubmit" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body" style="display:block;">
+        <div id="planSubmitSummary" class="view-item"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="btnPlanSubmitCancel">取消</button>
+        <button class="btn btn-primary" id="btnPlanSubmitOk">确认提交</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var currentUser = "张明";
+
+      try {
+        var sr = sessionStorage.getItem("demoScrapRole");
+        if (sr !== "dept" && sr !== "meeting" && sr !== "board") {
+          sessionStorage.setItem("demoScrapRole", "dept");
+        }
+      } catch (e) {}
+      function styleTab(active, elOn, elOff) {
+        elOn.style.background = "#1890ff";
+        elOn.style.color = "#fff";
+        elOn.style.borderColor = "#1890ff";
+        elOff.style.background = "#fff";
+        elOff.style.color = "#333";
+        elOff.style.borderColor = "#d9d9d9";
+      }
+      document.getElementById("tabScrapPlan").addEventListener("click", function () {
+        document.getElementById("panelScrapPlan").style.display = "block";
+        document.getElementById("panelScrapApply").style.display = "none";
+        styleTab(true, document.getElementById("tabScrapPlan"), document.getElementById("tabScrapApply"));
+      });
+      document.getElementById("tabScrapApply").addEventListener("click", function () {
+        document.getElementById("panelScrapPlan").style.display = "none";
+        document.getElementById("panelScrapApply").style.display = "block";
+        styleTab(true, document.getElementById("tabScrapApply"), document.getElementById("tabScrapPlan"));
+      });
+
+      function scrapRole() {
+        try {
+          var s = sessionStorage.getItem("demoScrapRole");
+          if (s === "meeting" || s === "board" || s === "dept") return s;
+        } catch (e) {}
+        return "dept";
+      }
+
+      // 基础数据物资台账（示例）
+      var materialLedger = [
+        { name: "齿轮箱", code: "MAT-GX-001", status: "在用" },
+        { name: "变流器", code: "MAT-BLQ-002", status: "在用" },
+        { name: "偏航电机", code: "MAT-DJ-003", status: "在用" },
+        { name: "主控柜", code: "MAT-ZKG-004", status: "已报废" }
+      ];
+
+      // 财务系统读取（示例）
+      var financeBook = {
+        "MAT-GX-001": { originValue: 860000, netValue: 118000 },
+        "MAT-BLQ-002": { originValue: 320000, netValue: 46000 },
+        "MAT-DJ-003": { originValue: 68000, netValue: 7000 },
+        "MAT-ZKG-004": { originValue: 210000, netValue: 0 }
+      };
+
+      var applications = [
+        {
+          applyNo: "TY20260320001",
+          applyDept: "设备运维部",
+          applyDate: "2026-03-20",
+          assetNameQty: "齿轮箱 x 1",
+          assetList: "MAT-GX-001：齿轮箱（1台）",
+          stackLocation: "华北中心仓 D 区报废暂存点",
+          scrapReason: "依据设备管理制度，第12条，该齿轮箱已达到使用年限且故障率高，拟申请报废。",
+          applicantSign: "张明（电子签）",
+          deptHeadOpinion: "同意报废，王磊（电子签）",
+          manageSpecialOpinion: "建议按流程处置，李娜（电子签）",
+          manageHeadOpinion: "同意，周强（电子签）",
+          status: "pending",
+          originValue: 860000,
+          netValue: 118000
+        },
+        {
+          applyNo: "TY20260318007",
+          applyDept: "设备运维部",
+          applyDate: "2026-03-18",
+          assetNameQty: "偏航电机 x 2",
+          assetList: "MAT-DJ-003：偏航电机（2台）",
+          stackLocation: "北区现场检修站",
+          scrapReason: "依据设备管理制度，第18条，该偏航电机故障无法修复，拟申请报废。",
+          applicantSign: "王磊（电子签）",
+          deptHeadOpinion: "同意报废，刘洋（电子签）",
+          manageSpecialOpinion: "资料齐全，建议通过，李娜（电子签）",
+          manageHeadOpinion: "同意，周强（电子签）",
+          status: "approved",
+          originValue: 68000,
+          netValue: 7000
+        },
+        {
+          applyNo: "TY20260315003",
+          applyDept: "检修保障部",
+          applyDate: "2026-03-15",
+          assetNameQty: "变流器 x 1",
+          assetList: "MAT-BLQ-002：变流器（1台）",
+          stackLocation: "华东中心仓 B 区",
+          scrapReason: "依据设备管理制度，第9条，该变流器技术落后且不满足改造需求，拟申请报废。",
+          applicantSign: "李娜（电子签）",
+          deptHeadOpinion: "建议补充评估后再议，赵峰（电子签）",
+          manageSpecialOpinion: "资料暂不完整，孙洁（电子签）",
+          manageHeadOpinion: "暂缓，周强（电子签）",
+          status: "rejected",
+          originValue: 320000,
+          netValue: 46000
+        }
+      ];
+
+      var refs = {
+        tbody: document.getElementById("applyTableBody"),
+        total: document.getElementById("applyTotalText"),
+        filterNo: document.getElementById("filterApplyNo"),
+        filterStatus: document.getElementById("filterStatus"),
+        btnCreate: document.getElementById("btnCreateApply"),
+        modalMask: document.getElementById("applyModalMask"),
+        btnCloseModal: document.getElementById("btnCloseModal"),
+        btnCancel: document.getElementById("btnCancel"),
+        btnSubmit: document.getElementById("btnSubmitApply"),
+        applyDept: document.getElementById("applyDept"),
+        applyDate: document.getElementById("applyDate"),
+        assetNameQty: document.getElementById("assetNameQty"),
+        scrapQty: document.getElementById("scrapQty"),
+        assetList: document.getElementById("assetList"),
+        stackLocation: document.getElementById("stackLocation"),
+        scrapReason: document.getElementById("scrapReason"),
+        applicantSign: document.getElementById("applicantSign"),
+        deptHeadOpinion: document.getElementById("deptHeadOpinion"),
+        manageSpecialOpinion: document.getElementById("manageSpecialOpinion"),
+        manageHeadOpinion: document.getElementById("manageHeadOpinion"),
+        viewModalMask: document.getElementById("viewModalMask"),
+        btnCloseViewModal: document.getElementById("btnCloseViewModal"),
+        btnViewClose: document.getElementById("btnViewClose"),
+        btnViewApprove: document.getElementById("btnViewApprove"),
+        btnViewReject: document.getElementById("btnViewReject"),
+        btnOpenProgress: document.getElementById("btnOpenProgress"),
+        viewGrid: document.getElementById("viewGrid"),
+        progressModalMask: document.getElementById("progressModalMask"),
+        btnCloseProgressModal: document.getElementById("btnCloseProgressModal"),
+        btnProgressClose: document.getElementById("btnProgressClose"),
+        flowTabs: document.querySelectorAll("[data-flow-tab]"),
+        flowPanes: document.querySelectorAll("[data-flow-pane]"),
+        flowTooltip: document.getElementById("flowTooltip"),
+        flowWrap: document.getElementById("flowWrap"),
+        flowNodes: document.querySelectorAll(".flow-node"),
+        progressInfoBody: document.getElementById("progressInfoBody")
+      };
+      var activeViewItem = null;
+      var currentDept = "设备运维部";
+
+      // 报废计划模块数据
+      var planAssets = [
+        { id: "GD-2024-001", name: "风速检测仪", model: "FS-80", location: "华北库房", keeper: "张三", origin: 22500, net: 16800, years: "8年", status: "在用", type: "检测设备", dept: "设备运维部" },
+        { id: "GD-2024-002", name: "振动分析仪", model: "ZD-300", location: "风电场01号", keeper: "李四", origin: 18000, net: 12600, years: "7年", status: "在用", type: "检测设备", dept: "设备运维部" },
+        { id: "GD-2023-088", name: "变流器测试仪", model: "BLT-300", location: "华北库房", keeper: "王磊", origin: 41000, net: 28400, years: "9年", status: "在用", type: "电测设备", dept: "设备运维部" },
+        { id: "LY-2024-015", name: "液压扳手套装", model: "HB-50", location: "风电场02号", keeper: "赵明", origin: 12000, net: 9300, years: "6年", status: "在用", type: "工器具", dept: "设备运维部" },
+        { id: "GD-2022-064", name: "绝缘电阻测试仪", model: "IR-5000", location: "华北库房", keeper: "周凯", origin: 30000, net: 24000, years: "5年", status: "在用", type: "电测设备", dept: "设备运维部" },
+        { id: "HD-2024-101", name: "电缆耐压仪", model: "NY-12", location: "华东库房", keeper: "孙强", origin: 56000, net: 47000, years: "4年", status: "在用", type: "电测设备", dept: "华东运维部" }
+      ];
+      var planRecords = [
+        { planNo: "BF-2026-001", year: "2026", dept: "设备运维部", applicant: currentUser, qty: 3, originSum: 75500, netSum: 54200, submitDate: "2026-06-15", status: "review", assetIds: ["GD-2024-001", "GD-2023-088", "LY-2024-015"], remark: "年度设备更新，按计划淘汰老旧设备。" },
+        { planNo: "BF-2026-002", year: "2026", dept: "设备运维部", applicant: currentUser, qty: 2, originSum: 48000, netSum: 35400, submitDate: "", status: "draft", assetIds: ["GD-2024-002", "GD-2022-064"], remark: "现场反馈故障率上升，拟报废。" },
+        { planNo: "BF-2026-003", year: "2026", dept: "设备运维部", applicant: "王磊", qty: 1, originSum: 41000, netSum: 28400, submitDate: "2026-07-03", status: "approved", assetIds: ["GD-2023-088"], remark: "已完成审批，待北交所挂牌。" },
+        { planNo: "BF-2026-004", year: "2026", dept: "设备运维部", applicant: "李四", qty: 1, originSum: 18000, netSum: 12600, submitDate: "2026-07-05", status: "rejected", assetIds: ["GD-2024-002"], remark: "资产仍可修复，暂不报废。" },
+        { planNo: "BF-2025-016", year: "2025", dept: "设备运维部", applicant: "张明", qty: 2, originSum: 52000, netSum: 36000, submitDate: "2025-06-26", status: "approved", assetIds: ["GD-2024-001", "GD-2022-064"], remark: "历年计划，已通过。" }
+      ];
+      var planFilters = { tab: "all" };
+      var planEditingNo = "";
+      var planSubmitNo = "";
+      var pickedAssetIds = [];
+      var pickedAssetQty = {};
+
+      function statusMeta(code) {
+        if (code === "approved") return { cls: "tag-status--approved", text: "已通过" };
+        if (code === "rejected") return { cls: "tag-status--rejected", text: "已驳回" };
+        return { cls: "tag-status--pending", text: "待评估" };
+      }
+
+      function fmtMoney(n) {
+        return Number(n).toLocaleString("zh-CN", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      }
+
+      function genApplyNo() {
+        var d = new Date();
+        var y = d.getFullYear();
+        var m = String(d.getMonth() + 1).padStart(2, "0");
+        var day = String(d.getDate()).padStart(2, "0");
+        var s = String(Math.floor(Math.random() * 900 + 100));
+        return "TY" + y + m + day + s;
+      }
+
+      function signerName(text) {
+        var t = String(text || "");
+        return t.split("（")[0].trim();
+      }
+
+      function canHandle(item) {
+        if (!item || item.status !== "pending") return false;
+        var applicant = signerName(item.applicantSign);
+        if (applicant && applicant === currentUser) return false;
+        var role = scrapRole();
+        return role === "dept" || role === "meeting" || role === "board";
+      }
+
+      function roleActionLabel() {
+        var role = scrapRole();
+        if (role === "dept") return "部门办理";
+        if (role === "meeting") return "主任办理";
+        return "分管领导办理";
+      }
+
+      function renderProgressInfo(item) {
+        var rows = [
+          { name: "备案", user: "-", status: "已完成", opinion: "-", start: "-", end: "-", cost: "-", file: "-" },
+          { name: "管理处置部门负责人意见及签字", user: "管理处置部门负责人", status: item.status === "pending" ? "待审批" : "通过", opinion: item.manageHeadOpinion || "-", start: item.applyDate + " 11:03:22", end: item.status === "pending" ? "-" : item.applyDate + " 11:05:32", cost: item.status === "pending" ? "-" : "49秒", file: "-" },
+          { name: "管理处置部门专责意见及签字", user: "管理处置部门专责", status: item.status === "rejected" ? "驳回" : "通过", opinion: item.manageSpecialOpinion || "-", start: item.applyDate + " 11:01:45", end: item.applyDate + " 11:02:32", cost: "47秒", file: "-" },
+          { name: "申请部门负责人意见及签字", user: "申请部门负责人", status: item.status === "rejected" ? "驳回" : "通过", opinion: item.deptHeadOpinion || "-", start: item.applyDate + " 11:00:45", end: item.applyDate + " 11:01:32", cost: "47秒", file: "-" },
+          { name: "申请人", user: signerName(item.applicantSign), status: "已提交", opinion: "-", start: item.applyDate + " 11:00:42", end: item.applyDate + " 11:00:45", cost: "2秒", file: "-" }
+        ];
+        refs.progressInfoBody.innerHTML = rows.map(function (r, idx) {
+          return "<tr><td>" + (idx + 1) + "</td><td>" + r.name + "</td><td>" + r.user + "</td><td>" + r.status + "</td><td>" + r.opinion + "</td><td>" + r.start + "</td><td>" + r.end + "</td><td>" + r.cost + "</td><td>" + r.file + "</td></tr>";
+        }).join("");
+      }
+
+      function setFlowTooltips(item) {
+        var tips = [
+          "开始",
+          "审批人: " + signerName(item.applicantSign) + "\n节点名称: 申请人\n开始时间: " + item.applyDate + " 11:00:42\n结束时间: " + item.applyDate + " 11:00:45\n耗时: 2秒\n审批状态: v3",
+          "审批人: 申请部门负责人\n节点名称: 申请部门负责人意见及签字\n开始时间: " + item.applyDate + " 11:00:45\n结束时间: " + item.applyDate + " 11:01:32\n耗时: 47秒\n审批状态: 通过",
+          "审批人: 管理处置部门专责\n节点名称: 管理处置部门专责意见及签字\n开始时间: " + item.applyDate + " 11:01:45\n结束时间: " + item.applyDate + " 11:02:32\n耗时: 47秒\n审批状态: " + (item.status === "rejected" ? "驳回" : "通过"),
+          "审批人: 管理处置部门负责人\n节点名称: 管理处置部门负责人意见及签字\n开始时间: " + item.applyDate + " 11:03:22\n结束时间: " + (item.status === "pending" ? "-" : item.applyDate + " 11:05:32") + "\n耗时: " + (item.status === "pending" ? "-" : "49秒") + "\n审批状态: " + statusMeta(item.status).text,
+          "结束"
+        ];
+        refs.flowNodes.forEach(function (node, i) {
+          node.setAttribute("data-flow-tip", tips[i] || "");
+        });
+      }
+
+      function escHtml(s) {
+        return String(s == null ? "" : s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function formatMoneyYuan(n) {
+        var x = Number(n);
+        if (!isFinite(x)) x = 0;
+        return "¥" + Math.round(x).toLocaleString("zh-CN");
+      }
+
+      function buildScrapAssetRows(item) {
+        var rows = [];
+        var loc = (item.stackLocation || "—").trim() || "—";
+        if (item.deviceCode) {
+          var mat = materialLedger.find(function (m) { return m.code === item.deviceCode; });
+          rows.push({
+            code: item.deviceCode,
+            name: mat ? mat.name : "—",
+            spec: "—",
+            location: loc,
+            origin: item.originValue,
+            net: item.netValue
+          });
+          return rows;
+        }
+        var segs = (item.assetList || "").split(/[；;]/).map(function (t) { return t.trim(); }).filter(Boolean);
+        if (!segs.length) {
+          rows.push({ code: "—", name: "—", spec: "—", location: loc, origin: item.originValue, net: item.netValue });
+          return rows;
+        }
+        var n = segs.length;
+        var oTot = Number(item.originValue) || 0;
+        var nTot = Number(item.netValue) || 0;
+        var oEach = Math.floor(oTot / n);
+        var nvEach = Math.floor(nTot / n);
+        segs.forEach(function (seg, i) {
+          var m = seg.match(/^([A-Z0-9-]+)\s*[：:]\s*(.+)$/);
+          var code = m ? m[1] : "—";
+          var rest = m ? m[2] : seg;
+          var name = String(rest).replace(/（\s*\d+\s*台）\s*$/g, "").trim() || "—";
+          var isLast = i === n - 1;
+          rows.push({
+            code: code,
+            name: name,
+            spec: "—",
+            location: loc,
+            origin: isLast ? oTot - oEach * (n - 1) : oEach,
+            net: isLast ? nTot - nvEach * (n - 1) : nvEach
+          });
+        });
+        return rows;
+      }
+
+      function openViewModal(item) {
+        activeViewItem = item;
+        var st = statusMeta(item.status);
+        var applicant = signerName(item.applicantSign || "");
+        var trows = buildScrapAssetRows(item);
+        var sumO = 0;
+        var sumN = 0;
+        trows.forEach(function (r) {
+          sumO += Number(r.origin) || 0;
+          sumN += Number(r.net) || 0;
+        });
+        var tableBody = trows.map(function (r) {
+          return (
+            "<tr>" +
+            "<td>" + escHtml(r.code) + "</td>" +
+            "<td>" + escHtml(r.name) + "</td>" +
+            "<td>" + escHtml(r.spec) + "</td>" +
+            "<td>" + escHtml(r.location) + "</td>" +
+            '<td class="cell-num-r">' + escHtml(formatMoneyYuan(r.origin)) + "</td>" +
+            '<td class="cell-num-r">' + escHtml(formatMoneyYuan(r.net)) + "</td>" +
+            "</tr>"
+          );
+        }).join("");
+        refs.viewGrid.innerHTML =
+          '<div class="scrap-detail-inner">' +
+          '<div class="scrap-detail-meta">' +
+          '<div><span class="label">申请单号：</span><span class="val-no">' + escHtml(item.applyNo || "—") + "</span></div>" +
+          '<div><span class="label">申请日期：</span>' + escHtml(item.applyDate || "—") + "</div>" +
+          '<div><span class="label">申请部门：</span>' + escHtml(item.applyDept || "—") + "</div>" +
+          '<div><span class="label">申请人：</span>' + escHtml(applicant || "—") + "</div>" +
+          "</div>" +
+          '<div class="scrap-detail-line"><span class="label">拟报废固定资产名称及数量：</span>' + escHtml(item.assetNameQty || "—") + "</div>" +
+          '<div class="scrap-detail-line"><span class="label">拟报废固定资产堆放地点：</span>' + escHtml(item.stackLocation || "—") + "</div>" +
+          '<h3 class="scrap-detail-table-title">拟报废固定资产清单</h3>' +
+          '<table class="scrap-detail-table">' +
+          "<thead><tr>" +
+          "<th>固定资产编号</th><th>固定资产名称</th><th>规格型号</th><th>存放地点</th><th>原值(元)</th><th>净值(元)</th>" +
+          "</tr></thead>" +
+          "<tbody>" + tableBody + "</tbody>" +
+          "<tfoot><tr>" +
+          '<td colspan="3"></td><td style="text-align:center;">合计</td>' +
+          '<td class="cell-num-r">' + escHtml(formatMoneyYuan(sumO)) + "</td>" +
+          '<td class="cell-num-r">' + escHtml(formatMoneyYuan(sumN)) + "</td>" +
+          "</tr></tfoot></table>" +
+          '<div class="scrap-detail-extra">' +
+          '<div class="ex-row"><b>状态：</b>' + escHtml(st.text) + "</div>" +
+          '<div class="ex-row"><b>申请报废原因：</b>' + escHtml(item.scrapReason || "—") + "</div>" +
+          '<div class="ex-row"><b>申请人员签字：</b>' + escHtml(item.applicantSign || "—") + "</div>" +
+          '<div class="ex-row"><b>申请部门负责人意见及签字：</b>' + escHtml(item.deptHeadOpinion || "—") + "</div>" +
+          '<div class="ex-row"><b>管理处置部门专责意见及签字：</b>' + escHtml(item.manageSpecialOpinion || "—") + "</div>" +
+          '<div class="ex-row"><b>管理处置部门负责人意见及签字：</b>' + escHtml(item.manageHeadOpinion || "—") + "</div>" +
+          "</div></div>";
+        var can = canHandle(item);
+        refs.btnViewApprove.style.display = can ? "inline-block" : "none";
+        refs.btnViewReject.style.display = can ? "inline-block" : "none";
+        refs.viewModalMask.classList.add("show");
+        refs.viewModalMask.setAttribute("aria-hidden", "false");
+      }
+
+      function closeViewModal() {
+        refs.viewModalMask.classList.remove("show");
+        refs.viewModalMask.setAttribute("aria-hidden", "true");
+      }
+
+      function openProgressModal(item) {
+        setFlowTooltips(item);
+        renderProgressInfo(item);
+        refs.progressModalMask.classList.add("show");
+        refs.progressModalMask.setAttribute("aria-hidden", "false");
+      }
+
+      function closeProgressModal() {
+        refs.progressModalMask.classList.remove("show");
+        refs.progressModalMask.setAttribute("aria-hidden", "true");
+        refs.flowTooltip.style.display = "none";
+      }
+
+      function render(rows) {
+        refs.tbody.innerHTML = "";
+        if (!rows.length) {
+          refs.tbody.innerHTML = '<tr><td colspan="13" style="text-align:center;color:#8ca0b8;padding:24px;">暂无数据</td></tr>';
+          refs.total.textContent = "共 0 条";
+          return;
+        }
+        rows.forEach(function (x) {
+          var st = statusMeta(x.status);
+          var tr = document.createElement("tr");
+          tr.setAttribute("data-apply-no", x.applyNo);
+          tr.innerHTML =
+            "<td>" + x.applyNo + "</td>" +
+            "<td>" + (x.applyDept || "-") + "</td>" +
+            "<td>" + x.applyDate + "</td>" +
+            "<td>" + (x.assetNameQty || "-") + "</td>" +
+            "<td>" + (x.assetList || "-") + "</td>" +
+            "<td>" + (x.stackLocation || "-") + "</td>" +
+            "<td>" + (x.scrapReason || "-") + "</td>" +
+            "<td>" + (x.applicantSign || "-") + "</td>" +
+            "<td>" + (x.deptHeadOpinion || "-") + "</td>" +
+            "<td>" + (x.manageSpecialOpinion || "-") + "</td>" +
+            "<td>" + (x.manageHeadOpinion || "-") + "</td>" +
+            '<td><span class="tag-status ' + st.cls + '">' + st.text + "</span></td>" +
+            '<td><div class="wh-ops">' +
+            '<a href="#" data-action="view">查看</a>' +
+            (canHandle(x) ? ('<a href="#" data-action="handle">' + roleActionLabel() + "</a>") : "") +
+            "</div></td>";
+          refs.tbody.appendChild(tr);
+        });
+        refs.total.textContent = "共 " + rows.length + " 条";
+      }
+
+      function applyFilters() {
+        var no = (refs.filterNo.value || "").trim().toLowerCase();
+        var st = refs.filterStatus.value;
+        var rows = applications.filter(function (x) {
+          var hitNo = !no || x.applyNo.toLowerCase().indexOf(no) > -1;
+          var hitSt = !st || x.status === st;
+          return hitNo && hitSt;
+        });
+        render(rows);
+      }
+
+      function activeMaterials() {
+        return materialLedger.filter(function (x) { return x.status === "在用"; });
+      }
+
+      function fillDeviceOptions() {
+        refs.assetNameQty.innerHTML = "";
+        activeMaterials().forEach(function (x) {
+          var opt = document.createElement("option");
+          opt.value = x.code;
+          opt.textContent = x.name;
+          refs.assetNameQty.appendChild(opt);
+        });
+      }
+
+      function openModal() {
+        fillDeviceOptions();
+        refs.scrapQty.value = "1";
+        refs.assetList.value = "";
+        refs.stackLocation.value = "";
+        refs.scrapReason.value = "";
+        refs.applicantSign.value = currentUser + "（电子签）";
+        refs.applyDate.value = new Date().toISOString().slice(0, 10);
+        refs.modalMask.classList.add("show");
+        refs.modalMask.setAttribute("aria-hidden", "false");
+      }
+
+      function closeModal() {
+        refs.modalMask.classList.remove("show");
+        refs.modalMask.setAttribute("aria-hidden", "true");
+      }
+
+      refs.btnCreate.addEventListener("click", openModal);
+      refs.btnCloseModal.addEventListener("click", closeModal);
+      refs.btnCancel.addEventListener("click", closeModal);
+      refs.modalMask.addEventListener("click", function (e) {
+        if (e.target === refs.modalMask) closeModal();
+      });
+      refs.btnCloseViewModal.addEventListener("click", closeViewModal);
+      refs.btnViewClose.addEventListener("click", closeViewModal);
+      refs.viewModalMask.addEventListener("click", function (e) {
+        if (e.target === refs.viewModalMask) closeViewModal();
+      });
+      refs.btnCloseProgressModal.addEventListener("click", closeProgressModal);
+      refs.btnProgressClose.addEventListener("click", closeProgressModal);
+      refs.progressModalMask.addEventListener("click", function (e) {
+        if (e.target === refs.progressModalMask) closeProgressModal();
+      });
+      refs.btnOpenProgress.addEventListener("click", function () {
+        if (!activeViewItem) return;
+        openProgressModal(activeViewItem);
+      });
+      refs.flowTabs.forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          var key = tab.getAttribute("data-flow-tab");
+          refs.flowTabs.forEach(function (t) { t.classList.remove("is-active"); });
+          refs.flowPanes.forEach(function (p) {
+            p.classList.toggle("is-active", p.getAttribute("data-flow-pane") === key);
+          });
+          tab.classList.add("is-active");
+        });
+      });
+      refs.flowNodes.forEach(function (node) {
+        node.addEventListener("mouseenter", function () {
+          var tip = node.getAttribute("data-flow-tip");
+          if (!tip) return;
+          refs.flowTooltip.textContent = tip;
+          refs.flowTooltip.style.display = "block";
+        });
+        node.addEventListener("mousemove", function (e) {
+          var rect = refs.flowWrap.getBoundingClientRect();
+          refs.flowTooltip.style.left = Math.max(10, e.clientX - rect.left + 12) + "px";
+          refs.flowTooltip.style.top = Math.max(10, e.clientY - rect.top + 12) + "px";
+        });
+        node.addEventListener("mouseleave", function () {
+          refs.flowTooltip.style.display = "none";
+        });
+      });
+      refs.btnSubmit.addEventListener("click", function () {
+        if (!refs.assetNameQty.value) {
+          alert("当前无可选在用物资。");
+          return;
+        }
+        var code = refs.assetNameQty.value;
+        var mat = materialLedger.find(function (x) { return x.code === code; });
+        var fin = financeBook[code] || { originValue: 0, netValue: 0 };
+        var d = new Date();
+        var date = refs.applyDate.value || d.toISOString().slice(0, 10);
+        var qty = Math.max(1, Number(refs.scrapQty.value || 1));
+        var nameQty = (mat ? mat.name : "未知设备") + " x " + qty;
+        var reasonText = (refs.scrapReason.value || "").trim();
+        if (!reasonText) {
+          alert("请填写申请报废原因。");
+          return;
+        }
+
+        applications.unshift({
+          applyNo: genApplyNo(),
+          applyDept: (refs.applyDept.value || "设备运维部").trim(),
+          applyDate: date,
+          assetNameQty: nameQty,
+          assetList: (refs.assetList.value || (code + "：" + (mat ? mat.name : "设备") + "（" + qty + "台）")).trim(),
+          stackLocation: (refs.stackLocation.value || "待补充").trim(),
+          scrapReason: reasonText,
+          applicantSign: (refs.applicantSign.value || (currentUser + "（电子签）")).trim(),
+          deptHeadOpinion: (refs.deptHeadOpinion.value || "").trim(),
+          manageSpecialOpinion: (refs.manageSpecialOpinion.value || "").trim(),
+          manageHeadOpinion: (refs.manageHeadOpinion.value || "").trim(),
+          status: "pending",
+          originValue: fin.originValue,
+          netValue: fin.netValue,
+          deviceCode: code
+        });
+        closeModal();
+        applyFilters();
+      });
+
+      refs.tbody.addEventListener("click", function (e) {
+        var a = e.target.closest("a[data-action]");
+        if (!a) return;
+        e.preventDefault();
+        var action = a.getAttribute("data-action");
+        var tr = a.closest("tr");
+        if (!tr) return;
+        var no = tr.getAttribute("data-apply-no");
+        var item = applications.find(function (x) { return x.applyNo === no; });
+        if (!item) return;
+
+        if (action === "view") {
+          openViewModal(item);
+          return;
+        }
+
+        if (action === "handle") {
+          openViewModal(item);
+          return;
+        }
+      });
+
+      refs.btnViewApprove.addEventListener("click", function () {
+        var item = activeViewItem;
+        if (!item) return;
+        if (!canHandle(item)) {
+          alert("当前角色无办理权限。");
+          return;
+        }
+          if (item.status === "approved") {
+            alert("该申请已通过。");
+            return;
+          }
+          item.status = "approved";
+          var m = materialLedger.find(function (x) { return x.code === item.deviceCode; });
+          if (m) m.status = "已报废";
+        closeViewModal();
+        closeProgressModal();
+          applyFilters();
+      });
+
+      refs.btnViewReject.addEventListener("click", function () {
+        var item = activeViewItem;
+        if (!item) return;
+        if (!canHandle(item)) {
+          alert("当前角色无办理权限。");
+          return;
+        }
+          item.status = "rejected";
+        closeViewModal();
+        closeProgressModal();
+          applyFilters();
+      });
+
+      // ------- 报废计划管理 -------
+      function planStatusMeta(s) {
+        if (s === "draft") return { txt: "待提交", cls: "tag-status--pending" };
+        if (s === "review") return { txt: "审批中", cls: "tag-status--pending" };
+        if (s === "approved") return { txt: "已通过", cls: "tag-status--approved" };
+        return { txt: "已驳回", cls: "tag-status--rejected" };
+      }
+      function planRowsByFilter() {
+        var no = (document.getElementById("qPlanNo").value || "").trim().toLowerCase();
+        var year = document.getElementById("qPlanYear").value || "";
+        var dept = document.getElementById("qPlanDept").value || "";
+        var user = (document.getElementById("qPlanUser").value || "").trim().toLowerCase();
+        var ds = document.getElementById("qDateStart").value || "";
+        var de = document.getElementById("qDateEnd").value || "";
+        return planRecords.filter(function (p) {
+          var byTab = true;
+          if (planFilters.tab === "draft") byTab = p.status === "draft";
+          else if (planFilters.tab === "review") byTab = p.status === "review";
+          else if (planFilters.tab === "approved") byTab = p.status === "approved";
+          else if (planFilters.tab === "rejected") byTab = p.status === "rejected";
+          else if (planFilters.tab === "history") byTab = Number(p.year) < new Date().getFullYear();
+          var byNo = !no || p.planNo.toLowerCase().indexOf(no) > -1;
+          var byYear = !year || p.year === year;
+          var byDept = !dept || p.dept === dept;
+          var byUser = !user || p.applicant.toLowerCase().indexOf(user) > -1;
+          var byDate = true;
+          if (ds && p.submitDate) byDate = p.submitDate >= ds;
+          if (byDate && de && p.submitDate) byDate = p.submitDate <= de;
+          return byTab && byNo && byYear && byDept && byUser && byDate;
+        });
+      }
+      function refreshPlanStats() {
+        var y = String(new Date().getFullYear());
+        var yearRows = planRecords.filter(function (p) { return p.year === y; });
+        document.getElementById("statYearTotal").textContent = String(yearRows.length);
+        document.getElementById("statDraft").textContent = String(yearRows.filter(function (p) { return p.status === "draft"; }).length);
+        document.getElementById("statReview").textContent = String(yearRows.filter(function (p) { return p.status === "review"; }).length);
+        document.getElementById("statApproved").textContent = String(yearRows.filter(function (p) { return p.status === "approved"; }).length);
+      }
+      function renderPlanTable() {
+        var body = document.getElementById("planTableBody");
+        if (!body) return;
+        var rows = planRowsByFilter();
+        body.innerHTML = "";
+        if (!rows.length) {
+          body.innerHTML = '<tr><td colspan="12" style="text-align:center;color:#8ca0b8;padding:20px;">暂无计划数据</td></tr>';
+          return;
+        }
+        rows.forEach(function (p, idx) {
+          var st = planStatusMeta(p.status);
+          var tr = document.createElement("tr");
+          tr.innerHTML =
+            '<td><input type="checkbox" class="plan-row-check" data-no="' + p.planNo + '"/></td>' +
+            "<td>" + (idx + 1) + "</td>" +
+            "<td>" + p.planNo + "</td>" +
+            "<td>" + p.year + "</td>" +
+            "<td>" + p.dept + "</td>" +
+            "<td>" + p.applicant + "</td>" +
+            "<td>" + p.qty + "</td>" +
+            "<td>" + fmtMoney(p.originSum) + "</td>" +
+            "<td>" + fmtMoney(p.netSum) + "</td>" +
+            "<td>" + (p.submitDate || "-") + "</td>" +
+            '<td><span class="tag-status ' + st.cls + '">' + st.txt + "</span></td>" +
+            '<td><div class="wh-ops"><a href="#" data-plan-act="view" data-no="' + p.planNo + '">查看</a><a href="#" data-plan-act="edit" data-no="' + p.planNo + '">编辑</a><a href="#" data-plan-act="submit" data-no="' + p.planNo + '">提交审批</a><a href="#" data-plan-act="print" data-no="' + p.planNo + '">打印</a></div></td>';
+          body.appendChild(tr);
+        });
+      }
+      function genPlanNo(year) {
+        var seq = planRecords.filter(function (p) { return p.year === String(year); }).length + 1;
+        return "BF-" + year + "-" + String(seq).padStart(3, "0");
+      }
+      function openPlanModal(planNo) {
+        planEditingNo = planNo || "";
+        pickedAssetIds = [];
+        pickedAssetQty = {};
+        var yearSel = document.getElementById("planYearInput");
+        if (!yearSel.options.length) {
+          var yy = new Date().getFullYear();
+          [yy - 1, yy, yy + 1].forEach(function (y) {
+            var op = document.createElement("option"); op.value = String(y); op.textContent = String(y);
+            yearSel.appendChild(op);
+          });
+        }
+        document.getElementById("planDeptInput").value = currentDept + " - 自动";
+        document.getElementById("planUserInput").value = currentUser + " - 自动";
+        document.getElementById("planDateInput").value = new Date().toISOString().slice(0, 10);
+        document.getElementById("planRemarkInput").value = "";
+        document.getElementById("assetKeyword").value = "";
+        document.getElementById("assetTypeFilter").value = "";
+        document.getElementById("assetLocationFilter").value = "";
+        if (planNo) {
+          var old = planRecords.find(function (p) { return p.planNo === planNo; });
+          if (old) {
+            yearSel.value = old.year;
+            document.getElementById("planDateInput").value = old.submitDate || new Date().toISOString().slice(0, 10);
+            document.getElementById("planRemarkInput").value = old.remark || "";
+            pickedAssetIds = old.assetIds.slice();
+            pickedAssetIds.forEach(function (id) {
+              var q = old.assetQty && old.assetQty[id] != null ? Number(old.assetQty[id]) : 1;
+              pickedAssetQty[id] = !isNaN(q) && q >= 1 ? Math.floor(q) : 1;
+            });
+          }
+        } else {
+          yearSel.value = String(new Date().getFullYear());
+        }
+        renderAssetPickTable();
+        document.getElementById("planModalMask").classList.add("show");
+      }
+      function closePlanModal() { document.getElementById("planModalMask").classList.remove("show"); }
+      function renderAssetPickTable() {
+        var body = document.getElementById("assetPickBody");
+        var kw = (document.getElementById("assetKeyword").value || "").trim().toLowerCase();
+        var ty = document.getElementById("assetTypeFilter").value || "";
+        var loc = document.getElementById("assetLocationFilter").value || "";
+        var rows = planAssets.filter(function (a) {
+          if (a.dept !== currentDept) return false;
+          var byKw = !kw || a.id.toLowerCase().indexOf(kw) > -1 || a.name.toLowerCase().indexOf(kw) > -1;
+          var byTy = !ty || a.type === ty;
+          var byLoc = !loc || a.location === loc;
+          return byKw && byTy && byLoc;
+        });
+        body.innerHTML = "";
+        rows.forEach(function (a) {
+          var checked = pickedAssetIds.indexOf(a.id) > -1;
+          var tr = document.createElement("tr");
+          if (checked) tr.className = "asset-row-selected";
+          var qVal = pickedAssetQty[a.id] != null ? pickedAssetQty[a.id] : 1;
+          if (typeof qVal !== "number" || isNaN(qVal) || qVal < 1) qVal = 1;
+          tr.innerHTML =
+            '<td><input type="checkbox" class="asset-row-check" data-id="' + a.id + '"' + (checked ? " checked" : "") + "></td>" +
+            "<td>" + a.id + "</td><td>" + a.name + "</td><td>" + a.model + "</td><td>" + a.location + "</td><td>" + a.keeper + "</td><td>" + fmtMoney(a.origin) + "</td><td>" + fmtMoney(a.net) + "</td><td>" + a.years + "</td><td>" + a.status + "</td>" +
+            '<td><input type="number" class="asset-qty-input" data-id="' + a.id + '" min="1" step="1" value="' + qVal + '"' + (checked ? "" : " disabled") + "></td>";
+          body.appendChild(tr);
+        });
+        refreshPickSummary();
+      }
+      function refreshPickSummary() {
+        var selected = planAssets.filter(function (a) { return pickedAssetIds.indexOf(a.id) > -1; });
+        var qty = 0;
+        var origin = 0;
+        var net = 0;
+        selected.forEach(function (a) {
+          var q = pickedAssetQty[a.id] != null ? Number(pickedAssetQty[a.id]) : 1;
+          if (isNaN(q) || q < 1) q = 1;
+          qty += q;
+          origin += a.origin * q;
+          net += a.net * q;
+        });
+        document.getElementById("pickedCount").textContent = String(qty);
+        document.getElementById("pickedOrigin").textContent = "¥ " + fmtMoney(origin);
+        document.getElementById("pickedNet").textContent = "¥ " + fmtMoney(net);
+        var tip = document.getElementById("evalTip");
+        if (net > 1000000) {
+          tip.classList.add("warn");
+          tip.textContent = "净值合计超过100万元，需进行资产评估";
+        } else {
+          tip.classList.remove("warn");
+          tip.textContent = "净值合计未超过100万元，无需进行资产评估";
+        }
+      }
+      function savePlan(status) {
+        if (!pickedAssetIds.length) { alert("请至少勾选1项物资。"); return; }
+        var selected = planAssets.filter(function (a) { return pickedAssetIds.indexOf(a.id) > -1; });
+        var year = document.getElementById("planYearInput").value;
+        var date = document.getElementById("planDateInput").value || new Date().toISOString().slice(0, 10);
+        var assetQty = {};
+        var totalPieces = 0;
+        var origin = 0;
+        var net = 0;
+        selected.forEach(function (a) {
+          var q = pickedAssetQty[a.id] != null ? Number(pickedAssetQty[a.id]) : 1;
+          if (isNaN(q) || q < 1) q = 1;
+          q = Math.floor(q);
+          assetQty[a.id] = q;
+          totalPieces += q;
+          origin += a.origin * q;
+          net += a.net * q;
+        });
+        var item = {
+          planNo: planEditingNo || genPlanNo(year),
+          year: year,
+          dept: currentDept,
+          applicant: currentUser,
+          qty: totalPieces,
+          originSum: origin,
+          netSum: net,
+          submitDate: status === "draft" ? "" : date,
+          status: status,
+          assetIds: pickedAssetIds.slice(),
+          assetQty: assetQty,
+          remark: (document.getElementById("planRemarkInput").value || "").trim()
+        };
+        var idx = planRecords.findIndex(function (p) { return p.planNo === item.planNo; });
+        if (idx > -1) planRecords[idx] = item; else planRecords.unshift(item);
+        closePlanModal();
+        refreshPlanStats();
+        renderPlanTable();
+      }
+      function openPlanDetail(planNo) {
+        var item = planRecords.find(function (p) { return p.planNo === planNo; });
+        if (!item) return;
+        document.getElementById("planDetailGrid").innerHTML =
+          '<div class="view-item"><b>计划编号：</b>' + item.planNo + '</div><div class="view-item"><b>计划年度：</b>' + item.year + '</div>' +
+          '<div class="view-item"><b>申请部门：</b>' + item.dept + '</div><div class="view-item"><b>申请人：</b>' + item.applicant + '</div>' +
+          '<div class="view-item"><b>提交日期：</b>' + (item.submitDate || "-") + '</div><div class="view-item"><b>审批状态：</b>' + planStatusMeta(item.status).txt + '</div>' +
+          '<div class="view-item full"><b>报废说明：</b>' + (item.remark || "-") + "</div>";
+        var assets = planAssets.filter(function (a) { return item.assetIds.indexOf(a.id) > -1; });
+        document.getElementById("planDetailAssetBody").innerHTML = assets.map(function (a) {
+          var pq = item.assetQty && item.assetQty[a.id] != null ? Number(item.assetQty[a.id]) : 1;
+          if (isNaN(pq) || pq < 1) pq = 1;
+          return "<tr><td>" + a.id + "</td><td>" + a.name + "</td><td>" + a.model + "</td><td>" + a.location + "</td><td>" + fmtMoney(a.origin) + "</td><td>" + fmtMoney(a.net) + "</td><td>" + pq + "</td></tr>";
+        }).join("");
+        document.getElementById("planDetailRecordBody").innerHTML =
+          "<tr><td>申请部门负责人意见及签字</td><td>申请部门负责人</td><td>" + (item.status === "rejected" ? "驳回" : "同意") + "</td><td>" + (item.submitDate || "-") + "</td><td>" + (item.status === "rejected" ? "驳回" : "完成") + "</td></tr>" +
+          "<tr><td>管理处置部门专责意见及签字</td><td>管理处置部门专责</td><td>" + (item.status === "rejected" ? "驳回" : "同意") + "</td><td>-</td><td>" + (item.status === "rejected" ? "驳回" : "完成") + "</td></tr>" +
+          "<tr><td>管理处置部门负责人意见及签字</td><td>管理处置部门负责人</td><td>" + (item.status === "approved" ? "通过" : item.status === "review" ? "审批中" : "-") + "</td><td>-</td><td>" + (item.status === "approved" ? "完成" : "待处理") + "</td></tr>";
+        document.getElementById("planDetailMask").classList.add("show");
+      }
+      function closePlanDetail() { document.getElementById("planDetailMask").classList.remove("show"); }
+      function openPlanSubmit(planNo) {
+        var item = planRecords.find(function (p) { return p.planNo === planNo; });
+        if (!item) return;
+        planSubmitNo = planNo;
+        document.getElementById("planSubmitSummary").innerHTML =
+          "<b>计划编号：</b>" + item.planNo + "<br><b>申请部门：</b>" + item.dept + "<br><b>物资数量：</b>" + item.qty + "<br><b>净值合计：</b>¥ " + fmtMoney(item.netSum) +
+          (item.netSum > 1000000 ? '<br><span style="color:#d48806;font-weight:600;">净值超过100万元，需资产评估。</span>' : "");
+        document.getElementById("planSubmitMask").classList.add("show");
+      }
+      function closePlanSubmit() { document.getElementById("planSubmitMask").classList.remove("show"); planSubmitNo = ""; }
+      function bindPlanModule() {
+        var yearSel = document.getElementById("qPlanYear");
+        var deptSel = document.getElementById("qPlanDept");
+        if (yearSel && yearSel.options.length <= 1) {
+          ["2024", "2025", "2026", "2027"].forEach(function (y) { var op = document.createElement("option"); op.value = y; op.textContent = y; yearSel.appendChild(op); });
+        }
+        if (deptSel && deptSel.options.length <= 1) {
+          [currentDept, "华东运维部", "检修保障部"].forEach(function (d) { var op = document.createElement("option"); op.value = d; op.textContent = d; deptSel.appendChild(op); });
+        }
+        var typeSel = document.getElementById("assetTypeFilter");
+        var locSel = document.getElementById("assetLocationFilter");
+        if (typeSel && typeSel.options.length <= 1) {
+          ["检测设备", "电测设备", "工器具"].forEach(function (t) { var op = document.createElement("option"); op.value = t; op.textContent = t; typeSel.appendChild(op); });
+        }
+        if (locSel && locSel.options.length <= 1) {
+          ["华北库房", "风电场01号", "风电场02号"].forEach(function (l) { var op = document.createElement("option"); op.value = l; op.textContent = l; locSel.appendChild(op); });
+        }
+        document.getElementById("planTabBar").addEventListener("click", function (e) {
+          var btn = e.target.closest("[data-plan-tab]");
+          if (!btn) return;
+          planFilters.tab = btn.getAttribute("data-plan-tab");
+          document.querySelectorAll("[data-plan-tab]").forEach(function (b) { b.classList.remove("is-active"); });
+          btn.classList.add("is-active");
+          renderPlanTable();
+        });
+        document.getElementById("btnPlanSearch").addEventListener("click", renderPlanTable);
+        document.getElementById("btnPlanReset").addEventListener("click", function () {
+          ["qPlanNo","qPlanYear","qPlanDept","qPlanUser","qDateStart","qDateEnd"].forEach(function (id) { document.getElementById(id).value = ""; });
+          renderPlanTable();
+        });
+        document.getElementById("btnPlanExport").addEventListener("click", function () { alert("已导出当前筛选结果（演示）"); });
+        document.getElementById("btnPlanRemind").addEventListener("click", function () { alert("已向本部门发送填报提醒（演示）"); });
+        document.getElementById("btnOpenPlanModal").addEventListener("click", function () { openPlanModal(""); });
+        document.getElementById("btnClosePlanModal").addEventListener("click", closePlanModal);
+        document.getElementById("btnPlanCancel").addEventListener("click", closePlanModal);
+        document.getElementById("planModalMask").addEventListener("click", function (e) { if (e.target.id === "planModalMask") closePlanModal(); });
+        document.getElementById("btnAssetFilter").addEventListener("click", renderAssetPickTable);
+        document.getElementById("assetCheckAll").addEventListener("change", function (e) {
+          var checks = document.querySelectorAll(".asset-row-check");
+          checks.forEach(function (c) {
+            c.checked = e.target.checked;
+            var id = c.getAttribute("data-id");
+            if (c.checked && pickedAssetIds.indexOf(id) < 0) {
+              pickedAssetIds.push(id);
+              if (pickedAssetQty[id] == null || pickedAssetQty[id] < 1) pickedAssetQty[id] = 1;
+            }
+            if (!c.checked) {
+              pickedAssetIds = pickedAssetIds.filter(function (x) { return x !== id; });
+              delete pickedAssetQty[id];
+            }
+          });
+          renderAssetPickTable();
+        });
+        document.getElementById("assetPickBody").addEventListener("change", function (e) {
+          var c = e.target.closest(".asset-row-check");
+          if (!c) return;
+          var id = c.getAttribute("data-id");
+          if (c.checked && pickedAssetIds.indexOf(id) < 0) {
+            pickedAssetIds.push(id);
+            if (pickedAssetQty[id] == null || pickedAssetQty[id] < 1) pickedAssetQty[id] = 1;
+          }
+          if (!c.checked) {
+            pickedAssetIds = pickedAssetIds.filter(function (x) { return x !== id; });
+            delete pickedAssetQty[id];
+          }
+          renderAssetPickTable();
+        });
+        document.getElementById("assetPickBody").addEventListener("input", function (e) {
+          var inp = e.target.closest(".asset-qty-input");
+          if (!inp || inp.disabled) return;
+          var id = inp.getAttribute("data-id");
+          var v = parseInt(inp.value, 10);
+          if (isNaN(v) || v < 1) v = 1;
+          pickedAssetQty[id] = v;
+          if (String(v) !== String(inp.value)) inp.value = String(v);
+          refreshPickSummary();
+        });
+        document.getElementById("btnPlanSaveDraft").addEventListener("click", function () { savePlan("draft"); });
+        document.getElementById("btnPlanSubmit").addEventListener("click", function () { savePlan("review"); });
+        document.getElementById("planTableBody").addEventListener("click", function (e) {
+          var a = e.target.closest("[data-plan-act]");
+          if (!a) return;
+          e.preventDefault();
+          var act = a.getAttribute("data-plan-act");
+          var no = a.getAttribute("data-no");
+          if (act === "view") openPlanDetail(no);
+          else if (act === "edit") openPlanModal(no);
+          else if (act === "submit") openPlanSubmit(no);
+          else if (act === "print") alert("打印计划 " + no + "（演示）");
+        });
+        document.getElementById("btnClosePlanDetail").addEventListener("click", closePlanDetail);
+        document.getElementById("btnPlanDetailClose").addEventListener("click", closePlanDetail);
+        document.getElementById("planDetailMask").addEventListener("click", function (e) { if (e.target.id === "planDetailMask") closePlanDetail(); });
+        document.getElementById("btnClosePlanSubmit").addEventListener("click", closePlanSubmit);
+        document.getElementById("btnPlanSubmitCancel").addEventListener("click", closePlanSubmit);
+        document.getElementById("btnPlanSubmitOk").addEventListener("click", function () {
+          var p = planRecords.find(function (x) { return x.planNo === planSubmitNo; });
+          if (p) {
+            p.status = "review";
+            p.submitDate = p.submitDate || new Date().toISOString().slice(0, 10);
+          }
+          closePlanSubmit();
+          refreshPlanStats();
+          renderPlanTable();
+        });
+        document.getElementById("planSubmitMask").addEventListener("click", function (e) { if (e.target.id === "planSubmitMask") closePlanSubmit(); });
+        refreshPlanStats();
+        renderPlanTable();
+      }
+      bindPlanModule();
+
+      refs.filterNo.addEventListener("input", applyFilters);
+      refs.filterStatus.addEventListener("change", applyFilters);
+      applyFilters();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>项目管理</title>
+</head>
+<body>
+  <script>
+    (function () {
+      try {
+        sessionStorage.setItem("demoRetiredScene", "project");
+        sessionStorage.setItem("demoScene", "project");
+      } catch (e) {}
+      window.location.replace("retired-prototype-list.html?scene=project&pageSub=" + encodeURIComponent("项目管理"));
+    })();
+  </script>
+</body>
+</html>
+

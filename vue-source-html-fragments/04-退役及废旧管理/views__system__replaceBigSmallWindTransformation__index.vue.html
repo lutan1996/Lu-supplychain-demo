@@ -1,0 +1,601 @@
+<!-- 来源: src/views/system/replaceBigSmallWindTransformation/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <transition>
+      <div class="mb-[10px]">
+        <el-card shadow="hover">
+          <el-form label-width="auto">
+            <el-form-item label="风电场名称" prop="windFarmName">
+              <el-input placeholder="请输入风电场名称" clearable />
+            </el-form-item>
+            <el-form-item label="项目名称" prop="projectName">
+              <el-input placeholder="请输入项目名称" clearable />
+            </el-form-item>
+            <el-form-item label="场内线路名称" prop="onSiteName">
+              <el-input placeholder="请输入场内线路名称" clearable />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="Search">搜索</el-button>
+              <el-button icon="Refresh">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </div>
+    </transition>
+
+    <el-card shadow="never">
+      <template>
+        <el-row class="mb8">
+          <el-col>
+            <el-button type="primary" plain icon="Plus"
+              >新增</el-button
+            >
+          </el-col>
+          <el-col>
+            <el-button
+              type="success"
+              plain
+              icon="Edit"
+              >修改</el-button
+            >
+          </el-col>
+          <el-col>
+            <el-button
+              type="danger"
+              plain
+              icon="Delete"
+              >删除</el-button
+            >
+          </el-col>
+          <el-col>
+            <el-button type="warning" plain icon="Download">
+              导出
+            </el-button>
+          </el-col>
+          <el-col>
+            <el-button type="primary" plain icon="Upload">导入</el-button>
+          </el-col>
+          <right-toolbar></right-toolbar>
+        </el-row>
+      </template>
+
+      <el-table>
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="仓库" align="center" prop="zbscWarehouseManagementName" />
+
+        <el-table-column label="项目名称" align="center" prop="zbscProjectManagementName" min-width="100px"  />
+        <el-table-column label="风电场名称" align="center" prop="windFarmName" />
+        <el-table-column label="分期名称" align="center" prop="projectName" />
+        <el-table-column label="场内线路名称" align="center" min-width="60px" prop="onSiteName" />
+        <el-table-column label="风机机组编号" align="center" prop="fanUnitNumber" />
+        <el-table-column label="风机机组整机制造商" align="center" prop="fanUnitManufacturer" />
+        <el-table-column label="风电机组型号" align="center" prop="danUnitModel" />
+        <el-table-column label="轮毂高度" align="center" prop="wheelHigh" min-width="50px"/>
+        <el-table-column label="叶轮直径" align="center" prop="impellerDiameter"  min-width="50px"/>
+        <el-table-column label="额定功率" align="center" prop="ratedPower"  min-width="50px"/>
+        <el-table-column label="投产日期 " align="center" prop="productionDate"  min-width="60px" />
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template="scope">
+            <el-tooltip content="修改" placement="top">
+              <el-button
+                link
+                type="primary"
+                icon="Edit"
+              ></el-button>
+            </el-tooltip>
+            <el-tooltip content="删除" placement="top">
+              <el-button
+                link
+                type="primary"
+                icon="Delete"
+              ></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination />
+    </el-card>
+    <!-- 添加或修改以大代小”拆除项目设备清单-风电机组和箱变对话框 -->
+    <el-dialog width="1000px" append-to-body>
+      <el-form label-width="auto">
+        <el-card style="margin-top: 1rem; min-height: 18rem">
+          <h2>风电场</h2>
+          <el-form-item label="仓库" prop="zbscWarehouseManagementId">
+            <el-select placeholder="请选择" clearable filterable style="width:80%">
+              <el-option>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="项目名称" prop="zbscProjectManagementId">
+          <!-- <el-input placeholder="请输入项目名称" /> -->
+          <el-select placeholder="请选择项目名称" clearable filterable style="width:100%">
+            <el-option>
+            </el-option>
+          </el-select>
+        </el-form-item>
+          <el-form-item label="风电场名称" prop="windFarmName">
+            <el-input placeholder="请输入风电场名称" />
+          </el-form-item>
+          <el-form-item label="分期名称" prop="projectName">
+            <el-input placeholder="请输入项目名称" />
+          </el-form-item>
+          <el-form-item label="场内线路名称" prop="onSiteName">
+            <el-input placeholder="请输入场内线路名称" />
+          </el-form-item>
+          <el-form-item label="风机机组编号" prop="fanUnitNumber">
+            <el-input placeholder="请输入风机机组编号" />
+          </el-form-item>
+          <el-form-item label="风机机组整机制造商" prop="fanUnitManufacturer">
+            <el-input placeholder="请输入风机机组整机制造商" />
+          </el-form-item>
+          <el-form-item label="风电机组型号" prop="danUnitModel">
+            <el-select placeholder="请选择" clearable filterable>
+              <el-option>
+              </el-option>
+            </el-select>
+            <el-button type="primary" plain icon="Plus">新增型号</el-button>
+          </el-form-item>
+          <el-form-item label="轮毂高度" prop="wheelHigh">
+            <el-input placeholder="请输入轮毂高度" />
+          </el-form-item>
+          <el-form-item label="叶轮直径" prop="impellerDiameter">
+            <el-input placeholder="请输入叶轮直径" />
+          </el-form-item>
+          <el-form-item label="额定功率" prop="ratedPower">
+            <el-input placeholder="请输入额定功率" />
+          </el-form-item>
+          <el-form-item label="投产日期 " prop="productionDate">
+            <el-input placeholder="请输入投产日期 " />
+          </el-form-item>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 18rem">
+          <h2>1.1叶片（单支叶片）</h2>
+          <el-form-item label="叶片制造商" prop="bladeManufacturer">
+            <el-input placeholder="请输入叶片制造商" />
+          </el-form-item>
+          <el-form-item label="叶片型号" prop="bladeModel">
+            <el-select placeholder="请选择" clearable filterable>
+              <el-option> </el-option>
+            </el-select>
+            <el-button type="primary" plain icon="Plus">新增型号</el-button>
+          </el-form-item>
+          <el-form-item label="叶片重量" prop="bladeWeight">
+            <el-input placeholder="请输入叶片重量" />
+          </el-form-item>
+          <el-form-item label="叶片主材质" prop="bladeMainMaterial">
+            <el-input placeholder="请输入叶片主材质" />
+          </el-form-item>
+          <el-form-item label="叶片长度" prop="bladeLength">
+            <el-input placeholder="请输入叶片长度" />
+          </el-form-item>
+          <el-form-item label="叶片数量" prop="bladeQuantity">
+            <el-input placeholder="请输入 叶片数量" />
+          </el-form-item>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 10rem">
+          <h2>1.2轮毂导流罩</h2>
+          <el-form-item label="轮毂导流罩重量" prop="wheelCoverWeight">
+            <el-input placeholder="请输入轮毂导流罩重量" />
+          </el-form-item>
+          <el-form-item label="轮毂导流罩主材质" prop="wheelCoverMainMaterial">
+            <el-input placeholder="请输入轮毂导流罩主材质" />
+          </el-form-item>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 10rem">
+          <h2>1.3轮毂</h2>
+          <el-form-item label="轮毂重量" prop="wheelWeight">
+            <el-input placeholder="请输入轮毂重量" />
+          </el-form-item>
+          <el-form-item label="轮毂主材质" prop="wheelMainMaterial">
+            <el-input placeholder="请输入轮毂主材质" />
+          </el-form-item>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 10rem">
+          <h2>1.4变桨机构（含变桨减速器、传动机构、变桨电机、变桨液压缸等）</h2>
+          <el-form-item label="变桨类型" prop="variablePitchType">
+            <el-input placeholder="请输入变桨减速器型号" />
+          </el-form-item>
+          <el-form-item label="变桨减速器型号" prop="variablePitchReducerModel">
+            <el-select placeholder="请选择" clearable filterable>
+              <el-option
+              >
+              </el-option>
+            </el-select>
+            <el-button type="primary" plain icon="Plus">新增型号</el-button>
+          </el-form-item>
+          <el-form-item label="变桨电机型号" prop="variablePitchMotorModel">
+            <el-select placeholder="请选择" clearable filterable>
+              <el-option>
+              </el-option>
+            </el-select>
+            <el-button type="primary" plain icon="Plus">新增型号</el-button>
+          </el-form-item>
+          <el-form-item label="变桨液压缸型号" prop="variablePitchHydraulicModel">
+            <el-select placeholder="请选择" clearable filterable>
+              <el-option
+              >
+              </el-option>
+            </el-select>
+            <el-button type="primary" plain icon="Plus">新增型号</el-button>
+          </el-form-item>
+          <el-form-item label="变桨液压缸数量" prop="variablePitchHydraulicNumber">
+            <el-input placeholder="请输入变桨液压缸数量" />
+          </el-form-item>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 18rem">
+          <h2>1.5变桨电气设备（含变桨控制柜、电池柜、驱动柜等）</h2>
+          <el-form-item label="变桨电气设备制造商" prop="variableManufacturer">
+            <el-input placeholder="请输入变桨电气设备制造商" />
+          </el-form-item>
+          <el-form-item label="变桨后备电源类型" prop="variablePitchPowerType">
+            <el-input placeholder="请输入变桨电气设备制造商" />
+          </el-form-item>
+          <el-form-item label="后备电源柜数量" prop="powerCabinetsNumber">
+            <el-input placeholder="请输入后备电源柜数量" />
+          </el-form-item>
+          <el-form-item label="其他电气柜数量" prop="otherPowerNumber">
+            <el-input placeholder="请输入其他电气柜数量" />
+          </el-form-item>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 18rem">
+          <h2>1.6主轴总成</h2>
+          <el-form-item label="主轴总成重量" prop="spindleWeight">
+            <el-input placeholder="请输入主轴总成重量" />
+          </el-form-item>
+          <el-form-item label="主轴总成主材质" prop="spindleMainMaterial">
+            <el-input placeholder="请输入主轴总成主材质" />
+          </el-form-item>
+          <el-form-item label="主轴轴承制造商" prop="spindleBearingManufacturer">
+            <el-input placeholder="请输入主轴轴承制造商" />
+          </el-form-item>
+          <el-form-item label="主轴轴承型号" prop="mainShaftBearingModel">
+            <el-select placeholder="请选择" clearable filterable>
+              <el-option>
+              </el-option>
+            </el-select>
+            <el-button type="primary" plain icon="Plus">新增型号</el-button>
+          </el-form-item>
+          <el-form-item label="主轴轴承数量" prop="spindleBearingNumber">
+            <el-input placeholder="请输入主轴轴承数量" />
+          </el-form-item>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 18rem">
+          <h2>1.7主齿轮箱</h2>
+          <el-form-item label="主齿轮箱制造商" prop="gearboxManufacturer">
+            <el-input placeholder="请输入主齿轮箱制造商" />
+          </el-form-item>
+          <el-form-item label="主齿轮箱型号" prop="gearboxModel">
+            <el-select placeholder="请选择" clearable filterable>
+              <el-option>
+              </el-option>
+            </el-select>
+            <el-button type="primary" plain icon="Plus">新增型号</el-button>
+          </el-form-item>
+          <el-form-item label="主齿轮箱重量" prop="gearboxWeight">
+            <el-input placeholder="请输入主齿轮箱重量" />
+          </el-form-item>
+          <el-form-item label="主齿轮箱润滑油型号" prop="lubricatingOilModel">
+            <el-input placeholder="请输入主齿轮箱润滑油型号" />
+          </el-form-item>
+          <el-form-item label="主齿轮箱润滑油容量" prop="lubricatingOilCapacity">
+            <el-input placeholder="请输入主齿轮箱润滑油容量" />
+          </el-form-item>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 14rem">
+          <h2>1.8发电机</h2>
+          <el-form-item label="发电机制造商" prop="generatorManufacturer">
+            <el-input placeholder="请输入发电机制造商" />
+          </el-form-item>
+          <el-form-item label="发电机型号" prop="generatorModel">
+            <el-select placeholder="请选择" clearable filterable>
+              <el-option>
+              </el-option>
+            </el-select>
+            <el-button type="primary" plain icon="Plus">新增型号</el-button>
+          </el-form-item>
+          <el-form-item label="发电机重量" prop="generatorWeight">
+            <el-input placeholder="请输入发电机重量" />
+          </el-form-item>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 10rem">
+          <h2>1.9成套液压设备</h2>
+          <el-form-item label="液压站制造商" prop="hydraulicStationManufacturer">
+            <el-input placeholder="请输入液压站制造商" />
+          </el-form-item>
+          <el-form-item label="型号" prop="hydraulicStationManufacturerModel">
+            <el-select placeholder="请选择" clearable filterable>
+              <el-option
+              >
+              </el-option>
+            </el-select>
+            <el-button type="primary" plain icon="Plus">新增型号</el-button>
+          </el-form-item>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 10rem">
+          <h2>1.10机架</h2>
+          <el-form-item label="机架重量" prop="rackWeight">
+            <el-input placeholder="请输入机架重量" />
+          </el-form-item>
+          <el-form-item label="机架主材质" prop="rackMainMaterial">
+            <el-input placeholder="请输入机架主材质" />
+          </el-form-item>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 14rem">
+          <h2>1.11偏航机构（含偏航轴承、偏航电机、偏航减速器等）</h2>
+          <el-form-item label="偏航电机型号" prop="yawMechanismModel">
+            <el-input placeholder="请输入偏航电机型号" />
+          </el-form-item>
+          <el-form-item label="偏航减速器型号" prop="yawReducersModel">
+            <el-select placeholder="请选择" clearable filterable>
+              <el-option>
+              </el-option>
+            </el-select>
+            <el-button type="primary" plain icon="Plus">新增型号</el-button>
+          </el-form-item>
+          <el-form-item label="偏航减速器数量" prop="yawReducersNumber">
+            <el-input placeholder="请输入偏航减速器数量" />
+          </el-form-item>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 18rem">
+          <h2>1.12机舱成套电气柜（含顶部控制柜、变流器柜等）</h2>
+          <div>
+            <el-row class="mb8">
+              <el-col>
+                <el-button type="primary" plain icon="Plus">新增</el-button>
+              </el-col>
+            </el-row>
+            <el-table>
+              <el-table-column label="序号" align="center" type="index"/>
+              <el-table-column label="电气柜" align="center" prop="electricalCabinet" />
+              <el-table-column label="备注" align="text" prop="text" />
+              <el-table-column label="操作" align="center">
+                <template="scope">
+                  <el-tooltip content="修改" placement="top">
+                    <el-button link type="primary" icon="Edit"></el-button>
+                  </el-tooltip>
+                  <el-tooltip content="删除" placement="top">
+                    <el-button link type="primary" icon="Delete"></el-button>
+                  </el-tooltip>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 18rem">
+          <h2>1.13塔底成套电气柜（含底部控制柜、变流器柜、环网柜等）</h2>
+          <div>
+            <el-row class="mb8">
+              <el-col>
+                <el-button type="primary" plain icon="Plus">新增</el-button>
+              </el-col>
+            </el-row>
+            <el-table>
+              <el-table-column label="序号" align="center" type="index"/>
+              <el-table-column label="电气柜" align="center" prop="electricalCabinet" />
+              <el-table-column label="备注" align="text" prop="text" />
+              <el-table-column label="操作" align="center">
+                <template="scope">
+                  <el-tooltip content="修改" placement="top">
+                    <el-button link type="primary" icon="Edit"></el-button>
+                  </el-tooltip>
+                  <el-tooltip content="删除" placement="top">
+                    <el-button link type="primary" icon="Delete"></el-button>
+                  </el-tooltip>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 18rem">
+          <h2>1.14机舱罩</h2>
+          <el-form-item label="机舱罩重量" prop="engineWeight">
+            <el-input placeholder="请输入机舱罩重量" />
+          </el-form-item>
+          <el-form-item label="机舱罩主材质" prop="engineMainMaterial">
+            <el-input placeholder="请输入机舱罩主材质" />
+          </el-form-item>
+          <el-form-item label="机舱罩长度" prop="engineLength">
+            <el-input placeholder="请输入机舱罩长度" />
+          </el-form-item>
+          <el-form-item label="机舱罩宽度" prop="engineWide">
+            <el-input placeholder="请输入机舱罩宽度" />
+          </el-form-item>
+          <el-form-item label="机舱罩高度" prop="engineHigh">
+            <el-input placeholder="请输入机舱罩高度" />
+          </el-form-item>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 10rem">
+          <h2>1.15塔筒</h2>
+          <el-form-item label="塔筒节数" prop="towerNumber">
+            <el-input placeholder="请输入塔筒节数" />
+          </el-form-item>
+          <el-table>
+            <el-table-column label="塔筒节" align="center" prop="towerNumber" />
+            <el-table-column label="塔筒重量（吨）" align="center" prop="towerWeight">
+              <template="scope">
+                <el-input placeholder="请输入塔筒重量" />
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 18rem">
+          <h2>1.16风电机组主电缆</h2>
+          <div>
+            <el-row class="mb8">
+              <el-col>
+                <el-button type="primary" plain icon="Plus">新增</el-button>
+              </el-col>
+            </el-row>
+            <el-table>
+              <el-table-column label="序号" align="center" type="index"/>
+              <el-table-column label="电缆型号" align="center" prop="cableModel" />
+              <el-table-column label="电缆根数" align="center" prop="cableNumber" />
+              <el-table-column label="电缆重量" align="center" prop="cableWeight" />
+              <el-table-column label="备注" align="center" prop="text" />
+              <el-table-column label="操作" align="center">
+                <template="scope">
+                  <el-tooltip content="修改" placement="top">
+                    <el-button link type="primary" icon="Edit"></el-button>
+                  </el-tooltip>
+                  <el-tooltip content="删除" placement="top">
+                    <el-button link type="primary" icon="Delete"></el-button>
+                  </el-tooltip>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-card>
+        <el-card style="margin-top: 1rem; min-height: 18rem">
+          <h2>1.17机组配套箱变</h2>
+          <el-form-item label="机组配套箱变制造商" prop="supportingManufacturer">
+            <el-input placeholder="请输入机组配套箱变制造商" />
+          </el-form-item>
+          <el-form-item label="机组配套箱变型号" prop="supportingModel">
+            <el-select placeholder="请选择" clearable filterable>
+              <el-option>
+              </el-option>
+            </el-select>
+            <el-button type="primary" plain icon="Plus">新增型号</el-button>
+          </el-form-item>
+          <el-form-item label="机组配套箱变重量" prop="supportingWeight">
+            <el-input placeholder="请输入机组配套箱变重量" />
+          </el-form-item>
+          <el-form-item label="机组配套箱变电压等级" prop="voltageLevel">
+            <el-input placeholder="请输入机组配套箱变电压等级" />
+          </el-form-item>
+          <el-form-item label="机组配套箱变安装位置" prop="installationLocation">
+            <el-input placeholder="请输入机组配套箱变安装位置" />
+          </el-form-item>
+        </el-card>
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 机舱成套电气柜添加修改明细对话框 -->
+    <el-dialog width="500px" append-to-body>
+      <el-form label-width="auto">
+        <!-- <el-form-item label="序号" prop="orderNumber">
+          <el-input type="number" placeholder="请输入" />
+        </el-form-item> -->
+        <el-form-item label="电气柜" prop="electricalCabinet">
+          <el-input placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="备注" prop="text">
+          <el-input placeholder="请输入" />
+        </el-form-item>
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 塔底成套电气柜添加修改明细对话框 -->
+    <el-dialog width="500px" append-to-body>
+      <el-form label-width="auto">
+        <!-- <el-form-item label="序号" prop="orderNumber">
+          <el-input type="number" placeholder="请输入" />
+        </el-form-item> -->
+        <el-form-item label="电气柜" prop="electricalCabinet">
+          <el-input placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="备注" prop="text">
+          <el-input placeholder="请输入" />
+        </el-form-item>
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 风电机组主电缆添加修改明细对话框 -->
+    <el-dialog width="500px" append-to-body>
+      <el-form label-width="auto">
+        <!-- <el-form-item label="序号" prop="orderNumber">
+          <el-input type="number" placeholder="请输入" />
+        </el-form-item> -->
+        <el-form-item label="电缆型号" prop="cableModel">
+          <el-select placeholder="请选择" clearable filterable>
+            <el-option>
+            </el-option>
+          </el-select>
+          <el-button type="primary" plain icon="Plus">新增型号</el-button>
+        </el-form-item>
+        <el-form-item label="电缆根数" prop="cableNumber">
+          <el-input type="number" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="电缆重量" prop="cableWeight">
+          <el-input type="number" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="备注" prop="text">
+          <el-input placeholder="请输入" />
+        </el-form-item>
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 型号添加或修改型号对话框 -->
+    <el-dialog width="500px" append-to-body>
+      <el-form label-width="80px">
+        <el-form-item label="类型" prop="type">
+          <el-input placeholder="请输入类型" disabled />
+        </el-form-item>
+        <el-form-item label="品牌" prop="brandId">
+          <el-select placeholder="可搜索选择品牌名称" clearable filterable>
+            <el-option> </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="型号" prop="model">
+          <el-input placeholder="请输入型号" />
+        </el-form-item>
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+    <!-- 导入对话框 -->
+    <el-dialog width="400px" append-to-body>
+      <el-upload
+        accept=".xlsx, .xls"
+        drag
+      >
+        <el-icon class="el-icon--upload">
+          <i-ep-upload-filled />
+        </el-icon>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <template>
+          <div class="text-center el-upload__tip">
+            <!-- <p class="el-upload__tip"></p> -->
+            <p style="color: red">仅允许导入xlsx、xls格式文件</p>
+            <p>
+              <el-link type="primary" style="font-size: 12px; vertical-align: baseline">
+                下载表格模板
+              </el-link>
+            </p>
+          </div>
+        </template>
+      </el-upload>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>

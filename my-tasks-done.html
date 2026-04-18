@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>我的已办 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .mt .main-scroll { overflow: hidden; background: #f5f7fb; }
+    .mt .carrier-main-inner { padding: 10px 12px 12px; overflow: hidden; background: #f5f7fb; }
+    .mt .carrier-page-title { margin-bottom: 8px; font-size: 18px; }
+    .mt-search { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin-bottom: 8px; }
+    .mt-item { display: grid; grid-template-columns: 72px 1fr; align-items: center; gap: 6px; }
+    .mt-item label { font-size: 12px; color: #4d6480; }
+    .mt-item input { height: 26px; border: 1px solid #dbe6f3; border-radius: 2px; padding: 0 6px; font-size: 12px; }
+    .mt-tools { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .mt-btn { border: 1px solid #dbe6f3; background: #fff; border-radius: 2px; color: #4d6480; font-size: 12px; padding: 4px 9px; cursor: pointer; }
+    .mt-btn.primary { background: #1890ff; border-color: #1890ff; color: #fff; }
+    .mt-table-wrap { border: 1px solid #e7ecf3; border-radius: 3px; overflow: hidden; height: calc(100vh - 190px); display: flex; flex-direction: column; background: #fff; }
+    .mt-table-layout { display: grid; grid-template-columns: 1fr; min-height: 0; flex: 1; }
+    .mt-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 12px; }
+    .mt-table th, .mt-table td { border-bottom: 1px solid #edf1f6; padding: 8px 6px; text-align: center; color: #3f546f; }
+    .mt-table thead { background: #f6f8fb; }
+    .mt-table td { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .mt-col-check { width: 26px; }
+    .mt-status { display: inline-block; border-radius: 2px; padding: 1px 6px; font-size: 10px; }
+    .mt-s1 { color: #389e0d; background: #f6ffed; }
+    .mt-action { display:inline-flex; align-items:center; justify-content:center; gap: 4px; min-width: 50px; height: 22px; background:#4ea7ff; color:#fff; border-radius:3px; padding:0 10px; font-size:11px; border: 1px solid rgba(78,167,255,0.65); box-sizing: border-box; }
+    .mt-pager { margin-top: auto; display:flex; align-items:center; justify-content:flex-end; gap: 10px; padding: 10px 10px; font-size: 12px; color: #617894; border-top: 1px solid #edf1f6; }
+    .mt-pager select { height: 24px; border: 1px solid #e1e8f2; border-radius: 2px; font-size: 12px; padding: 0 6px; background: #fff; color: #4d6480; }
+    .mt-page-btns { display: inline-flex; align-items: center; gap: 4px; }
+    .mt-page-btns button { min-width: 22px; height: 22px; border: 1px solid #e1e8f2; background: #fff; border-radius: 2px; cursor: pointer; font-size: 12px; color:#4d6480; }
+    .mt-page-btns button.is-current { background: #1890ff; border-color: #1890ff; color: #fff; }
+    .mt-goto { display:inline-flex; align-items:center; gap: 6px; }
+    .mt-goto input { width: 34px; height: 22px; border: 1px solid #e1e8f2; border-radius: 2px; text-align:center; font-size: 12px; }
+  </style>
+</head>
+<body class="page-subpage page-logistics mt page-source-navbar" data-scene="done">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar" title="用户">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item nav-item--module-active" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit-analytics.html"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title" id="mtTitle">我的已办</h1>
+          <div class="mt-search" id="mtSearch"></div>
+          <div class="mt-tools">
+            <button class="mt-btn primary" type="button">搜索</button>
+            <button class="mt-btn" type="button">重置</button>
+          </div>
+          <div class="mt-table-wrap">
+            <div class="mt-table-layout">
+              <div style="overflow:auto;">
+                <table class="mt-table">
+                  <thead><tr id="mtHead"></tr></thead>
+                  <tbody id="mtBody"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="mt-pager" role="navigation" aria-label="分页">
+              <span>共 <span id="mtTotal">0</span> 条</span>
+              <select aria-label="每页条数" id="mtPageSize">
+                <option value="10" selected>10条/页</option>
+                <option value="15">15条/页</option>
+                <option value="20">20条/页</option>
+              </select>
+              <div class="mt-page-btns" id="mtPageBtns">
+                <button type="button" aria-label="上一页">&lt;</button>
+                <button type="button" class="is-current" aria-current="page">1</button>
+                <button type="button" aria-label="下一页">&gt;</button>
+              </div>
+              <span class="mt-goto">跳至 <input type="text" value="1" aria-label="页码" /> 页</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var cfg = {
+        title: "我的已办",
+        fields: ["任务名称", "流程定义名称", "流程定义KEY", "", ""],
+        cols: ["", "序号", "流程定义名称", "流程定义KEY", "任务名称", "办理人", "流程状态", "创建时间", "操作"],
+        total: 121,
+        page: "10条/页",
+        pageBtns: ["1", "2", "3", "4", "5", "6", "...", "13"],
+        rows: [
+          ["", "1", "采购项目审定结果通知(非招标)v4.0", "cgjz0", "采购项目审定结果通知(非招标)", "处理员", "已办结", "2024-12-03 11:02:22"],
+          ["", "2", "采购项目审定结果通知(非招标)v4.0", "cgjz0", "采购项目审定结果通知(非招标)", "处理员", "已办结", "2024-12-03 10:56:33"],
+          ["", "3", "采购项目审定结果通知(非招标)v4.0", "cgjz0", "采购项目审定结果通知(非招标)", "处理员", "已办结", "2024-12-03 09:33:30"],
+          ["", "4", "公司级集采计划审批单v4.0", "cgjhspd", "公司级集采计划审批单", "处理员", "已办结", "2024-12-03 09:17:23"],
+          ["", "5", "本部月度采购计划审批单v4.0", "bbmdcqjh", "本部月度采购计划审批单", "处理员", "已办结", "2024-12-03 09:10:06"],
+          ["", "6", "15万以下采购结果审定(项目单位)v3.0", "wyxcqjgsd", "15万以下采购结果审定(项目单位)", "处理员", "已办结", "2024-11-29 19:09:38"],
+          ["", "7", "15万以下采购结果审定(项目单位)v3.0", "wyxcqjgsd", "15万以下采购结果审定(项目单位)", "处理员", "已办结", "2024-11-29 18:56:42"],
+          ["", "8", "15万以下采购结果审定(项目单位)v3.0", "wyxcqjgsd", "15万以下采购结果审定(项目单位)", "处理员", "已办结", "2024-11-29 14:54:36"],
+          ["", "9", "非招标零委会v7.0", "FH", "非招标零委会", "处理员", "已办结", "2024-11-29 14:22:00"],
+          ["", "10", "非招标零委会v7.0", "FH", "非招标零委会", "处理员", "已办结", "2024-11-29 14:21:11"]
+        ]
+      };
+      document.getElementById("mtTitle").textContent = cfg.title;
+      var s = document.getElementById("mtSearch");
+      cfg.fields.forEach(function (f) {
+        var item = document.createElement("div");
+        item.className = "mt-item";
+        item.innerHTML = "<label>" + (f || " ") + "</label>" + (f ? "<input placeholder='请输入" + f + "' />" : "<input style='visibility:hidden' />");
+        s.appendChild(item);
+      });
+      var h = document.getElementById("mtHead");
+      cfg.cols.forEach(function (x) { var th = document.createElement("th"); th.textContent = x; h.appendChild(th); });
+      var b = document.getElementById("mtBody");
+      cfg.rows.forEach(function (row) {
+        var tr = document.createElement("tr");
+        cfg.cols.forEach(function (col, idx) {
+          var td = document.createElement("td");
+          var val = row[idx];
+          if (idx === 0) {
+            td.className = "mt-col-check";
+            td.innerHTML = "<input type='checkbox' aria-label='选择行' />";
+          } else if (col === "流程状态") {
+            td.innerHTML = "<span class='mt-status mt-s1'>" + val + "</span>";
+          } else if (col === "操作") {
+            td.innerHTML = "<span class='mt-action'><i class='fa-regular fa-eye'></i>查看</span>";
+          } else {
+            td.textContent = val;
+          }
+          tr.appendChild(td);
+        });
+        b.appendChild(tr);
+      });
+      document.getElementById("mtTotal").textContent = String(cfg.total || cfg.rows.length);
+      var ps = document.getElementById("mtPageSize");
+      try {
+        if (cfg.page && cfg.page.indexOf("条/页") >= 0) {
+          var n = parseInt(cfg.page, 10);
+          if (!isNaN(n)) ps.value = String(n);
+        }
+      } catch (ePage) {}
+      var btnWrap = document.getElementById("mtPageBtns");
+      if (btnWrap && cfg.pageBtns && cfg.pageBtns.length) {
+        btnWrap.innerHTML = "<button type='button' aria-label='上一页'>&lt;</button>";
+        cfg.pageBtns.forEach(function (x, idx) {
+          var isCurrent = idx === 0;
+          var cls = isCurrent ? " class='is-current'" : "";
+          var aria = isCurrent ? " aria-current='page'" : "";
+          btnWrap.innerHTML += "<button type='button'" + cls + aria + ">" + x + "</button>";
+        });
+        btnWrap.innerHTML += "<button type='button' aria-label='下一页'>&gt;</button>";
+      }
+    })();
+  </script>
+</body>
+</html>
+

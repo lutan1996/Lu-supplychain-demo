@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>资产性质转变 - 新能源物资供应链管理系统</title>
+  <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-toolbar.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    body.page-asset-nature .main-scroll { background: #f7f5ff; }
+    .an-title { margin: 0; padding: 16px 20px 10px; font-size: 20px; font-weight: 700; background: #fff; border-bottom: 1px solid #e8e8e8; color: #1f1f1f; }
+    .an-wrap { padding: 12px 16px 20px; }
+    .an-kpis { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 10px; }
+    .an-kpi { background:#fff; border:1px solid #e8e8e8; border-radius:8px; padding:12px; }
+    .an-kpi b { font-size:12px; color:#666; display:block; }
+    .an-kpi span { margin-top:6px; display:block; color:#722ed1; font-size:20px; font-weight:700; }
+    .an-panel { margin-top:10px; background:#fff; border:1px solid #e8e8e8; border-radius:8px; overflow:hidden; }
+    .an-tabs { display:flex; padding:0 12px; border-bottom:1px solid #e8e8e8; background:#fafafa; }
+    .an-tab { border:none; background:transparent; height:38px; padding:0 16px; font-size:13px; color:#595959; cursor:pointer; position:relative; }
+    .an-tab.active { color:#722ed1; font-weight:700; }
+    .an-tab.active::after { content:""; position:absolute; left:10px; right:10px; bottom:0; height:2px; background:#722ed1; }
+    .an-filters { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; padding:12px 16px 8px; }
+    .an-actions { display:flex; gap:8px; padding:0 16px 12px; border-bottom:1px solid #f0f0f0; }
+    .an-btn { height:32px; border:1px solid #d9d9d9; border-radius:4px; background:#fff; padding:0 14px; cursor:pointer; font-size:13px; }
+    .an-btn.primary { background:#722ed1; border-color:#722ed1; color:#fff; }
+    .an-btn.new { background:#9254de; border-color:#9254de; color:#fff; }
+    .an-table-wrap { overflow:auto; padding:0 16px 10px; }
+    .an-table { width:100%; min-width:1500px; border-collapse:collapse; table-layout:fixed; font-size:12px; }
+    .an-table th,.an-table td { border:1px solid #e8e8e8; padding:8px; text-align:left; vertical-align:middle; }
+    .an-table th { background:#f5f5f5; white-space:nowrap; }
+    .an-op { display:inline-flex; gap:6px; }
+    .an-op button { border:1px solid #b37feb; background:#f9f0ff; color:#531dab; border-radius:4px; height:24px; padding:0 8px; font-size:12px; cursor:pointer; }
+    .an-tag { display:inline-flex; align-items:center; padding:0 8px; height:22px; border-radius:4px; font-size:11px; border:1px solid transparent; }
+    .an-tag.pending { background:#fff7e6; border-color:#ffd591; color:#d48806; }
+    .an-tag.passed { background:#e6f4ff; border-color:#91caff; color:#0958d9; }
+    .an-tag.done { background:#f6ffed; border-color:#b7eb8f; color:#389e0d; }
+    .an-tag.reject { background:#fff1f0; border-color:#ffa39e; color:#cf1322; }
+    .an-flow-tip { margin-top:10px; border:1px solid #d3adf7; background:#f9f0ff; border-radius:8px; padding:10px 12px; font-size:13px; color:#531dab; }
+    .an-modal-mask { position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; align-items:center; justify-content:center; z-index:2000; padding:18px; }
+    .an-modal-mask.show { display:flex; }
+    .an-modal { width:min(980px,100%); max-height:90vh; background:#fff; border-radius:8px; overflow:hidden; display:flex; flex-direction:column; }
+    .an-modal.narrow { width:min(680px,100%); }
+    .an-head,.an-foot { padding:12px 16px; border-bottom:1px solid #f0f0f0; display:flex; align-items:center; justify-content:space-between; }
+    .an-foot { border-bottom:none; border-top:1px solid #f0f0f0; justify-content:flex-end; gap:8px; }
+    .an-body { padding:12px 16px; overflow:auto; }
+    .an-close { border:none; background:transparent; font-size:22px; color:#8c8c8c; cursor:pointer; }
+    .an-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 12px; }
+    .an-pick { border:1px solid #e8e8e8; border-radius:6px; margin-top:10px; overflow:hidden; }
+    .an-pick-wrap { max-height:220px; overflow:auto; }
+    .an-pick-table { width:100%; border-collapse:collapse; font-size:12px; }
+    .an-pick-table th,.an-pick-table td { border:1px solid #f0f0f0; padding:6px 8px; color:#1f1f1f; }
+    .an-modal .an-body { color:#262626; }
+    .an-modal .an-head h3 { margin:0; font-size:16px; font-weight:600; color:#1f1f1f; }
+    .an-modal .wh-field label { color:#595959; }
+    .an-modal .wh-field input,
+    .an-modal .wh-field select { color:#262626; background:#fff; }
+    .an-summary { margin-top:8px; border:1px dashed #d3adf7; background:#f9f0ff; border-radius:6px; padding:8px 10px; color:#531dab; font-size:13px; }
+    .an-steps { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; margin-top:10px; }
+    .an-step { text-align:center; border:1px dashed #d9d9d9; border-radius:6px; padding:8px 6px; font-size:12px; color:#8c8c8c; }
+    .an-step.done { border-style:solid; border-color:#52c41a; color:#389e0d; background:#f6ffed; }
+    .an-step.active { border-style:solid; border-color:#722ed1; color:#531dab; background:#f9f0ff; }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-asset-nature">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#" aria-label="国家能源集团"><img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar" title="用户">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <div class="nav-item" title="驾驶舱"><span class="nav-label">驾驶舱</span></div>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <div class="nav-item" title="物流管理"><span class="nav-label">物流管理</span></div>
+        <div class="nav-item" title="仓储管理"><span class="nav-label">仓储管理</span></div>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <h1 class="an-title">资产性质转变</h1>
+        <div class="an-wrap">
+          <div class="an-kpis" id="kpis"></div>
+          <section class="an-panel">
+            <div class="an-tabs">
+              <button class="an-tab active" data-tab="all">全部申请</button>
+              <button class="an-tab" data-tab="待审批">待审批</button>
+              <button class="an-tab" data-tab="已通过">已通过</button>
+              <button class="an-tab" data-tab="已完成">已完成</button>
+              <button class="an-tab" data-tab="已驳回">已驳回</button>
+            </div>
+            <div class="an-filters">
+              <div class="wh-field"><label for="fNo">申请单号</label><input id="fNo" placeholder="请输入申请单号"></div>
+              <div class="wh-field"><label for="fDept">申请部门</label><input id="fDept" placeholder="请输入申请部门"></div>
+              <div class="wh-field"><label for="fType">转变类型</label><select id="fType"><option value="">全部类型</option><option>存货转固定资产</option><option>固定资产转存货</option></select></div>
+              <div class="wh-field"><label for="fDate">申请日期</label><input id="fDate" type="date"></div>
+            </div>
+            <div class="an-actions">
+              <button class="an-btn primary" id="btnSearch">搜索</button>
+              <button class="an-btn" id="btnReset">重置</button>
+              <button class="an-btn new" id="btnNew">新增转变申请</button>
+            </div>
+            <div class="an-table-wrap">
+              <table class="an-table">
+                <thead><tr><th>序号</th><th>申请单号</th><th>转变类型</th><th>物资名称</th><th>数量</th><th>原值</th><th>净值</th><th>申请部门</th><th>申请人</th><th>申请日期</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody id="tbody"></tbody>
+              </table>
+            </div>
+            <div class="an-flow-tip">审批流程：部门申请 → 部门主任审批 → 分管领导审批 → 经营发展中心审核 → 财务入账</div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="an-modal-mask" id="newMask">
+    <div class="an-modal">
+      <div class="an-head"><h3>新增转变申请</h3><button class="an-close" data-close>×</button></div>
+      <div class="an-body">
+        <div class="an-grid">
+          <div class="wh-field"><label>申请部门</label><select id="mDept"><option>华北运维部</option><option>华东运维部</option><option>经营发展中心</option></select></div>
+          <div class="wh-field"><label>转变类型</label><select id="mType"><option>存货转固定资产</option><option>固定资产转存货</option></select></div>
+          <div class="wh-field"><label>申请日期</label><input id="mDate" type="date"></div>
+          <div class="wh-field"><label>转变原因</label><input id="mReason" placeholder="请输入转变原因"></div>
+        </div>
+        <div class="an-pick">
+          <div class="an-pick-wrap">
+            <table class="an-pick-table">
+              <thead><tr><th><input type="checkbox" id="pickAll"></th><th>物资编号</th><th>名称</th><th>规格</th><th>地点</th><th>数量</th><th>原值</th><th>净值</th></tr></thead>
+              <tbody id="pickBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="an-summary" id="pickSummary">已选物资种类：0 ｜ 数量合计：0 ｜ 原值合计：¥ 0.00 ｜ 净值合计：¥ 0.00</div>
+      </div>
+      <div class="an-foot"><button class="an-btn" data-close>取消</button><button class="an-btn primary" id="btnCreate">提交申请</button></div>
+    </div>
+  </div>
+
+  <div class="an-modal-mask" id="detailMask">
+    <div class="an-modal">
+      <div class="an-head"><h3>申请详情</h3><button class="an-close" data-close>×</button></div>
+      <div class="an-body">
+        <div id="detailInfo" style="font-size:13px;line-height:1.8"></div>
+        <div class="an-steps">
+          <div class="an-step done">部门申请</div>
+          <div class="an-step done">部门主任审批</div>
+          <div class="an-step active">分管领导审批</div>
+          <div class="an-step">经营发展中心审核</div>
+          <div class="an-step">财务入账</div>
+        </div>
+      </div>
+      <div class="an-foot"><button class="an-btn" data-close>关闭</button></div>
+    </div>
+  </div>
+
+  <div class="an-modal-mask" id="approveMask">
+    <div class="an-modal narrow">
+      <div class="an-head"><h3>审批操作</h3><button class="an-close" data-close>×</button></div>
+      <div class="an-body">
+        <div id="approveSummary" style="font-size:13px;line-height:1.8;border:1px solid #e8e8e8;border-radius:6px;padding:8px 10px;background:#fafafa"></div>
+        <div class="wh-field" style="margin-top:8px"><label>审批结果</label><select id="apResult"><option>同意</option><option>驳回</option></select></div>
+        <div class="wh-field"><label>审批意见</label><input id="apComment" placeholder="请输入审批意见"></div>
+        <div class="wh-field"><label>电子签字</label><input id="apSign" placeholder="请输入签字（示例：张三）"></div>
+      </div>
+      <div class="an-foot"><button class="an-btn" data-close>取消</button><button class="an-btn primary" id="btnSubmitApprove">提交审批</button></div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var rows = [
+        { id: 1, no: "XZ-2026-001", type: "存货转固定资产", name: "展示样机组件", qty: 24, origin: 86400, net: 70200, dept: "经营发展中心", user: "张三", date: "2026-04-08", status: "待审批" },
+        { id: 2, no: "XZ-2026-002", type: "固定资产转存货", name: "应急发电机", qty: 1, origin: 58000, net: 40600, dept: "华北运维部", user: "王芳", date: "2026-04-05", status: "已通过" },
+        { id: 3, no: "XZ-2026-003", type: "存货转固定资产", name: "办公电脑", qty: 8, origin: 80000, net: 75200, dept: "综合管理部", user: "李四", date: "2026-03-30", status: "已完成" },
+        { id: 4, no: "XZ-2026-004", type: "固定资产转存货", name: "工具柜（带锁）", qty: 2, origin: 7200, net: 3960, dept: "华东运维部", user: "周琪", date: "2026-03-20", status: "已驳回" }
+      ];
+      var pickAssets = [
+        { no: "CH-2026-001", name: "连接器套件", spec: "CN-88", loc: "华北仓A-01", qty: 120, origin: 50400, net: 44800 },
+        { no: "CH-2026-002", name: "展示样机组件", spec: "ZX-45", loc: "华北仓A-03", qty: 24, origin: 86400, net: 70200 },
+        { no: "CH-2026-003", name: "测试工装", spec: "TS-20", loc: "华北仓B-01", qty: 15, origin: 18000, net: 16200 },
+        { no: "CH-2025-118", name: "变频控制模块", spec: "FC-M3", loc: "华东中心仓", qty: 8, origin: 96000, net: 82100 },
+        { no: "CH-2025-206", name: "绝缘操作杆组", spec: "OP-10kV", loc: "张北备件库", qty: 20, origin: 8600, net: 7200 },
+        { no: "CH-2024-441", name: "便携式振动分析仪", spec: "VB-PRO", loc: "承德运维点", qty: 3, origin: 28500, net: 23800 }
+      ];
+      var state = { tab: "all", current: null, filters: { no: "", dept: "", type: "", date: "" } };
+      function money(v) { return "¥ " + Number(v || 0).toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+      function tag(s) {
+        if (s === "待审批") return '<span class="an-tag pending">待审批</span>';
+        if (s === "已通过") return '<span class="an-tag passed">已通过</span>';
+        if (s === "已完成") return '<span class="an-tag done">已完成</span>';
+        return '<span class="an-tag reject">已驳回</span>';
+      }
+      function list() {
+        return rows.filter(function (x) {
+          if (state.tab !== "all" && x.status !== state.tab) return false;
+          if (state.filters.no && x.no.indexOf(state.filters.no) < 0) return false;
+          if (state.filters.dept && x.dept.indexOf(state.filters.dept) < 0) return false;
+          if (state.filters.type && x.type !== state.filters.type) return false;
+          if (state.filters.date && x.date !== state.filters.date) return false;
+          return true;
+        });
+      }
+      function renderKpis() {
+        var m = rows.filter(function (x) { return String(x.date).slice(0, 7) === String(new Date().toISOString().slice(0, 7)); }).length;
+        var p = rows.filter(function (x) { return x.status === "待审批"; }).length;
+        var ok = rows.filter(function (x) { return x.status === "已通过"; }).length;
+        var d = rows.filter(function (x) { return x.status === "已完成"; }).length;
+        var r = rows.filter(function (x) { return x.status === "已驳回"; }).length;
+        document.getElementById("kpis").innerHTML =
+          '<div class="an-kpi"><b>本月申请</b><span>' + m + '</span></div><div class="an-kpi"><b>待审批</b><span>' + p + '</span></div><div class="an-kpi"><b>已通过</b><span>' + ok + '</span></div><div class="an-kpi"><b>已完成</b><span>' + d + '</span></div><div class="an-kpi"><b>已驳回</b><span>' + r + "</span></div>";
+      }
+      function renderTable() {
+        var tbody = document.getElementById("tbody");
+        tbody.innerHTML = "";
+        list().forEach(function (x, i) {
+          var op = '<button data-act="detail" data-id="' + x.id + '">详情</button>';
+          if (x.status === "待审批") op += '<button data-act="approve" data-id="' + x.id + '">审批</button>';
+          var tr = document.createElement("tr");
+          tr.innerHTML = "<td>" + (i + 1) + "</td><td>" + x.no + "</td><td>" + x.type + "</td><td>" + x.name + "</td><td>" + x.qty + "</td><td>" + money(x.origin) + "</td><td>" + money(x.net) + "</td><td>" + x.dept + "</td><td>" + x.user + "</td><td>" + x.date + "</td><td>" + tag(x.status) + '</td><td><div class="an-op">' + op + "</div></td>";
+          tbody.appendChild(tr);
+        });
+      }
+      function open(id) { document.getElementById(id).classList.add("show"); }
+      function closeAll() { document.querySelectorAll(".an-modal-mask").forEach(function (m) { m.classList.remove("show"); }); }
+      document.querySelectorAll("[data-close]").forEach(function (b) { b.addEventListener("click", closeAll); });
+      document.querySelectorAll(".an-modal-mask").forEach(function (m) { m.addEventListener("click", function (e) { if (e.target === m) m.classList.remove("show"); }); });
+      document.querySelectorAll(".an-tab").forEach(function (t) {
+        t.addEventListener("click", function () {
+          state.tab = t.getAttribute("data-tab");
+          document.querySelectorAll(".an-tab").forEach(function (x) { x.classList.remove("active"); });
+          t.classList.add("active");
+          renderTable();
+        });
+      });
+      document.getElementById("btnSearch").addEventListener("click", function () {
+        state.filters.no = document.getElementById("fNo").value.trim();
+        state.filters.dept = document.getElementById("fDept").value.trim();
+        state.filters.type = document.getElementById("fType").value;
+        state.filters.date = document.getElementById("fDate").value;
+        renderTable();
+      });
+      document.getElementById("btnReset").addEventListener("click", function () {
+        document.getElementById("fNo").value = ""; document.getElementById("fDept").value = ""; document.getElementById("fType").selectedIndex = 0; document.getElementById("fDate").value = "";
+        state.filters = { no: "", dept: "", type: "", date: "" }; renderTable();
+      });
+      function renderPick() {
+        document.getElementById("pickBody").innerHTML = pickAssets.map(function (x) {
+          return "<tr><td><input type='checkbox' class='pick-one' data-qty='" + x.qty + "' data-origin='" + x.origin + "' data-net='" + x.net + "'></td><td>" + x.no + "</td><td>" + x.name + "</td><td>" + x.spec + "</td><td>" + x.loc + "</td><td>" + x.qty + "</td><td>" + money(x.origin) + "</td><td>" + money(x.net) + "</td></tr>";
+        }).join("");
+        updatePickSummary();
+      }
+      function updatePickSummary() {
+        var picks = Array.prototype.slice.call(document.querySelectorAll(".pick-one:checked"));
+        var kinds = picks.length;
+        var qty = picks.reduce(function (s, x) { return s + Number(x.getAttribute("data-qty") || 0); }, 0);
+        var origin = picks.reduce(function (s, x) { return s + Number(x.getAttribute("data-origin") || 0); }, 0);
+        var net = picks.reduce(function (s, x) { return s + Number(x.getAttribute("data-net") || 0); }, 0);
+        document.getElementById("pickSummary").textContent = "已选物资种类：" + kinds + " ｜ 数量合计：" + qty + " ｜ 原值合计：" + money(origin) + " ｜ 净值合计：" + money(net);
+      }
+      document.getElementById("btnNew").addEventListener("click", function () { renderPick(); open("newMask"); });
+      document.getElementById("pickAll").addEventListener("change", function () {
+        document.querySelectorAll(".pick-one").forEach(function (x) { x.checked = document.getElementById("pickAll").checked; });
+        updatePickSummary();
+      });
+      document.getElementById("pickBody").addEventListener("change", function (e) { if (e.target.classList.contains("pick-one")) updatePickSummary(); });
+      document.getElementById("btnCreate").addEventListener("click", function () {
+        var picks = Array.prototype.slice.call(document.querySelectorAll(".pick-one:checked"));
+        if (!picks.length) { alert("请至少勾选一项物资"); return; }
+        var qty = picks.reduce(function (s, x) { return s + Number(x.getAttribute("data-qty") || 0); }, 0);
+        var origin = picks.reduce(function (s, x) { return s + Number(x.getAttribute("data-origin") || 0); }, 0);
+        var net = picks.reduce(function (s, x) { return s + Number(x.getAttribute("data-net") || 0); }, 0);
+        rows.unshift({
+          id: Date.now(),
+          no: "XZ-" + new Date().getFullYear() + "-" + String(Math.floor(Math.random() * 900 + 100)),
+          type: document.getElementById("mType").value,
+          name: "批量物资",
+          qty: qty,
+          origin: origin,
+          net: net,
+          dept: document.getElementById("mDept").value,
+          user: "当前用户",
+          date: document.getElementById("mDate").value || new Date().toISOString().slice(0, 10),
+          status: "待审批"
+        });
+        closeAll(); renderKpis(); renderTable();
+      });
+      document.getElementById("tbody").addEventListener("click", function (e) {
+        var act = e.target.getAttribute("data-act");
+        if (!act) return;
+        var id = Number(e.target.getAttribute("data-id"));
+        var item = rows.find(function (x) { return x.id === id; });
+        if (!item) return;
+        state.current = item;
+        if (act === "detail") {
+          document.getElementById("detailInfo").innerHTML = "<b>申请单号：</b>" + item.no + "<br><b>转变类型：</b>" + item.type + "<br><b>申请部门：</b>" + item.dept + "<br><b>申请人：</b>" + item.user + "<br><b>申请日期：</b>" + item.date + "<br><b>物资清单：</b>" + item.name + "（数量：" + item.qty + "）";
+          open("detailMask");
+        } else if (act === "approve") {
+          document.getElementById("approveSummary").innerHTML = "<b>申请单号：</b>" + item.no + "<br><b>转变类型：</b>" + item.type + "<br><b>申请部门：</b>" + item.dept + "<br><b>数量：</b>" + item.qty + "<br><b>原值/净值：</b>" + money(item.origin) + " / " + money(item.net);
+          document.getElementById("apComment").value = "";
+          document.getElementById("apSign").value = "";
+          document.getElementById("apResult").selectedIndex = 0;
+          open("approveMask");
+        }
+      });
+      document.getElementById("btnSubmitApprove").addEventListener("click", function () {
+        if (!state.current) return;
+        var r = document.getElementById("apResult").value;
+        state.current.status = r === "同意" ? "已通过" : "已驳回";
+        closeAll(); renderKpis(); renderTable();
+      });
+      renderKpis(); renderTable();
+    })();
+  </script>
+</body>
+</html>

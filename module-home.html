@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <script>
+    (function () {
+      try {
+        if (sessionStorage.getItem("portalLoggedIn_v1") !== "1") {
+          window.location.replace("index.html");
+          return;
+        }
+      } catch (e) {
+        window.location.replace("index.html");
+        return;
+      }
+      window.location.replace("cockpit.html");
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>模块首页 · 新能源物资供应链管理系统</title>
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <style>
+    body.page-subpage {
+      --hub-cyan: #00e5ff;
+      background: #050d18;
+    }
+    .mh-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 12px 20px;
+      border-bottom: 1px solid rgba(0, 229, 255, 0.25);
+      background: rgba(6, 20, 40, 0.85);
+    }
+    .mh-topbar h1 {
+      margin: 0;
+      font-size: 18px;
+      color: #e8f4ff;
+    }
+    .mh-nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .mh-nav a {
+      font-size: 13px;
+      color: var(--hub-cyan);
+      text-decoration: none;
+      border: 1px solid rgba(0, 229, 255, 0.4);
+      padding: 6px 12px;
+      border-radius: 4px;
+    }
+    .mh-nav a:hover {
+      background: rgba(0, 229, 255, 0.1);
+    }
+    .mh-main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+      color: #b8d4ee;
+    }
+    .mh-main h2 {
+      color: #fff;
+      font-size: 22px;
+      margin: 0 0 12px;
+    }
+    .mh-main p.lead {
+      line-height: 1.75;
+      font-size: 14px;
+      margin: 0 0 20px;
+    }
+    .mh-box {
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid rgba(0, 229, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(8, 24, 48, 0.4);
+    }
+    .mh-links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .mh-links li {
+      border-bottom: 1px dashed rgba(0, 229, 255, 0.2);
+    }
+    .mh-links li:last-child { border-bottom: none; }
+    .mh-links a {
+      display: block;
+      padding: 12px 8px;
+      color: #e8f4ff;
+      text-decoration: none;
+      font-size: 15px;
+    }
+    .mh-links a:hover {
+      color: var(--hub-cyan);
+      background: rgba(0, 229, 255, 0.06);
+    }
+    .mh-links small {
+      display: block;
+      font-size: 12px;
+      color: #7a9ab8;
+      margin-top: 4px;
+      font-weight: normal;
+    }
+    .mh-section-title {
+      font-size: 11px;
+      color: #6a8aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin: 20px 0 8px;
+    }
+    .mh-section-title:first-child { margin-top: 0; }
+  </style>
+</head>
+<body class="page-subpage">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="mh-topbar">
+      <h1 id="mhTitle">新能源物资供应链管理系统</h1>
+      <nav class="mh-nav" aria-label="页面跳转">
+        <a href="cockpit.html">应用大厅</a>
+        <a href="cockpit.html">数据驾驶舱</a>
+        <a href="cockpit.html">首页</a>
+      </nav>
+    </header>
+    <main class="mh-main">
+      <h2 id="mhSub">模块工作台</h2>
+      <p class="lead" id="mhDesc">加载中…</p>
+      <div id="mhExtra"></div>
+      <div class="mh-box" id="mhHint">
+        <p style="margin:0;font-size:13px;color:#8ab4d6;"><strong>说明：</strong>「进运存出管」与物资全链路一致；数据驾驶舱侧重全局 KPI 与监测，从此处进入各模块办理业务。</p>
+      </div>
+    </main>
+  </div>
+  <script>
+    (function () {
+      if (sessionStorage.getItem("portalLoggedIn_v1") !== "1") {
+        window.location.replace("index.html");
+        return;
+      }
+      var key = new URLSearchParams(location.search).get("m") || "default";
+
+      var pages = {
+        transport: {
+          title: "运 · 物流管理",
+          sub: "物流管理 · 承运与在途",
+          desc: "对应应用大厅「运」：衔接采购到货与现场出库，覆盖承运商、合同、物流跟踪与付款。",
+          sections: [
+            {
+              title: "业务入口",
+              links: [
+                { href: "carrier-management.html", text: "承运商管理", note: "" },
+                { href: "logistics-contract.html", text: "物流合同", note: "" },
+                { href: "logistics-tracking.html", text: "物流跟踪", note: "" },
+                { href: "logistics-payment.html", text: "物流付款", note: "" }
+              ]
+            }
+          ]
+        },
+        outbound: {
+          title: "出 · 物资出库与处置",
+          sub: "退役、报废与循环利用",
+          desc: "对应应用大厅「出」：设备退役、报废处置、以大带小循环再利用与设备评估。",
+          sections: [
+            {
+              title: "业务入口",
+              links: [
+                { href: "retire-scrap-application.html", text: "退役及报废申请", note: "" },
+                { href: "equipment-evaluation.html", text: "设备评估", note: "" },
+                { href: "big-small-reuse.html", text: "以大带小循环再利用", note: "" }
+              ]
+            }
+          ]
+        },
+        governance: {
+          title: "管 · 综合管控",
+          sub: "综合业务 · 数据 · 绩效考核",
+          desc: "对应应用大厅「管」：跨部门协同、主数据与台账、绩效与看板（演示用静态页跳转）。",
+          sections: [
+            {
+              title: "综合业务管理",
+              links: [
+                { href: "demo-all-in-one.html", text: "离线演示总入口（总览）", note: "演示环境聚合页" }
+              ]
+            },
+            {
+              title: "数据管理",
+              links: [
+                { href: "base-data-material-ledger.html", text: "基础数据配置中心", note: "主数据 / 字典 / 税率等" },
+                { href: "purchase-ledger.html?tab=material", text: "物资台账", note: "采购数据台账 · 物资页签" },
+                { href: "inventory-management.html", text: "库存管理（数据侧）", note: "" }
+              ]
+            },
+            {
+              title: "绩效考核",
+              links: [
+                { href: "cockpit.html", text: "绩效看板 / 数据驾驶舱", note: "KPI 与大屏监测" }
+              ]
+            }
+          ]
+        },
+        default: {
+          title: "模块首页",
+          sub: "请从应用大厅进入",
+          desc: "请从「应用大厅」选择 进 · 运 · 存 · 出 · 管 进入对应环节。",
+          sections: []
+        }
+      };
+
+      var cfg = pages[key] || pages.default;
+      document.getElementById("mhTitle").textContent = "新能源物资供应链管理系统" + (key !== "default" ? " · " + cfg.title : "");
+      document.getElementById("mhSub").textContent = cfg.sub;
+      document.getElementById("mhDesc").textContent = cfg.desc;
+
+      var extra = document.getElementById("mhExtra");
+      if (cfg.sections && cfg.sections.length) {
+        var html = "";
+        cfg.sections.forEach(function (sec) {
+          html += '<p class="mh-section-title">' + sec.title + "</p><ul class="mh-links">';
+          sec.links.forEach(function (l) {
+            html +=
+              "<li><a href=\"" +
+              l.href +
+              '">' +
+              l.text +
+              (l.note ? "<small>" + l.note + "</small>" : "") +
+              "</a></li>";
+          });
+          html += "</ul>";
+        });
+        extra.innerHTML = html;
+      } else {
+        extra.innerHTML = "";
+      }
+
+      document.title = cfg.title.replace(/ · /, " ") + " · 模块首页";
+    })();
+  </script>
+</body>
+</html>

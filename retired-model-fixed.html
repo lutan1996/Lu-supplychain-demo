@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>型号</title>
+</head>
+<body>
+  <script>
+    (function () {
+      try {
+        sessionStorage.setItem("demoRetiredScene", "model");
+        sessionStorage.setItem("demoScene", "model");
+      } catch (e) {}
+      window.location.replace("retired-prototype-list.html?scene=model&pageSub=" + encodeURIComponent("型号"));
+    })();
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>盘点管理 - 新能源物资供应链管理系统</title>
+  <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-toolbar.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    body.page-asset-inventory .main-scroll { background: #f4f9f9; }
+    .ai-title { margin: 0; padding: 16px 20px 10px; font-size: 20px; font-weight: 700; background: #fff; border-bottom: 1px solid #e8e8e8; color: #1f1f1f; }
+    .ai-wrap { padding: 12px 16px 20px; }
+    .ai-kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+    .ai-kpi { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 12px; }
+    .ai-kpi b { font-size: 12px; color: #666; display: block; }
+    .ai-kpi span { margin-top: 6px; display: block; color: #13c2c2; font-size: 20px; font-weight: 700; }
+    .ai-panel { margin-top: 10px; background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; overflow: hidden; }
+    .ai-tabs { display: flex; padding: 0 12px; border-bottom: 1px solid #e8e8e8; background: #fafafa; }
+    .ai-tab { border: none; background: transparent; height: 38px; padding: 0 16px; cursor: pointer; color: #595959; font-size: 13px; position: relative; }
+    .ai-tab.active { color: #13c2c2; font-weight: 700; }
+    .ai-tab.active::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 0; height: 2px; background: #13c2c2; }
+    .ai-filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; padding: 12px 16px 8px; }
+    .ai-actions { display: flex; gap: 8px; padding: 0 16px 12px; border-bottom: 1px solid #f0f0f0; }
+    .ai-btn { height: 32px; border: 1px solid #d9d9d9; border-radius: 4px; background: #fff; padding: 0 14px; cursor: pointer; }
+    .ai-btn.primary { background: #13c2c2; border-color: #13c2c2; color: #fff; }
+    .ai-btn.new { background: #08979c; border-color: #08979c; color: #fff; }
+    .ai-table-wrap { overflow: auto; padding: 0 16px 10px; }
+    .ai-table { width: 100%; min-width: 1450px; border-collapse: collapse; table-layout: fixed; font-size: 12px; }
+    .ai-table th,.ai-table td { border: 1px solid #e8e8e8; padding: 8px; text-align: left; vertical-align: middle; }
+    .ai-table th { background: #f5f5f5; white-space: nowrap; }
+    .ai-table th:last-child,
+    .ai-table td:last-child {
+      width: 200px;
+      min-width: 200px;
+      box-sizing: border-box;
+    }
+    .ai-op {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 8px;
+    }
+    .ai-op button {
+      border: 1px solid #91d5ff;
+      background: #e6fffb;
+      color: #08979c;
+      border-radius: 4px;
+      min-height: 28px;
+      padding: 4px 12px;
+      font-size: 12px;
+      line-height: 1.2;
+      white-space: nowrap;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-sizing: border-box;
+    }
+    .ai-tag { display: inline-flex; align-items: center; padding: 0 8px; height: 22px; border-radius: 4px; font-size: 11px; border: 1px solid transparent; }
+    .ai-tag.running { background: #e6fffb; border-color: #87e8de; color: #08979c; }
+    .ai-tag.done { background: #f6ffed; border-color: #b7eb8f; color: #389e0d; }
+    .ai-tag.error { background: #fff1f0; border-color: #ffa39e; color: #cf1322; }
+    .ai-progress { width: 100%; height: 8px; border-radius: 99px; background: #f0f0f0; overflow: hidden; }
+    .ai-progress span { display: block; height: 100%; background: linear-gradient(90deg, #36cfc9, #13c2c2); }
+    .ai-modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 18px; }
+    .ai-modal-mask.show { display: flex; }
+    .ai-modal { width: min(980px,100%); max-height: 90vh; background: #fff; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+    .ai-modal.narrow { width: min(680px,100%); }
+    .ai-head,.ai-foot { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; display:flex; align-items:center; justify-content:space-between; }
+    .ai-foot { border-bottom:none; border-top:1px solid #f0f0f0; justify-content:flex-end; gap:8px; }
+    .ai-modal, .ai-modal * { color: #1f1f1f; }
+    .ai-body { padding: 12px 16px; overflow:auto; color: #1f1f1f; }
+    .ai-modal .ai-table th, .ai-modal .ai-table td { color: #1f1f1f; }
+    .ai-modal input, .ai-modal select, .ai-modal textarea { color: #1f1f1f; background: #fff; }
+    .ai-close { border:none; background:transparent; font-size:22px; color:#8c8c8c; cursor:pointer; }
+    .ai-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px 12px; }
+    .ai-scan-box { border:1px dashed #87e8de; background:#f0fffe; border-radius:8px; padding:14px; text-align:center; color:#08979c; font-size:13px; }
+    .ai-detail-cards { display:grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap:8px; margin:10px 0; }
+    .ai-detail-card { border:1px solid #e8e8e8; background:#fafafa; border-radius:6px; padding:8px; font-size:12px; }
+    .row-diff { background:#fff1f0; color:#cf1322; }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-asset-inventory">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#" aria-label="国家能源集团"><img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar" title="用户">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <div class="nav-item" title="驾驶舱"><span class="nav-label">驾驶舱</span></div>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <div class="nav-item" title="物流管理"><span class="nav-label">物流管理</span></div>
+        <div class="nav-item" title="仓储管理"><span class="nav-label">仓储管理</span></div>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <h1 class="ai-title">盘点管理</h1>
+        <div class="ai-wrap">
+          <div class="ai-kpis" id="kpis"></div>
+          <section class="ai-panel">
+            <div class="ai-tabs">
+              <button class="ai-tab active" data-tab="all">全部任务</button>
+              <button class="ai-tab" data-tab="todo">待开始</button>
+              <button class="ai-tab" data-tab="running">进行中</button>
+              <button class="ai-tab" data-tab="done">已完成</button>
+              <button class="ai-tab" data-tab="error">异常记录</button>
+            </div>
+            <div class="ai-filters">
+              <div class="wh-field"><label for="fNo">盘点单号</label><input id="fNo" placeholder="请输入盘点单号"></div>
+              <div class="wh-field"><label for="fDept">盘点部门</label><input id="fDept" placeholder="请输入盘点部门"></div>
+              <div class="wh-field"><label for="fType">盘点类型</label><select id="fType"><option value="">全部类型</option><option>部门盘点</option><option>公司抽检</option></select></div>
+              <div class="wh-field"><label for="fDate">盘点日期</label><input id="fDate" type="date"></div>
+            </div>
+            <div class="ai-actions">
+              <button class="ai-btn primary" id="btnSearch">搜索</button>
+              <button class="ai-btn" id="btnReset">重置</button>
+              <button class="ai-btn new" id="btnNew">新建盘点任务</button>
+              <button class="ai-btn" id="btnCard">固定资产卡片/二维码</button>
+            </div>
+            <div class="ai-table-wrap">
+              <table class="ai-table">
+                <thead><tr><th>序号</th><th>盘点单号</th><th>盘点类型</th><th>盘点部门</th><th>盘点人</th><th>计划日期</th><th>资产数量</th><th>已盘数量</th><th>异常数量</th><th>进度条</th><th>状态</th><th>操作</th></tr></thead>
+                <tbody id="tbody"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="ai-modal-mask" id="scanMask">
+    <div class="ai-modal">
+      <div class="ai-head"><h3>扫码盘点</h3><button class="ai-close" data-close>×</button></div>
+      <div class="ai-body">
+        <div class="ai-scan-box"><i class="fa-solid fa-camera" style="font-size:24px"></i><div style="margin-top:6px">扫码区域（演示）</div><div>请将资产二维码置于框内扫描</div></div>
+        <div class="ai-grid" style="margin-top:10px">
+          <div class="wh-field"><label for="scanNo">手动输入资产编号</label><input id="scanNo" placeholder="如 ZC-DA-2026-012"></div>
+          <div class="wh-field"><label>&nbsp;</label><button class="ai-btn primary" id="btnQueryAsset">查询资产</button></div>
+        </div>
+        <div id="scanResult" style="margin-top:10px;font-size:13px;line-height:1.8"></div>
+        <div class="ai-grid" style="margin-top:8px">
+          <div class="wh-field"><label>实物状态</label><select id="phyStatus"><option>正常</option><option>损坏</option><option>缺失</option></select></div>
+          <div class="wh-field"><label>是否与账面一致</label><select id="matchStatus"><option>一致</option><option>不一致</option></select></div>
+          <div class="wh-field"><label>实物保管人</label><input id="phyKeeper" placeholder="请输入实物保管人"></div>
+          <div class="wh-field"><label>备注</label><input id="phyRemark" placeholder="请输入备注"></div>
+        </div>
+      </div>
+      <div class="ai-foot"><button class="ai-btn" data-close>取消</button><button class="ai-btn primary" id="btnConfirmScan">确认盘点</button></div>
+    </div>
+  </div>
+
+  <div class="ai-modal-mask" id="newMask">
+    <div class="ai-modal">
+      <div class="ai-head"><h3>新建盘点任务</h3><button class="ai-close" data-close>×</button></div>
+      <div class="ai-body">
+        <div class="ai-grid">
+          <div class="wh-field"><label>盘点类型</label><select id="newType"><option>部门盘点</option><option>公司抽检</option></select></div>
+          <div class="wh-field"><label>盘点部门</label><select id="newDept"><option>华北运维部</option><option>华东运维部</option><option>综合管理部</option></select></div>
+          <div class="wh-field"><label>计划日期</label><input id="newDate" type="date"></div>
+          <div class="wh-field"><label>盘点负责人</label><input id="newOwner" value="当前用户"></div>
+        </div>
+        <div style="margin-top:8px;font-size:12px;color:#666">盘点范围说明：自动从“部门资产”导入该部门名下所有资产。</div>
+        <div class="ai-table-wrap" style="padding:8px 0 0">
+          <table class="ai-table" style="min-width:0">
+            <thead><tr><th>资产编号</th><th>资产名称</th><th>保管人</th><th>存放地点</th></tr></thead>
+            <tbody><tr><td>ZC-DA-2026-012</td><td>电缆故障测试仪</td><td>王芳</td><td>华北仓B-03</td></tr><tr><td>ZC-DA-2025-029</td><td>应急发电机</td><td>赵强</td><td>运维站点库房</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="ai-foot"><button class="ai-btn" data-close>取消</button><button class="ai-btn primary" id="btnCreateTask">创建任务</button></div>
+    </div>
+  </div>
+
+  <div class="ai-modal-mask" id="detailMask">
+    <div class="ai-modal">
+      <div class="ai-head"><h3>盘点详情</h3><button class="ai-close" data-close>×</button></div>
+      <div class="ai-body">
+        <div id="detailInfo" style="font-size:13px;line-height:1.8"></div>
+        <div class="ai-detail-cards" id="detailCards"></div>
+        <div class="ai-table-wrap" style="padding:0">
+          <table class="ai-table" style="min-width:0">
+            <thead><tr><th>资产编号</th><th>资产名称</th><th>账面保管人</th><th>实物保管人</th><th>结果</th></tr></thead>
+            <tbody id="detailRows"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="ai-foot"><button class="ai-btn" data-close>关闭</button></div>
+    </div>
+  </div>
+
+  <div class="ai-modal-mask" id="cardMask">
+    <div class="ai-modal narrow">
+      <div class="ai-head"><h3>固定资产卡片与二维码管理</h3><button class="ai-close" data-close>×</button></div>
+      <div class="ai-body">
+        <div class="ai-grid">
+          <div class="wh-field"><label>固定资产编号</label><input id="cardNo" value="GD-2026-001"></div>
+          <div class="wh-field"><label>名称</label><input id="cardName" value="主齿轮箱检测仪"></div>
+          <div class="wh-field"><label>计量单位</label><input id="cardUnit" value="台"></div>
+          <div class="wh-field"><label>类别</label><input id="cardType" value="固定资产"></div>
+          <div class="wh-field"><label>保管人</label><input id="cardKeeper" value="张三"></div>
+          <div class="wh-field"><label>保管部门</label><input id="cardDept" value="华北运维部"></div>
+          <div class="wh-field"><label>型号</label><input id="cardModel" value="ZX-500A"></div>
+        </div>
+        <div class="ai-scan-box" style="margin-top:10px">
+          <div><b>二维码预览（演示）</b></div>
+          <div id="cardQrText" style="margin-top:6px;font-family:monospace">ASSET://GD-2026-001</div>
+          <div style="margin-top:6px;color:#8c8c8c">建卡时自动生成，可打印贴于设备。</div>
+        </div>
+      </div>
+      <div class="ai-foot">
+        <button class="ai-btn" data-close>关闭</button>
+        <button class="ai-btn primary" id="btnGenCardQr">生成二维码</button>
+        <button class="ai-btn new" id="btnPrintCardQr">打印二维码</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var rows = [
+        { id: 1, no: "PD-2026-001", type: "部门盘点", dept: "华北运维部", owner: "张三", date: "2026-04-10", total: 120, done: 75, error: 3, status: "进行中" },
+        { id: 2, no: "PD-2026-002", type: "公司抽检", dept: "经营发展中心", owner: "李四", date: "2026-04-05", total: 60, done: 60, error: 0, status: "已完成" },
+        { id: 3, no: "PD-2026-003", type: "部门盘点", dept: "综合管理部", owner: "王芳", date: "2026-04-18", total: 42, done: 0, error: 0, status: "待开始" },
+        { id: 4, no: "PD-2026-004", type: "公司抽检", dept: "华东运维部", owner: "周琪", date: "2026-03-28", total: 88, done: 88, error: 7, status: "有异常" }
+      ];
+      var state = { tab: "all", current: null, f: { no: "", dept: "", type: "", date: "" } };
+      var refs = {
+        tabs: Array.prototype.slice.call(document.querySelectorAll(".ai-tab")),
+        tbody: document.getElementById("tbody"),
+        kpis: document.getElementById("kpis")
+      };
+      function calc() {
+        return rows.filter(function (x) {
+          if (state.tab === "todo" && x.status !== "待开始") return false;
+          if (state.tab === "running" && x.status !== "进行中") return false;
+          if (state.tab === "done" && x.status !== "已完成") return false;
+          if (state.tab === "error" && x.error <= 0) return false;
+          if (state.f.no && x.no.indexOf(state.f.no) < 0) return false;
+          if (state.f.dept && x.dept.indexOf(state.f.dept) < 0) return false;
+          if (state.f.type && x.type !== state.f.type) return false;
+          if (state.f.date && x.date !== state.f.date) return false;
+          return true;
+        });
+      }
+      function tag(x) {
+        if (x.status === "进行中") return '<span class="ai-tag running">进行中</span>';
+        if (x.status === "已完成") return '<span class="ai-tag done">已完成</span>';
+        if (x.error > 0) return '<span class="ai-tag error">有异常</span>';
+        return '<span class="ai-tag">待开始</span>';
+      }
+      function percent(x) { return x.total ? Math.round(x.done / x.total * 100) : 0; }
+      function renderKpis() {
+        var year = new Date().getFullYear();
+        var yRows = rows.filter(function (x) { return String(x.date).startsWith(String(year)); });
+        var running = yRows.filter(function (x) { return x.status === "进行中"; }).length;
+        var done = yRows.filter(function (x) { return x.status === "已完成"; }).length;
+        var err = yRows.reduce(function (s, x) { return s + x.error; }, 0);
+        var total = yRows.reduce(function (s, x) { return s + x.total; }, 0);
+        var finished = yRows.reduce(function (s, x) { return s + x.done; }, 0);
+        var rate = total ? (finished / total * 100).toFixed(1) + "%" : "0%";
+        refs.kpis.innerHTML =
+          '<div class="ai-kpi"><b>本年度盘点任务</b><span>' + yRows.length + '</span></div>' +
+          '<div class="ai-kpi"><b>进行中</b><span>' + running + '</span></div>' +
+          '<div class="ai-kpi"><b>已完成</b><span>' + done + '</span></div>' +
+          '<div class="ai-kpi"><b>异常数量</b><span>' + err + '</span></div>' +
+          '<div class="ai-kpi"><b>账卡物相符率</b><span>' + rate + '</span></div>';
+      }
+      function renderTable() {
+        refs.tbody.innerHTML = "";
+        calc().forEach(function (x, i) {
+          var p = percent(x);
+          var tr = document.createElement("tr");
+          tr.innerHTML = "<td>" + (i + 1) + "</td><td>" + x.no + "</td><td>" + x.type + "</td><td>" + x.dept + "</td><td>" + x.owner + "</td><td>" + x.date + "</td><td>" + x.total + "</td><td>" + x.done + "</td><td>" + x.error + '</td><td><div class="ai-progress"><span style="width:' + p + '%"></span></div>' + p + '%</td><td>' + tag(x) + '</td><td><div class="ai-op"><button data-act="scan" data-id="' + x.id + '">扫码盘点</button><button data-act="detail" data-id="' + x.id + '">详情</button></div></td>';
+          refs.tbody.appendChild(tr);
+        });
+      }
+      function open(id) { document.getElementById(id).classList.add("show"); }
+      function closeAll() { document.querySelectorAll(".ai-modal-mask").forEach(function (m) { m.classList.remove("show"); }); }
+      document.querySelectorAll("[data-close]").forEach(function (b) { b.addEventListener("click", closeAll); });
+      document.querySelectorAll(".ai-modal-mask").forEach(function (m) { m.addEventListener("click", function (e) { if (e.target === m) m.classList.remove("show"); }); });
+      refs.tabs.forEach(function (t) {
+        t.addEventListener("click", function () {
+          state.tab = t.getAttribute("data-tab");
+          refs.tabs.forEach(function (x) { x.classList.remove("active"); });
+          t.classList.add("active");
+          renderTable();
+        });
+      });
+      document.getElementById("btnSearch").addEventListener("click", function () {
+        state.f.no = document.getElementById("fNo").value.trim();
+        state.f.dept = document.getElementById("fDept").value.trim();
+        state.f.type = document.getElementById("fType").value;
+        state.f.date = document.getElementById("fDate").value;
+        renderTable();
+      });
+      document.getElementById("btnReset").addEventListener("click", function () {
+        document.getElementById("fNo").value = ""; document.getElementById("fDept").value = ""; document.getElementById("fType").selectedIndex = 0; document.getElementById("fDate").value = "";
+        state.f = { no: "", dept: "", type: "", date: "" }; renderTable();
+      });
+      document.getElementById("btnNew").addEventListener("click", function () { open("newMask"); });
+      document.getElementById("btnCard").addEventListener("click", function () { open("cardMask"); });
+      document.getElementById("btnCreateTask").addEventListener("click", function () {
+        rows.unshift({
+          id: Date.now(),
+          no: "PD-" + new Date().getFullYear() + "-" + String(Math.floor(Math.random() * 900 + 100)),
+          type: document.getElementById("newType").value,
+          dept: document.getElementById("newDept").value,
+          owner: document.getElementById("newOwner").value || "当前用户",
+          date: document.getElementById("newDate").value || new Date().toISOString().slice(0, 10),
+          total: 52, done: 0, error: 0, status: "待开始"
+        });
+        closeAll(); renderKpis(); renderTable();
+      });
+      refs.tbody.addEventListener("click", function (e) {
+        var act = e.target.getAttribute("data-act");
+        if (!act) return;
+        var id = Number(e.target.getAttribute("data-id"));
+        var item = rows.find(function (x) { return x.id === id; });
+        if (!item) return;
+        state.current = item;
+        if (act === "scan") {
+          document.getElementById("scanResult").innerHTML = "<b>盘点单号：</b>" + item.no + "<br><b>盘点部门：</b>" + item.dept + "<br><b>提示：</b>可扫码或手工录入资产编号盘点。";
+          open("scanMask");
+        } else if (act === "detail") {
+          document.getElementById("detailInfo").innerHTML = "<b>盘点单号：</b>" + item.no + "<br><b>盘点类型：</b>" + item.type + "<br><b>盘点部门：</b>" + item.dept + "<br><b>计划日期：</b>" + item.date;
+          document.getElementById("detailCards").innerHTML =
+            '<div class="ai-detail-card">账卡物相符：' + (item.done - item.error) + '</div><div class="ai-detail-card">存在差异：' + item.error + '</div><div class="ai-detail-card">待盘点：' + (item.total - item.done) + '</div><div class="ai-detail-card">完成进度：' + percent(item) + '%</div>';
+          document.getElementById("detailRows").innerHTML =
+            '<tr><td>ZC-DA-2026-012</td><td>电缆故障测试仪</td><td>王芳</td><td>王芳</td><td style="color:#389e0d">相符</td></tr>' +
+            '<tr class="row-diff"><td>ZC-DA-2025-029</td><td>应急发电机</td><td>赵强</td><td>李四</td><td>差异</td></tr>';
+          open("detailMask");
+        }
+      });
+      document.getElementById("btnQueryAsset").addEventListener("click", function () {
+        var no = document.getElementById("scanNo").value.trim() || "ZC-DA-2026-012";
+        document.getElementById("scanResult").innerHTML = "<b>资产编号：</b>" + no + "<br><b>名称：</b>电缆故障测试仪<br><b>型号：</b>CF-200<br><b>存放地点：</b>华北仓B-03<br><b>保管人：</b>王芳<br><b>状态：</b>在用";
+      });
+      document.getElementById("btnConfirmScan").addEventListener("click", function () {
+        if (!state.current) return;
+        state.current.done = Math.min(state.current.total, state.current.done + 1);
+        if (document.getElementById("matchStatus").value === "不一致") state.current.error += 1;
+        if (state.current.done >= state.current.total) state.current.status = state.current.error > 0 ? "有异常" : "已完成";
+        else state.current.status = "进行中";
+        closeAll(); renderKpis(); renderTable();
+      });
+      document.getElementById("btnGenCardQr").addEventListener("click", function () {
+        var no = (document.getElementById("cardNo").value || "").trim() || "GD-UNSET";
+        document.getElementById("cardQrText").textContent = "ASSET://" + no;
+        alert("已生成固定资产二维码（演示）。");
+      });
+      document.getElementById("btnPrintCardQr").addEventListener("click", function () {
+        var fields = {
+          no: document.getElementById("cardNo").value || "—",
+          name: document.getElementById("cardName").value || "—",
+          unit: document.getElementById("cardUnit").value || "—",
+          type: document.getElementById("cardType").value || "—",
+          keeper: document.getElementById("cardKeeper").value || "—",
+          dept: document.getElementById("cardDept").value || "—",
+          model: document.getElementById("cardModel").value || "—"
+        };
+        var qr = document.getElementById("cardQrText").textContent || ("ASSET://" + fields.no);
+        var html =
+          '<!doctype html><html><head><meta charset="utf-8"><title>固定资产卡片打印</title><style>body{font-family:Arial;padding:20px}.box{border:1px solid #ccc;border-radius:8px;padding:14px;max-width:520px}h3{margin:0 0 10px}p{margin:4px 0}.qr{margin-top:10px;padding:10px;border:1px dashed #aaa;font-family:monospace}</style></head><body>' +
+          '<div class="box"><h3>固定资产卡片</h3>' +
+          "<p>固定资产编号：" + fields.no + "</p>" +
+          "<p>名称：" + fields.name + "</p>" +
+          "<p>计量单位：" + fields.unit + "</p>" +
+          "<p>类别：" + fields.type + "</p>" +
+          "<p>保管人：" + fields.keeper + "</p>" +
+          "<p>保管部门：" + fields.dept + "</p>" +
+          "<p>型号：" + fields.model + "</p>" +
+          '<div class="qr">二维码内容：' + qr + "</div></div></body></html>";
+        var win = window.open("", "_blank");
+        if (!win) {
+          alert("浏览器拦截了弹窗，请允许弹窗后重试。");
+          return;
+        }
+        win.document.open();
+        win.document.write(html);
+        win.document.close();
+        win.focus();
+        win.print();
+      });
+      renderKpis(); renderTable();
+    })();
+  </script>
+</body>
+</html>

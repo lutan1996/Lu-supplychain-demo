@@ -1,0 +1,251 @@
+<!-- 来源: src/views/system/user/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <el-row>
+      <!-- 部门树 -->
+      <el-col style="">
+        <el-card shadow="hover">
+          <el-input placeholder="请输入部门名称" prefix-icon="Search" clearable />
+          <el-tree
+            class="mt-2"
+            node-key="id"
+            highlight-current
+            default-expand-all
+          />
+        </el-card>
+      </el-col>
+      <el-col>
+        <transition>
+          <div class="mb-[10px]">
+            <el-card shadow="hover">
+              <el-form>
+                <el-form-item label="用户名称" prop="userName">
+                  <el-input placeholder="请输入用户名称" clearable />
+                </el-form-item>
+                <el-form-item label="手机号码" prop="phonenumber">
+                  <el-input placeholder="请输入手机号码" clearable />
+                </el-form-item>
+
+                <el-form-item label="状态" prop="status">
+                  <el-select placeholder="用户状态" clearable>
+                    <el-option />
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="创建时间" style="width: 308px">
+                  <el-date-picker
+                    value-format="YYYY-MM-DD HH:mm:ss"
+                    type="daterange"
+                    range-separator="-"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                  ></el-date-picker>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" icon="Search">搜索</el-button>
+                  <el-button icon="Refresh">重置</el-button>
+                </el-form-item>
+              </el-form>
+            </el-card>
+          </div>
+        </transition>
+
+        <el-card shadow="hover">
+          <template>
+            <el-row>
+              <el-col>
+                <el-button type="primary" plain icon="Plus">新增</el-button>
+              </el-col>
+              <el-col>
+                <el-button type="success" plain icon="Edit">
+                  修改
+                </el-button>
+              </el-col>
+              <el-col>
+                <el-button type="danger" plain icon="Delete">
+                  删除
+                </el-button>
+              </el-col>
+              <el-col>
+                <el-dropdown class="mt-[1px]">
+                  <el-button plain type="info">
+                    更多
+                    <el-icon class="el-icon--right"><arrow-down /></el-icon
+                  ></el-button>
+                  <template>
+                    <el-dropdown-menu>
+                      <el-dropdown-item icon="Download">下载模板</el-dropdown-item>
+                      <el-dropdown-item icon="Top"> 导入数据</el-dropdown-item>
+                      <el-dropdown-item icon="Download"> 导出数据</el-dropdown-item>
+                    </el-dropdown-menu>
+                  </template>
+                </el-dropdown>
+              </el-col>
+              <right-toolbar></right-toolbar>
+            </el-row>
+          </template>
+
+          <el-table>
+            <el-table-column type="selection" width="50" align="center" />
+            <el-table-column key="userId" label="用户编号" align="center" prop="userId" />
+            <el-table-column key="userName" label="用户名称" align="center" prop="userName" />
+            <el-table-column key="nickName" label="用户昵称" align="center" prop="nickName" />
+            <el-table-column key="deptName" label="部门" align="center" prop="deptName" />
+            <el-table-column key="phonenumber" label="手机号码" align="center" prop="phonenumber" width="120" />
+            <el-table-column key="status" label="状态" align="center">
+              <template="scope">
+                <el-switch active-value="0" inactive-value="1"></el-switch>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="创建时间" align="center" prop="createTime" width="160">
+              <template="scope">
+                <span>（动态文本）</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column label="操作" fixed="right" width="180" class-name="small-padding fixed-width">
+              <template="scope">
+                <el-tooltip content="修改" placement="top">
+                  <el-button link type="primary" icon="Edit"></el-button>
+                </el-tooltip>
+                <el-tooltip content="删除" placement="top">
+                  <el-button link type="primary" icon="Delete"></el-button>
+                </el-tooltip>
+
+                <el-tooltip content="重置密码" placement="top">
+                  <el-button link type="primary" icon="Key"></el-button>
+                </el-tooltip>
+
+                <el-tooltip content="分配角色" placement="top">
+                  <el-button link type="primary" icon="CircleCheck"></el-button>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <pagination
+          />
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <!-- 添加或修改用户配置对话框 -->
+    <el-dialog width="600px" append-to-body>
+      <el-form label-width="80px">
+        <el-row>
+          <el-col>
+            <el-form-item label="用户昵称" prop="nickName">
+              <el-input placeholder="请输入用户昵称" maxlength="30" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="归属部门" prop="deptId">
+              <el-tree-select
+                value-key="id"
+                placeholder="请选择归属部门"
+                check-strictly
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <el-form-item label="手机号码" prop="phonenumber">
+              <el-input placeholder="请输入手机号码" maxlength="11" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="邮箱" prop="email">
+              <el-input placeholder="请输入邮箱" maxlength="50" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <el-form-item label="用户名称" prop="userName">
+              <el-input placeholder="请输入用户名称" maxlength="30" />
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="用户密码" prop="password">
+              <el-input placeholder="请输入用户密码" type="password" maxlength="20" show-password />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <el-form-item label="用户性别">
+              <el-select placeholder="请选择">
+                <el-option></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="状态">
+              <el-radio-group>
+                <el-radio>（动态文本）</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <el-form-item label="岗位">
+              <el-select multiple placeholder="请选择">
+                <el-option
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col>
+            <el-form-item label="角色" prop="roleIds">
+              <el-select filterable multiple placeholder="请选择">
+                <el-option
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col>
+            <el-form-item label="备注">
+              <el-input type="textarea" placeholder="请输入内容"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+
+    <!-- 用户导入对话框 -->
+    <el-dialog width="400px" append-to-body>
+      <el-upload
+        accept=".xlsx, .xls"
+        drag
+      >
+        <el-icon class="el-icon--upload">
+          <i-ep-upload-filled />
+        </el-icon>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <template>
+          <div class="text-center el-upload__tip">
+            <div class="el-upload__tip"><el-checkbox />是否更新已经存在的用户数据</div>
+            <span>仅允许导入xls、xlsx格式文件。</span>
+            <el-link type="primary" style="font-size: 12px; vertical-align: baseline">下载模板</el-link>
+          </div>
+        </template>
+      </el-upload>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>

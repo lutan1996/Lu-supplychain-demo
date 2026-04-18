@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>物资出库与处置 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .rp .main-scroll { overflow: hidden; background: #f5f7fb; }
+    .rp .carrier-main-inner { padding: 12px 14px 14px; overflow: hidden; background: #f5f7fb; }
+    .rp .carrier-page-title { margin-bottom: 12px; font-size: 18px; font-weight: 600; color: #1f1f1f; }
+    /* 筛选与搜索/重置同一行流式排列，紧挨筛选项（与采购/原型列表一致） */
+    .rp-filter-bar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .rp-filter-grid {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 10px 14px;
+      flex: 0 1 auto;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .rp-item {
+      display: grid;
+      grid-template-columns: 100px minmax(260px, 420px);
+      align-items: center;
+      gap: 8px;
+    }
+    .rp-item label { font-size: 13px; color: #4c6077; white-space: nowrap; text-align: right; }
+    .rp-item input,
+    .rp-item select {
+      width: 100%;
+      max-width: 100%;
+      height: 32px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      padding: 0 10px;
+      font-size: 13px;
+      color: #333;
+      background: #fff;
+      box-sizing: border-box;
+    }
+    .rp-item input:focus,
+    .rp-item select:focus {
+      border-color: #1890ff;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.12);
+    }
+    .rp-filter-actions { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .rp-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; padding: 12px 0; }
+    .rp-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .rp-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 32px;
+      padding: 0 14px;
+      font-size: 13px;
+      line-height: 1;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      box-sizing: border-box;
+      border: 1px solid #d9d9d9;
+      background: #fff;
+      color: rgba(0, 0, 0, 0.88);
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+    }
+    .rp-btn:hover { border-color: #1890ff; color: #1890ff; }
+    .rp-btn-primary {
+      background: #1890ff;
+      border-color: #1890ff;
+      color: #fff;
+    }
+    .rp-btn-primary:hover { background: #40a9ff; border-color: #40a9ff; color: #fff; }
+    .rp-btn-add { color: #1890ff; border-color: #69c0ff; background: rgba(24, 144, 255, 0.08); }
+    .rp-btn-add:hover { color: #096dd9; border-color: #40a9ff; background: rgba(24, 144, 255, 0.16); }
+    .rp-btn-edit { color: #52c41a; border-color: #b7eb8f; background: #f6ffed; }
+    .rp-btn-edit:hover { color: #389e0d; border-color: #95de64; }
+    .rp-btn-del { color: #ff4d4f; border-color: #ffccc7; background: #fff2f0; }
+    .rp-btn-del:hover { color: #cf1322; border-color: #ffa39e; }
+    .rp-btn-exp { color: #d48806; border-color: #ffd591; background: #fffbe6; }
+    .rp-btn-exp:hover { color: #ad6800; border-color: #ffc53d; }
+    .rp-btn-imp { color: #1677ff; border-color: #91caff; background: #e6f4ff; }
+    .rp-btn-imp:hover { color: #0958d9; border-color: #69b1ff; }
+    .rp-table-wrap {
+      border: 1px solid #e7ecf3;
+      border-radius: 4px;
+      overflow: auto;
+      max-height: calc(100vh - 240px);
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+    }
+    .rp-table { width: 100%; min-width: max-content; border-collapse: collapse; table-layout: auto; font-size: 12px; background: #fff; }
+    .rp-table thead { position: sticky; top: 0; z-index: 1; }
+    .rp-table th,
+    .rp-table td { border-bottom: 1px solid #edf1f6; padding: 8px 8px; text-align: center; color: #3e536c; vertical-align: middle; }
+    .rp-table thead tr { background: #f6f8fb; }
+    .rp-table th { font-weight: 600; color: #2b4664; }
+    .rp-table th.rp-th-op,
+    .rp-table td.rp-ops { min-width: 160px; width: 160px; }
+    .rp-table td:not(.rp-ops):not(.rp-check) { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rp-table td.rp-ops { white-space: nowrap; }
+    .rp-check { width: 44px; min-width: 44px; }
+    .rp-ops-inner { display: inline-flex; align-items: center; justify-content: center; flex-wrap: nowrap; gap: 4px; }
+    /* 操作列：与「我的任务」原型一致 — fa-regular 线性图标 + title 提示 */
+    .rp-icon-btn {
+      color: #77a6d7;
+      text-decoration: none;
+      margin: 0 3px;
+      font-size: 14px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .rp-icon-btn:hover { color: #1677ff; opacity: 0.92; }
+    .rp-foot {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #5d738d;
+      background: #fafafa;
+      border-top: 1px solid #edf1f6;
+    }
+    .rp-foot select,
+    .rp-foot .rp-foot-input {
+      height: 28px;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      font-size: 12px;
+      padding: 0 8px;
+      color: #5d738d;
+    }
+    .rp-page-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      padding: 0 8px;
+      background: #1890ff;
+      color: #fff;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics rp">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar" title="用户">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit-analytics.html"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item nav-item--module-active" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title" id="rpTitle">品牌</h1>
+          <div class="rp-filter-bar">
+            <div class="rp-filter-grid" id="rpSearch"></div>
+            <div class="rp-filter-actions">
+              <button type="button" class="rp-btn rp-btn-primary" id="rpSearchBtn"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> 搜索</button>
+              <button type="button" class="rp-btn" id="rpResetBtn"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> 重置</button>
+            </div>
+          </div>
+          <div class="rp-toolbar">
+            <div class="rp-tools" id="rpTools"></div>
+          </div>
+          <div class="rp-table-wrap">
+            <table class="rp-table">
+              <thead><tr id="rpHead"></tr></thead>
+              <tbody id="rpBody"></tbody>
+            </table>
+            <div class="rp-foot" role="navigation" aria-label="分页">
+              <span>共 <strong id="rpTotal">0</strong> 条</span>
+              <span>每页</span>
+              <select aria-label="每页条数" id="rpPageSize">
+                <option value="10" selected>10 条/页</option>
+                <option value="20">20 条/页</option>
+                <option value="50">50 条/页</option>
+              </select>
+              <button type="button" class="rp-btn" aria-label="上一页">&lt;</button>
+              <span class="rp-page-num" aria-current="page">1</span>
+              <button type="button" class="rp-btn" aria-label="下一页">&gt;</button>
+              <span>前往</span>
+              <input type="text" class="rp-foot-input" value="1" style="width: 44px; text-align: center;" aria-label="页码" />
+              <span>页</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var scene = "brand";
+      var sceneByLabel = {
+        "品牌": "brand",
+        "型号": "model",
+        "场内线路": "line",
+        "风电机组和箱变": "wind",
+        "物资领用单": "requisition",
+        "项目管理": "project"
+      };
+      function readSceneFromName(nameText) {
+        if (!nameText) return "";
+        try {
+          var nsp = new URLSearchParams(String(nameText));
+          var s1 = (nsp.get("scene") || "").trim();
+          if (s1) return s1;
+          var sub = (nsp.get("pageSub") || "").trim();
+          if (sub && sceneByLabel[sub]) return sceneByLabel[sub];
+        } catch (e) {}
+        return "";
+      }
+      try {
+        var sp = new URLSearchParams(window.location.search || "");
+        var byScene = (sp.get("scene") || "").trim();
+        var byPageSub = (sp.get("pageSub") || "").trim();
+        var byRetiredStore = "";
+        try { byRetiredStore = (sessionStorage.getItem("demoRetiredScene") || "").trim(); } catch (e2) {}
+        if (byScene) scene = byScene;
+        else if (byRetiredStore) scene = byRetiredStore;
+        else if (byPageSub && sceneByLabel[byPageSub]) scene = sceneByLabel[byPageSub];
+        else {
+          try {
+            var ss = (sessionStorage.getItem("demoScene") || "").trim();
+            if (ss) scene = ss;
+          } catch (e1) {}
+          if (!scene || scene === "brand") {
+            var byName = readSceneFromName(window.name || "");
+            if (byName) scene = byName;
+          }
+        }
+      } catch (e) {}
+      var map = {
+        brand: {
+          title: "品牌",
+          fields: ["品牌"],
+          cols: ["", "品牌", "操作"],
+          rows: [
+            ["", "联合能源"],
+            ["", "中材科技"],
+            ["", "中国中车"],
+            ["", "Nordex"],
+            ["", "金风科技"],
+            ["", "明阳"],
+            ["", "南高齿"],
+            ["", "Winergy"],
+            ["", "山西永乐"],
+            ["", "株洲时代"]
+          ],
+          toolButtons: ["add", "edit", "delete", "export"]
+        },
+        model: {
+          title: "型号",
+          fields: [
+            "型号",
+            { label: "类型", type: "select", options: ["请选择", "叶片", "风电机组"] }
+          ],
+          cols: ["", "型号", "类型", "操作"],
+          rows: [
+            ["", "HT24", "叶片"],
+            ["", "Sinoma40.2", "叶片"],
+            ["", "VA10", "叶片"],
+            ["", "SI452", "叶片"],
+            ["", "NR37", "叶片"],
+            ["", "GW50-750", "风电机组"],
+            ["", "GW82-1500kW", "风电机组"],
+            ["", "GW87-1500kW", "风电机组"],
+            ["", "GW93-1500kW", "风电机组"],
+            ["", "ND77-1500kW", "风电机组"]
+          ],
+          toolButtons: ["add", "edit", "delete", "export"]
+        },
+        line: {
+          title: "场内线路",
+          fields: ["风电场名称", "项目名称"],
+          cols: ["", "仓库", "项目名称", "风电场名称", "分期名称", "场内线路名称", "场内线路架设方式", "电缆型号", "电压等级", "电缆材质", "绝缘材质", "长度", "电缆重量", "途径风电机组台数", "备注", "操作"],
+          rows: [
+            ["", "222", "贺兰山第四风电场项目", "贺兰山第四风电场", "石墩子项目", "I线", "架空线路", "/", "10kV", "钢芯铝绞线", "/", "5442", "2.18", "14", ""],
+            ["", "222", "贺兰山第四风电场项目", "贺兰山第四风电场", "石墩子项目", "II线", "架空线路", "/", "35kV", "钢芯铝绞线", "/", "3195", "14.92", "19", ""],
+            ["", "222", "贺兰山第四风电场项目", "贺兰山第四风电场", "石墩子项目", "III线", "架空线路", "/", "35kV", "钢芯铝绞线", "/", "4190", "15.44", "20", ""],
+            ["", "222", "贺兰山第四风电场项目", "贺兰山第四风电场", "红碴子一期", "S14集电线路", "架空线路", "/", "10kV", "钢芯铝绞线", "/", "15242", "2", "13", ""],
+            ["", "222", "贺兰山第四风电场项目", "贺兰山第四风电场", "红碴子一期", "L24线至02光站", "架空线路", "/", "10kV", "钢芯铝绞线", "/", "20331", "3.85", "14", ""]
+          ],
+          toolButtons: ["add", "edit", "delete", "export", "import"]
+        },
+        wind: {
+          title: "风电机组和箱变",
+          fields: ["风电场名称", "项目名称", "场内线路名称"],
+          cols: ["", "仓库", "项目名称", "风电场名称", "分期名称", "场内线路名称", "风机机组编号", "风机机组整机制造商", "风机机组型号", "轮毂高度", "叶轮直径", "额定功率", "投产日期", "操作"],
+          rows: [
+            ["", "222", "贺兰山第四风电场项目", "贺兰山第四风电场", "石墩子项目", "1线", "A1", "金风科技", "GW50-750", "60", "50", "750", "2006.03.01", ""],
+            ["", "222", "贺兰山第四风电场项目", "贺兰山第四风电场", "石墩子项目", "1线", "A2", "金风科技", "GW50-750", "60", "50", "750", "2006.03.01", ""],
+            ["", "222", "贺兰山第四风电场项目", "贺兰山第四风电场", "石墩子项目", "1线", "A3", "金风科技", "GW50-750", "60", "50", "750", "2006.03.01", ""],
+            ["", "222", "贺兰山第四风电场项目", "贺兰山第四风电场", "石墩子项目", "1线", "A4", "金风科技", "GW50-750", "60", "50", "750", "2006.03.01", ""],
+            ["", "222", "贺兰山第四风电场项目", "贺兰山第四风电场", "石墩子项目", "1线", "A5", "金风科技", "GW50-750", "60", "50", "750", "2006.03.01", ""],
+            ["", "222", "贺兰山第四风电场项目", "贺兰山第四风电场", "石墩子项目", "1线", "A6", "金风科技", "GW50-750", "60", "50", "750", "2006.03.01", ""],
+            ["", "222", "贺兰山第四风电场项目", "贺兰山第四风电场", "石墩子项目", "1线", "A7", "金风科技", "GW50-750", "60", "50", "750", "2006.03.01", ""],
+            ["", "222", "贺兰山第四风电场项目", "贺兰山第四风电场", "石墩子项目", "1线", "A8", "金风科技", "GW50-750", "60", "50", "750", "2006.03.01", ""],
+            ["", "222", "贺兰山第四风电场项目", "贺兰山第四风电场", "石墩子项目", "1线", "A9", "金风科技", "GW50-750", "60", "50", "750", "2006.03.01", ""],
+            ["", "222", "贺兰山第四风电场项目", "贺兰山第四风电场", "石墩子项目", "1线", "A10", "金风科技", "GW50-750", "60", "50", "750", "2006.03.01", ""]
+          ],
+          toolButtons: ["add", "edit", "delete", "export", "import"]
+        },
+        requisition: {
+          title: "物资领用单",
+          fields: ["部门", "领用人"],
+          cols: ["", "仓库", "项目名称", "部门", "领用人", "操作"],
+          rows: [
+            ["", "222", "贺兰山第四风电场项目", "龙源电力", "曹思阳", ""],
+            ["", "222", "贺兰山第四风电场项目", "拉浪峡九力", "李宗阳", ""]
+          ],
+          toolButtons: ["add", "edit", "delete", "export"]
+        },
+        project: {
+          title: "项目管理",
+          fields: ["区域公司", "项目名称"],
+          cols: ["", "区域公司", "项目名称", "项目投产时间", "项目刚核验时间", "项目简介", "操作"],
+          rows: [
+            ["", "龙源（江苏）新能源工程技术有限公司", "111000", "2025-01-21 12:00:00", "2025-01-21 12:00:00", "投运运营阶段", ""],
+            ["", "宁夏龙源新能源有限公司", "贺兰山第四风电场项目", "2025-01-21 09:29:07", "2025-01-21 09:29:08", "前期执行", ""]
+          ],
+          toolButtons: ["add", "edit", "delete", "export"]
+        }
+      };
+      var cfg = map[scene] || map.brand;
+      document.getElementById("rpTitle").textContent = cfg.title;
+      var s = document.getElementById("rpSearch");
+      cfg.fields.forEach(function (f) {
+        var item = document.createElement("div");
+        item.className = "rp-item";
+        if (typeof f === "object" && f.type === "select") {
+          var opts = (f.options || []).map(function (x) { return "<option>" + x + "</option>"; }).join("");
+          item.innerHTML = "<label>" + (f.label || "") + "</label><select>" + opts + "</select>";
+        } else {
+          item.innerHTML = "<label>" + f + "</label><input placeholder='请输入" + f + "' />";
+        }
+        s.appendChild(item);
+      });
+      var toolMap = {
+        add: { cls: "rp-btn rp-btn-add", txt: "新增" },
+        edit: { cls: "rp-btn rp-btn-edit", txt: "修改" },
+        delete: { cls: "rp-btn rp-btn-del", txt: "删除" },
+        export: { cls: "rp-btn rp-btn-exp", txt: "导出" },
+        import: { cls: "rp-btn rp-btn-imp", txt: "导入" }
+      };
+      var toolsEl = document.getElementById("rpTools");
+      toolsEl.innerHTML = "";
+      (cfg.toolButtons || []).forEach(function (k) {
+        var m = toolMap[k];
+        if (!m) return;
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = m.cls;
+        btn.textContent = m.txt;
+        toolsEl.appendChild(btn);
+      });
+      var h = document.getElementById("rpHead");
+      cfg.cols.forEach(function (x) {
+        var th = document.createElement("th");
+        th.textContent = x;
+        if (x === "操作") th.className = "rp-th-op";
+        h.appendChild(th);
+      });
+      var b = document.getElementById("rpBody");
+      (cfg.rows || []).forEach(function (row) {
+        var tr = document.createElement("tr");
+        cfg.cols.forEach(function (col, idx) {
+          var td = document.createElement("td");
+          if (col === "操作") {
+            td.className = "rp-ops";
+            td.innerHTML =
+              '<span class="rp-ops-inner">' +
+              '<a href="#" class="rp-icon-btn" title="查看详情" aria-label="查看详情"><i class="fa-regular fa-eye" aria-hidden="true"></i></a>' +
+              '<a href="#" class="rp-icon-btn" title="修改" aria-label="修改"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i></a>' +
+              '<a href="#" class="rp-icon-btn" title="删除" aria-label="删除"><i class="fa-regular fa-trash-can" aria-hidden="true"></i></a>' +
+              "</span>";
+          } else if (col === "") {
+            td.className = "rp-check";
+            td.innerHTML = "<input type='checkbox' aria-label='选择行' />";
+          } else {
+            td.textContent = row[idx] != null ? row[idx] : "";
+          }
+          tr.appendChild(td);
+        });
+        b.appendChild(tr);
+      });
+      document.getElementById("rpTotal").textContent = String((cfg.rows || []).length);
+
+      var resetBtn = document.getElementById("rpResetBtn");
+      var searchBtn = document.getElementById("rpSearchBtn");
+      if (resetBtn) {
+        resetBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelectorAll("#rpSearch input, #rpSearch select").forEach(function (el) {
+            if (el.tagName === "SELECT") el.selectedIndex = 0;
+            else el.value = "";
+          });
+        });
+      }
+      if (searchBtn) {
+        searchBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

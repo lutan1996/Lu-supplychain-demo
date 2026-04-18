@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>基础数据 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .db .main-scroll { background: #f5f7fb; overflow: auto; }
+    .db .carrier-main-inner { padding: 10px 12px 12px; background: #f5f7fb; }
+    .db-search { background:#fff; border:1px solid #e7ecf3; border-radius:8px; padding:10px; display:grid; grid-template-columns: repeat(5,minmax(0,1fr)) auto; gap:10px; align-items:center; margin-bottom:10px; }
+    .db-search-actions { display:flex; align-items:center; gap:8px; flex-shrink:0; padding-left:4px; }
+    .db-item { display:grid; grid-template-columns: 120px 1fr; align-items:center; gap:8px; }
+    .db-item label { font-size:12px; color:#4d6480; }
+    .db-item input { height:30px; border:1px solid #dbe6f3; border-radius:4px; padding:0 8px; font-size:12px; }
+    .db-actions { display:flex; align-items:center; gap:8px; margin:0 0 10px; flex-wrap:wrap; }
+    .db-btn { font-size:12px; border-radius:4px; padding:6px 12px; border:1px solid transparent; cursor:pointer; }
+    .db-btn-search { background:#1890ff; color:#fff; border-color:#1890ff; }
+    .db-btn-reset { background:#fff; color:#4d6480; border-color:#dbe6f3; }
+    .db-btn-add { background:#e8f4ff; border-color:#cfe5fb; color:#3e8ad9; }
+    .db-btn-edit { background:#eef9ea; border-color:#d8f0d2; color:#69a95a; }
+    .db-btn-del { background:#fff0f0; border-color:#f8d7d7; color:#d97f7f; }
+    .db-btn-export { background:#ffe58f; border-color:#f0d060; color:#5c4a00; }
+    .db-btn-import { background:#fff; border-color:#dbe6f3; color:#4d6480; }
+    .db-table-wrap { border:1px solid #e7ecf3; border-radius:8px; overflow:auto; background:#fff; max-height: calc(100vh - 280px); }
+    .db-table { width: max(100%, 1400px); border-collapse: collapse; font-size: 12px; }
+    .db-table th, .db-table td { border-bottom:1px solid #edf1f6; padding:8px 6px; text-align:center; color:#3f546f; }
+    .db-table thead th { background:#f6f8fb; white-space:nowrap; position:sticky; top:0; z-index:1; }
+    .db-more-btn { border:none; background:transparent; color:#1890ff; cursor:pointer; font-size:12px; }
+    .db-more-row td { background:#fafcff; text-align:left; padding:10px 12px; font-size:12px; color:#516a87; }
+    .db-foot { margin-top:8px; display:flex; justify-content:flex-end; gap:8px; align-items:center; font-size:12px; color:#617894; }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics db">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header"><div class="header-left"><button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40" /></a><div class="header-source-brand"><p>新能源供应链管理系统</p></div></div><div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar">用</div></div></header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit-analytics.html"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item nav-item--module-active"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item"><span class="nav-label">设置</span></div>
+        <div class="nav-item"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title" style="font-size:18px;margin-bottom:8px;">基础数据</h1>
+          <div class="db-search">
+            <div class="db-item"><label>数据来源</label><input id="s_source" placeholder="请输入数据来源" /></div>
+            <div class="db-item"><label>厂家物料码</label><input id="s_factory" placeholder="请输入厂家物料码" /></div>
+            <div class="db-item"><label>物资分类码（A码）</label><input id="s_acode" placeholder="请输入物资分类码（A码）" /></div>
+            <div class="db-item"><label>物料名称</label><input id="s_name" placeholder="请输入物料名称" /></div>
+            <div class="db-item"><label>物料码</label><input id="s_code" placeholder="请输入物料码" /></div>
+            <div class="db-search-actions">
+              <button class="db-btn db-btn-search" type="button" id="btnSearch">搜索</button>
+              <button class="db-btn db-btn-reset" type="button" id="btnReset">重置</button>
+            </div>
+          </div>
+          <div class="db-actions">
+            <button class="db-btn db-btn-add" type="button" id="btnAdd">新增</button>
+            <button class="db-btn db-btn-edit" type="button" id="btnEdit">修改</button>
+            <button class="db-btn db-btn-del" type="button" id="btnDel">删除</button>
+            <button class="db-btn db-btn-import" type="button" id="btnImport">导入</button>
+            <button class="db-btn db-btn-export" type="button" id="btnExport">导出</button>
+          </div>
+          <div class="db-table-wrap">
+            <table class="db-table">
+              <thead>
+                <tr>
+                  <th style="width:44px;">序号</th>
+                  <th>部门</th>
+                  <th>岗位职务/使用性质</th>
+                  <th>使用人姓名</th>
+                  <th>设备名称</th>
+                  <th>品牌/规格型号</th>
+                  <th>设备编号</th>
+                  <th>采购日期</th>
+                  <th>存放地点</th>
+                  <th>采购价格</th>
+                  <th>原值</th>
+                  <th>净值</th>
+                  <th>使用年限</th>
+                  <th>保管人</th>
+                  <th>更多</th>
+                </tr>
+              </thead>
+              <tbody id="dbTbody"></tbody>
+            </table>
+          </div>
+          <div class="db-foot">
+            <span id="dbTotal">共 2 条</span>
+            <span>每页</span>
+            <select id="dbPageSize"><option>10条/页</option><option>20条/页</option></select>
+            <button type="button" class="db-btn db-btn-reset" style="min-width:28px;">1</button>
+            <span>前往</span>
+            <input value="1" style="width:36px;height:24px;border:1px solid #dbe6f3;" />
+            <span>页</span>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="js/sidebar-actions.js"></script><script src="js/subpage-feature-title.js"></script><script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var rows = [
+        { dept: "运维一部", seq: 1, post: "运行", user: "王强", devName: "风机齿轮箱", brand: "南高齿/GW-GX-3.2MW", devNo: "SB-2023-001", buyDate: "2023-05-10", loc: "华北场站#12", price: "420000", orig: "400000", net: "320000", life: "15年", keeper: "李华",
+          src: "采购系统", facCode: "NGC-GX-3200", aCode: "A0101001", matName: "齿轮箱总成", matCode: "MAT-GX-001", f1: "3.2MW", f2: "低温型" },
+        { dept: "检修中心", seq: 2, post: "备用", user: "赵敏", devName: "发电机", brand: "湘电/FD-2.0", devNo: "SB-2022-088", buyDate: "2022-11-20", loc: "华东备件仓", price: "180000", orig: "175000", net: "120000", life: "20年", keeper: "周杰",
+          src: "手工录入", facCode: "XD-FD2000", aCode: "A0101002", matName: "双馈发电机", matCode: "MAT-FDJ-002", f1: "2.0MW", f2: "标准" }
+      ];
+      var openMore = {};
+
+      function esc(s) { return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+      function render() {
+        var tb = document.getElementById("dbTbody");
+        var fs = {
+          source: (document.getElementById("s_source").value || "").trim().toLowerCase(),
+          factory: (document.getElementById("s_factory").value || "").trim().toLowerCase(),
+          acode: (document.getElementById("s_acode").value || "").trim().toLowerCase(),
+          name: (document.getElementById("s_name").value || "").trim().toLowerCase(),
+          code: (document.getElementById("s_code").value || "").trim().toLowerCase()
+        };
+        var list = rows.filter(function (r) {
+          return (!fs.source || (r.src || "").toLowerCase().indexOf(fs.source) !== -1) &&
+            (!fs.factory || (r.facCode || "").toLowerCase().indexOf(fs.factory) !== -1) &&
+            (!fs.acode || (r.aCode || "").toLowerCase().indexOf(fs.acode) !== -1) &&
+            (!fs.name || (r.matName || "").toLowerCase().indexOf(fs.name) !== -1) &&
+            (!fs.code || (r.matCode || "").toLowerCase().indexOf(fs.code) !== -1);
+        });
+        tb.innerHTML = "";
+        list.forEach(function (r, i) {
+          var idx = rows.indexOf(r);
+          var tr = document.createElement("tr");
+          tr.innerHTML =
+            "<td>" + r.seq + "</td>" +
+            "<td>" + esc(r.dept) + "</td>" +
+            "<td>" + esc(r.post) + "</td>" +
+            "<td>" + esc(r.user) + "</td>" +
+            "<td>" + esc(r.devName) + "</td>" +
+            "<td>" + esc(r.brand) + "</td>" +
+            "<td>" + esc(r.devNo) + "</td>" +
+            "<td>" + esc(r.buyDate) + "</td>" +
+            "<td>" + esc(r.loc) + "</td>" +
+            "<td>" + esc(r.price) + "</td>" +
+            "<td>" + esc(r.orig) + "</td>" +
+            "<td>" + esc(r.net) + "</td>" +
+            "<td>" + esc(r.life) + "</td>" +
+            "<td>" + esc(r.keeper) + "</td>" +
+            "<td><button type=\"button\" class=\"db-more-btn\" data-idx=\"" + idx + "\">更多 <i class=\"fa-solid fa-chevron-down\"></i></button></td>";
+          tb.appendChild(tr);
+          if (openMore[idx]) {
+            var tr2 = document.createElement("tr");
+            tr2.className = "db-more-row";
+            tr2.innerHTML =
+              "<td colspan=\"15\">" +
+              "<strong>数据来源</strong>：" + esc(r.src) +
+              " &nbsp;|&nbsp; <strong>厂家物料码</strong>：" + esc(r.facCode) +
+              " &nbsp;|&nbsp; <strong>物资分类码（A码）</strong>：" + esc(r.aCode) +
+              " &nbsp;|&nbsp; <strong>物料名称</strong>：" + esc(r.matName) +
+              " &nbsp;|&nbsp; <strong>物料码</strong>：" + esc(r.matCode) +
+              " &nbsp;|&nbsp; <strong>特征值1</strong>：" + esc(r.f1) +
+              " &nbsp;|&nbsp; <strong>特征值2</strong>：" + esc(r.f2) +
+              "</td>";
+            tb.appendChild(tr2);
+          }
+        });
+        document.getElementById("dbTotal").textContent = "共 " + list.length + " 条";
+      }
+
+      document.getElementById("dbTbody").addEventListener("click", function (e) {
+        var b = e.target.closest("button.db-more-btn");
+        if (!b) return;
+        var idx = parseInt(b.getAttribute("data-idx"), 10);
+        openMore[idx] = !openMore[idx];
+        render();
+      });
+
+      document.getElementById("btnSearch").addEventListener("click", function () { render(); });
+      document.getElementById("btnReset").addEventListener("click", function () {
+        ["s_source","s_factory","s_acode","s_name","s_code"].forEach(function (id) { document.getElementById(id).value = ""; });
+        render();
+      });
+      document.getElementById("btnAdd").addEventListener("click", function () {});
+      document.getElementById("btnEdit").addEventListener("click", function () {});
+      document.getElementById("btnDel").addEventListener("click", function () {});
+      document.getElementById("btnImport").addEventListener("click", function () {});
+      document.getElementById("btnExport").addEventListener("click", function () {});
+      render();
+    })();
+  </script>
+</body>
+</html>

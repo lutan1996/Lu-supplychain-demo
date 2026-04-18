@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>供应商数据 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .sp .main-scroll{background:#f5f7fb;overflow:hidden}.sp .carrier-main-inner{padding:10px 12px 12px;background:#f5f7fb}
+    .sp-search{background:#fff;border:1px solid #e7ecf3;border-radius:4px;padding:8px;display:flex;gap:10px;align-items:center;margin-bottom:8px;font-size:12px}
+    .sp-search input,.sp-search select{height:26px;border:1px solid #dbe6f3;border-radius:2px;padding:0 6px;font-size:12px}
+    .btn{font-size:12px;border-radius:2px;padding:4px 10px;border:1px solid transparent;cursor:pointer}
+    .btn-s{background:#1890ff;color:#fff;border-color:#1890ff}.btn-r{background:#fff;color:#4d6480;border-color:#dbe6f3}
+    .bar{display:flex;gap:6px;margin-bottom:8px}.b1{background:#e8f4ff;border-color:#cfe5fb;color:#3e8ad9}.b2{background:#eef9ea;border-color:#d8f0d2;color:#69a95a}.b3{background:#fff0f0;border-color:#f8d7d7;color:#d97f7f}.b4{background:#fff6e8;border-color:#f5e2c6;color:#b08a57}
+    .tbl{border:1px solid #e7ecf3;border-radius:4px;overflow:hidden;background:#fff}
+    table{width:100%;border-collapse:collapse;font-size:12px}th,td{border-bottom:1px solid #edf1f6;padding:8px 6px;text-align:center;color:#3f546f}thead th{background:#f6f8fb}
+    .tag{display:inline-block;background:#f6ffed;color:#389e0d;border-radius:2px;padding:1px 6px;font-size:10px}
+    .op a{color:#77a6d7;margin:0 3px;text-decoration:none}
+    .foot{display:flex;justify-content:flex-end;gap:8px;align-items:center;padding:8px;font-size:11px;color:#617894}
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics sp">
+<div class="page-bg" aria-hidden="true"></div><div class="app">
+<header class="header"><div class="header-left"><button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40" /></a><div class="header-source-brand"><p>新能源供应链管理系统</p></div></div><div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar">用</div></div></header>
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="layout"><aside class="sidebar" aria-label="主导航"><div class="nav-item"><span class="nav-label">我的任务</span></div><a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a><a class="nav-item" href="cockpit-analytics.html"><span class="nav-label">驾驶舱</span></a><div class="nav-item"><span class="nav-label">采购管理</span></div><a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a><a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a><div class="nav-item"><span class="nav-label">物资采购</span></div><div class="nav-item"><span class="nav-label">物资出库与处置</span></div><div class="nav-item"><span class="nav-label">绩效考核</span></div><div class="nav-item"><span class="nav-label">公告管理</span></div><div class="nav-item"><span class="nav-label">综合业务管理</span></div><div class="nav-item nav-item--module-active"><span class="nav-label">数据管理</span></div><div class="nav-item"><span class="nav-label">开发工具</span></div><div class="nav-item"><span class="nav-label">设置</span></div><div class="nav-item"><span class="nav-label">系统管理</span></div></aside>
+<main class="main-scroll"><div class="carrier-main-inner">
+  <div class="sp-search"><span>供应商数据</span><input placeholder="请输入供应商名称" style="width:180px" /><span>类别</span><select style="width:140px"><option>请选择</option></select><button class="btn btn-s">搜索</button><button class="btn btn-r">重置</button></div>
+  <div class="bar"><button class="btn b1">新增</button><button class="btn b2">修改</button><button class="btn b3">删除</button><button class="btn b4">导出</button></div>
+  <div class="tbl"><table><thead><tr><th style="width:36px"><input type="checkbox"/></th><th>供货商数据</th><th>类别</th><th>操作</th></tr></thead><tbody>
+    <tr><td><input type="checkbox"/></td><td>金风科技</td><td><span class="tag">有效</span></td><td class="op"><a href="#"><i class="fa-regular fa-pen-to-square"></i></a><a href="#"><i class="fa-regular fa-trash-can"></i></a></td></tr>
+    <tr><td><input type="checkbox"/></td><td>远景</td><td><span class="tag">有效</span></td><td class="op"><a href="#"><i class="fa-regular fa-pen-to-square"></i></a><a href="#"><i class="fa-regular fa-trash-can"></i></a></td></tr>
+    <tr><td><input type="checkbox"/></td><td>联合动力有限公司</td><td><span class="tag">有效</span></td><td class="op"><a href="#"><i class="fa-regular fa-pen-to-square"></i></a><a href="#"><i class="fa-regular fa-trash-can"></i></a></td></tr>
+    <tr><td><input type="checkbox"/></td><td>协合分布式技术（雄安）有限公司</td><td><span class="tag">有效</span></td><td class="op"><a href="#"><i class="fa-regular fa-pen-to-square"></i></a><a href="#"><i class="fa-regular fa-trash-can"></i></a></td></tr>
+    <tr><td><input type="checkbox"/></td><td>中城材切割中片片段设备有限公司</td><td><span class="tag">有效</span></td><td class="op"><a href="#"><i class="fa-regular fa-pen-to-square"></i></a><a href="#"><i class="fa-regular fa-trash-can"></i></a></td></tr>
+  </tbody></table>
+  <div class="foot"><span>共 237 条</span><span>10条/页</span><button>‹</button><button style="background:#1890ff;color:#fff;border:1px solid #1890ff">1</button><button>2</button><button>3</button><button>4</button><button>5</button><span>…</span><button>24</button><button>›</button><span>前往</span><input value="1" style="width:26px;height:20px;border:1px solid #dbe6f3" /><span>页</span></div>
+  </div>
+</div></main></div></div>
+<script src="js/sidebar-actions.js"></script><script src="js/subpage-feature-title.js"></script><script src="js/subpage-clock.js"></script>
+</body>
+</html>
+

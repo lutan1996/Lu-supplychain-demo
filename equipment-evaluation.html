@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>设备评估 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .tag-result-ok { background: #f6ffed; color: #389e0d; }
+    .tag-result-bad { background: #fff1f0; color: #cf1322; }
+    .tag-status-pending { background: #fff7e6; color: #d48806; }
+    .tag-status-done { background: #e6f4ff; color: #1677ff; }
+    .wh-ops { display: flex; align-items: center; gap: 10px; }
+    .wh-ops a { color: #1677ff; text-decoration: none; font-size: 13px; }
+    .wh-ops a:hover { opacity: 0.85; }
+    .cell-num {
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+      color: #1f2d3d;
+    }
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 20, 40, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+    .modal-mask.show { display: flex; }
+    .modal {
+      width: min(760px, 96vw);
+      background: #fff;
+      border: 1px solid #dbe6f3;
+      border-radius: 12px;
+      box-shadow: 0 18px 46px rgba(9, 24, 45, 0.28);
+      overflow: hidden;
+    }
+    .modal-header {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      border-bottom: 1px solid #e8eef7;
+    }
+    .modal-title { margin: 0; font-size: 17px; color: #1f3551; }
+    .modal-close { border: none; background: transparent; cursor: pointer; font-size: 22px; color: #6a819f; }
+    .modal-body {
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 14px;
+    }
+    .field.full { grid-column: 1 / -1; }
+    .field label { display: block; margin: 0 0 6px; font-size: 13px; color: #516a87; }
+    .field input, .field select, .field textarea {
+      width: 100%;
+      height: 34px;
+      border: 1px solid #d7e1ee;
+      border-radius: 6px;
+      padding: 0 10px;
+      font-size: 14px;
+      color: #223a55;
+      background: #fff;
+    }
+    .field textarea { height: 84px; padding: 8px 10px; resize: vertical; }
+    .modal-wide .modal-body { grid-template-columns: 1fr 1fr; max-height: 70vh; overflow-y: auto; }
+    .modal-footer {
+      height: 54px;
+      border-top: 1px solid #e8eef7;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 0 14px;
+    }
+    .btn {
+      border: 1px solid #d7e1ee;
+      background: #fff;
+      color: #2b4664;
+      border-radius: 6px;
+      padding: 7px 14px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: #1890ff;
+      color: #fff;
+      border-color: #1890ff;
+    }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit.html"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item nav-item--module-active"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item"><span class="nav-label">设置</span></div>
+        <div class="nav-item"><span class="nav-label">系统管理</span></div>
+      </aside>
+
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title">设备评估</h1>
+
+          <div class="carrier-toolbar">
+            <button type="button" class="carrier-btn-add" id="btnCreateEval">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              创建评估
+            </button>
+            <div class="carrier-toolbar-right">
+              <input
+                type="search"
+                class="carrier-search"
+                id="filterEvalNo"
+                placeholder="按评估单号搜索"
+                autocomplete="off"
+                aria-label="按评估单号搜索"
+              />
+              <select class="carrier-select" id="filterStatus" aria-label="按状态筛选">
+                <option value="">全部状态</option>
+                <option value="pending">待评估</option>
+                <option value="done">已完成</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="carrier-table-wrap">
+            <table class="carrier-table">
+              <thead>
+                <tr>
+                  <th>评估单号</th>
+                  <th>关联申请单</th>
+                  <th>设备名称</th>
+                  <th>原值</th>
+                  <th>净值</th>
+                  <th>评估人</th>
+                  <th>评估日期</th>
+                  <th>评估结论</th>
+                  <th style="min-width:240px;">操作</th>
+                </tr>
+              </thead>
+              <tbody id="evalTableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="carrier-pagination" role="navigation" aria-label="分页">
+            <span id="evalTotalText">共 0 条</span>
+            <span>每页</span>
+            <select aria-label="每页条数">
+              <option value="10" selected>10 条/页</option>
+              <option value="20">20 条/页</option>
+              <option value="50">50 条/页</option>
+            </select>
+            <div class="carrier-page-btns">
+              <button type="button" aria-label="上一页">&lt;</button>
+              <button type="button" class="is-current" aria-current="page">1</button>
+              <button type="button" aria-label="下一页">&gt;</button>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="evalModalMask" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="evalModalTitle">
+      <div class="modal-header">
+        <h2 class="modal-title" id="evalModalTitle">创建设备评估</h2>
+        <button class="modal-close" id="btnCloseModal" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field">
+          <label for="relApplyNo">关联申请单</label>
+          <select id="relApplyNo"></select>
+        </div>
+        <div class="field">
+          <label for="deviceName">设备名称</label>
+          <input id="deviceName" type="text" readonly />
+        </div>
+        <div class="field">
+          <label for="originValue">原值</label>
+          <input id="originValue" type="text" readonly />
+        </div>
+        <div class="field">
+          <label for="netValue">净值</label>
+          <input id="netValue" type="text" readonly />
+        </div>
+        <div class="field">
+          <label for="evaluator">评估人</label>
+          <input id="evaluator" type="text" placeholder="请输入评估人" />
+        </div>
+        <div class="field">
+          <label for="conclusion">评估结论</label>
+          <select id="conclusion">
+            <option value="合格">合格</option>
+            <option value="不合格">不合格</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label for="comment">评估说明</label>
+          <textarea id="comment" placeholder="请输入评估说明（选填）"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="btnCancel">取消</button>
+        <button class="btn btn-primary" id="btnSubmitEval">提交评估</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="evalCompleteMask" aria-hidden="true">
+    <div class="modal modal-wide" role="dialog" style="width:min(900px,96vw);">
+      <div class="modal-header">
+        <h2 class="modal-title">完成评估（线下评估线上留痕）</h2>
+        <button class="modal-close" id="btnCloseComplete" aria-label="关闭">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="field"><label>评估单号</label><input id="ecEvalNo" type="text" readonly /></div>
+        <div class="field"><label>关联申请单号</label><input id="ecApplyNo" type="text" readonly /></div>
+        <div class="field"><label>申请部门</label><input id="ecDept" type="text" readonly value="检修中心" /></div>
+        <div class="field"><label>申请人</label><input id="ecApplicant" type="text" readonly value="张明" /></div>
+        <div class="field"><label>设备名称</label><input id="ecDevName" type="text" readonly /></div>
+        <div class="field"><label>设备编码</label><input id="ecDevCode" type="text" readonly value="MAT-GX-001" /></div>
+        <div class="field"><label>原值</label><input id="ecOrig" type="text" readonly /></div>
+        <div class="field"><label>净值</label><input id="ecNet" type="text" readonly /></div>
+        <div class="field full"><label>报废原因</label><textarea id="ecScrapReason" readonly>达到年限</textarea></div>
+        <div class="field"><label>评估人（专家）</label><input id="ecExpert" type="text" placeholder="必填" /></div>
+        <div class="field"><label>评估日期</label><input id="ecDate" type="date" /></div>
+        <div class="field"><label>评估结论</label>
+          <select id="ecConc"><option>合格</option><option>不合格</option></select>
+        </div>
+        <div class="field"><label>处置建议</label>
+          <select id="ecDisp"><option>报废</option><option>内部循环</option><option>外部循环</option><option>维修</option></select>
+        </div>
+        <div class="field full"><label>评估报告附件（PDF）</label><input id="ecPdf" type="file" accept=".pdf" /></div>
+        <div class="field full"><label>备注</label><textarea id="ecRemark" placeholder="选填"></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="btnCancelComplete" type="button">取消</button>
+        <button class="btn btn-primary" id="btnSaveComplete" type="button">保存并完成评估</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      // 报废申请单（示例，设备净值字段用于自动任务创建）
+      var scrapApplications = [
+        { applyNo: "TY20260320001", deviceName: "齿轮箱", originValue: 1860000, netValue: 1280000, evalResult: "" },
+        { applyNo: "TY20260318007", deviceName: "偏航电机", originValue: 68000, netValue: 7000, evalResult: "" },
+        { applyNo: "TY20260315003", deviceName: "变流器", originValue: 1320000, netValue: 1020000, evalResult: "不合格" }
+      ];
+
+      var evaluations = []; // 评估任务列表
+      var completingEvalNo = null;
+
+      var refs = {
+        tbody: document.getElementById("evalTableBody"),
+        total: document.getElementById("evalTotalText"),
+        filterEvalNo: document.getElementById("filterEvalNo"),
+        filterStatus: document.getElementById("filterStatus"),
+        btnCreate: document.getElementById("btnCreateEval"),
+        modal: document.getElementById("evalModalMask"),
+        btnClose: document.getElementById("btnCloseModal"),
+        btnCancel: document.getElementById("btnCancel"),
+        btnSubmit: document.getElementById("btnSubmitEval"),
+        relApplyNo: document.getElementById("relApplyNo"),
+        deviceName: document.getElementById("deviceName"),
+        originValue: document.getElementById("originValue"),
+        netValue: document.getElementById("netValue"),
+        evaluator: document.getElementById("evaluator"),
+        conclusion: document.getElementById("conclusion")
+      };
+
+      function fmtMoney(n) {
+        return Number(n).toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function today() {
+        return new Date().toISOString().slice(0, 10);
+      }
+
+      function genEvalNo() {
+        var d = new Date();
+        var y = d.getFullYear();
+        var m = String(d.getMonth() + 1).padStart(2, "0");
+        var day = String(d.getDate()).padStart(2, "0");
+        var s = String(Math.floor(Math.random() * 900 + 100));
+        return "PG" + y + m + day + s;
+      }
+
+      function statusTag(x) {
+        if (x.status === "done") return '<span class="tag-status tag-status-done">已完成</span>';
+        return '<span class="tag-status tag-status-pending">待评估</span>';
+      }
+
+      function resultTag(x) {
+        if (x.status !== "done") return '<span style="color:#8ca0b8;">待评估</span>';
+        if (x.conclusion === "合格") return '<span class="tag-status tag-result-ok">合格</span>';
+        return '<span class="tag-status tag-result-bad">不合格</span>';
+      }
+
+      // 规则：净值 >= 100 万自动创建评估任务
+      function autoCreateTasks() {
+        scrapApplications.forEach(function (app) {
+          if (app.netValue >= 1000000) {
+            var exists = evaluations.some(function (x) { return x.relApplyNo === app.applyNo; });
+            if (!exists) {
+              evaluations.push({
+                evalNo: genEvalNo(),
+                relApplyNo: app.applyNo,
+                deviceName: app.deviceName,
+                originValue: app.originValue,
+                netValue: app.netValue,
+                evaluator: "",
+                evalDate: "",
+                conclusion: "",
+                status: "pending"
+              });
+            }
+          }
+        });
+      }
+
+      function render(rows) {
+        refs.tbody.innerHTML = "";
+        if (!rows.length) {
+          refs.tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#8ca0b8;padding:24px;">暂无数据</td></tr>';
+          refs.total.textContent = "共 0 条";
+          return;
+        }
+        rows.forEach(function (x) {
+          var tr = document.createElement("tr");
+          tr.setAttribute("data-eval-no", x.evalNo);
+          tr.innerHTML =
+            "<td>" + x.evalNo + "</td>" +
+            "<td>" + x.relApplyNo + "</td>" +
+            "<td>" + x.deviceName + "</td>" +
+            '<td class="cell-num">¥ ' + fmtMoney(x.originValue) + "</td>" +
+            '<td class="cell-num">¥ ' + fmtMoney(x.netValue) + "</td>" +
+            "<td>" + (x.evaluator || "-") + "</td>" +
+            "<td>" + (x.evalDate || "-") + "</td>" +
+            "<td>" + resultTag(x) + "</td>" +
+            '<td><div class="wh-ops">' +
+            '<a href="#" data-action="view">查看详情</a>' +
+            (x.status === "done"
+              ? '<a href="#" data-action="pdf">鉴定报告</a>'
+              : '<a href="#" data-action="finish">完成评估</a>') +
+            "</div></td>";
+          refs.tbody.appendChild(tr);
+        });
+        refs.total.textContent = "共 " + rows.length + " 条";
+      }
+
+      function applyFilters() {
+        var q = (refs.filterEvalNo.value || "").trim().toLowerCase();
+        var st = refs.filterStatus.value;
+        var rows = evaluations.filter(function (x) {
+          var hitNo = !q || x.evalNo.toLowerCase().indexOf(q) > -1;
+          var hitSt = !st || x.status === st;
+          return hitNo && hitSt;
+        });
+        render(rows);
+      }
+
+      function fillApplyOptions() {
+        refs.relApplyNo.innerHTML = "";
+        scrapApplications.forEach(function (x) {
+          var opt = document.createElement("option");
+          opt.value = x.applyNo;
+          opt.textContent = x.applyNo + "（" + x.deviceName + "）";
+          refs.relApplyNo.appendChild(opt);
+        });
+        syncApplyData();
+      }
+
+      function syncApplyData() {
+        var no = refs.relApplyNo.value;
+        var app = scrapApplications.find(function (x) { return x.applyNo === no; });
+        refs.deviceName.value = app ? app.deviceName : "";
+        refs.originValue.value = app ? "¥ " + fmtMoney(app.originValue) : "";
+        refs.netValue.value = app ? "¥ " + fmtMoney(app.netValue) : "";
+      }
+
+      function openModal() {
+        fillApplyOptions();
+        refs.evaluator.value = "";
+        refs.conclusion.value = "合格";
+        document.getElementById("comment").value = "";
+        refs.modal.classList.add("show");
+      }
+
+      function closeModal() {
+        refs.modal.classList.remove("show");
+      }
+
+      refs.btnCreate.addEventListener("click", openModal);
+      refs.btnClose.addEventListener("click", closeModal);
+      refs.btnCancel.addEventListener("click", closeModal);
+      refs.modal.addEventListener("click", function (e) {
+        if (e.target === refs.modal) closeModal();
+      });
+      refs.relApplyNo.addEventListener("change", syncApplyData);
+
+      refs.btnSubmit.addEventListener("click", function () {
+        var evalPerson = (refs.evaluator.value || "").trim();
+        if (!evalPerson) {
+          alert("请填写评估人。");
+          return;
+        }
+        var no = refs.relApplyNo.value;
+        var app = scrapApplications.find(function (x) { return x.applyNo === no; });
+        if (!app) return;
+        evaluations.unshift({
+          evalNo: genEvalNo(),
+          relApplyNo: no,
+          deviceName: app.deviceName,
+          originValue: app.originValue,
+          netValue: app.netValue,
+          evaluator: evalPerson,
+          evalDate: today(),
+          conclusion: refs.conclusion.value,
+          status: "done"
+        });
+        app.evalResult = refs.conclusion.value; // 回写报废申请单
+        closeModal();
+        applyFilters();
+      });
+
+      refs.tbody.addEventListener("click", function (e) {
+        var a = e.target.closest("a[data-action]");
+        if (!a) return;
+        e.preventDefault();
+        var action = a.getAttribute("data-action");
+        var tr = a.closest("tr");
+        if (!tr) return;
+        var evalNo = tr.getAttribute("data-eval-no");
+        var item = evaluations.find(function (x) { return x.evalNo === evalNo; });
+        if (!item) return;
+
+        if (action === "view") {
+          alert(
+            "评估单号：" + item.evalNo + "\n" +
+            "关联申请单：" + item.relApplyNo + "\n" +
+            "设备名称：" + item.deviceName + "\n" +
+            "原值：" + item.originValue + "\n" +
+            "净值：" + item.netValue + "\n" +
+            "评估结论：" + (item.conclusion || "待评估")
+          );
+          return;
+        }
+
+        if (action === "pdf") {
+          alert("下载鉴定报告 PDF（演示）");
+          return;
+        }
+
+        if (action === "finish") {
+          if (item.status === "done") {
+            alert("该评估单已完成。");
+            return;
+          }
+          completingEvalNo = item.evalNo;
+          document.getElementById("ecEvalNo").value = item.evalNo;
+          document.getElementById("ecApplyNo").value = item.relApplyNo;
+          document.getElementById("ecDevName").value = item.deviceName;
+          document.getElementById("ecOrig").value = "¥ " + fmtMoney(item.originValue);
+          document.getElementById("ecNet").value = "¥ " + fmtMoney(item.netValue);
+          document.getElementById("ecExpert").value = "";
+          document.getElementById("ecDate").value = today();
+          document.getElementById("ecConc").value = "合格";
+          document.getElementById("ecDisp").value = "报废";
+          document.getElementById("ecRemark").value = "";
+          document.getElementById("evalCompleteMask").classList.add("show");
+        }
+      });
+
+      document.getElementById("btnCloseComplete").addEventListener("click", function () {
+        document.getElementById("evalCompleteMask").classList.remove("show");
+      });
+      document.getElementById("btnCancelComplete").addEventListener("click", function () {
+        document.getElementById("evalCompleteMask").classList.remove("show");
+      });
+      document.getElementById("evalCompleteMask").addEventListener("click", function (e) {
+        if (e.target.id === "evalCompleteMask") document.getElementById("evalCompleteMask").classList.remove("show");
+      });
+      document.getElementById("btnSaveComplete").addEventListener("click", function () {
+        var ex = (document.getElementById("ecExpert").value || "").trim();
+        if (!ex) {
+          alert("请填写评估人。");
+          return;
+        }
+        var item = evaluations.find(function (x) { return x.evalNo === completingEvalNo; });
+        if (!item) return;
+        item.status = "done";
+        item.evaluator = ex;
+        item.evalDate = document.getElementById("ecDate").value || today();
+        item.conclusion = document.getElementById("ecConc").value;
+        item.disposal = document.getElementById("ecDisp").value;
+        var app = scrapApplications.find(function (x) { return x.applyNo === item.relApplyNo; });
+        if (app) app.evalResult = item.conclusion;
+        document.getElementById("evalCompleteMask").classList.remove("show");
+        applyFilters();
+      });
+
+      refs.filterEvalNo.addEventListener("input", applyFilters);
+      refs.filterStatus.addEventListener("change", applyFilters);
+
+      autoCreateTasks();
+      applyFilters();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-proc-tab="m1">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>物资采购 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/module-hub.css" />
+  <style>
+    .proc-grid { display: grid; gap: 12px; }
+    .proc-card { border: 1px solid #e6edf6; border-radius: 10px; background: #fff; }
+    .proc-card .carrier-toolbar { border-bottom: 1px solid #edf2f8; margin-bottom: 0; }
+    .proc-card .carrier-table-wrap { margin-top: 0; border: none; }
+    .tag-soft { padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 500; }
+    .tag-pending { background: #fff7e6; color: #d48806; border: 1px solid #ffd591; }
+    .tag-done { background: #f6ffed; color: #389e0d; border: 1px solid #b7eb8f; }
+    .tag-reject { background: #fff1f0; color: #cf1322; border: 1px solid #ffccc7; }
+    .tag-blue { background: #e6f4ff; color: #1677ff; border: 1px solid #91caff; }
+    .tag-cyan { background: #e6fffb; color: #08979c; border: 1px solid #87e8de; }
+    .tag-flow { background: #fff1f0; color: #cf1322; border: 1px solid #ffa39e; }
+    .tag-warn { background: #fff7e6; color: #d48806; border: 1px solid #ffd591; }
+    .tag-expire { background: #fff7e6; color: #d46b08; border: 1px solid #ffd591; }
+    .kpi-line { font-size: 13px; color: #516a87; margin: 0 0 10px; }
+    .proc-section { margin-bottom: 14px; }
+    .proc-section-title { margin: 0 0 8px; font-size: 16px; color: #1f3551; font-weight: 600; }
+    /* 子功能按钮样式：对齐系统其它业务页视觉 */
+    .proc-card .carrier-toolbar .carrier-btn-add,
+    .proc-card .carrier-toolbar a.carrier-btn-add {
+      border: 1px solid #d7e1ee;
+      background: #fff;
+      color: #2b4664;
+      border-radius: 6px;
+      height: 32px;
+      line-height: 30px;
+      padding: 0 12px;
+      font-size: 13px;
+      font-weight: 500;
+      box-sizing: border-box;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .15s ease;
+      box-shadow: 0 1px 2px rgba(15, 35, 70, .06);
+    }
+    .proc-card .carrier-toolbar .carrier-btn-add:hover,
+    .proc-card .carrier-toolbar a.carrier-btn-add:hover {
+      border-color: #91caff;
+      color: #1677ff;
+      background: #f7fbff;
+    }
+    .proc-card .carrier-toolbar .carrier-btn-add[data-op^="新增"],
+    .proc-card .carrier-toolbar .carrier-btn-add[data-op^="发起"],
+    .proc-card .carrier-toolbar .carrier-btn-add[data-op^="进入"] {
+      background: #1890ff;
+      border-color: #1890ff;
+      color: #fff;
+    }
+    .proc-card .carrier-toolbar .carrier-btn-add[data-op^="新增"]:hover,
+    .proc-card .carrier-toolbar .carrier-btn-add[data-op^="发起"]:hover,
+    .proc-card .carrier-toolbar .carrier-btn-add[data-op^="进入"]:hover {
+      background: #40a9ff;
+      border-color: #40a9ff;
+      color: #fff;
+    }
+    .proc-card .carrier-toolbar .carrier-btn-add[data-op^="导出"] {
+      color: #2b4664;
+      background: #fff;
+    }
+    .proc-card .carrier-toolbar .carrier-btn-add[data-op^="查询"] {
+      background: #1890ff;
+      border-color: #1890ff;
+      color: #fff;
+      min-width: 64px;
+    }
+    .proc-card .carrier-toolbar .carrier-btn-add[data-op^="查询"]:hover {
+      background: #40a9ff;
+      border-color: #40a9ff;
+    }
+    .proc-card .carrier-table a.js-op {
+      color: #1677ff;
+      text-decoration: none;
+      font-weight: 500;
+      margin-right: 8px;
+    }
+    .proc-card .carrier-table a.js-op:hover {
+      text-decoration: underline;
+      color: #4096ff;
+    }
+    /* 操作列：多链接同一水平行（m1–m10 共用本页） */
+    .proc-card .carrier-table {
+      min-width: max-content;
+    }
+    .proc-card .carrier-table thead th:last-child,
+    .proc-card .carrier-table tbody td:last-child {
+      min-width: 320px;
+      max-width: none;
+      white-space: nowrap;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .proc-card .carrier-table thead th:last-child {
+      text-align: center;
+    }
+    .proc-card .carrier-table tbody td:last-child a.js-op {
+      white-space: nowrap;
+    }
+    .proc-card .carrier-table .proc-ops-row {
+      display: inline-flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .proc-card .carrier-table .proc-ops-row .js-op {
+      margin-right: 0;
+    }
+    /* 订单需求管理 m3：筛选 + 右侧「生成订单」；操作列较窄 */
+    #proc-m3 .proc-m3-filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 12px;
+      flex: 1;
+      min-width: 0;
+    }
+    #proc-m3 .proc-filter-label {
+      font-size: 13px;
+      color: #4c6077;
+      white-space: nowrap;
+    }
+    #proc-m3 .proc-m3-order-input {
+      width: min(220px, 100%);
+      max-width: 100%;
+    }
+    #proc-m3 .carrier-toolbar .carrier-btn-add[data-op="生成订单"] {
+      background: #1890ff;
+      border-color: #1890ff;
+      color: #fff;
+    }
+    #proc-m3 .carrier-toolbar .carrier-btn-add[data-op="生成订单"]:hover {
+      background: #40a9ff;
+      border-color: #40a9ff;
+      color: #fff;
+    }
+    #proc-m3 .proc-order-no {
+      color: #1677ff;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    #proc-m3 .proc-order-no:hover {
+      text-decoration: underline;
+      color: #4096ff;
+    }
+    #proc-m3 .carrier-table thead th:last-child,
+    #proc-m3 .carrier-table tbody td:last-child {
+      min-width: 108px;
+      max-width: 160px;
+    }
+    /* 合同管理 m6：筛选 + 查询/重置（图标）+ 右上「新增合同」 */
+    #proc-m6 .proc-m6-filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 12px;
+      flex: 1;
+      min-width: 0;
+    }
+    #proc-m6 .proc-filter-label {
+      font-size: 13px;
+      color: #4c6077;
+      white-space: nowrap;
+    }
+    #proc-m6 .proc-m6-contract-input {
+      width: min(220px, 100%);
+      max-width: 100%;
+    }
+    #proc-m6 .proc-btn-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    #proc-m6 .proc-btn-icon i {
+      font-size: 13px;
+      opacity: 0.95;
+    }
+    #proc-m6 .carrier-btn-add.btn-sub {
+      color: rgba(0, 0, 0, 0.88);
+      border-color: #d9d9d9;
+      background: #fff;
+    }
+    #proc-m6 .carrier-btn-add.btn-sub:hover {
+      border-color: #1890ff;
+      color: #1890ff;
+      background: #fff;
+    }
+    #proc-m6 .carrier-toolbar .carrier-btn-add[data-op="新增合同"] {
+      background: #1890ff;
+      border-color: #1890ff;
+      color: #fff;
+    }
+    #proc-m6 .carrier-toolbar .carrier-btn-add[data-op="新增合同"]:hover {
+      background: #40a9ff;
+      border-color: #40a9ff;
+      color: #fff;
+    }
+    #proc-m6 .proc-ops-row a.js-op {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    #proc-m6 .proc-ops-row a.js-op i {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    /* 主区已有 h1 动态标题，隐藏与各 tab 重复的 h2 */
+    .proc-section > .proc-section-title {
+      display: none;
+    }
+    /* 无 JS 时由 head 内脚本写入；默认仅显示一个子模块，避免一屏堆叠全部区块 */
+    html[data-proc-tab] .proc-section[data-tab-key] { display: none !important; }
+    html[data-proc-tab="m1"] #proc-m1,
+    html[data-proc-tab="m2"] #proc-m2,
+    html[data-proc-tab="m3"] #proc-m3,
+    html[data-proc-tab="m4"] #proc-m4,
+    html[data-proc-tab="m5"] #proc-m5,
+    html[data-proc-tab="m6"] #proc-m6,
+    html[data-proc-tab="m7"] #proc-m7,
+    html[data-proc-tab="m8"] #proc-m8,
+    html[data-proc-tab="m9"] #proc-m9,
+    html[data-proc-tab="m10"] #proc-m10 { display: block !important; }
+    .proc-toolbar-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 12px;
+      margin-bottom: 10px;
+    }
+    .proc-toolbar-row .carrier-search,
+    .proc-toolbar-row .carrier-select {
+      min-width: 140px;
+    }
+    .proc-modal-mask {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1200;
+      background: rgba(0, 0, 0, 0.45);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .proc-modal-mask.is-open { display: flex; }
+    .proc-modal-box {
+      background: #fff;
+      border-radius: 10px;
+      max-width: 920px;
+      width: 100%;
+      max-height: 90vh;
+      overflow: auto;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+    }
+    .proc-modal-box.fullscreen {
+      width: 96vw;
+      max-width: none;
+      height: 88vh;
+      max-height: 88vh;
+      border-radius: 10px;
+    }
+    .proc-modal-head {
+      padding: 14px 18px;
+      border-bottom: 1px solid #edf2f8;
+      font-size: 16px;
+      font-weight: 600;
+      color: #1f3551;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .proc-modal-body { padding: 16px 18px; font-size: 13px; color: #3e536c; }
+    .proc-modal-foot {
+      padding: 12px 18px;
+      border-top: 1px solid #edf2f8;
+      text-align: right;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+    .proc-modal-body .field-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 8px 12px;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+    .proc-modal-body label { color: #516a87; }
+    .proc-modal-body input[type="text"],
+    .proc-modal-body input[type="date"],
+    .proc-modal-body input[type="number"],
+    .proc-modal-body select,
+    .proc-modal-body textarea {
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 13px;
+    }
+    .proc-modal-body textarea { min-height: 72px; resize: vertical; }
+    .proc-mini-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+    .proc-mini-table th,
+    .proc-mini-table td {
+      border: 1px solid #e6edf6;
+      padding: 6px 8px;
+      text-align: left;
+    }
+    .proc-mini-table th { background: #f6f8fb; }
+    .proc-btn {
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      border: 1px solid #d9d9d9;
+      background: #fff;
+    }
+    .proc-btn-primary {
+      background: #1890ff;
+      border-color: #1890ff;
+      color: #fff;
+    }
+    .proc-btn-ghost { border-color: #91caff; color: #1677ff; background: #fff; }
+  </style>
+  <script>
+    (function () {
+      function resolveProcTab() {
+        var labelMap = {
+          采购计划: "m1",
+          采购计划管理: "m1",
+          采购申请: "m2",
+          "订单/需求管理": "m3",
+          订单需求管理: "m3",
+          寻源管理: "m4",
+          供应商管理: "m5",
+          合同管理: "m6",
+          招投标管理: "m7",
+          采购付款: "m8",
+          退货换货管理: "m9",
+          货物质量验收: "m10",
+          采购订单: "m3"
+        };
+        var tab = "";
+        try {
+          var sp = new URLSearchParams(window.location.search);
+          tab = (sp.get("tab") || "").trim();
+          if (!tab) {
+            var ps = (sp.get("pageSub") || "").trim();
+            tab = labelMap[ps] || "";
+          }
+          if (!tab) {
+            var n = String(window.name || "");
+            if (n.indexOf("tab=") >= 0) {
+              tab = decodeURIComponent((n.split("tab=")[1] || "").split("&")[0] || "");
+            }
+          }
+          if (!tab) {
+            tab = sessionStorage.getItem("demoPurchaseTab") || "";
+          }
+        } catch (e0) {}
+        if (!/^m(10|[1-9])$/.test(tab)) tab = "m1";
+        try {
+          /* 切勿用 getElementById('#proc-m*') 校验：本脚本在 <head> 同步执行时主内容尚未解析，会恒为 null，导致永远落在 m1 */
+          document.documentElement.setAttribute("data-proc-tab", tab);
+          sessionStorage.setItem("demoPurchaseTab", tab);
+        } catch (e1) {
+          document.documentElement.setAttribute("data-proc-tab", "m1");
+        }
+      }
+      resolveProcTab();
+    })();
+  </script>
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#"><img src="assets/logo-chenergy.png" alt="" width="220" height="40" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit-analytics.html"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html"><span class="nav-label">物流管理</span></a>
+        <a class="nav-item" href="warehouse.html"><span class="nav-label">仓储管理</span></a>
+        <div class="nav-item nav-item--module-active" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title" id="procPageTitle">采购计划</h1>
+          <section class="proc-section" id="proc-m1" data-tab-key="m1"><h2 class="proc-section-title">采购计划</h2>
+            <div class="proc-card">
+              <div class="carrier-toolbar">
+                <div><button type="button" class="carrier-btn-add js-op" data-op="新增计划">新增计划</button></div>
+                <div class="carrier-toolbar-right proc-toolbar-row">
+                  <select class="carrier-select" aria-label="计划年度"><option>2026</option><option>2025</option><option>2024</option></select>
+                  <select class="carrier-select" aria-label="计划状态"><option>全部</option><option>待审批</option><option>已通过</option><option>已驳回</option></select>
+                  <button type="button" class="carrier-btn-add js-op" data-op="查询计划">查询</button>
+                  <button type="button" class="carrier-btn-add js-op" data-op="重置筛选">重置</button>
+                </div>
+              </div>
+              <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>计划编号</th><th>执行合同号</th><th>子合同列表</th><th>剩余执行数量</th><th>已执行数量</th><th>审批状态</th><th>操作</th></tr></thead><tbody>
+                <tr><td>CGJH-2026-001</td><td>HT-2026-301</td><td>SUB-2026-001、SUB-2026-002、SUB-2026-003</td><td>70</td><td>50</td><td><span class="tag-soft tag-pending">待审批</span></td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="计划查看详情">查看详情</a><a href="#" class="js-op" data-op="计划编辑">编辑</a><a href="#" class="js-op" data-op="计划删除">删除</a><a href="#" class="js-op" data-op="计划提交审批">提交审批</a><a href="#" class="js-op" data-op="计划撤回">撤回</a></span></td></tr>
+                <tr><td>CGJH-2026-002</td><td>HT-2026-309</td><td>SUB-2026-021、SUB-2026-022</td><td>24</td><td>0</td><td><span class="tag-soft tag-done">已通过</span></td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="计划查看详情">查看详情</a><a href="#" class="js-op" data-op="计划编辑">编辑</a><a href="#" class="js-op" data-op="计划删除">删除</a></span></td></tr>
+              </tbody></table></div>
+            </div>
+          </section>
+          <section class="proc-section" id="proc-m2" data-tab-key="m2"><h2 class="proc-section-title">采购申请</h2>
+            <div class="proc-card">
+              <div class="carrier-toolbar">
+                <div><button type="button" class="carrier-btn-add js-op" data-op="新增申请">新增申请</button></div>
+                <div class="carrier-toolbar-right proc-toolbar-row">
+                  <input class="carrier-search" type="search" placeholder="申请单号" aria-label="申请单号" />
+                  <select class="carrier-select" aria-label="申请部门"><option>全部部门</option><option>供应链管理部</option><option>运维中心</option><option>华北场站</option></select>
+                  <select class="carrier-select" aria-label="审批状态"><option>全部</option><option>待审批</option><option>已通过</option><option>已驳回</option></select>
+                  <button type="button" class="carrier-btn-add js-op" data-op="查询申请">查询</button>
+                  <button type="button" class="carrier-btn-add js-op" data-op="重置筛选">重置</button>
+                </div>
+              </div>
+              <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>申请单号</th><th>申请部门</th><th>申请人</th><th>申请日期</th><th>物资名称</th><th>数量</th><th>预算金额（元）</th><th>审批状态</th><th>操作</th></tr></thead><tbody>
+                <tr><td>PA20260321001</td><td>供应链管理部</td><td>张明</td><td>2026-03-21</td><td>齿轮箱</td><td>2</td><td>86,000</td><td><span class="tag-soft tag-pending">待审批</span></td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="申请查看详情">查看详情</a><a href="#" class="js-op" data-op="申请编辑">编辑</a><a href="#" class="js-op" data-op="申请撤回">撤回</a><a href="#" class="js-op" data-op="申请提交审批">提交审批</a></span></td></tr>
+                <tr><td>PA20260322008</td><td>运维中心</td><td>王芳</td><td>2026-03-22</td><td>主轴轴承</td><td>4</td><td>120,000</td><td><span class="tag-soft tag-done">已通过</span></td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="申请查看详情">查看详情</a><a href="#" class="js-op" data-op="申请编辑">编辑</a></span></td></tr>
+              </tbody></table></div>
+            </div>
+          </section>
+          <section class="proc-section" id="proc-m3" data-tab-key="m3"><h2 class="proc-section-title">订单/需求管理</h2>
+            <div class="proc-card">
+              <div class="carrier-toolbar">
+                <div class="toolbar-left proc-m3-filters">
+                  <span class="proc-filter-label">订单号</span>
+                  <input class="carrier-search proc-m3-order-input" type="search" placeholder="请输入订单号" aria-label="订单号" />
+                  <span class="proc-filter-label">提报单位</span>
+                  <select class="carrier-select" aria-label="提报单位"><option>全部</option><option>河南能源</option><option>天津能源</option></select>
+                  <span class="proc-filter-label">状态</span>
+                  <select class="carrier-select" aria-label="状态"><option>全部</option><option>待确认</option><option>已确认</option><option>已完成</option></select>
+                  <button type="button" class="carrier-btn-add js-op" data-op="查询采购订单">查询</button>
+                  <button type="button" class="carrier-btn-add js-op" data-op="重置筛选">重置</button>
+                </div>
+                <div class="carrier-toolbar-right">
+                  <button type="button" class="carrier-btn-add js-op" data-op="新增订单">新增订单</button>
+                </div>
+              </div>
+              <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>订单编号</th><th>提报单位</th><th>场站名称</th><th>设备清单</th><th>指定业务部门</th><th>订单状态</th><th>操作</th></tr></thead><tbody>
+                <tr data-order-row="ORD2026001"><td><a href="#" class="js-op proc-order-no" data-op="订单查看详情" data-order="ORD2026001">ORD2026001</a></td><td>河南能源</td><td>新安风电场</td><td>齿轮箱总成*2、变流器模块*4</td><td data-order-dept>经营发展中心</td><td data-order-status><span class="tag-soft tag-pending">待确认</span></td><td class="proc-ops-cell" data-order-op><a href="#" class="js-op" data-op="订单确认" data-order="ORD2026001">确认并推送</a></td></tr>
+                <tr data-order-row="ORD2026002"><td><a href="#" class="js-op proc-order-no" data-op="订单查看详情" data-order="ORD2026002">ORD2026002</a></td><td>天津能源</td><td>滨海场站</td><td>主控柜*1、液压站*2</td><td data-order-dept>运维业务一部</td><td data-order-status><span class="tag-soft tag-blue">已确认</span></td><td class="proc-ops-cell" data-order-op><a href="receipt-inbound.html" style="color:#1677ff;font-weight:500;text-decoration:none">收货入库</a></td></tr>
+              </tbody></table></div>
+            </div>
+          </section>
+          <section class="proc-section" id="proc-m4" data-tab-key="m4"><h2 class="proc-section-title">寻源管理</h2>
+            <div class="proc-card">
+              <div class="carrier-toolbar">
+                <div><button type="button" class="carrier-btn-add js-op" data-op="新增寻源">新增寻源</button></div>
+                <div class="carrier-toolbar-right proc-toolbar-row">
+                  <input class="carrier-search" type="search" placeholder="寻源编号" aria-label="寻源编号" />
+                  <input class="carrier-search" type="search" placeholder="项目名称" aria-label="项目名称" />
+                  <select class="carrier-select" aria-label="状态"><option>全部</option><option>进行中</option><option>已完成</option><option>已流标</option></select>
+                  <button type="button" class="carrier-btn-add js-op" data-op="查询寻源">查询</button>
+                  <button type="button" class="carrier-btn-add js-op" data-op="重置筛选">重置</button>
+                </div>
+              </div>
+              <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>寻源编号</th><th>项目名称</th><th>寻源方式</th><th>发布日期</th><th>截止日期</th><th>状态</th><th>操作</th></tr></thead><tbody>
+                <tr><td>XY-2026-011</td><td>齿轮箱采购寻源</td><td>询价</td><td>2026-03-10</td><td>2026-03-30</td><td><span class="tag-soft tag-blue">进行中</span></td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="寻源查看详情">查看详情</a><a href="#" class="js-op" data-op="寻源编辑">编辑</a><a href="#" class="js-op" data-op="寻源发布询价">发布询价</a><a href="#" class="js-op" data-op="寻源查看报价">查看报价</a><a href="#" class="js-op" data-op="寻源比价决标">比价决标</a></span></td></tr>
+                <tr><td>XY-2026-018</td><td>电缆批次采购比选</td><td>招标</td><td>2026-03-05</td><td>2026-03-25</td><td><span class="tag-soft tag-done">已完成</span></td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="寻源查看详情">查看详情</a><a href="#" class="js-op" data-op="寻源查看报价">查看报价</a></span></td></tr>
+              </tbody></table></div>
+            </div>
+          </section>
+          <section class="proc-section" id="proc-m5" data-tab-key="m5"><h2 class="proc-section-title">供应商管理</h2>
+            <div class="proc-card">
+              <div class="carrier-toolbar">
+                <div><button type="button" class="carrier-btn-add js-op" data-op="新增供应商">新增供应商</button></div>
+                <div class="carrier-toolbar-right proc-toolbar-row">
+                  <input class="carrier-search" type="search" placeholder="供应商名称" aria-label="供应商名称" />
+                  <select class="carrier-select" aria-label="合作状态"><option>全部</option><option>合作中</option><option>已终止</option></select>
+                  <button type="button" class="carrier-btn-add js-op" data-op="查询供应商">查询</button>
+                  <button type="button" class="carrier-btn-add js-op" data-op="重置筛选">重置</button>
+                </div>
+              </div>
+              <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>供应商编码</th><th>供应商名称</th><th>统一社会信用代码</th><th>联系人</th><th>联系电话</th><th>合作状态</th><th>准入日期</th><th>操作</th></tr></thead><tbody>
+                <tr><td>GYS001</td><td>华通物流有限公司</td><td>91310110MA1G8T9X2P</td><td>刘倩</td><td>13800001234</td><td><span class="tag-soft tag-done">合作中</span></td><td>2025-01-08</td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="供应商查看详情">查看详情</a><a href="#" class="js-op" data-op="供应商编辑">编辑</a><a href="#" class="js-op" data-op="供应商禁用">禁用</a></span></td></tr>
+                <tr><td>GYS002</td><td>远景能源有限公司</td><td>91110000MA01234567</td><td>周强</td><td>010-88881234</td><td><span class="tag-soft tag-done">合作中</span></td><td>2024-11-20</td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="供应商查看详情">查看详情</a><a href="#" class="js-op" data-op="供应商编辑">编辑</a><a href="#" class="js-op" data-op="供应商禁用">禁用</a></span></td></tr>
+                <tr><td>GYS003</td><td>联程供应链科技</td><td>91310000MA1K2AB3CD</td><td>赵敏</td><td>13900009988</td><td><span class="tag-soft tag-reject">已终止</span></td><td>2023-06-01</td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="供应商查看详情">查看详情</a><a href="#" class="js-op" data-op="供应商编辑">编辑</a><a href="#" class="js-op" data-op="供应商启用">启用</a></span></td></tr>
+              </tbody></table></div>
+            </div>
+          </section>
+          <section class="proc-section" id="proc-m6" data-tab-key="m6"><h2 class="proc-section-title">合同管理</h2>
+            <div class="proc-card">
+              <div class="carrier-toolbar">
+                <div class="toolbar-left proc-m6-filters">
+                  <span class="proc-filter-label">合同编号</span>
+                  <input class="carrier-search proc-m6-contract-input" type="search" placeholder="请输入合同编号" aria-label="合同编号" />
+                  <span class="proc-filter-label">供应商</span>
+                  <select class="carrier-select" aria-label="供应商"><option>全部供应商</option><option>宏达物资有限公司</option><option>远景能源</option><option>华通物流有限公司</option></select>
+                  <span class="proc-filter-label">合同状态</span>
+                  <select class="carrier-select" aria-label="合同状态"><option>全部</option><option>生效中</option><option>即将到期</option><option>已过期</option></select>
+                  <button type="button" class="carrier-btn-add js-op proc-btn-icon" data-op="查询合同"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> 查询</button>
+                  <button type="button" class="carrier-btn-add js-op proc-btn-icon btn-sub" data-op="重置筛选"><i class="fa-solid fa-arrow-rotate-right" aria-hidden="true"></i> 重置</button>
+                </div>
+                <div class="carrier-toolbar-right">
+                  <button type="button" class="carrier-btn-add js-op" data-op="新增合同">新增合同</button>
+                </div>
+              </div>
+              <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>合同编号</th><th>合同名称</th><th>供应商</th><th>合同金额(元)</th><th>签订日期</th><th>生效日期</th><th>失效日期</th><th>状态</th><th>操作</th></tr></thead><tbody>
+                <tr><td>HT-2025-001</td><td>办公用品年度框架协议</td><td>宏达物资有限公司</td><td>125,000</td><td>2025-01-08</td><td>2025-01-10</td><td>2025-12-31</td><td><span class="tag-soft tag-reject">已过期</span></td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="合同查看详情"><i class="fa-regular fa-eye" aria-hidden="true"></i> 查看详情</a><a href="#" class="js-op" data-op="合同编辑"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i> 编辑</a><a href="#" class="js-op" data-op="合同删除"><i class="fa-regular fa-trash-can" aria-hidden="true"></i> 删除</a><a href="#" class="js-op" data-op="合同下载附件"><i class="fa-solid fa-paperclip" aria-hidden="true"></i> 下载附件</a></span></td></tr>
+                <tr><td>HT-2025-002</td><td>劳保用品集中采购合同</td><td>宏达物资有限公司</td><td>88,500</td><td>2025-03-15</td><td>2025-03-20</td><td>2025-11-30</td><td><span class="tag-soft tag-reject">已过期</span></td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="合同查看详情"><i class="fa-regular fa-eye" aria-hidden="true"></i> 查看详情</a><a href="#" class="js-op" data-op="合同编辑"><i class="fa-regular fa-pen-to-square" aria-hidden="true"></i> 编辑</a><a href="#" class="js-op" data-op="合同删除"><i class="fa-regular fa-trash-can" aria-hidden="true"></i> 删除</a><a href="#" class="js-op" data-op="合同下载附件"><i class="fa-solid fa-paperclip" aria-hidden="true"></i> 下载附件</a></span></td></tr>
+              </tbody></table></div>
+            </div>
+          </section>
+          <section class="proc-section" id="proc-m7" data-tab-key="m7"><h2 class="proc-section-title">招投标管理</h2>
+            <div class="proc-card">
+              <div class="carrier-toolbar">
+                <div><button type="button" class="carrier-btn-add js-op" data-op="新增招标项目">新增项目</button></div>
+                <div class="carrier-toolbar-right proc-toolbar-row">
+                  <input class="carrier-search" type="search" placeholder="项目编号" aria-label="项目编号" />
+                  <input class="carrier-search" type="search" placeholder="项目名称" aria-label="项目名称" />
+                  <select class="carrier-select" aria-label="状态"><option>全部</option><option>进行中</option><option>已结束</option><option>已流标</option></select>
+                  <button type="button" class="carrier-btn-add js-op" data-op="查询招标">查询</button>
+                  <button type="button" class="carrier-btn-add js-op" data-op="重置筛选">重置</button>
+                </div>
+              </div>
+              <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>项目编号</th><th>项目名称</th><th>招标方式</th><th>预算金额（元）</th><th>投标截止日期</th><th>开标日期</th><th>状态</th><th>操作</th></tr></thead><tbody>
+                <tr><td>ZB-2026-004</td><td>风机主轴备件采购</td><td>公开招标</td><td>2,800,000</td><td>2026-03-28 17:00</td><td>2026-04-02 09:30</td><td><span class="tag-soft tag-blue">进行中</span></td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="招标查看详情">查看详情</a><a href="#" class="js-op" data-op="招标发布公告">发布公告</a><a href="#" class="js-op" data-op="招标查看投标">查看投标</a><a href="#" class="js-op" data-op="招标开标记录">开标记录</a></span></td></tr>
+              </tbody></table></div>
+            </div>
+          </section>
+          <section class="proc-section" id="proc-m8" data-tab-key="m8"><h2 class="proc-section-title">采购付款</h2>
+            <div class="proc-card">
+              <div class="carrier-toolbar">
+                <div><button type="button" class="carrier-btn-add js-op" data-op="新增付款申请">新增付款申请</button></div>
+                <div class="carrier-toolbar-right proc-toolbar-row">
+                  <input class="carrier-search" type="search" placeholder="付款申请号" aria-label="付款申请号" />
+                  <input class="carrier-search" type="search" placeholder="采购订单号" aria-label="采购订单号" />
+                  <select class="carrier-select" aria-label="付款状态"><option>全部</option><option>待审批</option><option>待付款</option><option>已付款</option><option>已驳回</option></select>
+                  <button type="button" class="carrier-btn-add js-op" data-op="查询采购付款">查询</button>
+                  <button type="button" class="carrier-btn-add js-op" data-op="重置筛选">重置</button>
+                </div>
+              </div>
+              <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>付款申请号</th><th>采购订单号</th><th>供应商</th><th>申请金额（元）</th><th>实付金额（元）</th><th>付款状态</th><th>申请日期</th><th>申请人</th><th>操作</th></tr></thead><tbody>
+                <tr><td>FK-CG-2026-002</td><td>CG-2026-001</td><td>远景能源</td><td>410,000</td><td>—</td><td><span class="tag-soft tag-pending">待审批</span></td><td>2026-04-01</td><td>张明</td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="付款查看详情">查看详情</a><a href="#" class="js-op" data-op="付款审批">审批</a><a href="#" class="js-op" data-op="付款编辑">编辑</a><a href="#" class="js-op" data-op="付款撤回">撤回</a></span></td></tr>
+                <tr><td>FK-CG-2026-001</td><td>PO-2026-0099</td><td>联程供应链</td><td>50,000</td><td>50,000</td><td><span class="tag-soft tag-blue">待付款</span></td><td>2026-03-25</td><td>李华</td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="付款查看详情">查看详情</a><a href="#" class="js-op" data-op="付款确认付款">确认付款</a></span></td></tr>
+              </tbody></table></div>
+            </div>
+          </section>
+          <section class="proc-section" id="proc-m9" data-tab-key="m9"><h2 class="proc-section-title">退货换货管理</h2>
+            <div class="proc-card">
+              <div class="carrier-toolbar">
+                <div><button type="button" class="carrier-btn-add js-op" data-op="新增退货申请">新增退货申请</button></div>
+                <div class="carrier-toolbar-right proc-toolbar-row">
+                  <input class="carrier-search" type="search" placeholder="退货单号" aria-label="退货单号" />
+                  <input class="carrier-search" type="search" placeholder="采购订单号" aria-label="采购订单号" />
+                  <select class="carrier-select" aria-label="状态"><option>全部</option><option>待审批</option><option>已通过</option><option>已驳回</option></select>
+                  <button type="button" class="carrier-btn-add js-op" data-op="查询退换货">查询</button>
+                  <button type="button" class="carrier-btn-add js-op" data-op="重置筛选">重置</button>
+                </div>
+              </div>
+              <p class="kpi-line">业务规则：退货需质检确认；换货将重新生成订单。</p>
+              <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>退货单号</th><th>采购订单号</th><th>供应商</th><th>退货原因</th><th>退货数量</th><th>退货金额（元）</th><th>状态</th><th>操作</th></tr></thead><tbody>
+                <tr><td>TH-2026-001</td><td>PO-2026-0099</td><td>联程供应链</td><td>质检不合格</td><td>2</td><td>12,600</td><td><span class="tag-soft tag-pending">待审批</span></td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="退货查看详情">查看详情</a><a href="#" class="js-op" data-op="退货审批">审批</a><a href="#" class="js-op" data-op="退货撤回">撤回</a></span></td></tr>
+              </tbody></table></div>
+            </div>
+          </section>
+          <section class="proc-section" id="proc-m10" data-tab-key="m10"><h2 class="proc-section-title">货物质量验收</h2>
+            <div class="proc-card">
+              <div class="carrier-toolbar">
+                <div class="carrier-toolbar-right proc-toolbar-row" style="margin-left:auto;width:100%;justify-content:flex-end">
+                  <input class="carrier-search" type="search" placeholder="验收单号" aria-label="验收单号" />
+                  <input class="carrier-search" type="search" placeholder="采购订单号" aria-label="采购订单号" />
+                  <select class="carrier-select" aria-label="验收结果"><option>全部</option><option>合格</option><option>不合格</option></select>
+                  <button type="button" class="carrier-btn-add js-op" data-op="查询质量验收">查询</button>
+                  <button type="button" class="carrier-btn-add js-op" data-op="重置筛选">重置</button>
+                </div>
+              </div>
+              <p class="kpi-line">业务规则：不合格品触发退货流程。</p>
+              <div class="carrier-table-wrap"><table class="carrier-table"><thead><tr><th>验收单号</th><th>采购订单号</th><th>供应商</th><th>到货日期</th><th>验收结果</th><th>验收人</th><th>操作</th></tr></thead><tbody>
+                <tr><td>YS-2026-003</td><td>PO-2026-0099</td><td>联程供应链</td><td>2026-03-22</td><td><span class="tag-soft tag-done">合格</span></td><td>质检-刘强</td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="验收查看详情">查看详情</a><a href="#" class="js-op" data-op="验收录入">录入验收结果</a></span></td></tr>
+                <tr><td>YS-2026-004</td><td>PO-2026-0101</td><td>远景能源</td><td>2026-03-24</td><td><span class="tag-soft tag-reject">不合格</span></td><td>质检-陈蕾</td><td class="proc-ops-cell"><span class="proc-ops-row"><a href="#" class="js-op" data-op="验收查看详情">查看详情</a><a href="#" class="js-op" data-op="验收录入">录入验收结果</a></span></td></tr>
+              </tbody></table></div>
+          </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="procModalMask" class="proc-modal-mask" aria-hidden="true">
+    <div class="proc-modal-box" role="dialog" aria-modal="true" aria-labelledby="procModalTitle">
+      <div class="proc-modal-head">
+        <span id="procModalTitle">提示</span>
+        <button type="button" class="proc-btn" id="procModalX" aria-label="关闭">×</button>
+      </div>
+      <div class="proc-modal-body" id="procModalBody"></div>
+      <div class="proc-modal-foot" id="procModalFoot">
+        <button type="button" class="proc-btn" id="procModalClose">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/demo-list-form-modal.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script src="js/material-procurement-hub.js"></script>
+  <script>
+    (function () {
+      try {
+        var titleMap = {
+          m1: "采购计划",
+          m2: "采购申请",
+          m3: "订单/需求管理",
+          m4: "寻源管理",
+          m5: "供应商管理",
+          m6: "合同管理",
+          m7: "招投标管理",
+          m8: "采购付款",
+          m9: "退货换货管理",
+          m10: "货物质量验收"
+        };
+        var tab = document.documentElement.getAttribute("data-proc-tab") || "m1";
+        var h1 = document.getElementById("procPageTitle");
+        if (h1 && titleMap[tab]) {
+          h1.textContent = titleMap[tab];
+        }
+        try {
+          document.title = titleMap[tab] + " - 新能源物资供应链管理系统";
+        } catch (eTitle) {}
+        var sc = document.querySelector(".main-scroll");
+        if (sc) sc.scrollTop = 0;
+      } catch (eTab) {}
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!-- 来源: src/views/system/client/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <transition>
+      <div class="search">
+        <el-form>
+          <el-form-item label="客户端key" prop="clientKey">
+            <el-input placeholder="请输入客户端key" clearable />
+          </el-form-item>
+          <el-form-item label="客户端秘钥" prop="clientSecret">
+            <el-input placeholder="请输入客户端秘钥" clearable />
+          </el-form-item>
+          <el-form-item label="状态" prop="status">
+            <el-select placeholder="状态" clearable>
+              <el-option />
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="Search">搜索</el-button>
+            <el-button icon="Refresh">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </transition>
+
+    <el-card shadow="never">
+      <template>
+        <el-row class="mb8">
+          <el-col>
+            <el-button type="primary" plain icon="Plus">新增</el-button>
+          </el-col>
+          <el-col>
+            <el-button type="success" plain icon="Edit">
+              修改
+            </el-button>
+          </el-col>
+          <el-col>
+            <el-button type="danger" plain icon="Delete">
+              删除
+            </el-button>
+          </el-col>
+          <el-col>
+            <el-button type="warning" plain icon="Download">导出</el-button>
+          </el-col>
+          <right-toolbar></right-toolbar>
+        </el-row>
+      </template>
+
+      <el-table>
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="id" align="center" prop="id" />
+        <el-table-column label="客户端id" align="center" prop="clientId" />
+        <el-table-column label="客户端key" align="center" prop="clientKey" />
+        <el-table-column label="客户端秘钥" align="center" prop="clientSecret" />
+        <el-table-column label="授权类型" align="center">
+          <template="scope">
+            <dict-tag />
+          </template>
+        </el-table-column>
+        <el-table-column label="设备类型" align="center">
+          <template="scope">
+            <dict-tag />
+          </template>
+        </el-table-column>
+        <el-table-column label="Token活跃超时时间" align="center" prop="activeTimeout" />
+        <el-table-column label="Token固定超时时间" align="center" prop="timeout" />
+        <el-table-column key="status" label="状态" align="center">
+          <template="scope">
+            <el-switch active-value="0" inactive-value="1"></el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template="scope">
+            <el-tooltip content="修改" placement="top">
+              <el-button link type="primary" icon="Edit"></el-button>
+            </el-tooltip>
+            <el-tooltip content="删除" placement="top">
+              <el-button link type="primary" icon="Delete"></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination />
+    </el-card>
+    <!-- 添加或修改客户端管理对话框 -->
+    <el-dialog width="500px" append-to-body>
+      <el-form label-width="100px">
+        <el-form-item label="客户端key" prop="clientKey">
+          <el-input placeholder="请输入客户端key" />
+        </el-form-item>
+        <el-form-item label="客户端秘钥" prop="clientSecret">
+          <el-input placeholder="请输入客户端秘钥" />
+        </el-form-item>
+        <el-form-item label="授权类型" prop="grantTypeList">
+          <el-select multiple placeholder="请输入授权类型">
+            <el-option></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="设备类型" prop="deviceType">
+          <el-select placeholder="请输入设备类型">
+            <el-option></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item prop="activeTimeout" label-width="auto">
+          <template>
+            <span>
+              <el-tooltip content="指定时间无操作则过期（单位：秒），默认30分钟（1800秒）" placement="top">
+                <el-icon><question-filled /></el-icon>
+              </el-tooltip>
+              Token活跃超时时间
+            </span>
+          </template>
+          <el-input placeholder="请输入Token活跃超时时间" />
+        </el-form-item>
+        <el-form-item prop="timeout" label-width="auto">
+          <template>
+            <span>
+              <el-tooltip content="指定时间必定过期（单位：秒），默认七天（604800秒）" placement="top">
+                <el-icon><question-filled /></el-icon>
+              </el-tooltip>
+              Token固定超时时间
+            </span>
+          </template>
+          <el-input placeholder="请输入Token固定超时时间" />
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-radio-group>
+            <el-radio>
+              （动态文本）
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>

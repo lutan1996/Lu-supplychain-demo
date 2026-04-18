@@ -1,0 +1,46 @@
+<!-- 来源: src/views/workflow/leave/leaveEdit.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <el-card shadow="never">
+      <div style="display: flex; justify-content: space-between">
+        <div>123
+          <el-button type="info">暂存</el-button>
+          <el-button type="primary">提 交</el-button>
+          <el-button type="primary">审批</el-button>
+          <el-button type="primary">流程进度</el-button>
+        </div>
+        <div>
+          <el-button style="float: right">返回</el-button>
+        </div>
+      </div>
+    </el-card>
+    <el-card shadow="never" style="height: 78vh; overflow-y: auto">
+      <el-form label-width="80px">
+        <el-form-item label="请假类型" prop="leaveType">
+          <el-select placeholder="请选择请假类型" style="width: 100%">
+            <el-option />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="请假时间">
+          <el-date-picker
+            value-format="YYYY-MM-DD HH:mm:ss"
+            type="daterange"
+            range-separator="To"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+          />
+        </el-form-item>
+        <el-form-item label="请假天数" prop="leaveDays">
+          <el-input disabled type="number" placeholder="请输入请假天数" />
+        </el-form-item>
+        <el-form-item label="请假原因" prop="remark">
+          <el-input type="textarea" placeholder="请输入请假原因" />
+        </el-form-item>
+      </el-form>
+    </el-card>
+    <!-- 提交组件 -->
+    <submitVerify />
+    <!-- 审批记录 -->
+    <approvalRecord />
+  </div>

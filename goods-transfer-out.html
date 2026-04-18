@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>货物转出 - 新能源物资供应链管理系统</title>
+  <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-toolbar.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/goods-transfer-out.css" />
+</head>
+<body class="page-source-navbar page-subpage page-goods-transfer">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item" title="我的资产">
+          <span class="nav-label">我的资产</span>
+        </div>
+        <div class="nav-item" title="我的任务">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="5" width="14" height="17" rx="1.5"/><path d="M8 9h8M8 12.5h8M8 16h6"/></svg></span>
+          <span class="nav-label">我的任务</span>
+        </div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 10.5L12 3l9 7.5V20a1.5 1.5 0 0 1-1.5 1.5H15v-7H9v7H4.5A1.5 1.5 0 0 1 3 20v-9.5z"/></svg></span>
+          <span class="nav-label">首页</span>
+        </a>
+        <div class="nav-item" data-nav="cockpit" title="驾驶舱">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1"/></svg></span>
+          <span class="nav-label">驾驶舱</span>
+        </div>
+        <div class="nav-item" title="采购管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6h14l-1.2 9H7.2L6 6z"/><path d="M6 6V5a1 1 0 0 1 1-1h2"/><circle cx="9" cy="20" r="1.25"/><circle cx="17" cy="20" r="1.25"/></svg></span>
+          <span class="nav-label">采购管理</span>
+        </div>
+        <a class="nav-item" href="carrier-management.html" title="物流管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1 16h11.5V8.5H5V7h11.5v5h2.5l3.5 4.5"/><circle cx="6.5" cy="17.5" r="1.75"/><circle cx="16.5" cy="17.5" r="1.75"/></svg></span>
+          <span class="nav-label">物流管理</span>
+        </a>
+        <div class="nav-item" id="navWarehouse" data-nav="warehouse" title="仓储管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 21h18V10.5L12 6 3 10.5V21z"/><path d="M9 21v-7h6v7"/></svg></span>
+          <span class="nav-label">仓储管理</span>
+        </div>
+        <div class="nav-item" title="物资采购">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6a2 2 0 0 1 2-2h6v16H6a2 2 0 0 1-2-2V6z"/><path d="M20 6a2 2 0 0 0-2-2h-6v16h6a2 2 0 0 0 2-2V6z"/><path d="M12 4v16"/><path d="M7 9h3M7 12.5h3M7 16h2M14 9h3M14 12.5h3M14 16h2"/></svg></span>
+          <span class="nav-label">物资采购</span>
+        </div>
+        <div class="nav-item nav-item--module-active" title="物资出库与处置">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 12a9 9 0 0 0-9-9 9.5 9.5 0 0 0-7 3"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.5 9.5 0 0 0 7-3"/><path d="M16 16h5v5"/></svg></span>
+          <span class="nav-label">物资出库与处置</span>
+        </div>
+        <div class="nav-item" title="绩效考核">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="3" width="12" height="18" rx="1.5"/><path d="M9 8h6M9 12h6M9 16h5"/></svg></span>
+          <span class="nav-label">绩效考核</span>
+        </div>
+        <div class="nav-item" title="公告管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 6h12a2 2 0 0 1 2 2v10H6a2 2 0 0 0-2 2v2"/><path d="M4 6V5a1 1 0 0 1 1-1h2"/><path d="M8 10h8M8 14h6"/></svg></span>
+          <span class="nav-label">公告管理</span>
+        </div>
+        <div class="nav-item" title="综合业务管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg></span>
+          <span class="nav-label">综合业务管理</span>
+        </div>
+        <div class="nav-item" title="数据管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><ellipse cx="12" cy="5" rx="9" ry="2.5"/><path d="M3 5v6c0 1.6 4 3 9 3s9-1.4 9-3V5"/><path d="M3 11v6c0 1.6 4 3 9 3s9-1.4 9-3V11"/><path d="M3 17v2c0 1.6 4 3 9 3s9-1.4 9-3v-2"/></svg></span>
+          <span class="nav-label">数据管理</span>
+        </div>
+        <div class="nav-item" title="开发工具">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 18l6-6-6-6"/><path d="M8 6 2 12l6 6"/></svg></span>
+          <span class="nav-label">开发工具</span>
+        </div>
+        <div class="nav-item" title="设置">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="3"/><path d="M12 1v2.5M12 20.5V23M4.2 4.2l1.8 1.8M18 18l1.8 1.8M1 12h2.5M20.5 12H23M4.2 19.8 6 18M18 6l1.8-1.8"/></svg></span>
+          <span class="nav-label">设置</span>
+        </div>
+        <div class="nav-item" title="系统管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="9" r="3.5"/><path d="M5 20.5v-1a7 7 0 0 1 14 0v1"/></svg></span>
+          <span class="nav-label">系统管理</span>
+        </div>
+      </aside>
+
+      <main class="main-scroll">
+        <h1 class="gto-page-title">货物转出</h1>
+        <div class="gto-inner">
+          <div class="gto-kpi-row" role="region" aria-label="转出统计">
+            <div class="gto-kpi-card">
+              <div class="gto-kpi-card__label">本月转出申请</div>
+              <div class="gto-kpi-card__val gto-kpi-card__val--blue">18</div>
+            </div>
+            <div class="gto-kpi-card">
+              <div class="gto-kpi-card__label">待审批</div>
+              <div class="gto-kpi-card__val gto-kpi-card__val--gold">5</div>
+            </div>
+            <div class="gto-kpi-card">
+              <div class="gto-kpi-card__label">已通过</div>
+              <div class="gto-kpi-card__val gto-kpi-card__val--green">10</div>
+            </div>
+            <div class="gto-kpi-card">
+              <div class="gto-kpi-card__label">已驳回</div>
+              <div class="gto-kpi-card__val gto-kpi-card__val--red">3</div>
+            </div>
+            <div class="gto-kpi-card">
+              <div class="gto-kpi-card__label">转出总金额</div>
+              <div class="gto-kpi-card__val gto-kpi-card__val--blue" style="font-size:17px">¥ 256,800</div>
+            </div>
+          </div>
+
+          <div class="gto-panel">
+            <div class="gto-tabs" role="tablist" aria-label="申请状态">
+              <button type="button" class="gto-tab is-active" role="tab" aria-selected="true" data-tab="all">全部申请</button>
+              <button type="button" class="gto-tab" role="tab" aria-selected="false" data-tab="pending">待审批</button>
+              <button type="button" class="gto-tab" role="tab" aria-selected="false" data-tab="passed">已通过</button>
+              <button type="button" class="gto-tab" role="tab" aria-selected="false" data-tab="done">已完成</button>
+              <button type="button" class="gto-tab" role="tab" aria-selected="false" data-tab="rejected">已驳回</button>
+            </div>
+            <div class="gto-filter-grid">
+              <div class="wh-field">
+                <label for="gto-no">申请单号</label>
+                <input id="gto-no" type="text" placeholder="请输入申请单号" />
+              </div>
+              <div class="wh-field">
+                <label for="gto-method">转出方式</label>
+                <select id="gto-method">
+                  <option>全部方式</option>
+                  <option>销售</option>
+                  <option>转让</option>
+                  <option>捐赠</option>
+                  <option>报废</option>
+                </select>
+              </div>
+              <div class="wh-field">
+                <label for="gto-recv">接收单位</label>
+                <input id="gto-recv" type="text" placeholder="请输入接收单位" />
+              </div>
+              <div class="wh-field">
+                <label for="gto-applicant">申请人</label>
+                <input id="gto-applicant" type="text" placeholder="请输入申请人" />
+              </div>
+              <div class="wh-field">
+                <label for="gto-date">申请日期</label>
+                <input id="gto-date" type="date" />
+              </div>
+              <div class="wh-field">
+                <label for="gto-approve">审批状态</label>
+                <select id="gto-approve">
+                  <option>全部状态</option>
+                  <option>待审批</option>
+                  <option>已通过</option>
+                  <option>已完成</option>
+                  <option>已驳回</option>
+                </select>
+              </div>
+            </div>
+            <div class="gto-action-row">
+              <button type="button" class="gto-btn gto-btn--search">搜索</button>
+              <button type="button" class="gto-btn gto-btn--reset">重置</button>
+              <button type="button" class="gto-btn gto-btn--add" id="gtoBtnAdd">新增转出申请</button>
+              <button type="button" class="gto-btn gto-btn--export">导出</button>
+              <button type="button" class="gto-btn gto-btn--batch-del" id="gtoBtnBatchDel">批量删除</button>
+            </div>
+
+            <div class="gto-table-wrap">
+              <table class="wh-table">
+                <thead>
+                  <tr>
+                    <th style="width:40px"><input type="checkbox" aria-label="全选" /></th>
+                    <th style="width:48px">序号</th>
+                    <th>申请单号</th>
+                    <th>转出方式</th>
+                    <th>物资名称</th>
+                    <th>数量</th>
+                    <th>转出金额</th>
+                    <th>接收单位</th>
+                    <th>申请人</th>
+                    <th>申请日期</th>
+                    <th>审批状态</th>
+                    <th style="width:150px">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="gtoTableBody"></tbody>
+              </table>
+            </div>
+            <div class="wh-pagination">
+              <span id="gtoTotalText">共 0 条</span>
+              <select aria-label="每页条数">
+                <option>10条/页</option>
+                <option>20条/页</option>
+              </select>
+              <div class="wh-page-btns">
+                <button type="button" aria-label="上一页">&lt;</button>
+                <button type="button" class="is-current" aria-current="page">1</button>
+                <button type="button">2</button>
+                <button type="button" aria-label="下一页">&gt;</button>
+              </div>
+              <span class="wh-goto">前往 <input type="text" value="1" aria-label="页码" /> 页</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="gto-modal-mask" id="gtoCreateMask" aria-hidden="true">
+    <div class="gto-modal">
+      <div class="gto-modal-head">
+        <h3>新增转出申请</h3>
+        <button type="button" class="gto-modal-close" data-close-modal>×</button>
+      </div>
+      <div class="gto-modal-body">
+        <div class="gto-form-grid">
+          <div class="wh-field">
+            <label for="gtoCreateMethod">转出方式</label>
+            <select id="gtoCreateMethod">
+              <option value="销售">销售</option>
+              <option value="转让">转让</option>
+              <option value="捐赠">捐赠</option>
+              <option value="报废">报废</option>
+            </select>
+          </div>
+          <div class="wh-field">
+            <label for="gtoCreateReceiver">接收单位</label>
+            <input id="gtoCreateReceiver" type="text" placeholder="请输入接收单位" />
+          </div>
+          <div class="wh-field">
+            <label for="gtoCreateAmount">金额</label>
+            <input id="gtoCreateAmount" type="number" min="0" step="0.01" placeholder="请输入金额" />
+          </div>
+          <div class="wh-field">
+            <label for="gtoCreateRemark">说明</label>
+            <input id="gtoCreateRemark" type="text" placeholder="请输入说明" />
+          </div>
+        </div>
+        <div class="gto-pick-title">物资选择（复选）</div>
+        <div class="gto-pick-list" id="gtoPickList"></div>
+      </div>
+      <div class="gto-modal-foot">
+        <button type="button" class="gto-btn gto-btn--reset" data-close-modal>取消</button>
+        <button type="button" class="gto-btn gto-btn--add" id="gtoCreateSubmit">提交申请</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="gto-modal-mask" id="gtoViewMask" aria-hidden="true">
+    <div class="gto-modal gto-modal--wide">
+      <div class="gto-modal-head">
+        <h3>转出申请详情</h3>
+        <button type="button" class="gto-modal-close" data-close-modal>×</button>
+      </div>
+      <div class="gto-modal-body">
+        <div class="gto-detail-grid" id="gtoDetailGrid"></div>
+        <div class="gto-flow">
+          <div class="gto-flow-step is-done">提交申请</div>
+          <div class="gto-flow-step is-active">部门审批</div>
+          <div class="gto-flow-step">管理处置审批</div>
+          <div class="gto-flow-step">执行完成</div>
+        </div>
+      </div>
+      <div class="gto-modal-foot">
+        <button type="button" class="gto-btn gto-btn--reset" data-close-modal>关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="gto-modal-mask" id="gtoApproveMask" aria-hidden="true">
+    <div class="gto-modal">
+      <div class="gto-modal-head">
+        <h3>审批操作</h3>
+        <button type="button" class="gto-modal-close" data-close-modal>×</button>
+      </div>
+      <div class="gto-modal-body">
+        <div class="gto-summary" id="gtoApproveSummary"></div>
+        <div class="wh-field">
+          <label for="gtoApproveResult">审批结果</label>
+          <select id="gtoApproveResult">
+            <option value="passed">同意</option>
+            <option value="rejected">驳回</option>
+          </select>
+        </div>
+        <div class="wh-field">
+          <label for="gtoApproveComment">审批意见</label>
+          <textarea id="gtoApproveComment" rows="4" placeholder="请输入审批意见"></textarea>
+        </div>
+      </div>
+      <div class="gto-modal-foot">
+        <button type="button" class="gto-btn gto-btn--reset" data-close-modal>取消</button>
+        <button type="button" class="gto-btn gto-btn--search" id="gtoApproveSubmit">提交审批</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var state = { activeTab: "all", currentItem: null };
+      var tableBody = document.getElementById("gtoTableBody");
+      var totalText = document.getElementById("gtoTotalText");
+      var tabs = Array.prototype.slice.call(document.querySelectorAll(".gto-tab"));
+      var createMask = document.getElementById("gtoCreateMask");
+      var viewMask = document.getElementById("gtoViewMask");
+      var approveMask = document.getElementById("gtoApproveMask");
+      var pickList = document.getElementById("gtoPickList");
+
+      var data = [
+        { no: "TC-2024-001", method: "销售", name: "废旧主齿轮箱", qty: "3", amount: "45000.00", receiver: "华东再生资源有限公司", applicant: "张三", date: "2024-03-12", status: "passed", assets: ["齿轮箱A-01", "齿轮箱A-02", "齿轮箱A-03"] },
+        { no: "TC-2024-002", method: "转让", name: "闲置变流器设备", qty: "2", amount: "88000.00", receiver: "龙源电力工程技术公司", applicant: "李四", date: "2024-03-14", status: "pending", assets: ["变流器B-08", "变流器B-09"] },
+        { no: "TC-2024-003", method: "捐赠", name: "退役电缆", qty: "500米", amount: "12000.00", receiver: "地方公益基金会", applicant: "王五", date: "2024-03-15", status: "passed", assets: ["电缆批次C-03"] },
+        { no: "TC-2024-004", method: "销售", name: "废旧叶片边角料", qty: "8", amount: "6500.00", receiver: "绿源环保科技（江苏）", applicant: "赵六", date: "2024-03-16", status: "done", assets: ["叶片D-01", "叶片D-02"] },
+        { no: "TC-2024-005", method: "转让", name: "备品电气柜（退役）", qty: "1", amount: "32000.00", receiver: "华北检修服务中心", applicant: "刘洋", date: "2024-03-18", status: "rejected", assets: ["电气柜E-11"] },
+        { no: "TC-2024-006", method: "报废", name: "退役变压器（含油）", qty: "1", amount: "0.00", receiver: "危废定点处置单位", applicant: "陈工", date: "2024-03-20", status: "passed", assets: ["变压器F-01"] }
+      ];
+      var materialOptions = [
+        { id: "MAT-001", name: "废旧主齿轮箱", spec: "ZX-500A", qty: 3 },
+        { id: "MAT-002", name: "闲置变流器设备", spec: "BLT-300", qty: 2 },
+        { id: "MAT-003", name: "退役电缆", spec: "DJL-220", qty: 500 },
+        { id: "MAT-004", name: "叶片边角料", spec: "YP-08", qty: 8 }
+      ];
+
+      function statusMeta(status) {
+        if (status === "pending") return { text: "待审批", cls: "tag-gto-status--pending" };
+        if (status === "passed") return { text: "已通过", cls: "tag-gto-status--passed" };
+        if (status === "done") return { text: "已完成", cls: "tag-gto-status--done" };
+        return { text: "已驳回", cls: "tag-gto-status--rejected" };
+      }
+      function methodCls(method) {
+        if (method === "销售") return "tag-method--sale";
+        if (method === "转让") return "tag-method--transfer";
+        if (method === "捐赠") return "tag-method--donate";
+        if (method === "报废") return "tag-method--scrap";
+        return "tag-method--donate";
+      }
+      function opButtons(item) {
+        if (item.status === "pending") return '<button type="button" class="gto-op-btn gto-op-btn--view" data-act="view">查看</button><button type="button" class="gto-op-btn gto-op-btn--approve" data-act="approve">审批</button>';
+        if (item.status === "passed" || item.status === "done") return '<button type="button" class="gto-op-btn gto-op-btn--view" data-act="view">查看</button><button type="button" class="gto-op-btn gto-op-btn--print" data-act="print">打印</button>';
+        return '<button type="button" class="gto-op-btn gto-op-btn--view" data-act="view">查看</button><button type="button" class="gto-op-btn gto-op-btn--edit" data-act="resubmit">重新提交</button>';
+      }
+      function currentRows() {
+        if (state.activeTab === "all") return data.slice();
+        return data.filter(function (x) { return x.status === state.activeTab; });
+      }
+      function renderTable() {
+        var rows = currentRows();
+        tableBody.innerHTML = "";
+        rows.forEach(function (item, idx) {
+          var st = statusMeta(item.status);
+          var tr = document.createElement("tr");
+          tr.setAttribute("data-no", item.no);
+          tr.innerHTML =
+            '<td><input type="checkbox" aria-label="选择行" /></td>' +
+            "<td>" + (idx + 1) + "</td>" +
+            "<td>" + item.no + "</td>" +
+            '<td><span class="tag-method ' + methodCls(item.method) + '">' + item.method + "</span></td>" +
+            "<td>" + item.name + "</td>" +
+            "<td>" + item.qty + "</td>" +
+            "<td>" + item.amount + "</td>" +
+            "<td>" + item.receiver + "</td>" +
+            "<td>" + item.applicant + "</td>" +
+            "<td>" + item.date + "</td>" +
+            '<td><span class="tag-gto-status ' + st.cls + '">' + st.text + "</span></td>" +
+            '<td class="gto-op">' + opButtons(item) + "</td>";
+          tableBody.appendChild(tr);
+        });
+        totalText.textContent = "共 " + rows.length + " 条";
+      }
+      function setTab(tabKey) {
+        state.activeTab = tabKey;
+        tabs.forEach(function (tab) {
+          var active = tab.getAttribute("data-tab") === tabKey;
+          tab.classList.toggle("is-active", active);
+          tab.setAttribute("aria-selected", active ? "true" : "false");
+        });
+        renderTable();
+      }
+      function openModal(mask) {
+        mask.classList.add("show");
+        mask.setAttribute("aria-hidden", "false");
+      }
+      function closeModal(mask) {
+        mask.classList.remove("show");
+        mask.setAttribute("aria-hidden", "true");
+      }
+      function renderPickList() {
+        pickList.innerHTML = materialOptions.map(function (m) {
+          return '<label class="gto-pick-item"><input type="checkbox" value="' + m.id + '" /> ' + m.id + " / " + m.name + " / " + m.spec + " / 可选数量：" + m.qty + "</label>";
+        }).join("");
+      }
+      function fillView(item) {
+        var grid = document.getElementById("gtoDetailGrid");
+        var st = statusMeta(item.status);
+        grid.innerHTML =
+          "<div><b>申请单号：</b>" + item.no + "</div>" +
+          "<div><b>转出方式：</b>" + item.method + "</div>" +
+          "<div><b>申请人：</b>" + item.applicant + "</div>" +
+          "<div><b>申请日期：</b>" + item.date + "</div>" +
+          "<div><b>接收单位：</b>" + item.receiver + "</div>" +
+          "<div><b>状态：</b>" + st.text + "</div>" +
+          '<div class="gto-detail-full"><b>物资清单：</b>' + item.assets.join("、") + "</div>";
+      }
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener("click", function () { setTab(tab.getAttribute("data-tab")); });
+      });
+      document.getElementById("gtoBtnAdd").addEventListener("click", function () {
+        renderPickList();
+        openModal(createMask);
+      });
+      document.querySelectorAll("[data-close-modal]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          closeModal(createMask);
+          closeModal(viewMask);
+          closeModal(approveMask);
+        });
+      });
+      [createMask, viewMask, approveMask].forEach(function (mask) {
+        mask.addEventListener("click", function (e) {
+          if (e.target === mask) closeModal(mask);
+        });
+      });
+      document.getElementById("gtoCreateSubmit").addEventListener("click", function () {
+        var method = document.getElementById("gtoCreateMethod").value;
+        var receiver = document.getElementById("gtoCreateReceiver").value || "待填写";
+        var amount = document.getElementById("gtoCreateAmount").value || "0.00";
+        var checked = Array.prototype.slice.call(pickList.querySelectorAll("input:checked"));
+        var names = checked.map(function (c) {
+          var m = materialOptions.find(function (x) { return x.id === c.value; });
+          return m ? m.name : c.value;
+        });
+        if (!checked.length) {
+          alert("请至少选择一项物资");
+          return;
+        }
+        data.unshift({
+          no: "TC-" + new Date().getFullYear() + "-" + String(Math.floor(Math.random() * 900 + 100)),
+          method: method,
+          name: names.join("、"),
+          qty: checked.length,
+          amount: amount,
+          receiver: receiver,
+          applicant: "当前用户",
+          date: new Date().toISOString().slice(0, 10),
+          status: "pending",
+          assets: names
+        });
+        closeModal(createMask);
+        setTab("all");
+      });
+      tableBody.addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-act]");
+        if (!btn) return;
+        var tr = btn.closest("tr");
+        var no = tr && tr.getAttribute("data-no");
+        var item = data.find(function (x) { return x.no === no; });
+        if (!item) return;
+        var act = btn.getAttribute("data-act");
+        state.currentItem = item;
+        if (act === "view") {
+          fillView(item);
+          openModal(viewMask);
+        } else if (act === "approve") {
+          document.getElementById("gtoApproveSummary").innerHTML = "<b>申请单号：</b>" + item.no + "<br><b>物资名称：</b>" + item.name + "<br><b>金额：</b>" + item.amount;
+          document.getElementById("gtoApproveComment").value = "";
+          document.getElementById("gtoApproveResult").value = "passed";
+          openModal(approveMask);
+        } else if (act === "print") {
+          alert("打印申请单：" + item.no);
+        } else if (act === "resubmit") {
+          item.status = "pending";
+          setTab("pending");
+        }
+      });
+      document.getElementById("gtoApproveSubmit").addEventListener("click", function () {
+        if (!state.currentItem) return;
+        var r = document.getElementById("gtoApproveResult").value;
+        state.currentItem.status = r === "passed" ? "passed" : "rejected";
+        closeModal(approveMask);
+        setTab("all");
+      });
+      document.getElementById("gtoBtnBatchDel").addEventListener("click", function () {
+        var checkedRows = Array.prototype.slice.call(tableBody.querySelectorAll('input[type="checkbox"]:checked'));
+        var ids = checkedRows.map(function (c) { return c.closest("tr").getAttribute("data-no"); });
+        if (!ids.length) {
+          alert("请先勾选需要删除的申请");
+          return;
+        }
+        data = data.filter(function (x) { return ids.indexOf(x.no) < 0; });
+        setTab("all");
+      });
+      document.querySelector(".gto-btn--reset").addEventListener("click", function () {
+        document.getElementById("gto-no").value = "";
+        document.getElementById("gto-method").selectedIndex = 0;
+        document.getElementById("gto-recv").value = "";
+        document.getElementById("gto-applicant").value = "";
+        document.getElementById("gto-date").value = "";
+        document.getElementById("gto-approve").selectedIndex = 0;
+        setTab(state.activeTab);
+      });
+      renderPickList();
+      setTab("all");
+    })();
+  </script>
+</body>
+</html>

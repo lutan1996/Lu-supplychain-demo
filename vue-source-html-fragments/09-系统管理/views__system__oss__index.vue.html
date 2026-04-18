@@ -1,0 +1,116 @@
+<!-- 来源: src/views/system/oss/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <transition>
+      <div class="mb-[10px]">
+        <el-card shadow="hover">
+          <el-form>
+            <el-form-item label="文件名" prop="fileName">
+              <el-input placeholder="请输入文件名" clearable />
+            </el-form-item>
+            <el-form-item label="原名" prop="originalName">
+              <el-input placeholder="请输入原名" clearable />
+            </el-form-item>
+            <el-form-item label="文件后缀" prop="fileSuffix">
+              <el-input placeholder="请输入文件后缀" clearable />
+            </el-form-item>
+            <el-form-item label="创建时间" style="width: 308px">
+              <el-date-picker
+                value-format="YYYY-MM-DD HH:mm:ss"
+                type="daterange"
+                range-separator="-"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              ></el-date-picker>
+            </el-form-item>
+            <el-form-item label="服务商" prop="service">
+              <el-input placeholder="请输入服务商" clearable />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="search">搜索</el-button>
+              <el-button icon="Refresh">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </el-card>
+      </div>
+    </transition>
+
+    <el-card shadow="hover">
+      <template>
+        <el-row class="mb8">
+          <el-col>
+            <el-button type="primary" plain icon="Upload">上传文件</el-button>
+          </el-col>
+          <el-col>
+            <el-button type="primary" plain icon="Upload">上传图片</el-button>
+          </el-col>
+          <el-col>
+            <el-button type="danger" plain icon="Delete">
+              删除
+            </el-button>
+          </el-col>
+          <el-col>
+            <el-button
+              plain
+              >预览开关 : （动态文本）</el-button
+            >
+          </el-col>
+          <el-col>
+            <el-button type="info" plain icon="Operation">配置管理</el-button>
+          </el-col>
+          <right-toolbar></right-toolbar>
+        </el-row>
+      </template>
+
+      <el-table
+      >
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="对象存储主键" align="center" prop="ossId" />
+        <el-table-column label="文件名" align="center" prop="fileName" />
+        <el-table-column label="原名" align="center" prop="originalName" />
+        <el-table-column label="文件后缀" align="center" prop="fileSuffix" />
+        <el-table-column label="文件展示" align="center" prop="url">
+          <template="scope">
+            <ImagePreview
+            />
+            <span />
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间" align="center" prop="createTime" width="180" sortable="custom">
+          <template="scope">
+            <span>（动态文本）</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="上传人" align="center" prop="createByName" />
+        <el-table-column label="服务商" align="center" prop="service" sortable="custom" />
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template="scope">
+            <el-tooltip content="下载" placement="top">
+              <el-button link type="primary" icon="Download"></el-button>
+            </el-tooltip>
+            <el-tooltip content="删除" placement="top">
+              <el-button link type="primary" icon="Delete"></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination />
+    </el-card>
+    <!-- 添加或修改OSS对象存储对话框 -->
+    <el-dialog width="500px" append-to-body>
+      <el-form label-width="80px">
+        <el-form-item label="文件名">
+          <fileUpload />
+          <imageUpload />
+        </el-form-item>
+      </el-form>
+      <template>
+        <div class="dialog-footer">
+          <el-button type="primary">确 定</el-button>
+          <el-button>取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>

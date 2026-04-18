@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>库存管理 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/warehouse-modal.css" />
+  <style>
+    .stock-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .stock-card {
+      background: #fff;
+      border: 1px solid #e7ecf3;
+      border-radius: 10px;
+      padding: 12px 14px;
+      box-shadow: 0 6px 16px rgba(18, 38, 63, 0.05);
+    }
+    .stock-card .label {
+      font-size: 13px;
+      color: #62788f;
+      margin-bottom: 8px;
+    }
+    .stock-card .value {
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 700;
+      color: #1f2d3d;
+    }
+    .stock-card .value.warn {
+      color: #cf1322;
+    }
+    .carrier-toolbar-right .carrier-search {
+      width: 260px;
+    }
+    .cell-num {
+      font-variant-numeric: tabular-nums;
+      color: #1f2d3d;
+      font-weight: 500;
+    }
+    .status-low {
+      color: #cf1322;
+      font-weight: 600;
+    }
+    .status-ok {
+      color: #389e0d;
+      font-weight: 500;
+    }
+    .wh-ops {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .wh-ops a {
+      color: #1677ff;
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .sync-box {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border: 1px dashed #dbe4f0;
+      border-radius: 8px;
+      background: #f8fbff;
+      font-size: 13px;
+      color: #4c6077;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit.html" title="驾驶舱"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html" title="物流管理"><span class="nav-label">物流管理</span></a>
+        <div class="nav-item nav-item--module-active" id="navWarehouse" data-nav="warehouse" title="仓储管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 21h18V10.5L12 6 3 10.5V21z"/><path d="M9 21v-7h6v7"/></svg></span>
+          <span class="nav-label">仓储管理</span>
+        </div>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+
+      <aside
+        id="warehouseSecondaryPanel"
+        class="warehouse-secondary-panel"
+        aria-label="仓储管理子菜单"
+        aria-hidden="true"
+        hidden
+      >
+        <div class="warehouse-secondary-inner">
+          <div class="warehouse-secondary-row warehouse-secondary-row--pipe" id="masterSecondaryRow">
+            <button type="button" class="warehouse-secondary-link" data-action="slot" data-label="货位管理">货位管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="receive" data-label="收货入库">收货入库</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="scan" data-label="扫码领用">扫码领用</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="inventory-check" data-label="盘库管理">盘库管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="stock" data-label="库存管理">库存管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="maintenance" data-label="库内保养">库内保养</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="idle" data-label="闲置物资">闲置物资</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="warehouse" data-label="仓库管理">仓库管理</button>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title">库存管理</h1>
+          <p id="pageContextHint" class="page-context-hint" hidden style="font-size:13px;color:#62788f;margin:0 0 10px;"></p>
+
+          <section class="stock-cards">
+            <div class="stock-card">
+              <div class="label">总库存金额</div>
+              <div class="value" id="cardTotalAmount">¥ 0.00</div>
+            </div>
+            <div class="stock-card">
+              <div class="label">物资种类数</div>
+              <div class="value" id="cardTypeCount">0</div>
+            </div>
+            <div class="stock-card">
+              <div class="label">预警物资数</div>
+              <div class="value warn" id="cardWarningCount">0</div>
+            </div>
+          </section>
+
+          <div class="carrier-toolbar">
+            <button type="button" class="carrier-btn-add" id="btnTransfer">
+              <i class="fa-solid fa-right-left" aria-hidden="true"></i>
+              库存调拨
+            </button>
+            <div class="carrier-toolbar-right">
+              <select class="carrier-select" id="filterWarehouse" aria-label="仓库">
+                <option value="">全部仓库</option>
+                <option value="华北主仓">华北主仓</option>
+                <option value="华东备件仓">华东备件仓</option>
+                <option value="华南应急仓">华南应急仓</option>
+              </select>
+              <select class="carrier-select" id="filterCategory" aria-label="物资分类">
+                <option value="">全部分类</option>
+                <option value="主机部件">主机部件</option>
+                <option value="电气备件">电气备件</option>
+                <option value="通用耗材">通用耗材</option>
+              </select>
+              <input
+                type="search"
+                class="carrier-search"
+                id="filterKeyword"
+                placeholder="搜索物资编码/名称"
+                autocomplete="off"
+                aria-label="搜索物资编码/名称"
+              />
+            </div>
+          </div>
+
+          <div class="carrier-table-wrap">
+            <table class="carrier-table">
+              <thead>
+                <tr>
+                  <th>物资编码</th>
+                  <th>物资名称</th>
+                  <th>规格型号</th>
+                  <th>仓库</th>
+                  <th>货位</th>
+                  <th>当前库存数量</th>
+                  <th>单位</th>
+                  <th>库存上限</th>
+                  <th>库存下限</th>
+                  <th>上次盘点时间</th>
+                  <th style="min-width:220px;">操作</th>
+                </tr>
+              </thead>
+              <tbody id="stockTableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="carrier-pagination" role="navigation" aria-label="分页">
+            <span id="stockTotalText">共 0 条</span>
+            <span>每页</span>
+            <select aria-label="每页条数">
+              <option value="10" selected>10 条/页</option>
+              <option value="20">20 条/页</option>
+              <option value="50">50 条/页</option>
+            </select>
+            <div class="carrier-page-btns">
+              <button type="button" aria-label="上一页">&lt;</button>
+              <button type="button" class="is-current" aria-current="page">1</button>
+              <button type="button" aria-label="下一页">&gt;</button>
+            </div>
+          </div>
+
+          <div id="syncLog" style="display:none" aria-hidden="true"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="wh-modal-mask modal-mask" id="stockFlowMask" aria-hidden="true">
+    <div class="wh-modal-box wh-modal-box--md" role="dialog" aria-modal="true" aria-labelledby="stockFlowHeading">
+      <div class="wh-modal-head">
+        <h3 class="wh-modal-title" id="stockFlowHeading">库存流水</h3>
+        <button type="button" class="wh-modal-close" id="btnCloseStockFlow" aria-label="关闭">×</button>
+      </div>
+      <div class="wh-modal-body">
+        <p id="stockFlowTitle" style="margin:0 0 10px;font-size:14px;color:#31475f;"></p>
+        <table class="carrier-table">
+          <thead><tr><th>时间</th><th>类型</th><th>数量</th><th>摘要</th></tr></thead>
+          <tbody id="stockFlowTbody"></tbody>
+        </table>
+      </div>
+      <div class="wh-modal-foot">
+        <button type="button" class="wh-btn wh-btn--ghost" id="btnOkStockFlow">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wh-modal-mask modal-mask" id="transferMask" aria-hidden="true">
+    <div class="wh-modal-box" role="dialog" aria-modal="true" aria-labelledby="transferHeading">
+      <div class="wh-modal-head">
+        <h3 class="wh-modal-title" id="transferHeading">库存调拨</h3>
+        <button type="button" class="wh-modal-close" id="btnCloseTransfer" aria-label="关闭">×</button>
+      </div>
+      <div class="wh-modal-body">
+        <div class="wh-field">
+          <label class="wh-label" for="transferMaterialPick">物资</label>
+          <select id="transferMaterialPick" class="wh-input"></select>
+          <div id="transferMatHint" class="wh-hint"></div>
+        </div>
+        <div class="wh-field">
+          <label class="wh-label" for="transferFrom">调出仓库</label>
+          <input id="transferFrom" class="wh-input" type="text" readonly />
+        </div>
+        <div class="wh-field">
+          <label class="wh-label" for="transferTo">调入仓库</label>
+          <select id="transferTo" class="wh-input">
+            <option value="华北主仓">华北主仓</option>
+            <option value="华东备件仓">华东备件仓</option>
+            <option value="华南应急仓">华南应急仓</option>
+          </select>
+        </div>
+        <div class="wh-field">
+          <label class="wh-label" for="transferQty">调拨数量</label>
+          <input id="transferQty" class="wh-input" type="number" min="1" value="1" />
+        </div>
+      </div>
+      <div class="wh-modal-foot">
+        <button type="button" class="wh-btn wh-btn--ghost" id="btnCancelTransfer">取消</button>
+        <button type="button" class="wh-btn wh-btn--primary" id="btnOkTransfer">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wh-modal-mask modal-mask" id="warnMask" aria-hidden="true">
+    <div class="wh-modal-box" role="dialog" aria-modal="true" aria-labelledby="warnHeading">
+      <div class="wh-modal-head">
+        <h3 class="wh-modal-title" id="warnHeading">设置预警值</h3>
+        <button type="button" class="wh-modal-close" id="btnCloseWarn" aria-label="关闭">×</button>
+      </div>
+      <div class="wh-modal-body">
+        <div class="wh-field">
+          <label class="wh-label" for="warnMax">库存上限</label>
+          <input id="warnMax" class="wh-input" type="number" min="1" />
+        </div>
+        <div class="wh-field">
+          <label class="wh-label" for="warnMin">库存下限</label>
+          <input id="warnMin" class="wh-input" type="number" min="0" />
+        </div>
+      </div>
+      <div class="wh-modal-foot">
+        <button type="button" class="wh-btn wh-btn--ghost" id="btnCancelWarn">取消</button>
+        <button type="button" class="wh-btn wh-btn--primary" id="btnOkWarn">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/warehouse-submenu.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      // 基础数据物资台账（演示）：入库增加、出库减少都体现在 currentQty
+      var ledger = [
+        {
+          materialCode: "MAT-GX-001",
+          materialName: "齿轮箱",
+          spec: "GW-GX-3.2MW",
+          warehouse: "华北主仓",
+          category: "主机部件",
+          slot: "A-01-03",
+          currentQty: 8,
+          unit: "件",
+          maxQty: 30,
+          minQty: 10,
+          lastCheckAt: "2026-03-20",
+          unitPrice: 42000
+        },
+        {
+          materialCode: "MAT-BLQ-002",
+          materialName: "变流器",
+          spec: "BLQ-1500V",
+          warehouse: "华东备件仓",
+          category: "电气备件",
+          slot: "B-03-02",
+          currentQty: 16,
+          unit: "件",
+          maxQty: 26,
+          minQty: 8,
+          lastCheckAt: "2026-03-19",
+          unitPrice: 16000
+        },
+        {
+          materialCode: "MAT-DJ-003",
+          materialName: "偏航电机",
+          spec: "YH-DJ-7.5kW",
+          warehouse: "华南应急仓",
+          category: "电气备件",
+          slot: "C-01-08",
+          currentQty: 6,
+          unit: "件",
+          maxQty: 20,
+          minQty: 6,
+          lastCheckAt: "2026-03-18",
+          unitPrice: 7000
+        },
+        {
+          materialCode: "MAT-HC-004",
+          materialName: "液压油",
+          spec: "L-HM 46",
+          warehouse: "华北主仓",
+          category: "通用耗材",
+          slot: "A-02-09",
+          currentQty: 30,
+          unit: "桶",
+          maxQty: 80,
+          minQty: 20,
+          lastCheckAt: "2026-03-21",
+          unitPrice: 220
+        }
+      ];
+
+      var refs = {
+        tableBody: document.getElementById("stockTableBody"),
+        totalText: document.getElementById("stockTotalText"),
+        cardTotalAmount: document.getElementById("cardTotalAmount"),
+        cardTypeCount: document.getElementById("cardTypeCount"),
+        cardWarningCount: document.getElementById("cardWarningCount"),
+        filterWarehouse: document.getElementById("filterWarehouse"),
+        filterCategory: document.getElementById("filterCategory"),
+        filterKeyword: document.getElementById("filterKeyword"),
+        btnTransfer: document.getElementById("btnTransfer"),
+        syncLog: document.getElementById("syncLog")
+      };
+
+      function money(n) {
+        return n.toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function isLow(item) {
+        return Number(item.currentQty) < Number(item.minQty) || Number(item.currentQty) > Number(item.maxQty);
+      }
+
+      var flowDemo = {
+        "MAT-GX-001": [
+          { t: "2026-03-21 10:20", type: "入库", qty: "+2", note: "采购入库" },
+          { t: "2026-03-20 14:05", type: "出库", qty: "-1", note: "领用出库" },
+          { t: "2026-03-18 09:00", type: "入库", qty: "+5", note: "调拨入" }
+        ],
+        "MAT-BLQ-002": [
+          { t: "2026-03-19 11:00", type: "出库", qty: "-2", note: "检修领用" }
+        ],
+        "MAT-DJ-003": [
+          { t: "2026-03-17 16:30", type: "入库", qty: "+3", note: "退货入库" }
+        ],
+        "MAT-HC-004": [
+          { t: "2026-03-21 08:00", type: "入库", qty: "+10", note: "批量入库" }
+        ]
+      };
+
+      var transferMask = document.getElementById("transferMask");
+      var warnMask = document.getElementById("warnMask");
+      var stockFlowMask = document.getElementById("stockFlowMask");
+      var warnEditingCode = null;
+
+      function anyModalOpen() {
+        return [transferMask, warnMask, stockFlowMask].some(function (m) {
+          return m && m.classList.contains("show");
+        });
+      }
+      function openMask(el) {
+        if (!el) return;
+        el.classList.add("show");
+        el.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+      function closeMask(el) {
+        if (!el) return;
+        el.classList.remove("show");
+        el.setAttribute("aria-hidden", "true");
+        if (!anyModalOpen()) document.body.style.overflow = "";
+      }
+
+      function fillTransferPick() {
+        var sel = document.getElementById("transferMaterialPick");
+        if (!sel) return;
+        sel.innerHTML = "";
+        ledger.forEach(function (it) {
+          var o = document.createElement("option");
+          o.value = it.materialCode;
+          o.textContent = it.materialCode + " " + it.materialName;
+          sel.appendChild(o);
+        });
+      }
+
+      function openTransferModal(code, fromToolbar) {
+        fillTransferPick();
+        var sel = document.getElementById("transferMaterialPick");
+        var hint = document.getElementById("transferMatHint");
+        if (sel) {
+          sel.disabled = !fromToolbar && !!code;
+          sel.value = code || (sel.options[0] && sel.options[0].value);
+        }
+        if (hint) hint.textContent = fromToolbar ? "可从下拉框选择要调拨的物资。" : "从当前行发起调拨。";
+        var item = ledger.find(function (x) { return x.materialCode === (code || sel.value); });
+        if (item) {
+          document.getElementById("transferFrom").value = item.warehouse;
+          document.getElementById("transferQty").value = "1";
+        }
+        openMask(transferMask);
+      }
+
+      function openWarnModal(code) {
+        var item = ledger.find(function (x) { return x.materialCode === code; });
+        if (!item) return;
+        warnEditingCode = code;
+        document.getElementById("warnMax").value = item.maxQty;
+        document.getElementById("warnMin").value = item.minQty;
+        openMask(warnMask);
+      }
+
+      function openFlowModal(code) {
+        var item = ledger.find(function (x) { return x.materialCode === code; });
+        var rows = flowDemo[code] || [{ t: "—", type: "—", qty: "—", note: "暂无流水" }];
+        document.getElementById("stockFlowTitle").textContent =
+          item ? "物资：" + item.materialName + "（" + code + "）" : code;
+        var tb = document.getElementById("stockFlowTbody");
+        tb.innerHTML = rows.map(function (r) {
+          return "<tr><td>" + r.t + "</td><td>" + r.type + "</td><td>" + r.qty + "</td><td>" + r.note + "</td></tr>";
+        }).join("");
+        openMask(stockFlowMask);
+      }
+
+      function renderRows(rows) {
+        refs.tableBody.innerHTML = "";
+        if (!rows.length) {
+          refs.tableBody.innerHTML =
+            '<tr><td colspan="11" style="text-align:center;color:#8ca0b8;padding:26px;">暂无数据</td></tr>';
+          refs.totalText.textContent = "共 0 条";
+          return;
+        }
+        rows.forEach(function (item) {
+          var low = isLow(item);
+          var tr = document.createElement("tr");
+          tr.setAttribute("data-code", item.materialCode);
+          tr.innerHTML =
+            "<td>" + item.materialCode + "</td>" +
+            '<td><a href="#" data-action="flow" style="color:#1677ff;">' + item.materialName + "</a></td>" +
+            "<td>" + item.spec + "</td>" +
+            "<td>" + item.warehouse + "</td>" +
+            "<td>" + item.slot + "</td>" +
+            '<td class="cell-num">' + item.currentQty + "</td>" +
+            "<td>" + item.unit + "</td>" +
+            '<td class="cell-num">' + item.maxQty + "</td>" +
+            '<td class="cell-num">' + item.minQty + "</td>" +
+            "<td>" + item.lastCheckAt + "</td>" +
+            '<td><div class="wh-ops">' +
+            '<a href="#" data-action="flow">库存流水</a>' +
+            '<a href="#" data-action="transfer">发起调拨</a>' +
+            '<a href="#" data-action="warn">设置预警值</a>' +
+            "</div></td>";
+          refs.tableBody.appendChild(tr);
+        });
+        refs.totalText.textContent = "共 " + rows.length + " 条";
+      }
+
+      function refreshCards(sourceRows) {
+        var totalAmount = 0;
+        var warning = 0;
+        sourceRows.forEach(function (x) {
+          totalAmount += Number(x.currentQty) * Number(x.unitPrice);
+          if (isLow(x)) warning++;
+        });
+        refs.cardTotalAmount.textContent = "¥ " + money(totalAmount);
+        refs.cardTypeCount.textContent = String(sourceRows.length);
+        refs.cardWarningCount.textContent = String(warning);
+      }
+
+      function applyFilters() {
+        var w = refs.filterWarehouse.value;
+        var c = refs.filterCategory.value;
+        var k = (refs.filterKeyword.value || "").trim().toLowerCase();
+        var rows = ledger.filter(function (x) {
+          var hitW = !w || x.warehouse === w;
+          var hitC = !c || x.category === c;
+          var hitK = !k || x.materialCode.toLowerCase().indexOf(k) > -1 || x.materialName.toLowerCase().indexOf(k) > -1;
+          return hitW && hitC && hitK;
+        });
+        renderRows(rows);
+        refreshCards(rows);
+      }
+
+      function updateQty(code, delta) {
+        var item = ledger.find(function (x) { return x.materialCode === code; });
+        if (!item) return;
+        var next = Number(item.currentQty) + Number(delta);
+        if (next < 0) {
+          alert("库存不足，无法继续出库。");
+          return;
+        }
+        item.currentQty = next;
+        refs.syncLog.innerHTML =
+          "最近变更：物资编码 <b>" + item.materialCode + "</b>，物资名称 <b>" +
+          item.materialName + "</b>，当前库存 <b>" + item.currentQty +
+          "</b>，阈值区间 <b>" + item.minQty + "-" + item.maxQty + "</b>。";
+        applyFilters();
+      }
+
+      refs.btnTransfer.addEventListener("click", function () {
+        openTransferModal(null, true);
+      });
+
+      var transferPick = document.getElementById("transferMaterialPick");
+      if (transferPick) {
+        transferPick.addEventListener("change", function () {
+          var item = ledger.find(function (x) { return x.materialCode === transferPick.value; });
+          if (item) document.getElementById("transferFrom").value = item.warehouse;
+        });
+      }
+
+      document.getElementById("btnCloseStockFlow").addEventListener("click", function () { closeMask(stockFlowMask); });
+      document.getElementById("btnOkStockFlow").addEventListener("click", function () { closeMask(stockFlowMask); });
+      stockFlowMask.addEventListener("click", function (e) { if (e.target === stockFlowMask) closeMask(stockFlowMask); });
+
+      document.getElementById("btnCloseTransfer").addEventListener("click", function () { closeMask(transferMask); });
+      document.getElementById("btnCancelTransfer").addEventListener("click", function () { closeMask(transferMask); });
+      transferMask.addEventListener("click", function (e) { if (e.target === transferMask) closeMask(transferMask); });
+      document.getElementById("btnOkTransfer").addEventListener("click", function () {
+        var code = document.getElementById("transferMaterialPick").value;
+        var n = Number(document.getElementById("transferQty").value || 0);
+        var toWh = document.getElementById("transferTo").value;
+        if (!n || n <= 0) {
+          alert("请输入有效调拨数量。");
+          return;
+        }
+        var item = ledger.find(function (x) { return x.materialCode === code; });
+        if (!item || n > item.currentQty) {
+          alert("库存不足。");
+          return;
+        }
+        item.currentQty -= n;
+        item.warehouse = toWh;
+        refs.syncLog.style.display = "block";
+        refs.syncLog.innerHTML = "最近同步：物资 <b>" + code + "</b> 已调拨 <b>" + n + "</b> 至 <b>" + toWh + "</b>。";
+        closeMask(transferMask);
+        applyFilters();
+      });
+
+      document.getElementById("btnCloseWarn").addEventListener("click", function () { closeMask(warnMask); });
+      document.getElementById("btnCancelWarn").addEventListener("click", function () { closeMask(warnMask); });
+      warnMask.addEventListener("click", function (e) { if (e.target === warnMask) closeMask(warnMask); });
+      document.getElementById("btnOkWarn").addEventListener("click", function () {
+        var item = ledger.find(function (x) { return x.materialCode === warnEditingCode; });
+        if (!item) return;
+        var min = Number(document.getElementById("warnMin").value);
+        var max = Number(document.getElementById("warnMax").value);
+        if (min < 0 || max <= 0 || min >= max) {
+          alert("阈值不合法。");
+          return;
+        }
+        item.minQty = min;
+        item.maxQty = max;
+        refs.syncLog.style.display = "block";
+        refs.syncLog.innerHTML = "最近同步：物资 <b>" + warnEditingCode + "</b> 预警值已更新（下限 " + min + "，上限 " + max + "）。";
+        closeMask(warnMask);
+        applyFilters();
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key !== "Escape") return;
+        if (stockFlowMask.classList.contains("show")) closeMask(stockFlowMask);
+        else if (transferMask.classList.contains("show")) closeMask(transferMask);
+        else if (warnMask.classList.contains("show")) closeMask(warnMask);
+      });
+
+      refs.tableBody.addEventListener("click", function (e) {
+        var a = e.target.closest("a[data-action]");
+        if (!a) return;
+        e.preventDefault();
+        var tr = a.closest("tr");
+        if (!tr) return;
+        var code = tr.getAttribute("data-code");
+        var action = a.getAttribute("data-action");
+        var item = ledger.find(function (x) { return x.materialCode === code; });
+        if (!item) return;
+
+        if (action === "flow") {
+          openFlowModal(code);
+          return;
+        }
+        if (action === "transfer") {
+          openTransferModal(code, false);
+          return;
+        }
+        if (action === "warn") {
+          openWarnModal(code);
+          return;
+        }
+      });
+
+      refs.filterWarehouse.addEventListener("change", applyFilters);
+      refs.filterCategory.addEventListener("change", applyFilters);
+      refs.filterKeyword.addEventListener("input", applyFilters);
+
+      applyFilters();
+    })();
+  </script>
+</body>
+</html>

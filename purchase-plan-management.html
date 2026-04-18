@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>采购计划</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    .metric-warn { background: #fff1f2; color: #be123c; }
+    .metric-good { background: #ecfdf5; color: #047857; }
+    .metric-mid { background: #eff6ff; color: #1d4ed8; }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage bg-slate-50 text-slate-800">
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#"><img src="assets/logo-chenergy.png" width="220" height="40" alt="" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar">用</div></div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <div class="nav-item" title="驾驶舱"><span class="nav-label">驾驶舱</span></div>
+        <div class="nav-item nav-item--module-active" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <div class="nav-item" title="物流管理"><span class="nav-label">物流管理</span></div>
+        <div class="nav-item" title="仓储管理"><span class="nav-label">仓储管理</span></div>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+
+      <main class="main-scroll p-4 md:p-5">
+        <div class="mx-auto max-w-[1800px] space-y-4">
+          <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-bold text-slate-800">采购计划</h1>
+          </div>
+
+          <section class="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+            <div class="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-6">
+              <input id="fProjectName" class="h-10 rounded border border-slate-300 px-3 text-sm" placeholder="项目名称（模糊）" />
+              <select id="fMethod" class="h-10 rounded border border-slate-300 px-3 text-sm"></select>
+              <select id="fTargetType" class="h-10 rounded border border-slate-300 px-3 text-sm"></select>
+              <select id="fProjectType" class="h-10 rounded border border-slate-300 px-3 text-sm"></select>
+              <select id="fFrame" class="h-10 rounded border border-slate-300 px-3 text-sm"></select>
+              <select id="fSci" class="h-10 rounded border border-slate-300 px-3 text-sm"></select>
+              <select id="fProgress" class="h-10 rounded border border-slate-300 px-3 text-sm"></select>
+              <input id="fPkgNo" class="h-10 rounded border border-slate-300 px-3 text-sm" placeholder="采购标包号" />
+              <input id="fSrmStart" type="date" class="h-10 rounded border border-slate-300 px-3 text-sm" />
+              <input id="fSrmEnd" type="date" class="h-10 rounded border border-slate-300 px-3 text-sm" />
+            </div>
+            <input type="file" id="fileImportPlan" class="hidden" accept=".xlsx,.xls,.csv" aria-hidden="true" />
+            <div class="mt-3 flex flex-wrap gap-2">
+              <button id="btnQuery" class="h-10 rounded bg-blue-600 px-4 text-sm font-medium text-white hover:bg-blue-700">查询</button>
+              <button id="btnReset" class="h-10 rounded border border-slate-300 bg-white px-4 text-sm font-medium hover:bg-slate-100">重置</button>
+              <button id="btnImport" type="button" class="h-10 rounded border border-emerald-200 bg-emerald-50 px-4 text-sm font-medium text-emerald-700 hover:bg-emerald-100">导入</button>
+              <button id="btnAdd" class="h-10 rounded bg-blue-600 px-4 text-sm font-medium text-white hover:bg-blue-700">新增计划</button>
+              <button id="btnBatchDelete" class="h-10 rounded border border-rose-200 bg-rose-50 px-4 text-sm font-medium text-rose-600 hover:bg-rose-100">批量删除</button>
+            </div>
+          </section>
+
+          <section class="rounded-lg border border-slate-200 bg-white shadow-sm">
+            <div class="overflow-x-auto">
+              <table class="min-w-[3400px] table-auto border-collapse text-xs">
+                <thead class="bg-slate-100 text-slate-700">
+                  <tr>
+                    <th class="border border-slate-200 p-2"><input id="ckAll" type="checkbox" /></th>
+                    <th class="border border-slate-200 p-2">项目名称</th>
+                    <th class="border border-slate-200 p-2">采购方式</th>
+                    <th class="border border-slate-200 p-2">采购标的类别</th>
+                    <th class="border border-slate-200 p-2">业务部门</th>
+                    <th class="border border-slate-200 p-2">业务经办人</th>
+                    <th class="border border-slate-200 p-2">是否框架</th>
+                    <th class="border border-slate-200 p-2">项目类别</th>
+                    <th class="border border-slate-200 p-2">预算（万元）</th>
+                    <th class="border border-slate-200 p-2">是否限价</th>
+                    <th class="border border-slate-200 p-2">是否科技项目</th>
+                    <th class="border border-slate-200 p-2">科技项目名称</th>
+                    <th class="border border-slate-200 p-2">项目/WBS编码</th>
+                    <th class="border border-slate-200 p-2">是否西安公司</th>
+                    <th class="border border-slate-200 p-2">龙源OA审批表时间</th>
+                    <th class="border border-slate-200 p-2">龙源OA审查纪要时间</th>
+                    <th class="border border-slate-200 p-2">采委会计划通过期数</th>
+                    <th class="border border-slate-200 p-2">SRM提报时间</th>
+                    <th class="border border-slate-200 p-2">流程进度</th>
+                    <th class="border border-slate-200 p-2">挂网时间</th>
+                    <th class="border border-slate-200 p-2">挂网网址</th>
+                    <th class="border border-slate-200 p-2">采购依据</th>
+                    <th class="border border-slate-200 p-2">采购标包号</th>
+                    <th class="border border-slate-200 p-2">招标/采购编码</th>
+                    <th class="border border-slate-200 p-2">开标时间</th>
+                    <th class="border border-slate-200 p-2">定标时间</th>
+                    <th class="border border-slate-200 p-2">招标公示时间</th>
+                    <th class="border border-slate-200 p-2">中标/成交通知书下发时间</th>
+                    <th class="border border-slate-200 p-2">中标/成交金额（万元）</th>
+                    <th class="border border-slate-200 p-2">中标/成交供应商</th>
+                    <th class="border border-slate-200 p-2">是否关联年度计划</th>
+                    <th class="border border-slate-200 p-2">合同用印时间</th>
+                    <th class="border border-slate-200 p-2">备注</th>
+                    <th class="border border-slate-200 p-2">考核点1：采购时长</th>
+                    <th class="border border-slate-200 p-2">考核点2：合同签订时长</th>
+                    <th class="border border-slate-200 p-2">考核点备注</th>
+                    <th class="border border-slate-200 p-2">操作</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody" class="bg-white"></tbody>
+              </table>
+            </div>
+            <div class="flex items-center justify-between border-t border-slate-200 p-3 text-sm">
+              <span id="totalText" class="text-slate-600"></span>
+              <div class="flex items-center gap-2">
+                <button id="prevPage" class="rounded border border-slate-300 px-3 py-1 hover:bg-slate-100">上一页</button>
+                <div id="pageNums" class="flex items-center gap-1"></div>
+                <button id="nextPage" class="rounded border border-slate-300 px-3 py-1 hover:bg-slate-100">下一页</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script>
+    (function () {
+      var PAGE_SIZE = 5;
+      var page = 1;
+      var filtered = [];
+
+      var source = [
+        {id:1,projectName:"华北风场主机备件采购",method:"招标",targetType:"物资",bizDept:"经营发展中心",handler:"张敏",isFrame:"是",projectType:"生产",budget:520,isLimit:"是",isSci:"否",sciName:"-",wbs:"WBS-HB-001",isXiAn:"否",oaApprove:"2026-01-10",oaMinutes:"2026-01-14",committeeNo:"2026-01期",srmDate:"2026-01-20",progress:"已定标",publishDate:"2026-02-01",publishUrl:"https://srm.ly/ab12",basis:"年度计划+故障率分析",pkgNo:"PKG-HB-01",procCode:"PROC-2026-001",openDate:"2026-02-18",awardDate:"2026-02-25",publicDate:"2026-02-26",noticeDate:"2026-03-01",dealAmount:486,supplier:"联合动力",isAnnual:"是",stampDate:"2026-03-12",remarkExtra:"执行顺畅"},
+        {id:2,projectName:"西北场站电缆改造服务",method:"询价",targetType:"服务",bizDept:"运维一部",handler:"李哲",isFrame:"否",projectType:"基建",budget:180,isLimit:"否",isSci:"否",sciName:"-",wbs:"WBS-XB-118",isXiAn:"是",oaApprove:"2026-02-02",oaMinutes:"2026-02-07",committeeNo:"2026-02期",srmDate:"2026-02-10",progress:"合同签订中",publishDate:"2026-02-15",publishUrl:"https://srm.ly/cd33",basis:"设备改造专项",pkgNo:"PKG-XB-05",procCode:"PROC-2026-033",openDate:"2026-02-24",awardDate:"2026-02-28",publicDate:"2026-03-01",noticeDate:"2026-03-03",dealAmount:172,supplier:"华科工程",isAnnual:"否",stampDate:"2026-04-10",remarkExtra:"跨区协同"},
+        {id:3,projectName:"海上风场无人机巡检",method:"单一来源",targetType:"服务",bizDept:"数字化中心",handler:"周宁",isFrame:"否",projectType:"综合",budget:95,isLimit:"是",isSci:"是",sciName:"海风AI巡检",wbs:"WBS-IT-023",isXiAn:"否",oaApprove:"2026-02-15",oaMinutes:"2026-02-18",committeeNo:"2026-03期",srmDate:"2026-02-20",progress:"审批中",publishDate:"",publishUrl:"-",basis:"科技立项",pkgNo:"PKG-IT-02",procCode:"PROC-2026-071",openDate:"",awardDate:"",publicDate:"",noticeDate:"",dealAmount:0,supplier:"-",isAnnual:"是",stampDate:"",remarkExtra:"科技项目"},
+        {id:4,projectName:"华东光伏站逆变器采购",method:"招标",targetType:"物资",bizDept:"运维二部",handler:"王芳",isFrame:"是",projectType:"生产",budget:760,isLimit:"是",isSci:"否",sciName:"-",wbs:"WBS-HD-222",isXiAn:"否",oaApprove:"2025-12-12",oaMinutes:"2025-12-20",committeeNo:"2025-12期",srmDate:"2025-12-25",progress:"已完成",publishDate:"2026-01-08",publishUrl:"https://srm.ly/ef81",basis:"年度备件计划",pkgNo:"PKG-HD-08",procCode:"PROC-2025-288",openDate:"2026-01-20",awardDate:"2026-01-28",publicDate:"2026-01-30",noticeDate:"2026-02-03",dealAmount:702,supplier:"东风",isAnnual:"是",stampDate:"2026-02-08",remarkExtra:"提前完成"},
+        {id:5,projectName:"天津项目公司检修工器具",method:"询价",targetType:"物资",bizDept:"项目公司支持部",handler:"赵坤",isFrame:"否",projectType:"综合",budget:68,isLimit:"否",isSci:"否",sciName:"-",wbs:"WBS-TJ-009",isXiAn:"否",oaApprove:"2026-03-01",oaMinutes:"2026-03-04",committeeNo:"2026-04期",srmDate:"2026-03-05",progress:"已挂网",publishDate:"2026-03-07",publishUrl:"https://srm.ly/tt09",basis:"检修计划",pkgNo:"PKG-TJ-02",procCode:"PROC-2026-106",openDate:"2026-03-15",awardDate:"",publicDate:"",noticeDate:"",dealAmount:0,supplier:"-",isAnnual:"否",stampDate:"",remarkExtra:"等待定标"},
+        {id:6,projectName:"甘肃风场塔筒工程",method:"招标",targetType:"工程",bizDept:"工程管理部",handler:"陈浩",isFrame:"否",projectType:"基建",budget:1380,isLimit:"是",isSci:"否",sciName:"-",wbs:"WBS-GS-701",isXiAn:"是",oaApprove:"2026-01-05",oaMinutes:"2026-01-09",committeeNo:"2026-01期",srmDate:"2026-01-12",progress:"已开标",publishDate:"2026-01-18",publishUrl:"https://srm.ly/gs77",basis:"新建项目",pkgNo:"PKG-GS-11",procCode:"PROC-2026-018",openDate:"2026-02-02",awardDate:"",publicDate:"",noticeDate:"",dealAmount:0,supplier:"-",isAnnual:"是",stampDate:"",remarkExtra:"开标后评审中"},
+        {id:7,projectName:"总部办公网络升级服务",method:"单一来源",targetType:"服务",bizDept:"综合管理部",handler:"刘静",isFrame:"否",projectType:"综合",budget:120,isLimit:"是",isSci:"是",sciName:"智联办公2.0",wbs:"WBS-ZH-035",isXiAn:"否",oaApprove:"2026-02-08",oaMinutes:"2026-02-12",committeeNo:"2026-03期",srmDate:"2026-02-14",progress:"计划中",publishDate:"",publishUrl:"-",basis:"信息化升级",pkgNo:"PKG-ZH-03",procCode:"PROC-2026-055",openDate:"",awardDate:"",publicDate:"",noticeDate:"",dealAmount:0,supplier:"-",isAnnual:"否",stampDate:"",remarkExtra:"待审批上会"},
+        {id:8,projectName:"宁夏场站变桨系统物资",method:"询价",targetType:"物资",bizDept:"运维三部",handler:"杨杰",isFrame:"是",projectType:"生产",budget:245,isLimit:"否",isSci:"否",sciName:"-",wbs:"WBS-NX-092",isXiAn:"否",oaApprove:"2026-01-22",oaMinutes:"2026-01-26",committeeNo:"2026-02期",srmDate:"2026-01-29",progress:"合同签订中",publishDate:"2026-02-02",publishUrl:"https://srm.ly/nx92",basis:"备件补库",pkgNo:"PKG-NX-06",procCode:"PROC-2026-042",openDate:"2026-02-12",awardDate:"2026-02-18",publicDate:"2026-02-20",noticeDate:"2026-02-25",dealAmount:231,supplier:"中车",isAnnual:"是",stampDate:"2026-03-25",remarkExtra:"合同会签中"},
+        {id:9,projectName:"新疆项目塔基工程",method:"招标",targetType:"工程",bizDept:"工程管理部",handler:"孙博",isFrame:"否",projectType:"基建",budget:1680,isLimit:"是",isSci:"否",sciName:"-",wbs:"WBS-XJ-811",isXiAn:"是",oaApprove:"2025-11-10",oaMinutes:"2025-11-15",committeeNo:"2025-11期",srmDate:"2025-11-20",progress:"已完成",publishDate:"2025-12-01",publishUrl:"https://srm.ly/xj88",basis:"基地建设",pkgNo:"PKG-XJ-01",procCode:"PROC-2025-199",openDate:"2025-12-20",awardDate:"2025-12-28",publicDate:"2025-12-30",noticeDate:"2026-01-03",dealAmount:1596,supplier:"中建西北",isAnnual:"是",stampDate:"2026-01-18",remarkExtra:"冬季抢工"}
+      ];
+
+      var options = {
+        fMethod: ["全部","招标","询价","单一来源"],
+        fTargetType: ["全部","物资","服务","工程"],
+        fProjectType: ["全部","生产","综合","基建"],
+        fFrame: ["全部","是","否"],
+        fSci: ["全部","是","否"],
+        fProgress: ["全部","计划中","审批中","已挂网","已开标","已定标","合同签订中","已完成"]
+      };
+      Object.keys(options).forEach(function(id){
+        var el = document.getElementById(id);
+        el.innerHTML = options[id].map(function(x){ return '<option>'+x+'</option>'; }).join("");
+      });
+
+      function daysBetween(start, end) {
+        if (!start || !end) return null;
+        var s = new Date(start + "T00:00:00");
+        var e = new Date(end + "T00:00:00");
+        if (isNaN(s.getTime()) || isNaN(e.getTime())) return null;
+        return Math.floor((e - s) / 86400000);
+      }
+
+      function agoText(dateStr) {
+        if (!dateStr) return "待计算";
+        var d = new Date(dateStr + "T00:00:00");
+        if (isNaN(d.getTime())) return "待计算";
+        return Math.max(0, Math.floor((Date.now() - d.getTime()) / 86400000)) + "天前";
+      }
+
+      function metricClass(v) {
+        if (v === null) return "bg-slate-100 text-slate-500";
+        if (v > 30) return "metric-warn";
+        if (v < 7) return "metric-good";
+        return "metric-mid";
+      }
+
+      function enrich(row) {
+        var m1 = daysBetween(row.srmDate, row.stampDate);
+        var m2 = daysBetween(row.noticeDate, row.stampDate);
+        var remark = (m1 === null)
+          ? "待计算"
+          : ("SRM提报:" + agoText(row.srmDate) + "，合同用印:" + agoText(row.stampDate) + "，采购时长:" + m1 + "天");
+        return Object.assign({}, row, { metric1: m1, metric2: m2, autoRemark: remark });
+      }
+
+      function getFilters() {
+        return {
+          projectName: document.getElementById("fProjectName").value.trim(),
+          method: document.getElementById("fMethod").value,
+          targetType: document.getElementById("fTargetType").value,
+          projectType: document.getElementById("fProjectType").value,
+          frame: document.getElementById("fFrame").value,
+          sci: document.getElementById("fSci").value,
+          progress: document.getElementById("fProgress").value,
+          pkgNo: document.getElementById("fPkgNo").value.trim(),
+          srmStart: document.getElementById("fSrmStart").value,
+          srmEnd: document.getElementById("fSrmEnd").value
+        };
+      }
+
+      function applyFilter() {
+        var f = getFilters();
+        filtered = source.map(enrich).filter(function(x){
+          if (f.projectName && x.projectName.indexOf(f.projectName) < 0) return false;
+          if (f.method !== "全部" && x.method !== f.method) return false;
+          if (f.targetType !== "全部" && x.targetType !== f.targetType) return false;
+          if (f.projectType !== "全部" && x.projectType !== f.projectType) return false;
+          if (f.frame !== "全部" && x.isFrame !== f.frame) return false;
+          if (f.sci !== "全部" && x.isSci !== f.sci) return false;
+          if (f.progress !== "全部" && x.progress !== f.progress) return false;
+          if (f.pkgNo && x.pkgNo.indexOf(f.pkgNo) < 0) return false;
+          if (f.srmStart && x.srmDate < f.srmStart) return false;
+          if (f.srmEnd && x.srmDate > f.srmEnd) return false;
+          return true;
+        });
+      }
+
+      function renderPager(total) {
+        var max = Math.max(1, Math.ceil(total / PAGE_SIZE));
+        if (page > max) page = max;
+        var nums = [];
+        for (var i = 1; i <= max; i++) {
+          nums.push('<button class="rounded border px-2 py-1 ' + (i === page ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-300 hover:bg-slate-100') + '" data-page="'+i+'">'+i+'</button>');
+        }
+        document.getElementById("pageNums").innerHTML = nums.join("");
+        document.getElementById("totalText").textContent = "共 " + total + " 条";
+      }
+
+      function renderTable() {
+        renderPager(filtered.length);
+        var start = (page - 1) * PAGE_SIZE;
+        var rows = filtered.slice(start, start + PAGE_SIZE);
+        document.getElementById("tbody").innerHTML = rows.map(function(x){
+          return '<tr class="hover:bg-slate-50">'
+            + '<td class="border border-slate-200 p-2 text-center"><input class="rowCk" type="checkbox" data-id="'+x.id+'"/></td>'
+            + '<td class="border border-slate-200 p-2">'+x.projectName+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.method+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.targetType+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.bizDept+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.handler+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.isFrame+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.projectType+'</td>'
+            + '<td class="border border-slate-200 p-2 text-right">'+x.budget.toFixed(2)+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.isLimit+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.isSci+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.sciName+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.wbs+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.isXiAn+'</td>'
+            + '<td class="border border-slate-200 p-2">'+(x.oaApprove||"-")+'</td>'
+            + '<td class="border border-slate-200 p-2">'+(x.oaMinutes||"-")+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.committeeNo+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.srmDate+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.progress+'</td>'
+            + '<td class="border border-slate-200 p-2">'+(x.publishDate||"-")+'</td>'
+            + '<td class="border border-slate-200 p-2">'+(x.publishUrl === "-" ? "-" : '<a class="text-blue-600 hover:underline" href="#">查看链接</a>')+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.basis+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.pkgNo+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.procCode+'</td>'
+            + '<td class="border border-slate-200 p-2">'+(x.openDate||"-")+'</td>'
+            + '<td class="border border-slate-200 p-2">'+(x.awardDate||"-")+'</td>'
+            + '<td class="border border-slate-200 p-2">'+(x.publicDate||"-")+'</td>'
+            + '<td class="border border-slate-200 p-2">'+(x.noticeDate||"-")+'</td>'
+            + '<td class="border border-slate-200 p-2 text-right">'+(x.dealAmount ? x.dealAmount.toFixed(2) : "-")+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.supplier+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.isAnnual+'</td>'
+            + '<td class="border border-slate-200 p-2">'+(x.stampDate||"-")+'</td>'
+            + '<td class="border border-slate-200 p-2">'+x.autoRemark+'</td>'
+            + '<td class="border border-slate-200 p-2"><span class="inline-flex rounded px-2 py-1 '+metricClass(x.metric1)+'">'+(x.metric1===null?'待计算':x.metric1+'天')+'</span></td>'
+            + '<td class="border border-slate-200 p-2"><span class="inline-flex rounded px-2 py-1 '+metricClass(x.metric2)+'">'+(x.metric2===null?'待计算':x.metric2+'天')+'</span></td>'
+            + '<td class="border border-slate-200 p-2">'+(x.metric1===null||x.metric2===null?'缺少关键时间节点':'已完成考核计算')+'</td>'
+            + '<td class="border border-slate-200 p-2"><div class="flex items-center justify-center gap-2">'
+            + '<button class="text-blue-600 hover:underline" data-act="view" data-id="'+x.id+'">查看</button>'
+            + '<button class="text-emerald-600 hover:underline" data-act="edit" data-id="'+x.id+'">编辑</button>'
+            + '<button class="text-rose-600 hover:underline" data-act="del" data-id="'+x.id+'">删除</button>'
+            + '</div></td>'
+            + '</tr>';
+        }).join("");
+      }
+
+      function refresh() {
+        applyFilter();
+        renderTable();
+      }
+
+      document.getElementById("btnQuery").addEventListener("click", function(){ page = 1; refresh(); });
+      document.getElementById("btnReset").addEventListener("click", function(){
+        ["fProjectName","fPkgNo","fSrmStart","fSrmEnd"].forEach(function(id){ document.getElementById(id).value = ""; });
+        ["fMethod","fTargetType","fProjectType","fFrame","fSci","fProgress"].forEach(function(id){ document.getElementById(id).selectedIndex = 0; });
+        page = 1;
+        refresh();
+      });
+      document.getElementById("btnAdd").addEventListener("click", function(){ alert("新增计划（演示）"); });
+      document.getElementById("btnImport").addEventListener("click", function(){ document.getElementById("fileImportPlan").click(); });
+      document.getElementById("fileImportPlan").addEventListener("change", function(){
+        if (!this.files || !this.files.length) return;
+        alert("已选择文件：" + this.files[0].name + "\n（演示：此处接入模板校验与批量写入）");
+        this.value = "";
+      });
+
+      document.getElementById("tbody").addEventListener("click", function(e){
+        var btn = e.target.closest("button[data-act]");
+        if (!btn) return;
+        var act = btn.getAttribute("data-act");
+        var id = btn.getAttribute("data-id");
+        if (act === "del") {
+          if (!window.confirm("确认删除该记录？")) return;
+          var idx = source.findIndex(function(x){ return String(x.id) === String(id); });
+          if (idx >= 0) source.splice(idx, 1);
+          refresh();
+          return;
+        }
+        alert((act === "view" ? "查看" : "编辑") + "记录 ID: " + id + "（演示）");
+      });
+
+      document.getElementById("btnBatchDelete").addEventListener("click", function(){
+        var ids = Array.prototype.slice.call(document.querySelectorAll(".rowCk:checked")).map(function(x){ return Number(x.getAttribute("data-id")); });
+        if (!ids.length) { alert("请先勾选要删除的记录"); return; }
+        if (!window.confirm("确认批量删除选中记录？")) return;
+        for (var i = source.length - 1; i >= 0; i--) {
+          if (ids.indexOf(source[i].id) >= 0) source.splice(i, 1);
+        }
+        refresh();
+      });
+
+      document.getElementById("ckAll").addEventListener("change", function(e){
+        var checked = e.target.checked;
+        document.querySelectorAll(".rowCk").forEach(function(x){ x.checked = checked; });
+      });
+
+      document.getElementById("prevPage").addEventListener("click", function(){ if (page > 1) { page--; renderTable(); } });
+      document.getElementById("nextPage").addEventListener("click", function(){
+        var max = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+        if (page < max) { page++; renderTable(); }
+      });
+      document.getElementById("pageNums").addEventListener("click", function(e){
+        var btn = e.target.closest("button[data-page]");
+        if (!btn) return;
+        page = Number(btn.getAttribute("data-page"));
+        renderTable();
+      });
+
+      refresh();
+    })();
+  </script>
+</body>
+</html>

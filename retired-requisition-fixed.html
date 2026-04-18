@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>物资领用单</title>
+</head>
+<body>
+  <script>
+    (function () {
+      try {
+        sessionStorage.setItem("demoRetiredScene", "requisition");
+        sessionStorage.setItem("demoScene", "requisition");
+      } catch (e) {}
+      window.location.replace("retired-prototype-list.html?scene=requisition&pageSub=" + encodeURIComponent("物资领用单"));
+    })();
+  </script>
+</body>
+</html>
+

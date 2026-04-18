@@ -1,0 +1,228 @@
+<!-- 来源: src/views/workflow/processDefinition/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <el-row>
+      <!-- 流程分类树 -->
+      <el-col style="">
+        <el-card shadow="hover">
+          <el-input placeholder="请输入流程分类名" prefix-icon="Search" clearable />
+          <el-tree
+            class="mt-2"
+            node-key="id"
+            highlight-current
+            default-expand-all
+          ></el-tree>
+        </el-card>
+      </el-col>
+      <el-col>
+        <transition>
+          <div class="mb-[10px]">
+            <el-card shadow="hover">
+              <el-form label-width="120px">
+                <el-form-item label="流程定义名称" prop="name">
+                  <el-input placeholder="请输入流程定义名称" clearable />
+                </el-form-item>
+                <el-form-item label="流程定义KEY" prop="key">
+                  <el-input placeholder="请输入流程定义KEY" clearable />
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" icon="Search">搜索</el-button>
+                  <el-button icon="Refresh">重置</el-button>
+                </el-form-item>
+              </el-form>
+            </el-card>
+          </div>
+        </transition>
+        <el-card shadow="hover">
+          <template>
+            <el-row class="mb8">
+              <el-col>
+                <el-button type="danger" icon="Delete">删除</el-button>
+              </el-col>
+              <el-col>
+                <el-button type="primary" icon="UploadFilled">部署流程文件</el-button>
+              </el-col>
+              <right-toolbar></right-toolbar>
+            </el-row>
+          </template>
+
+          <el-table border>
+            <el-table-column type="selection" width="55" align="center" />
+            <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
+            <el-table-column align="center" prop="name" label="流程定义名称"></el-table-column>
+            <el-table-column align="center" prop="key" label="标识KEY" width="80"></el-table-column>
+            <el-table-column align="center" prop="version" label="版本号" width="80">
+              <template="scope"> v（动态文本）.0</template>
+            </el-table-column>
+            <el-table-column align="center" prop="resourceName" label="流程XML" width="100">
+              <template="scope">
+                <el-link type="primary">（动态文本）</el-link>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="diagramResourceName" label="流程图片" width="100">
+              <template="scope">
+                <el-link type="primary">（动态文本）</el-link>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="suspensionState" label="状态" width="80">
+              <template="scope">
+                <el-tag type="success">激活</el-tag>
+                <el-tag type="danger">挂起</el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="deploymentTime" label="部署时间" width="120"></el-table-column>
+            <el-table-column align="center" label="表名/表单KEY" width="120">
+              <template="scope">
+                <span>
+                  （动态文本）
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" align="center" width="220" class-name="small-padding fixed-width">
+              <template="scope">
+                <el-row class="mb8">
+                  <el-col>
+                    <el-button
+                      link
+                      type="primary"
+                      size="small"
+                    >
+                      （动态文本）
+                    </el-button>
+                  </el-col>
+                  <el-col>
+                    <el-button link type="primary" size="small" icon="Document">
+                      历史版本
+                    </el-button>
+                  </el-col>
+                  <el-col>
+                    <el-button link type="primary" size="small" icon="Delete">删除</el-button>
+                  </el-col>
+                </el-row>
+                <el-row class="mb8">
+                  <el-col>
+                    <el-button link type="primary" size="small" icon="Sort"> 转换模型 </el-button>
+                  </el-col>
+                  <el-col>
+                    <el-button link type="primary" size="small" icon="Tickets">绑定业务</el-button>
+                  </el-col>
+                </el-row>
+              </template>
+            </el-table-column>
+          </el-table>
+          <pagination
+          />
+        </el-card>
+      </el-col>
+    </el-row>
+    <!-- 预览图片或xml -->
+    <process-preview />
+
+    <!-- 部署文件 -->
+    <el-dialog width="30%">
+      <div>
+        <div class="mb5">
+          <el-text class="mx-1" size="large"><span class="text-danger">*</span>请选择部署流程分类：</el-text>
+          <el-tree-select
+            filterable
+            value-key="categoryCode"
+            check-strictly
+            style="width: 240px"
+          />
+        </div>
+        <el-upload
+          class="upload-demo"
+          drag
+          multiple
+          accept="application/zip,application/xml,.bpmn"
+        >
+          <el-icon class="UploadFilled"><upload-filled /></el-icon>
+          <div class="el-upload__text"><em>点击上传，选择BPMN流程文件</em></div>
+          <div class="el-upload__text">仅支持 .zip、.bpmn20.xml、bpmn 格式文件</div>
+          <div class="el-upload__text">PS:如若部署请部署从本项目模型管理导出的数据</div>
+        </el-upload>
+      </div>
+    </el-dialog>
+
+    <!-- 历史版本 -->
+    <el-dialog width="70%">
+      <el-table>
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column align="center" type="index" label="序号" width="60"></el-table-column>
+        <el-table-column align="center" prop="name" label="流程定义名称" min-width="80"></el-table-column>
+        <el-table-column align="center" prop="key" label="标识KEY"></el-table-column>
+        <el-table-column align="center" prop="version" label="版本号" width="90">
+          <template="scope"> v（动态文本）.0</template>
+        </el-table-column>
+        <el-table-column align="center" prop="resourceName" label="流程XML" min-width="80">
+          <template="scope">
+            <el-link type="primary">（动态文本）</el-link>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="diagramResourceName" label="流程图片" min-width="80">
+          <template="scope">
+            <el-link type="primary">（动态文本）</el-link>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="suspensionState" label="状态" min-width="70">
+          <template="scope">
+            <el-tag type="success">激活</el-tag>
+            <el-tag type="danger">挂起</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="deploymentTime" label="部署时间"></el-table-column>
+        <el-table-column fixed="right" label="操作" align="center" width="200" class-name="small-padding fixed-width">
+          <template="scope">
+            <el-row class="mb8">
+              <el-col>
+                <el-button
+                  link
+                  type="primary"
+                  size="small"
+                >
+                  （动态文本）
+                </el-button>
+              </el-col>
+              <el-col>
+                <el-button type="text" size="small" icon="Tickets">绑定业务</el-button>
+              </el-col>
+            </el-row>
+            <el-row class="mb8">
+              <el-col>
+                <el-button link type="primary" icon="Sort" size="small"> 转换模型 </el-button>
+              </el-col>
+              <el-col>
+                <el-button link type="primary" icon="Delete" size="small">删除</el-button>
+              </el-col>
+            </el-row>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
+
+    <!-- 表单配置 -->
+    <el-dialog
+      width="650px"
+      append-to-body
+    >
+      <el-form label-width="auto">
+        <el-form-item label="流程KEY">
+          <el-input disabled />
+        </el-form-item>
+        <el-form-item label="表名" prop="formId">
+          <el-input placeholder="示例:test_leave" />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input type="textarea" resize="none" />
+        </el-form-item>
+      </el-form>
+
+      <template>
+        <div class="dialog-footer">
+          <el-button>取消</el-button>
+          <el-button type="primary">保存</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>

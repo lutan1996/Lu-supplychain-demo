@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8" /><title>参数设置</title></head>
+<body>
+<script>
+  (function () {
+    try { sessionStorage.setItem("demoSystemScene", "params"); sessionStorage.setItem("demoScene", "params"); } catch (e) {}
+    window.location.replace("system-prototype-list.html?scene=params&pageSub=" + encodeURIComponent("参数设置"));
+  })();
+</script>
+</body>
+</html>

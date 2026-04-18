@@ -1,0 +1,121 @@
+/**
+ * 子页面通用：操作栏「新增 / 修改 / 删除 / 导出」四按钮样式
+ * 描边 + 同色系浅底（Ant Design / Element 类 ghost 风格）
+ *
+ * 用法：
+ *   <link rel="stylesheet" href="css/subpage-toolbar.css" />
+ *   <button type="button" class="btn-toolbar btn-toolbar--primary"><i class="fa-solid fa-plus"></i> 新增</button>
+ *   <button type="button" class="btn-toolbar btn-toolbar--success">…</button>
+ *   <button type="button" class="btn-toolbar btn-toolbar--danger">…</button>
+ *   <button type="button" class="btn-toolbar btn-toolbar--warning">…</button>
+ */
+
+.btn-toolbar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 72px;
+  height: 32px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.btn-toolbar i {
+  font-size: 13px;
+  line-height: 1;
+}
+
+/* 新增：蓝 */
+.btn-toolbar--primary {
+  color: #1890ff;
+  border-color: #69c0ff;
+  background: rgba(24, 144, 255, 0.08);
+}
+.btn-toolbar--primary:hover {
+  color: #096dd9;
+  border-color: #40a9ff;
+  background: rgba(24, 144, 255, 0.16);
+}
+.btn-toolbar--primary:active {
+  color: #0050b3;
+  border-color: #096dd9;
+  background: rgba(24, 144, 255, 0.22);
+}
+
+/* 修改：绿 */
+.btn-toolbar--success {
+  color: #52c41a;
+  border-color: #95de64;
+  background: rgba(82, 196, 26, 0.08);
+}
+.btn-toolbar--success:hover {
+  color: #389e0d;
+  border-color: #73d13d;
+  background: rgba(82, 196, 26, 0.14);
+}
+.btn-toolbar--success:active {
+  color: #237804;
+  border-color: #52c41a;
+  background: rgba(82, 196, 26, 0.2);
+}
+
+/* 删除：红 */
+.btn-toolbar--danger {
+  color: #ff4d4f;
+  border-color: #ff7875;
+  background: rgba(255, 77, 79, 0.08);
+}
+.btn-toolbar--danger:hover {
+  color: #cf1322;
+  border-color: #ff4d4f;
+  background: rgba(255, 77, 79, 0.14);
+}
+.btn-toolbar--danger:active {
+  color: #a8071a;
+  border-color: #f5222d;
+  background: rgba(255, 77, 79, 0.2);
+}
+
+/* 导出：橙 */
+.btn-toolbar--warning {
+  color: #fa8c16;
+  border-color: #ffc069;
+  background: rgba(250, 140, 22, 0.08);
+}
+.btn-toolbar--warning:hover {
+  color: #d46b08;
+  border-color: #ffa940;
+  background: rgba(250, 140, 22, 0.14);
+}
+.btn-toolbar--warning:active {
+  color: #ad4e00;
+  border-color: #fa8c16;
+  background: rgba(250, 140, 22, 0.2);
+}
+
+/**
+ * 可选：标准操作栏容器（白底 + 上下浅分割线），新子页面可直接套用
+ */
+.subpage-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+  background: #ffffff;
+}
+
+.subpage-toolbar__spacer {
+  flex: 1;
+}

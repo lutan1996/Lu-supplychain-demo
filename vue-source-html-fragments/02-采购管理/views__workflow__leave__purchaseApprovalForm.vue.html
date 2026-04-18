@@ -1,0 +1,238 @@
+<!-- 来源: src/views/workflow/leave/purchaseApprovalForm.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <el-card shadow="never">
+      <div style="display: flex; justify-content: space-between">
+        <div>
+          <el-button type="info">暂存</el-button>
+          <el-button type="primary">提 交</el-button>
+          <el-button type="primary">审批</el-button>
+          <el-button type="primary">流程进度</el-button>
+        </div>
+        <div>
+          <el-button style="float: right">返回</el-button>
+        </div>
+      </div>
+    </el-card>
+    <el-card shadow="never" style="height: 78vh; overflow-y: auto">
+        <div class="table_title">长协采购结果使用审批单</div>
+        <div style="margin-bottom: 10px;display: flex;position: relative;">
+          <div>
+            日期：<el-date-picker  clearable type="datetime" value-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择时间" />
+
+          </div>
+          <el-form-item label="归档" label-width="50" style="width:300px;" prop="archiveDirectoryId">
+            <el-select
+              placeholder="请选择归档路径"
+              size="large"
+              style="width: 240px"
+            >
+              <el-option
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="表单编号" label-width="100" style="width:300px;float: right;position: absolute;right:0px;" prop="archiveDirectoryId">
+            <div>（动态文本）</div>
+          </el-form-item>
+        </div>
+       
+      <el-form id="editForm" label-width="0">
+        <table border class="add_table">
+          <tr>
+            <th rowspan="14">采购人填写<sup> *</sup></th> 
+            <th>
+              长协编号<sup> *</sup>
+              </th>
+            <td>
+              <el-form-item label="" prop="longTermAgreementNumber">
+                <el-input placeholder="请输入长协编号" />
+              </el-form-item>
+            </td>
+            <th>办理人<sup> *</sup></th>
+            <td>
+              <el-form-item label="" prop="transactors">
+                <el-input placeholder="请输入办理人" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>项目名称<sup> *</sup></th>
+            <td>
+              <el-form-item label="" prop="projectName">
+                <el-input placeholder="请输入项目名称" />
+              </el-form-item>
+            </td>
+            <th>办理电话<sup> *</sup></th>
+            <td>
+              <el-form-item label="" prop="handlePhoneNumber">
+                <el-input placeholder="请输入办理电话" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>采购编号<sup> *</sup></th>
+            <td colspan="3">
+              <el-form-item label="" prop="purchaseNumber">
+                <el-input placeholder="请输入采购编号" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>首选供应商<sup> *</sup></th>
+            <td colspan="3">
+              <el-form-item label="" prop="preferredSupplier">
+                <el-input placeholder="请输入首选供应商" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>有效期<sup> *</sup></th>
+            <td colspan="3">
+              <el-form-item label="" prop="periodOfValidity">
+                <el-date-picker
+                  clearable
+                  type="datetime"
+                  value-format="YYYY-MM-DD HH:mm:ss"
+                  placeholder="请选择时间"
+                />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>采购类别<sup> *</sup></th>
+            <td>
+              <el-form-item label="" prop="purchasingCategories">
+                <el-input placeholder="请输入采购类别" />
+              </el-form-item>
+            </td>
+            <th>额度上限（万元）<sup> *</sup></th>
+            <td>
+              <el-form-item label="" prop="upperLimit">
+                <el-input type="number" placeholder="请输入额度上限" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>是否备品备件<sup> *</sup></th>
+            <td colspan="3">
+              <el-form-item label="" prop="isSpareParts">
+                <el-radio-group>
+                  <el-radio label="是"></el-radio>
+                  <el-radio label="否"></el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>累计已使用金额（万元）<sup> *</sup></th>
+            <td colspan="3">
+              <el-form-item label="" prop="accumulatedAmountUsed">
+                <el-input type="number" placeholder="请输入累计已使用金额 " />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>本次预算金额（万元）<sup> *</sup></th>
+            <td>
+              <el-form-item label="" prop="thisBudgetAmount">
+                <el-input type="number" placeholder="请输入本次预算金额" />
+              </el-form-item>
+            </td>
+            <th>本次实际发生金额（万元）<sup> *</sup></th>
+            <td>
+              <el-form-item label="" prop="thisActuallyAmount">
+                <el-input type="number" placeholder="请输入本次预算金额" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>区域公司<sup> *</sup></th>
+            <td colspan="3">
+              <el-form-item label="" prop="regionalCompany">
+                <el-input placeholder="请输入区域公司" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>项目公司<sup> *</sup></th>
+            <td colspan="3">
+              <el-form-item label="" prop="projectCompany">
+                <el-input placeholder="请输入项目公司" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>使用部门<sup> *</sup></th>
+            <td colspan="3">
+              <el-form-item label="" prop="userDepartment">
+                <el-input placeholder="请输入使用部门" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>采购内容说明<sup> *</sup></th>
+            <td colspan="3">
+              <el-form-item label="" prop="contentDescription">
+                <el-input type="textarea" placeholder="请输入内容" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>采购内容附件</th>
+            <td colspan="3">
+              <el-form-item label="" prop="contentAttachment">
+                <fileUpload />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th rowspan="2">使用单位审批意见</th>
+            <th>申请部门负责人意见</th>
+            <td colspan="3">
+              <el-form-item label="" prop="useCompMasterOp">
+                <el-input type="textarea" placeholder="请输入内容" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>申请部门分管领导意见</th>
+            <td colspan="3">
+              <el-form-item label="" prop="useCompLeaderOp">
+                <el-input type="textarea" placeholder="请输入内容" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th rowspan="2">本部业务部门审批意见</th>
+            <th>经办人意见</th>
+            <td colspan="3">
+              <el-form-item label="" prop="operatorOp">
+                <el-input placeholder="请输入经办人意见" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th>负责人审批意见</th>
+            <td colspan="3">
+              <el-form-item label="" prop="personOp">
+                <el-input placeholder="请输入经办人意见" />
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <th colspan="2">备注</th>
+            <td colspan="3">
+              <el-form-item label="" prop="remark">
+                <el-input placeholder="请输入备注" />
+              </el-form-item>
+            </td>
+          </tr>
+        </table>
+      </el-form>
+    </el-card>
+    <!-- 提交组件 -->
+    <submitVerify />
+    <!-- 审批记录 -->
+    <approvalRecord />
+  </div>

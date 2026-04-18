@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>收货入库 - 新能源物资供应链管理系统</title>
+    <link rel="stylesheet" href="css/vendor/fa-all.min.css" />
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/carrier-management.css" />
+<link rel="stylesheet" href="css/source-navbar-header.css" />
+  <link rel="stylesheet" href="css/module-hub.css" />
+  <link rel="stylesheet" href="css/warehouse-modal.css" />
+  <style>
+    .tag-status--to-qc {
+      background: #fff2e8;
+      color: #d46b08;
+    }
+    .tag-status--to-shelf {
+      background: #e6f4ff;
+      color: #1677ff;
+    }
+    .tag-status--done {
+      background: #f6ffed;
+      color: #389e0d;
+    }
+    .cell-amount {
+      font-variant-numeric: tabular-nums;
+      color: #1f2d3d;
+      font-weight: 500;
+    }
+    .wh-ops {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .wh-ops a {
+      color: #1677ff;
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .wh-ops a:hover { opacity: 0.85; }
+    .sync-box {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border: 1px dashed #dbe4f0;
+      border-radius: 8px;
+      background: #f8fbff;
+      font-size: 13px;
+      color: #4c6077;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-logistics">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <a class="header-logo" href="#" aria-label="国家能源集团">
+          <img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" />
+        </a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right">
+        <span class="clock" id="clock"></span>
+        <div class="user-avatar" title="用户">用</div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+<div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+<div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <a class="nav-item" href="cockpit.html" title="驾驶舱"><span class="nav-label">驾驶舱</span></a>
+        <div class="nav-item" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <a class="nav-item" href="carrier-management.html" title="物流管理"><span class="nav-label">物流管理</span></a>
+        <div class="nav-item nav-item--module-active" id="navWarehouse" data-nav="warehouse" title="仓储管理">
+          <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 21h18V10.5L12 6 3 10.5V21z"/><path d="M9 21v-7h6v7"/></svg></span>
+          <span class="nav-label">仓储管理</span>
+        </div>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+
+      <aside
+        id="warehouseSecondaryPanel"
+        class="warehouse-secondary-panel"
+        aria-label="仓储管理子菜单"
+        aria-hidden="true"
+        hidden
+      >
+        <div class="warehouse-secondary-inner">
+          <div class="warehouse-secondary-row warehouse-secondary-row--pipe" id="masterSecondaryRow">
+            <button type="button" class="warehouse-secondary-link" data-action="slot" data-label="货位管理">货位管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="receive" data-label="收货入库">收货入库</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="scan" data-label="扫码领用">扫码领用</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="inventory-check" data-label="盘库管理">盘库管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="stock" data-label="库存管理">库存管理</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="maintenance" data-label="库内保养">库内保养</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="idle" data-label="闲置物资">闲置物资</button>
+            <span class="warehouse-secondary-pipe" aria-hidden="true">|</span>
+            <button type="button" class="warehouse-secondary-link" data-action="warehouse" data-label="仓库管理">仓库管理</button>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-scroll">
+        <div class="carrier-main-inner">
+          <h1 class="carrier-page-title">收货入库</h1>
+          <p id="pageContextHint" class="page-context-hint" hidden style="font-size:13px;color:#62788f;margin:0 0 10px;"></p>
+
+          <div class="carrier-toolbar">
+            <button type="button" class="carrier-btn-add" id="btnCreateInbound" data-crud-demo="off">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i>
+              扫码收货/手工录入
+            </button>
+            <div class="carrier-toolbar-right">
+              <input
+                type="search"
+                class="carrier-search"
+                id="inboundSearch"
+                placeholder="按入库单号/采购单号搜索"
+                autocomplete="off"
+                aria-label="按入库单号/采购单号搜索"
+              />
+              <select class="carrier-select" id="inboundStatusFilter" aria-label="状态筛选">
+                <option value="">全部状态</option>
+                <option value="to-qc">待质检</option>
+                <option value="to-shelf">待上架</option>
+                <option value="done">已完成</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="carrier-table-wrap">
+            <table class="carrier-table">
+              <thead>
+                <tr>
+                  <th>入库单号</th>
+                  <th>采购订单号</th>
+                  <th>供应商</th>
+                  <th>到货日期</th>
+                  <th>验收状态</th>
+                  <th>入库状态</th>
+                  <th>关联部门</th>
+                  <th style="min-width: 240px">操作</th>
+                </tr>
+              </thead>
+              <tbody id="inboundTableBody"></tbody>
+            </table>
+          </div>
+
+          <div class="carrier-pagination" role="navigation" aria-label="分页">
+            <span id="inboundTotalText">共 3 条</span>
+            <span>每页</span>
+            <select aria-label="每页条数">
+              <option value="10" selected>10 条/页</option>
+              <option value="20">20 条/页</option>
+              <option value="50">50 条/页</option>
+            </select>
+            <div class="carrier-page-btns">
+              <button type="button" aria-label="上一页">&lt;</button>
+              <button type="button" class="is-current" aria-current="page">1</button>
+              <button type="button" aria-label="下一页">&gt;</button>
+            </div>
+          </div>
+
+          <div id="syncLog" style="display:none" aria-hidden="true"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="wh-modal-mask modal-mask" id="inboundFlowModal" aria-hidden="true">
+    <div class="wh-modal-box wh-modal-box--lg" role="dialog" aria-modal="true" aria-labelledby="inboundFlowTitle">
+      <div class="wh-modal-head">
+        <h3 class="wh-modal-title" id="inboundFlowTitle">入库流程（演示）</h3>
+        <button type="button" class="wh-modal-close" id="btnCloseInboundFlow" aria-label="关闭">×</button>
+      </div>
+      <div class="wh-modal-body" style="max-height:min(70vh,560px);overflow-y:auto;">
+        <p style="font-size:13px;color:#516a87;margin:0 0 10px;">选择采购订单或输入订单号后带出明细；录入实收/不合格数量；选择货位；上传质检报告；验收结论；各部门负责人在线确认。</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <label style="font-size:13px;">采购订单号<br /><input type="text" style="width:100%;height:32px;border:1px solid #d7e1ee;border-radius:6px;padding:0 8px;box-sizing:border-box;" value="CG-2026-001" readonly /></label>
+          <label style="font-size:13px;">货位<br /><select style="width:100%;height:32px;border:1px solid #d7e1ee;border-radius:6px;"><option>BJ-01-01</option><option>A-01-03</option><option>B-02-01</option></select></label>
+        </div>
+        <table class="carrier-table" style="margin-top:10px;font-size:13px;">
+          <thead><tr><th>物资名称</th><th>规格</th><th>计划</th><th>实收</th><th>不合格</th></tr></thead>
+          <tbody>
+            <tr><td>风机齿轮箱</td><td>WZ001</td><td>5</td><td>5</td><td>0</td></tr>
+            <tr><td>发电机</td><td>WZ002</td><td>2</td><td>2</td><td>0</td></tr>
+          </tbody>
+        </table>
+        <label style="font-size:13px;display:block;margin-top:8px;">质检报告<br /><input type="file" accept=".pdf,image/*" /></label>
+        <label style="font-size:13px;display:block;margin-top:8px;">验收结论<br /><select style="width:100%;height:32px;border:1px solid #d7e1ee;border-radius:6px;"><option>合格</option><option>不合格</option></select></label>
+        <div style="margin-top:12px;padding:8px;background:#f8fbff;border:1px dashed #dbe4f0;border-radius:8px;font-size:13px;">
+          部门确认：运维部 <button type="button" class="btn-sub" style="padding:4px 10px;cursor:pointer;">已确认</button>
+          · 仓储部 <button type="button" class="btn-sub" style="padding:4px 10px;cursor:pointer;">确认</button>
+        </div>
+      </div>
+      <div class="wh-modal-foot">
+        <button type="button" class="wh-btn wh-btn--ghost" id="btnCancelInboundFlow">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script src="js/warehouse-submenu.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script>
+    (function () {
+      var tbody = document.getElementById("inboundTableBody");
+      var totalEl = document.getElementById("inboundTotalText");
+      var search = document.getElementById("inboundSearch");
+      var filter = document.getElementById("inboundStatusFilter");
+      var btnCreate = document.getElementById("btnCreateInbound");
+      var syncLog = document.getElementById("syncLog");
+
+      var rows = [
+        { inboundNo: "RK20260401001", poNo: "CG-2026-001", supplier: "远景能源", arriveDate: "2026-04-01", qcStatus: "待验收", inboundStatus: "待入库", dept: "北京中心库", source: "扫码收货" },
+        { inboundNo: "RK20260321001", poNo: "PO20260301001", supplier: "华通物流有限公司", arriveDate: "2026-03-21", qcStatus: "待验收", inboundStatus: "待入库", dept: "运维一部", source: "扫码收货" },
+        { inboundNo: "RK20260322006", poNo: "PO20260302003", supplier: "远达运输集团", arriveDate: "2026-03-22", qcStatus: "验收合格", inboundStatus: "待入库", dept: "检修中心", source: "手工录入" },
+        { inboundNo: "RK20260318009", poNo: "PO20260303102", supplier: "联程供应链科技", arriveDate: "2026-03-18", qcStatus: "验收合格", inboundStatus: "已入库", dept: "计划物资部", source: "扫码收货" }
+      ];
+
+      function tagQc(v) {
+        if (v === "验收合格") return '<span class="tag-status tag-status--done">验收合格</span>';
+        if (v === "验收不合格") return '<span class="tag-status tag-status--to-qc">验收不合格</span>';
+        return '<span class="tag-status tag-status--to-shelf">待验收</span>';
+      }
+      function tagInbound(v) {
+        return v === "已入库"
+          ? '<span class="tag-status tag-status--done">已入库</span>'
+          : '<span class="tag-status tag-status--to-shelf">待入库</span>';
+      }
+      function matchStatus(item, val) {
+        if (!val) return true;
+        if (val === "to-qc") return item.qcStatus === "待验收";
+        if (val === "to-shelf") return item.qcStatus === "验收合格" && item.inboundStatus !== "已入库";
+        if (val === "done") return item.inboundStatus === "已入库";
+        return true;
+      }
+      function render() {
+        var q = (search.value || "").trim().toLowerCase();
+        var st = filter.value;
+        var list = rows.filter(function (x) {
+          var hitQ = !q || x.inboundNo.toLowerCase().indexOf(q) > -1 || x.poNo.toLowerCase().indexOf(q) > -1;
+          return hitQ && matchStatus(x, st);
+        });
+        tbody.innerHTML = "";
+        list.forEach(function (x) {
+          var tr = document.createElement("tr");
+          tr.setAttribute("data-no", x.inboundNo);
+          tr.innerHTML =
+            "<td>" + x.inboundNo + "</td>" +
+            "<td>" + x.poNo + "</td>" +
+            "<td>" + x.supplier + "</td>" +
+            "<td>" + x.arriveDate + "</td>" +
+            "<td>" + tagQc(x.qcStatus) + "</td>" +
+            "<td>" + tagInbound(x.inboundStatus) + "</td>" +
+            "<td>" + x.dept + "</td>" +
+            '<td><div class="wh-ops"><a href="#" data-action="view">查看详情</a><a href="#" data-action="qc">验收确认</a><a href="#" data-action="finish">入库确认</a></div></td>';
+          tbody.appendChild(tr);
+        });
+        totalEl.textContent = "共 " + list.length + " 条";
+      }
+
+      btnCreate.addEventListener("click", function () {
+        showActionPrompt("扫码收货/手工录入", "请输入采购订单号：", "PO20260309999", function (poNo) {
+          if (!poNo) return;
+          showActionPrompt("扫码收货/手工录入", "请输入供应商：", "示例供应商", function (supplier) {
+            if (!supplier) return;
+            showActionPrompt("扫码收货/手工录入", "请输入关联部门：", "计划物资部", function (dept) {
+              if (!dept) return;
+              showActionPrompt("扫码收货/手工录入", "录入方式：扫码收货/手工录入", "扫码收货", function (way) {
+                var d = new Date();
+                var ds = d.toISOString().slice(0, 10);
+                var no = "RK" + ds.replace(/-/g, "") + String(Math.floor(Math.random() * 900 + 100));
+                rows.unshift({ inboundNo: no, poNo: poNo.trim(), supplier: supplier.trim(), arriveDate: ds, qcStatus: "待验收", inboundStatus: "待入库", dept: dept.trim(), source: (way || "扫码收货").trim() });
+                syncLog.innerHTML = "最近同步：已通过 <b>" + (way || "扫码收货").trim() + "</b> 创建入库单 <b>" + no + "</b>。";
+                render();
+              });
+            });
+          });
+        });
+      });
+
+      tbody.addEventListener("click", function (e) {
+        var a = e.target.closest("a[data-action]");
+        if (!a) return;
+        e.preventDefault();
+        var tr = a.closest("tr");
+        var no = tr && tr.getAttribute("data-no");
+        var item = rows.find(function (x) { return x.inboundNo === no; });
+        if (!item) return;
+        var action = a.getAttribute("data-action");
+        if (action === "view") {
+          alert("入库单号：" + item.inboundNo + "\n采购订单号：" + item.poNo + "\n验收状态：" + item.qcStatus + "\n入库状态：" + item.inboundStatus + "\n关联部门：" + item.dept);
+          return;
+        }
+        if (action === "qc") {
+          showActionPrompt("验收确认", "验收结论：合格/不合格", "合格", function (result) {
+            if (!result) return;
+            if (result === "不合格") {
+              item.qcStatus = "验收不合格";
+              syncLog.innerHTML = "最近同步：入库单 <b>" + item.inboundNo + "</b> 验收不合格，已触发退货流程提示。";
+            } else {
+              item.qcStatus = "验收合格";
+              syncLog.innerHTML = "最近同步：入库单 <b>" + item.inboundNo + "</b> 已验收合格。";
+            }
+            render();
+          });
+          return;
+        }
+        if (action === "finish") {
+          if (item.qcStatus !== "验收合格") {
+            alert("请先完成且通过验收确认。");
+            return;
+          }
+          item.inboundStatus = "已入库";
+          syncLog.innerHTML = "最近同步：入库单 <b>" + item.inboundNo + "</b> 已完成入库确认。";
+          render();
+        }
+      });
+
+      search.addEventListener("input", render);
+      filter.addEventListener("change", render);
+      render();
+
+      var flowMask = document.getElementById("inboundFlowModal");
+      var btnFlow = document.getElementById("btnInboundFlowDemo");
+      function closeFlow() {
+        if (!flowMask) return;
+        flowMask.classList.remove("show");
+        flowMask.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+      }
+      if (btnFlow && flowMask) {
+        btnFlow.addEventListener("click", function () {
+          flowMask.classList.add("show");
+          flowMask.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+        });
+        document.getElementById("btnCloseInboundFlow").addEventListener("click", closeFlow);
+        document.getElementById("btnCancelInboundFlow").addEventListener("click", closeFlow);
+        flowMask.addEventListener("click", function (e) {
+          if (e.target === flowMask) closeFlow();
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape" && flowMask.classList.contains("show")) closeFlow();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

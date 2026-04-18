@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>采购申请 - 新能源物资供应链管理系统</title>
+  <link rel="stylesheet" href="css/subpage-base.css" />
+  <link rel="stylesheet" href="css/source-navbar-header.css" />
+  <style>
+    body.page-procurement-apply .main-scroll { background: #f4f8ff; }
+    .pa-title { margin: 0; padding: 16px 20px 10px; font-size: 20px; font-weight: 700; color: #1f1f1f; background: #fff; border-bottom: 1px solid #e8e8e8; }
+    .pa-wrap { padding: 12px 16px 20px; }
+    .pa-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .pa-kpi { background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; padding: 12px; }
+    .pa-kpi b { display: block; font-size: 12px; color: #666; }
+    .pa-kpi span { display: block; margin-top: 6px; font-size: 22px; color: #1890ff; font-weight: 700; }
+    .pa-panel { margin-top: 10px; background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; overflow: hidden; }
+    .pa-tabs { display: flex; gap: 0; padding: 0 12px; border-bottom: 1px solid #e8e8e8; background: #fafafa; }
+    .pa-tab { height: 38px; border: none; background: transparent; padding: 0 16px; color: #595959; font-size: 13px; cursor: pointer; position: relative; }
+    .pa-tab.active { color: #1890ff; font-weight: 700; }
+    .pa-tab.active::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: 0; height: 2px; background: #1890ff; border-radius: 2px; }
+    .pa-filters { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; padding: 12px 16px 8px; }
+    .pa-actions { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 12px; border-bottom: 1px solid #f0f0f0; }
+    .pa-btn { height: 32px; border: 1px solid #d9d9d9; background: #fff; border-radius: 4px; padding: 0 14px; cursor: pointer; font-size: 13px; }
+    .pa-btn.primary { background: #1890ff; border-color: #1890ff; color: #fff; }
+    .pa-btn.add { background: #13c2c2; border-color: #13c2c2; color: #fff; }
+    .pa-table-wrap { overflow: auto; padding: 0 16px 10px; }
+    .pa-table { width: 100%; min-width: 1400px; border-collapse: collapse; table-layout: fixed; font-size: 12px; }
+    .pa-table th, .pa-table td { border: 1px solid #e8e8e8; padding: 8px; text-align: left; vertical-align: middle; }
+    .pa-table th { background: #f5f5f5; white-space: nowrap; }
+    .pa-op { display: inline-flex; gap: 6px; }
+    .pa-op button { border: 1px solid #91caff; background: #e6f4ff; color: #0958d9; border-radius: 4px; height: 24px; padding: 0 8px; font-size: 12px; cursor: pointer; }
+    .tag { display: inline-flex; align-items: center; padding: 0 8px; height: 22px; border-radius: 4px; border: 1px solid transparent; font-size: 11px; }
+    .tag.pending { background: #fff7e6; border-color: #ffd591; color: #d48806; }
+    .tag.passed { background: #e6f4ff; border-color: #91caff; color: #0958d9; }
+    .tag.done { background: #f6ffed; border-color: #b7eb8f; color: #389e0d; }
+    .tag.reject { background: #fff1f0; border-color: #ffa39e; color: #cf1322; }
+    .pa-note { margin: 10px 16px 0; border: 1px dashed #91caff; background: #f0f9ff; color: #0958d9; border-radius: 8px; padding: 10px 12px; font-size: 13px; }
+
+    .pa-custom-select { position: relative; }
+    .pa-trigger { height: 32px; border: 1px solid #d9d9d9; border-radius: 4px; background: #fff; padding: 0 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-size: 13px; }
+    .pa-menu { display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 12; background: #fff; border: 1px solid #d9d9d9; border-radius: 6px; box-shadow: 0 8px 20px rgba(0,0,0,.12); overflow: hidden; }
+    .pa-menu.show { display: block; }
+    .pa-option { width: 100%; border: none; text-align: left; background: #fff; padding: 8px 10px; border-bottom: 1px solid #f0f0f0; cursor: pointer; }
+    .pa-option:last-child { border-bottom: none; }
+    .pa-option:hover { background: #f5fbff; }
+    .pa-option .main { display: block; font-size: 13px; font-weight: 700; color: #333; }
+    .pa-option .sub { display: block; margin-top: 2px; font-size: 11px; color: #8c8c8c; }
+
+    .pa-modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: none; align-items: center; justify-content: center; z-index: 2000; padding: 18px; }
+    .pa-modal-mask.show { display: flex; }
+    .pa-modal { width: min(980px, 100%); max-height: 90vh; background: #fff; border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+    .pa-modal.narrow { width: min(680px, 100%); }
+    .pa-head, .pa-foot { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+    .pa-foot { border-bottom: none; border-top: 1px solid #f0f0f0; justify-content: flex-end; gap: 8px; }
+    .pa-body { padding: 12px 16px; overflow: auto; }
+    .pa-close { border: none; background: transparent; font-size: 22px; color: #8c8c8c; cursor: pointer; }
+    .pa-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
+    .pa-full { grid-column: 1 / -1; }
+    .pa-tip { margin-top: 4px; font-size: 12px; color: #666; background: #f7fbff; border: 1px dashed #91caff; border-radius: 6px; padding: 6px 8px; }
+    .pa-mat-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
+    .pa-mat-table th, .pa-mat-table td { border: 1px solid #e8e8e8; padding: 6px 8px; text-align: left; }
+    .pa-flow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+    .pa-step { text-align: center; border: 1px dashed #d9d9d9; border-radius: 6px; padding: 8px 6px; font-size: 12px; color: #8c8c8c; }
+    .pa-step.done { border-style: solid; border-color: #52c41a; color: #389e0d; background: #f6ffed; }
+    .pa-step.active { border-style: solid; border-color: #1890ff; color: #0958d9; background: #e6f4ff; }
+  </style>
+</head>
+<body class="page-source-navbar page-subpage page-procurement-apply">
+  <div class="page-bg" aria-hidden="true"></div>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <button type="button" class="header-hamburger" aria-label="菜单" title="菜单"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <a class="header-logo" href="#" aria-label="国家能源集团"><img src="assets/logo-chenergy.png" alt="国家能源集团 CHN ENERGY" width="220" height="40" /></a>
+        <div class="header-source-brand"><p>新能源供应链管理系统</p></div>
+      </div>
+      <div class="header-right"><span class="clock" id="clock"></span><div class="user-avatar" title="用户">用</div></div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar" aria-label="主导航">
+        <div class="nav-item" title="我的资产"><span class="nav-label">我的资产</span></div>
+        <div class="nav-item" title="我的任务"><span class="nav-label">我的任务</span></div>
+        <a class="nav-item" href="index-portal-screen-alt.html" title="首页"><span class="nav-label">首页</span></a>
+        <div class="nav-item" title="驾驶舱"><span class="nav-label">驾驶舱</span></div>
+        <div class="nav-item nav-item--module-active" title="采购管理"><span class="nav-label">采购管理</span></div>
+        <div class="nav-item" title="物流管理"><span class="nav-label">物流管理</span></div>
+        <div class="nav-item" title="仓储管理"><span class="nav-label">仓储管理</span></div>
+        <div class="nav-item" title="物资采购"><span class="nav-label">物资采购</span></div>
+        <div class="nav-item" title="物资出库与处置"><span class="nav-label">物资出库与处置</span></div>
+        <div class="nav-item" title="绩效考核"><span class="nav-label">绩效考核</span></div>
+        <div class="nav-item" title="公告管理"><span class="nav-label">公告管理</span></div>
+        <div class="nav-item" title="综合业务管理"><span class="nav-label">综合业务管理</span></div>
+        <div class="nav-item" title="数据管理"><span class="nav-label">数据管理</span></div>
+        <div class="nav-item" title="开发工具"><span class="nav-label">开发工具</span></div>
+        <div class="nav-item" title="设置"><span class="nav-label">设置</span></div>
+        <div class="nav-item" title="系统管理"><span class="nav-label">系统管理</span></div>
+      </aside>
+      <main class="main-scroll">
+        <div class="pa-wrap">
+          <section class="pa-kpis" id="kpis"></section>
+          <section class="pa-panel">
+            <div class="pa-tabs">
+              <button type="button" class="pa-tab active" data-tab="all">全部申请</button>
+              <button type="button" class="pa-tab" data-tab="待审批">待审批</button>
+              <button type="button" class="pa-tab" data-tab="已通过">已通过</button>
+              <button type="button" class="pa-tab" data-tab="已完成">已完成</button>
+            </div>
+            <div class="pa-filters">
+              <div class="wh-field"><label for="fNo">申请单号</label><input id="fNo" type="text" placeholder="请输入申请单号" /></div>
+              <div class="wh-field"><label for="fDept">申请部门</label><input id="fDept" type="text" placeholder="请输入申请部门" /></div>
+              <div class="wh-field">
+                <label>物资类别</label>
+                <div class="pa-custom-select" id="fCategoryWrap">
+                  <button type="button" class="pa-trigger" id="fCategoryTrigger">全部类别 <i class="fa-solid fa-angle-down"></i></button>
+                  <div class="pa-menu" id="fCategoryMenu">
+                    <button class="pa-option" type="button" data-value=""><span class="main">全部类别</span></button>
+                    <button class="pa-option" type="button" data-value="生产类"><span class="main">生产类</span><span class="sub">用于生产运营的物资，如设备备件、维修材料</span></button>
+                    <button class="pa-option" type="button" data-value="办公类"><span class="main">办公类</span><span class="sub">用于日常办公的物资，如办公用品、办公设备</span></button>
+                    <button class="pa-option" type="button" data-value="销售类"><span class="main">销售类</span><span class="sub">用于对外销售的物资，即存货</span></button>
+                  </div>
+          </div>
+        </div>
+              <div class="wh-field"><label for="fType">采购类型</label><select id="fType"><option value="">全部类型</option><option>生产类</option><option>办公类</option><option>销售类</option></select></div>
+              <div class="wh-field"><label for="fDate">申请日期</label><input id="fDate" type="date" /></div>
+            </div>
+            <div class="pa-actions">
+              <button type="button" class="pa-btn primary" id="btnSearch">搜索</button>
+              <button type="button" class="pa-btn" id="btnReset">重置</button>
+              <button type="button" class="pa-btn add" id="btnNew">新增采购申请</button>
+            </div>
+            <div class="pa-table-wrap">
+              <table class="pa-table">
+            <thead>
+              <tr>
+                    <th style="width:60px">序号</th>
+                    <th style="width:130px">申请单号</th>
+                    <th style="width:140px">物资名称</th>
+                    <th style="width:120px">物资类别</th>
+                    <th style="width:80px">数量</th>
+                    <th style="width:120px">预算金额</th>
+                    <th style="width:120px">申请部门</th>
+                    <th style="width:90px">申请人</th>
+                    <th style="width:110px">申请日期</th>
+                    <th style="width:90px">状态</th>
+                    <th style="width:140px">操作</th>
+              </tr>
+            </thead>
+                <tbody id="tbody"></tbody>
+          </table>
+        </div>
+            <div class="pa-note">审批通过后将自动生成采购清单，并同步至 <a href="purchase-material-info-management.html" class="pa-link">物资采购信息页面</a>。</div>
+      </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="pa-modal-mask" id="newMask">
+    <div class="pa-modal">
+      <div class="pa-head"><h3>新增采购申请</h3><button type="button" class="pa-close" data-close>×</button></div>
+      <div class="pa-body">
+        <div class="pa-grid">
+          <div class="wh-field"><label for="mDept">申请部门</label><select id="mDept"><option>供应链管理部</option><option>华北运维部</option><option>综合管理部</option></select></div>
+          <div class="wh-field"><label for="mDate">申请日期</label><input id="mDate" type="date" /></div>
+          <div class="wh-field"><label for="mType">采购类型</label><select id="mType"><option>生产类</option><option>办公类</option><option>销售类</option></select></div>
+          <div class="wh-field"><label for="mName">物资名称</label><input id="mName" type="text" /></div>
+          <div class="wh-field"><label for="mSpec">规格型号</label><input id="mSpec" type="text" /></div>
+          <div class="wh-field">
+            <label>物资类别 ⭐</label>
+            <div class="pa-custom-select" id="mCategoryWrap">
+              <button type="button" class="pa-trigger" id="mCategoryTrigger">生产类 <i class="fa-solid fa-angle-down"></i></button>
+              <div class="pa-menu" id="mCategoryMenu">
+                <button class="pa-option" type="button" data-value="生产类"><span class="main">生产类</span><span class="sub">用于生产运营的物资，如设备备件、维修材料</span></button>
+                <button class="pa-option" type="button" data-value="办公类"><span class="main">办公类</span><span class="sub">用于日常办公的物资，如办公用品、办公设备</span></button>
+                <button class="pa-option" type="button" data-value="销售类"><span class="main">销售类</span><span class="sub">用于对外销售的物资，即存货</span></button>
+              </div>
+      </div>
+            <div class="pa-tip" id="mCategoryTip">💡 生产类：用于生产运营的物资，如设备备件、维修材料。</div>
+          </div>
+          <div class="wh-field"><label for="mQty">数量</label><input id="mQty" type="number" min="1" value="1" /></div>
+          <div class="wh-field"><label for="mBudget">预算金额</label><input id="mBudget" type="number" min="0" step="0.01" /></div>
+          <div class="wh-field"><label for="mContract">合同编号</label><input id="mContract" type="text" placeholder="可选" /></div>
+          <div class="wh-field pa-full"><label for="mDesc">采购说明</label><textarea id="mDesc" rows="3" placeholder="请输入采购说明"></textarea></div>
+        </div>
+        </div>
+      <div class="pa-foot">
+        <button type="button" class="pa-btn" data-close>取消</button>
+        <button type="button" class="pa-btn primary" id="btnSave">提交申请</button>
+        </div>
+        </div>
+        </div>
+
+  <div class="pa-modal-mask" id="detailMask">
+    <div class="pa-modal">
+      <div class="pa-head"><h3>申请详情</h3><button type="button" class="pa-close" data-close>×</button></div>
+      <div class="pa-body">
+        <div id="detailBase" style="font-size:13px;line-height:1.8"></div>
+        <table class="pa-mat-table">
+          <thead><tr><th>物资名称</th><th>规格型号</th><th>物资类别</th><th>数量</th><th>预算金额</th></tr></thead>
+          <tbody id="detailMaterial"></tbody>
+        </table>
+        <div class="pa-flow">
+          <div class="pa-step done">提交申请</div>
+          <div class="pa-step active">部门审批</div>
+          <div class="pa-step">采购审批</div>
+          <div class="pa-step">执行完成</div>
+        </div>
+        <div id="detailListPreview" class="pa-note" style="margin:10px 0 0 0">审批通过后将生成采购清单预览。</div>
+      </div>
+      <div class="pa-foot"><button type="button" class="pa-btn" data-close>关闭</button></div>
+    </div>
+  </div>
+
+  <script src="js/sidebar-actions.js"></script>
+  <script src="js/subpage-clock.js"></script>
+  <script src="js/subpage-feature-title.js"></script>
+  <script>
+    (function () {
+      var PURCHASE_SYNC_KEY = "demoProcurementToPurchaseInfo_v1";
+      var rows = [
+        { id: 1, no: "PA-2026-001", name: "齿轮箱", category: "生产类", qty: 2, budget: 86000, dept: "供应链管理部", user: "张明", date: "2026-04-08", status: "待审批", spec: "GW-GX-3.2MW", type: "生产类" },
+        { id: 2, no: "PA-2026-002", name: "办公电脑", category: "办公类", qty: 8, budget: 76000, dept: "综合管理部", user: "李四", date: "2026-04-06", status: "已通过", spec: "ThinkPad P16", type: "办公类" },
+        { id: 3, no: "PA-2026-003", name: "连接器套件", category: "销售类", qty: 120, budget: 50400, dept: "经营发展中心", user: "王芳", date: "2026-04-05", status: "已完成", spec: "CN-88", type: "销售类" },
+        { id: 4, no: "PA-2026-004", name: "测试工装", category: "生产类", qty: 15, budget: 18000, dept: "华北运维部", user: "赵强", date: "2026-04-03", status: "已驳回", spec: "TS-20", type: "生产类" }
+      ];
+      var state = { tab: "all", current: null, categoryFilter: "", filters: { no: "", dept: "", type: "", date: "" } };
+      var refs = {
+        kpis: document.getElementById("kpis"),
+        tabs: Array.prototype.slice.call(document.querySelectorAll(".pa-tab")),
+        tbody: document.getElementById("tbody"),
+        fNo: document.getElementById("fNo"),
+        fDept: document.getElementById("fDept"),
+        fType: document.getElementById("fType"),
+        fDate: document.getElementById("fDate"),
+        fCategoryWrap: document.getElementById("fCategoryWrap"),
+        fCategoryTrigger: document.getElementById("fCategoryTrigger"),
+        fCategoryMenu: document.getElementById("fCategoryMenu"),
+        newMask: document.getElementById("newMask"),
+        detailMask: document.getElementById("detailMask"),
+        detailBase: document.getElementById("detailBase"),
+        detailMaterial: document.getElementById("detailMaterial"),
+        detailListPreview: document.getElementById("detailListPreview"),
+        mCategoryWrap: document.getElementById("mCategoryWrap"),
+        mCategoryTrigger: document.getElementById("mCategoryTrigger"),
+        mCategoryMenu: document.getElementById("mCategoryMenu"),
+        mCategoryTip: document.getElementById("mCategoryTip")
+      };
+      function money(v) { return "¥ " + Number(v || 0).toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+      function tag(status) {
+        if (status === "待审批") return '<span class="tag pending">待审批</span>';
+        if (status === "已通过") return '<span class="tag passed">已通过</span>';
+        if (status === "已完成") return '<span class="tag done">已完成</span>';
+        return '<span class="tag reject">已驳回</span>';
+      }
+      function filteredRows() {
+        return rows.filter(function (x) {
+          if (state.tab !== "all" && x.status !== state.tab) return false;
+          if (state.categoryFilter && x.category !== state.categoryFilter) return false;
+          if (state.filters.no && x.no.indexOf(state.filters.no) < 0) return false;
+          if (state.filters.dept && x.dept.indexOf(state.filters.dept) < 0) return false;
+          if (state.filters.type && x.type !== state.filters.type) return false;
+          if (state.filters.date && x.date !== state.filters.date) return false;
+          return true;
+        });
+      }
+      function renderKpis() {
+        var monthKey = new Date().toISOString().slice(0, 7);
+        var monthCount = rows.filter(function (x) { return String(x.date).slice(0, 7) === monthKey; }).length;
+        var pending = rows.filter(function (x) { return x.status === "待审批"; }).length;
+        var passed = rows.filter(function (x) { return x.status === "已通过"; }).length;
+        var amount = rows.reduce(function (s, x) { return s + Number(x.budget || 0); }, 0);
+        refs.kpis.innerHTML =
+          '<div class="pa-kpi"><b>本月申请数</b><span>' + monthCount + '</span></div>' +
+          '<div class="pa-kpi"><b>待审批</b><span>' + pending + '</span></div>' +
+          '<div class="pa-kpi"><b>已通过</b><span>' + passed + '</span></div>' +
+          '<div class="pa-kpi"><b>采购金额</b><span>' + money(amount) + '</span></div>';
+      }
+      function renderTable() {
+        refs.tbody.innerHTML = "";
+        filteredRows().forEach(function (x, i) {
+          var op = '<button data-act="detail" data-id="' + x.id + '">查看</button>';
+          if (x.status === "待审批") op += '<button data-act="approve" data-id="' + x.id + '">通过</button>';
+          var tr = document.createElement("tr");
+          tr.innerHTML = "<td>" + (i + 1) + "</td><td>" + x.no + "</td><td>" + x.name + "</td><td>" + x.category + "</td><td>" + x.qty + "</td><td>" + money(x.budget) + "</td><td>" + x.dept + "</td><td>" + x.user + "</td><td>" + x.date + "</td><td>" + tag(x.status) + '</td><td><div class="pa-op">' + op + "</div></td>";
+          refs.tbody.appendChild(tr);
+        });
+      }
+      function appendPurchaseSync(item) {
+        try {
+          var qty = Number(item.qty || 0);
+          var totalIn = Number(item.budget || 0);
+          var priceIn = qty > 0 ? totalIn / qty : 0;
+          var priceEx = priceIn / 1.13;
+          var payload = {
+            source: "procurement-application",
+            requestNo: item.no,
+            contractNo: "AUTO-" + item.no,
+            dept: item.dept,
+            name: item.name,
+            spec: item.spec || "-",
+            category: item.category,
+            qty: qty,
+            priceIn: Number(priceIn.toFixed(2)),
+            priceEx: Number(priceEx.toFixed(2)),
+            remark: "审批通过自动生成采购清单",
+            purchaseDate: item.date,
+            approvalStatus: "已通过",
+            supplier: "待维护",
+            inboundStatus: "待入库"
+          };
+          var raw = localStorage.getItem(PURCHASE_SYNC_KEY);
+          var list = raw ? JSON.parse(raw) : [];
+          var exists = list.some(function (x) { return x && x.requestNo === payload.requestNo; });
+          if (!exists) {
+            list.push(payload);
+            localStorage.setItem(PURCHASE_SYNC_KEY, JSON.stringify(list));
+          }
+        } catch (err) {}
+      }
+      function open(mask) { mask.classList.add("show"); }
+      function close(mask) { mask.classList.remove("show"); }
+      function closeAll() { close(refs.newMask); close(refs.detailMask); }
+      function setCategoryTip(val) {
+        if (val === "生产类") refs.mCategoryTip.textContent = "💡 生产类：用于生产运营的物资，如设备备件、维修材料。";
+        else if (val === "办公类") refs.mCategoryTip.textContent = "💡 办公类：用于日常办公的物资，如办公用品、办公设备。";
+        else refs.mCategoryTip.textContent = "💡 销售类：用于对外销售的物资，即存货。";
+      }
+      function bindCustomMenu(wrap, trigger, menu, onPick) {
+        trigger.addEventListener("click", function (e) { e.stopPropagation(); menu.classList.toggle("show"); });
+        menu.querySelectorAll(".pa-option").forEach(function (op) {
+          op.addEventListener("click", function () {
+            var val = op.getAttribute("data-value") || "";
+            var txt = val || "全部类别";
+            trigger.innerHTML = txt + ' <i class="fa-solid fa-angle-down"></i>';
+            menu.classList.remove("show");
+            onPick(val);
+          });
+        });
+        document.addEventListener("click", function (e) { if (!wrap.contains(e.target)) menu.classList.remove("show"); });
+      }
+      bindCustomMenu(refs.fCategoryWrap, refs.fCategoryTrigger, refs.fCategoryMenu, function (val) { state.categoryFilter = val; renderTable(); });
+      bindCustomMenu(refs.mCategoryWrap, refs.mCategoryTrigger, refs.mCategoryMenu, function (val) { setCategoryTip(val); });
+
+      refs.tabs.forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          state.tab = tab.getAttribute("data-tab");
+          refs.tabs.forEach(function (t) { t.classList.remove("active"); });
+          tab.classList.add("active");
+          renderTable();
+        });
+      });
+      document.getElementById("btnSearch").addEventListener("click", function () {
+        state.filters.no = refs.fNo.value.trim();
+        state.filters.dept = refs.fDept.value.trim();
+        state.filters.type = refs.fType.value;
+        state.filters.date = refs.fDate.value;
+        renderTable();
+      });
+      document.getElementById("btnReset").addEventListener("click", function () {
+        refs.fNo.value = ""; refs.fDept.value = ""; refs.fType.selectedIndex = 0; refs.fDate.value = "";
+        state.filters = { no: "", dept: "", type: "", date: "" };
+        state.categoryFilter = "";
+        refs.fCategoryTrigger.innerHTML = '全部类别 <i class="fa-solid fa-angle-down"></i>';
+        renderTable();
+      });
+      document.getElementById("btnNew").addEventListener("click", function () {
+        document.getElementById("mDate").value = new Date().toISOString().slice(0, 10);
+        document.getElementById("mQty").value = 1;
+        document.getElementById("mBudget").value = "";
+        document.getElementById("mName").value = "";
+        document.getElementById("mSpec").value = "";
+        document.getElementById("mContract").value = "";
+        document.getElementById("mDesc").value = "";
+        refs.mCategoryTrigger.innerHTML = '生产类 <i class="fa-solid fa-angle-down"></i>';
+        setCategoryTip("生产类");
+        open(refs.newMask);
+      });
+      document.querySelectorAll("[data-close]").forEach(function (btn) { btn.addEventListener("click", closeAll); });
+      [refs.newMask, refs.detailMask].forEach(function (mask) { mask.addEventListener("click", function (e) { if (e.target === mask) close(mask); }); });
+
+      document.getElementById("btnSave").addEventListener("click", function () {
+        var newRow = {
+          id: Date.now(),
+          no: "PA-" + new Date().getFullYear() + "-" + String(Math.floor(Math.random() * 900 + 100)),
+          name: document.getElementById("mName").value.trim() || "未命名物资",
+          category: refs.mCategoryTrigger.textContent.trim().split(" ")[0],
+          qty: Number(document.getElementById("mQty").value || 0),
+          budget: Number(document.getElementById("mBudget").value || 0),
+          dept: document.getElementById("mDept").value,
+          user: "当前用户",
+          date: document.getElementById("mDate").value || new Date().toISOString().slice(0, 10),
+          status: "待审批",
+          spec: document.getElementById("mSpec").value.trim() || "-",
+          type: document.getElementById("mType").value
+        };
+        rows.unshift(newRow);
+        close(refs.newMask);
+        renderKpis();
+        renderTable();
+      });
+      refs.tbody.addEventListener("click", function (e) {
+        var act = e.target.getAttribute("data-act");
+        if (!act) return;
+        var id = Number(e.target.getAttribute("data-id"));
+        var item = rows.find(function (x) { return x.id === id; });
+        if (!item) return;
+        if (act === "detail") {
+          refs.detailBase.innerHTML = "<b>申请单号：</b>" + item.no + "<br><b>申请部门：</b>" + item.dept + "<br><b>申请人：</b>" + item.user + "<br><b>申请日期：</b>" + item.date + "<br><b>状态：</b>" + item.status;
+          refs.detailMaterial.innerHTML = "<tr><td>" + item.name + "</td><td>" + item.spec + "</td><td>" + item.category + "</td><td>" + item.qty + "</td><td>" + money(item.budget) + "</td></tr>";
+          refs.detailListPreview.innerHTML = item.status === "已通过" || item.status === "已完成"
+            ? '已生成采购清单预览：<a href="purchase-material-info-management.html" class="pa-link">点击查看同步数据</a>'
+            : "审批通过后将生成采购清单预览。";
+          open(refs.detailMask);
+        } else if (act === "approve") {
+          item.status = "已通过";
+          appendPurchaseSync(item);
+          renderKpis();
+          renderTable();
+          alert("审批通过后将自动生成采购清单，数据已同步至“物资采购信息页面”（演示）。");
+        }
+      });
+
+      renderKpis();
+      renderTable();
+    })();
+  </script>
+</body>
+</html>

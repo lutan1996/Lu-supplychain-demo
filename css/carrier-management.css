@@ -1,0 +1,432 @@
+/**
+ * 承运商管理页：260px 深蓝侧栏 + 白底内容区（与需求规格一致）
+ */
+:root {
+  --carrier-sidebar-w: 260px;
+  --carrier-sidebar-bg: #0a2a44;
+  --carrier-primary: #1890ff;
+  /* 与 subpage-base wh-table 对齐 */
+  --carrier-border: #e8e8e8;
+  --carrier-table-head: #f5f5f5;
+  --carrier-text: #333333;
+  --carrier-text-secondary: #666666;
+  --tag-enabled-bg: #e8f5e9;
+  --tag-enabled-text: #2e7d32;
+  --tag-disabled-bg: #ffebee;
+  --tag-disabled-text: #c62828;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  color: var(--carrier-text);
+  background: #fff;
+}
+
+body.page-carrier {
+  overflow: hidden;
+}
+
+.carrier-shell {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* —— 左侧菜单 260px —— */
+.carrier-sidebar {
+  width: var(--carrier-sidebar-w);
+  flex: 0 0 var(--carrier-sidebar-w);
+  background: var(--carrier-sidebar-bg);
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  border-right: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.carrier-sidebar-brand {
+  padding: 16px 16px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  letter-spacing: 0.02em;
+}
+
+.carrier-nav {
+  padding: 8px 0 16px;
+  flex: 1;
+}
+
+.carrier-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  color: rgba(255, 255, 255, 0.82);
+  border-left: 3px solid transparent;
+  user-select: none;
+}
+
+.carrier-nav-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.carrier-nav-item.is-active {
+  background: rgba(24, 144, 255, 0.18);
+  color: #fff;
+  border-left-color: var(--carrier-primary);
+}
+
+.carrier-nav-item .nav-ico {
+  width: 18px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 14px;
+}
+
+.carrier-nav-item.is-active .nav-ico {
+  color: var(--carrier-primary);
+}
+
+/* —— 右侧主区 —— */
+.carrier-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.carrier-main-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px 24px;
+  overflow: auto;
+}
+
+.carrier-page-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f1f1f;
+  margin-bottom: 18px;
+}
+
+/* 内容区标题隐藏见 css/subpage-base.css body.page-subpage .carrier-page-title */
+
+/* —— 操作栏（与 warehouse wh-toolbar 条带一致） —— */
+.carrier-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 0;
+  margin: 0 0 0 0;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fff;
+}
+
+/* 标题行已隐藏时，工具条贴主区顶：不再重复顶部分割线 */
+.carrier-main-inner h1.carrier-page-title + .carrier-toolbar {
+  border-top: none;
+  padding-top: 0;
+}
+
+.carrier-toolbar .toolbar-left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 主按钮：与 subpage-toolbar btn-toolbar--primary 一致（描边 + 浅底） */
+.carrier-btn-add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 72px;
+  height: 32px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  box-sizing: border-box;
+  color: #1890ff;
+  border: 1px solid #69c0ff;
+  background: rgba(24, 144, 255, 0.08);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.carrier-btn-add:hover {
+  color: #096dd9;
+  border-color: #40a9ff;
+  background: rgba(24, 144, 255, 0.16);
+}
+
+.carrier-btn-add:active {
+  color: #0050b3;
+  border-color: #096dd9;
+  background: rgba(24, 144, 255, 0.22);
+}
+
+.carrier-toolbar .btn-sub {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  background: #fff;
+  color: rgba(0, 0, 0, 0.88);
+  cursor: pointer;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.15s, color 0.15s;
+}
+.carrier-toolbar .btn-sub:hover {
+  border-color: #1890ff;
+  color: #1890ff;
+}
+
+.carrier-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.carrier-search {
+  width: 280px;
+  max-width: 100%;
+  height: 32px;
+  padding: 0 12px;
+  font-size: 13px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  outline: none;
+  color: var(--carrier-text);
+  background: #fff;
+}
+
+.carrier-search::placeholder {
+  color: #bfbfbf;
+}
+
+.carrier-search:focus {
+  border-color: var(--carrier-primary);
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.15);
+}
+
+.carrier-select {
+  height: 32px;
+  min-width: 120px;
+  padding: 0 28px 0 12px;
+  font-size: 13px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  background: #fff;
+  color: var(--carrier-text);
+  cursor: pointer;
+  outline: none;
+}
+
+.carrier-select:focus {
+  border-color: var(--carrier-primary);
+}
+
+/* —— 表格（与 warehouse .wh-table 网格线一致） —— */
+.carrier-table-wrap {
+  border: none;
+  border-radius: 0;
+  overflow-x: auto;
+  flex: 1;
+  min-height: 120px;
+  padding: 12px 0 0;
+  margin: 0;
+}
+
+.carrier-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: #fff;
+}
+
+.carrier-table thead th {
+  text-align: left;
+  padding: 10px 12px;
+  font-weight: 600;
+  color: #333;
+  background: var(--carrier-table-head);
+  border: 1px solid var(--carrier-border);
+  white-space: nowrap;
+}
+
+.carrier-table tbody td {
+  padding: 10px 12px;
+  border: 1px solid var(--carrier-border);
+  color: var(--carrier-text);
+  vertical-align: middle;
+}
+
+.carrier-table tbody tr:hover {
+  background: #fafafa;
+}
+
+/* 状态标签 */
+.tag-status {
+  display: inline-block;
+  padding: 2px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.tag-status--enabled {
+  background: var(--tag-enabled-bg);
+  color: var(--tag-enabled-text);
+}
+
+.tag-status--disabled {
+  background: var(--tag-disabled-bg);
+  color: var(--tag-disabled-text);
+}
+
+/* 操作列：与仓库管理 wh-ops 一致 — 蓝色图标 */
+.carrier-table .wh-ops {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.carrier-table .wh-ops a {
+  color: #1890ff;
+  cursor: pointer;
+  font-size: 15px;
+}
+.carrier-table .wh-ops a:hover {
+  opacity: 0.85;
+}
+
+/* —— 分页（与 wh-pagination 对齐） —— */
+.carrier-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 0;
+  padding: 12px 0 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.carrier-pagination select {
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--carrier-border);
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.carrier-page-btns {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.carrier-page-btns button {
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  font-size: 13px;
+  border: 1px solid var(--carrier-border);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--carrier-text);
+  cursor: pointer;
+}
+
+.carrier-page-btns button:hover {
+  border-color: var(--carrier-primary);
+  color: var(--carrier-primary);
+}
+
+.carrier-page-btns button.is-current {
+  border-color: var(--carrier-primary);
+  background: var(--carrier-primary);
+  color: #fff;
+}
+
+.carrier-goto {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.carrier-goto input {
+  width: 48px;
+  height: 28px;
+  text-align: center;
+  border: 1px solid var(--carrier-border);
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  .carrier-shell {
+    flex-direction: column;
+  }
+  .carrier-sidebar {
+    width: 100%;
+    flex: none;
+    max-height: 200px;
+  }
+}
+
+/* —— 与驾驶舱统一：顶栏 + 86px 渐变侧栏（page-subpage + .app/.layout） —— */
+body.page-subpage {
+  background: #000814 !important;
+  overflow: hidden;
+}
+@media (max-width: 900px) {
+  body.page-subpage .layout {
+    flex-direction: column;
+  }
+  body.page-subpage .sidebar {
+    width: 100% !important;
+    flex: none !important;
+    max-height: 220px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  body.page-subpage .sidebar .nav-item {
+    flex: 1 1 auto;
+    min-height: 52px;
+    min-width: 72px;
+    border-bottom: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+  }
+}

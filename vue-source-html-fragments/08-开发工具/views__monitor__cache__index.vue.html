@@ -1,0 +1,125 @@
+<!-- 来源: src/views/monitor/cache/index.vue -->
+<!-- 已移除 Vue 指令与 {}，仅作静态结构参考 -->
+
+<div class="p-2">
+    <el-row>
+      <el-col class="card-box">
+        <el-card shadow="hover">
+          <template>
+            <Monitor style="width: 1em; height: 1em; vertical-align: middle" />
+            <span style="vertical-align: middle">基本信息</span>
+          </template>
+
+          <div class="el-table el-table--enable-row-hover el-table--medium">
+            <table style="width: 100%">
+              <tbody>
+                <tr>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">Redis版本</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">（动态文本）</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">运行模式</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">（动态文本）</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">端口</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">（动态文本）</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">客户端数</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">（动态文本）</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">运行时间(天)</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">（动态文本）</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">使用内存</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">（动态文本）</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">使用CPU</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">（动态文本）</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">内存配置</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">（动态文本）</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">AOF是否开启</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">（动态文本）</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">RDB是否成功</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">（动态文本）</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">Key数量</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">（动态文本）</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">网络入口/出口</div>
+                  </td>
+                  <td class="el-table__cell is-leaf">
+                    <div class="cell">
+                      （动态文本）kps/（动态文本）kps
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </el-card>
+      </el-col>
+
+      <el-col class="card-box">
+        <el-card shadow="hover">
+          <template>
+            <PieChart style="width: 1em; height: 1em; vertical-align: middle" />
+            <span style="vertical-align: middle">命令统计</span>
+          </template>
+          <div class="el-table el-table--enable-row-hover el-table--medium">
+            <div style="height: 420px" />
+          </div>
+        </el-card>
+      </el-col>
+
+      <el-col class="card-box">
+        <el-card shadow="hover">
+          <template>
+            <Odometer style="width: 1em; height: 1em; vertical-align: middle" /> <span style="vertical-align: middle">内存信息</span>
+          </template>
+          <div class="el-table el-table--enable-row-hover el-table--medium">
+            <div style="height: 420px" />
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>

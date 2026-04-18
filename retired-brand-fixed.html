@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>品牌</title>
+</head>
+<body>
+  <script>
+    (function () {
+      try {
+        sessionStorage.setItem("demoRetiredScene", "brand");
+        sessionStorage.setItem("demoScene", "brand");
+      } catch (e) {}
+      window.location.replace("retired-prototype-list.html?scene=brand&pageSub=" + encodeURIComponent("品牌"));
+    })();
+  </script>
+</body>
+</html>
+
