@@ -18,10 +18,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 OUT_NAMES = ("demo-all-pages-interactive.html", "demo-interactive-single.html")
 EXCLUDE = set(OUT_NAMES) | {"demo-all-in-one.html"}
+# 优先 index.html（与日常编辑一致）；勿把输出文件 demo-all-pages-interactive.html 当模板，否则二次构建会吃旧产物
 SHELL_TEMPLATE_CANDIDATES = (
+    "index.html",
     "demo-all-in-one.html",
     "demo-all-pages-interactive-v4.html",
-    "demo-all-pages-interactive.html",
 )
 
 LINK_TAG_RE = re.compile(r"<link\s+([^>]+)>", re.I)
@@ -38,10 +39,12 @@ def read_text(p: Path) -> str:
 def assert_not_generated_artifact(filename: str, raw: str) -> None:
     """
     防止把已打包产物反向当成源页面再打包，造成 script/JSON 转义错乱。
+    仅匹配真实占位序列 __DEMO_INLINE_DATA_n__；壳层 index.html 里 expandDemoInline 的正则字面量
+    含 __DEMO_INLINE_DATA_ 子串但无数字占位，不应误杀。
     """
-    if "__DEMO_INLINE_DATA_" in raw:
+    if re.search(r"__DEMO_INLINE_DATA_\d+__", raw):
         raise RuntimeError(
-            f"Refusing generated artifact as source page: {filename} contains __DEMO_INLINE_DATA_."
+            f"Refusing generated artifact as source page: {filename} contains __DEMO_INLINE_DATA_n__ placeholders."
         )
 
 
