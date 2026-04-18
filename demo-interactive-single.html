@@ -799,19 +799,8 @@
   
   
   
+  <!-- 完整离线包由 scripts/build_demo_single_html.py 生成并写入内联 pages；此处仅保留单文件 stub，缺 part 分片时勿再引用 404 -->
   <script src="demo-pages-bundle.js"></script>
-  <script src="demo-pages-bundle.part001.js"></script>
-  <script src="demo-pages-bundle.part002.js"></script>
-  <script src="demo-pages-bundle.part003.js"></script>
-  <script src="demo-pages-bundle.part004.js"></script>
-  <script src="demo-pages-bundle.part005.js"></script>
-  <script src="demo-pages-bundle.part006.js"></script>
-  <script src="demo-pages-bundle.part007.js"></script>
-  <script src="demo-pages-bundle.part008.js"></script>
-  <script src="demo-pages-bundle.part009.js"></script>
-  <script src="demo-pages-bundle.part010.js"></script>
-  <script src="demo-pages-bundle.part011.js"></script>
-  <script src="demo-pages-bundle.part012.js"></script>
 
   <script>
   var __DEMO_INLINE_ASSETS__ = ["fonts/demo-inline-0.woff2", "images/demo-inline-1.jpg", "fonts/demo-inline-2.woff2", "images/demo-inline-3.jpg", "fonts/demo-inline-4.woff2", "images/demo-inline-5.png", "fonts/demo-inline-6.woff2"];
@@ -825,6 +814,9 @@
   (function () {
     var meta = [{"title": "登录（账号密码）", "file": "index.html", "group": "core"}, {"title": "首页", "file": "index-portal-screen-alt.html", "group": "core"}, {"title": "驾驶舱", "file": "cockpit.html", "group": "core"}, {"title": "模块首页（旧）", "file": "module-home.html", "group": "other"}, {"title": "采购申请", "file": "procurement-application.html", "group": "other"}, {"title": "承运商管理", "file": "carrier-management.html", "group": "logistics"}, {"title": "物流合同", "file": "logistics-contract.html", "group": "logistics"}, {"title": "物流跟踪", "file": "logistics-tracking.html", "group": "logistics"}, {"title": "物流付款", "file": "logistics-payment.html", "group": "logistics"}, {"title": "仓储管理", "file": "warehouse.html", "group": "warehouse"}, {"title": "收货入库", "file": "receipt-inbound.html", "group": "warehouse"}, {"title": "扫码领用", "file": "scan-pick.html", "group": "warehouse"}, {"title": "货位管理", "file": "slot-management.html", "group": "warehouse"}, {"title": "盘库管理", "file": "inventory-check.html", "group": "warehouse"}, {"title": "库内保养", "file": "warehouse-maintenance.html", "group": "warehouse"}, {"title": "库存管理", "file": "inventory-management.html", "group": "warehouse"}, {"title": "闲置物资", "file": "idle-materials.html", "group": "warehouse"}, {"title": "退役及报废申请", "file": "retire-scrap-application.html", "group": "retired"}, {"title": "设备评估", "file": "equipment-evaluation.html", "group": "retired"}, {"title": "以大代小&循环再利用", "file": "big-small-reuse.html", "group": "retired"}, {"title": "基础数据配置中心", "file": "base-data-material-ledger.html", "group": "data"}, {"title": "合同管理", "file": "contract-management.html", "group": "purchase"}, {"title": "采购计划表", "file": "purchase-plan-table.html", "group": "purchase"}, {"title": "采购数据台账", "file": "purchase-ledger.html", "group": "purchase"}, {"title": "货物台账", "file": "cargo-ledger.html", "group": "purchase"}, {"title": "验收入库", "file": "proc-acceptance-inbound.html", "group": "purchase"}, {"title": "领用申请审批", "file": "proc-use-approval.html", "group": "purchase"}, {"title": "销售合同管理", "file": "proc-sales-contract.html", "group": "purchase"}, {"title": "发货管理", "file": "proc-shipment.html", "group": "purchase"}, {"title": "项目公司验收", "file": "proc-quality-accept.html", "group": "purchase"}, {"title": "采购汇总报表", "file": "purchase-summary-report.html", "group": "purchase"}, {"title": "库存台账", "file": "warehouse-stock-ledger.html", "group": "warehouse"}, {"title": "出入库记录", "file": "warehouse-io-ledger.html", "group": "warehouse"}, {"title": "物流台账", "file": "logistics-ledger.html", "group": "logistics"}, {"title": "资产台账", "file": "asset-ledger.html", "group": "asset"}, {"title": "子页模板", "file": "subpage-template.html", "group": "other"}, {"title": "我的任务-原型列表", "file": "my-tasks-prototype-list.html", "group": "core"}, {"title": "采购计划审批单（办理）", "file": "purchase-plan-approval-handle.html", "group": "core"}, {"title": "驾驶舱分析", "file": "cockpit-analytics.html", "group": "core"}, {"title": "采购管理聚合", "file": "purchase-management-hub.html", "group": "other"}, {"title": "物资采购聚合", "file": "material-procurement-hub.html", "group": "other"}, {"title": "退役子功能聚合", "file": "retired-module-hub.html", "group": "retired"}, {"title": "绩效考核聚合", "file": "performance-hub.html", "group": "other"}, {"title": "公告管理聚合", "file": "notice-hub.html", "group": "other"}, {"title": "综合业务聚合", "file": "integrated-business-hub.html", "group": "other"}, {"title": "系统管理聚合", "file": "system-admin-hub.html", "group": "other"}];
     var pages = __DEMO_PAGES__;
+    /* 未打包或分片丢失时 __DEMO_PAGES__ 为空：勿再阻塞整页；直接 iframe 加载同目录 .html（与 http(s)/file 同源均可） */
+    var demoUseExternalPages =
+      !pages || typeof pages !== "object" || Object.keys(pages).length === 0;
     var frame = document.getElementById("demoFrame");
     var viewport = document.querySelector(".viewport");
     var currentTitle = document.getElementById("currentTitle");
@@ -928,6 +920,13 @@
     }
 
     function buildList() {
+      if (demoUseExternalPages) {
+        meta.forEach(function (m) {
+          pagesList.push(m);
+          fileToIndex[m.file] = pagesList.length - 1;
+        });
+        return;
+      }
       meta.forEach(function (m) {
         if (pages[m.file]) {
           pagesList.push(m);
@@ -1032,7 +1031,7 @@
       for (var ci = 0; ci < candidates.length; ci++) {
         var c = candidates[ci];
         if (c && fileToIndex.hasOwnProperty(c)) {
-          switchTo(fileToIndex[c]);
+          switchTo(fileToIndex[c], href);
           return true;
         }
       }
@@ -1085,7 +1084,7 @@
       for (var ci = 0; ci < candidates.length; ci++) {
         var f = candidates[ci];
         if (f && fileToIndex.hasOwnProperty(f)) {
-          switchTo(fileToIndex[f]);
+          switchTo(fileToIndex[f], raw);
         return true;
         }
       }
@@ -1120,13 +1119,14 @@
       }
     });
 
-    function finishDemoShellUi(item, index) {
+    function finishDemoShellUi(item, index, openHref) {
       if (demoLoadingSafetyTimer) {
         clearTimeout(demoLoadingSafetyTimer);
         demoLoadingSafetyTimer = null;
       }
-      currentTitle.textContent = "当前页面：" + item.file.replace(/\.html.*/i, "");
-      if (openNewTab) openNewTab.href = item.file;
+      var showFile = (openHref && String(openHref).trim()) ? String(openHref).split("#")[0].trim() : item.file;
+      currentTitle.textContent = "当前页面：" + showFile.replace(/\.html.*/i, "");
+      if (openNewTab) openNewTab.href = (openHref && String(openHref).trim()) ? String(openHref).trim() : item.file;
       buttons.forEach(function (b, i) {
         b.classList.toggle("active", i === index);
       });
@@ -1227,11 +1227,56 @@
     var demoUseSrcdocOnly = true;
     var demoLoadingSafetyTimer = null;
 
-    function switchTo(index) {
+    function switchTo(index, optFullHref) {
       if (index < 0 || index >= pagesList.length) return;
       var prevIndex = currentIndex;
       currentIndex = index;
       var item = pagesList[index];
+
+      if (demoUseExternalPages) {
+        try {
+          sessionStorage.setItem("portalLoggedIn_v1", "1");
+        } catch (e) {}
+        currentTitle.textContent = "当前页面：加载中…";
+        if (viewport) viewport.classList.add("is-demo-loading");
+        if (demoLoadingSafetyTimer) {
+          clearTimeout(demoLoadingSafetyTimer);
+        }
+        demoLoadingSafetyTimer = setTimeout(function () {
+          demoLoadingSafetyTimer = null;
+          try {
+            if (viewport && viewport.classList.contains("is-demo-loading")) {
+              viewport.classList.remove("is-demo-loading");
+              tryBindDemoIframeNav();
+            }
+          } catch (eSafety) {}
+        }, 5000);
+        var extSrc =
+          optFullHref && String(optFullHref).trim()
+            ? String(optFullHref).trim()
+            : item.file;
+        try {
+          frame.removeAttribute("srcdoc");
+        } catch (eSk0) {}
+        function armExtLoadOnce(done) {
+          frame.addEventListener(
+            "load",
+            function onExtDemoLoad() {
+              frame.removeEventListener("load", onExtDemoLoad);
+              done();
+            }
+          );
+        }
+        armExtLoadOnce(function () {
+          tryBindDemoIframeNav();
+          finishDemoShellUi(item, index, extSrc);
+        });
+        try {
+          frame.src = extSrc;
+        } catch (eSrc) {}
+        return;
+      }
+
       var raw = pages[item.file];
       if (!raw) return;
       try {
@@ -1400,7 +1445,11 @@
       tryBindDemoIframeNav();
     });
 
-    switchTo(0);
+    var initialDemoIndex = 0;
+    if (demoUseExternalPages && fileToIndex.hasOwnProperty("index-portal-screen-alt.html")) {
+      initialDemoIndex = fileToIndex["index-portal-screen-alt.html"];
+    }
+    switchTo(initialDemoIndex);
   })();
   </script>
 </body>

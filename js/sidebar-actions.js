@@ -27,9 +27,6 @@
     "go-app-hub": "index-portal-screen-alt.html",
     "go-cockpit-kpi": "cockpit.html",
     "go-cockpit-map": "cockpit.html",
-    "cockpit-material-map": "cockpit.html#cockpit-anchor-material-map",
-    "cockpit-trend-line": "cockpit.html#cockpit-anchor-trend-line",
-    "cockpit-bar-chart": "cockpit.html#cockpit-anchor-bar-chart",
     "logistics-integration": "logistics-tracking.html",
     "purchase-accept-confirm": "receipt-inbound.html",
     // 物资采购（侧栏「物资采购」）

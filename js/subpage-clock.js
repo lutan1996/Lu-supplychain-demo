@@ -438,13 +438,7 @@
         rowHtml:
           '<button type="button" class="warehouse-secondary-link" data-action="go-cockpit" data-label="集团驾驶舱">集团驾驶舱</button>' +
           '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-          '<button type="button" class="warehouse-secondary-link" data-action="go-cockpit-map" data-label="省级驾驶舱">省级驾驶舱</button>' +
-          '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-          '<button type="button" class="warehouse-secondary-link" data-action="cockpit-material-map" data-label="物资分布图">物资分布图</button>' +
-          '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-          '<button type="button" class="warehouse-secondary-link" data-action="cockpit-trend-line" data-label="折线图">折线图</button>' +
-          '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-          '<button type="button" class="warehouse-secondary-link" data-action="cockpit-bar-chart" data-label="条形图">条形图</button>'
+          '<button type="button" class="warehouse-secondary-link" data-action="go-cockpit-map" data-label="省级驾驶舱">省级驾驶舱</button>'
       },
       purchaseMgmt: {
         text: '采购管理',

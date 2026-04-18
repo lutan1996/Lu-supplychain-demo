@@ -6,16 +6,22 @@
     (function () {
       try {
         /* 离线总演示 iframe 内嵌时由父页注入，不要求登录态 */
-        if (window.parent !== window && typeof window.parent.__demoOpenPage === "function") {
-          return;
+        if (window.parent !== window) {
+          try {
+            if (typeof window.parent.__demoOpenPage === "function") return;
+          } catch (eParent) {}
+          /* file:// 下父页与 iframe 常互不可读，误判会 replace 到 index 导致驾驶舱空白 */
+          try {
+            if (window.location.protocol === "file:") return;
+          } catch (eProto) {}
         }
         if (sessionStorage.getItem("portalLoggedIn_v1") !== "1") {
           window.location.replace("index.html");
         }
       } catch (e) {
-        if (window.parent !== window && typeof window.parent.__demoOpenPage === "function") {
-          return;
-        }
+        try {
+          if (window.parent !== window && window.location.protocol === "file:") return;
+        } catch (e2) {}
         window.location.replace("index.html");
       }
     })();
@@ -5428,13 +5434,7 @@
           rowHtml:
             '<button type="button" class="warehouse-secondary-link" data-action="go-cockpit" data-label="集团驾驶舱">集团驾驶舱</button>' +
             '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-            '<button type="button" class="warehouse-secondary-link" data-action="go-cockpit-map" data-label="省级驾驶舱">省级驾驶舱</button>' +
-            '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-            '<button type="button" class="warehouse-secondary-link" data-action="cockpit-material-map" data-label="物资分布图">物资分布图</button>' +
-            '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-            '<button type="button" class="warehouse-secondary-link" data-action="cockpit-trend-line" data-label="折线图">折线图</button>' +
-            '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-            '<button type="button" class="warehouse-secondary-link" data-action="cockpit-bar-chart" data-label="条形图">条形图</button>'
+            '<button type="button" class="warehouse-secondary-link" data-action="go-cockpit-map" data-label="省级驾驶舱">省级驾驶舱</button>'
         },
         purchaseMgmt: {
           text: '采购管理',
