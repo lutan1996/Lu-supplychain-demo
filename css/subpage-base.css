@@ -41,10 +41,11 @@ body.page-warehouse {
   max-height: 100dvh;
   overflow: hidden;
 }
-/* 主内容区顶部页面大标题（与侧栏/主导航重复），统一不展示 */
+/* 主内容区顶部页面大标题（与侧栏/面包屑重复），统一不展示 */
 body.page-source-navbar .main-scroll h1.carrier-page-title,
 body.page-source-navbar .main-scroll h1.asset-page-title,
 body.page-source-navbar .main-scroll h1.subpage-title,
+body.page-source-navbar .main-scroll h1.apm-page-title,
 body.page-source-navbar .main-scroll h1.dt-title,
 body.page-source-navbar .main-scroll h1.gto-page-title,
 body.page-source-navbar .main-scroll h1.ai-title,
