@@ -354,6 +354,7 @@
       if (existingRow && !existingRow.id) existingRow.id = 'masterSecondaryRow';
     }
 
+    /* 物资出库与处置：废旧鉴定审批、设备评估、报废计划、净值计算等按功能列表融入退役申请/鉴定/评估等页面流程，不单列蓝条入口。 */
     var retiredPanel = document.getElementById('retiredSecondaryPanel');
     if (!retiredPanel) {
       retiredPanel = document.createElement('aside');
@@ -510,7 +511,9 @@
           '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
           '<button type="button" class="warehouse-secondary-link" data-action="idle" data-label="闲置物资">闲置物资</button>' +
           '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-          '<button type="button" class="warehouse-secondary-link" data-action="warehouse" data-label="仓库管理">仓库管理</button>'
+          '<button type="button" class="warehouse-secondary-link" data-action="warehouse" data-label="仓库管理">仓库管理</button>' +
+          '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
+          '<button type="button" class="warehouse-secondary-link" data-action="warehouse-stock-ledger" data-label="库存台账">库存台账</button>'
       },
       retired: {
         text: '物资出库与处置',
@@ -620,6 +623,7 @@
           '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
           '<button type="button" class="warehouse-secondary-link" data-action="setting-permission" data-label="权限管理">权限管理</button>'
       },
+      /* 系统管理：OA 单点/流程样式/打印 PDF/退回知会/财务导出等按功能列表融入各业务页与流程，不单列第二排蓝条。 */
       system: {
         text: '系统管理',
         panel: secondaryPanel,
@@ -644,19 +648,7 @@
           '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
           '<button type="button" class="warehouse-secondary-link" data-action="system-file" data-label="文件管理">文件管理</button>' +
           '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-          '<button type="button" class="warehouse-secondary-link" data-action="system-client" data-label="客户端管理">客户端管理</button>' +
-          '<span class="warehouse-secondary-break" aria-hidden="true" style="flex-basis:100%;height:0;"></span>' +
-          '<button type="button" class="warehouse-secondary-link" data-action="oa-integration" data-label="OA单点集成">OA单点集成</button>' +
-          '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-          '<button type="button" class="warehouse-secondary-link" data-action="oa-flow-style" data-label="OA流程样式">OA流程样式</button>' +
-          '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-          '<button type="button" class="warehouse-secondary-link" data-action="flow-print-pdf" data-label="A4打印/PDF导出">A4打印/PDF导出</button>' +
-          '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-          '<button type="button" class="warehouse-secondary-link" data-action="flow-return-withdraw" data-label="流程退回/撤回">流程退回/撤回</button>' +
-          '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-          '<button type="button" class="warehouse-secondary-link" data-action="flow-notify" data-label="流程知会">流程知会</button>' +
-          '<span class="warehouse-secondary-pipe" aria-hidden="true">|</span>' +
-          '<button type="button" class="warehouse-secondary-link" data-action="finance-export" data-label="财务数据导出">财务数据导出</button>'
+          '<button type="button" class="warehouse-secondary-link" data-action="system-client" data-label="客户端管理">客户端管理</button>'
       }
     };
     var NAV_MODULE_KEY_BY_ID = {
@@ -1003,52 +995,70 @@
   function installGlobalTaskReminder() {
     if (document.getElementById("globalTaskReminder")) return;
     if (!document.body) return;
-    var role = getCurrentRole();
-    if (!role) return;
+    try {
+      if (window.localStorage && localStorage.getItem("mapDemo_taskReminderDismissed_v1") === "1") return;
+    } catch (eLs) {}
     if (!document.getElementById("globalTaskReminderStyle")) {
       var st = document.createElement("style");
       st.id = "globalTaskReminderStyle";
       st.textContent =
-        ".global-task-reminder{position:fixed;right:18px;bottom:18px;z-index:10030;width:min(340px,90vw);background:#fff;border:1px solid #dbe6f3;border-radius:10px;box-shadow:0 14px 36px rgba(10,28,52,.24);}" +
-        ".global-task-reminder.is-hide{display:none;}" +
-        ".global-task-reminder__head{height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;border-bottom:1px solid #eef3fa;}" +
+        ".global-task-reminder{position:fixed;right:18px;bottom:18px;z-index:10030;width:min(360px,92vw);background:#fff;border:1px solid #dbe6f3;border-radius:10px;box-shadow:0 14px 36px rgba(10,28,52,.24);}" +
+        ".global-task-reminder.is-hide{display:none !important;}" +
+        ".global-task-reminder__head{height:40px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;border-bottom:1px solid #eef3fa;background:linear-gradient(180deg,#f7fbff 0%,#fff 100%);border-radius:10px 10px 0 0;}" +
         ".global-task-reminder__title{font-size:14px;color:#1f3551;font-weight:600;}" +
-        ".global-task-reminder__close{border:none;background:transparent;color:#7a8fa8;font-size:18px;cursor:pointer;}" +
+        ".global-task-reminder__close{border:none;background:transparent;color:#7a8fa8;font-size:20px;line-height:1;cursor:pointer;padding:4px 2px;}" +
+        ".global-task-reminder__close:hover{color:#29405a;}" +
         ".global-task-reminder__body{padding:10px 12px 12px;font-size:13px;color:#2f435d;line-height:1.7;}" +
-        ".global-task-reminder__item{margin:0 0 6px;padding-left:14px;position:relative;}" +
+        ".global-task-reminder__item{margin:0 0 8px;padding-left:14px;position:relative;}" +
         ".global-task-reminder__item:before{content:'';position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:#1890ff;}" +
-        ".global-task-reminder__empty{color:#7f8ea3;}";
+        ".global-task-reminder__foot{margin-top:8px;padding-top:8px;border-top:1px solid #eef3fa;display:flex;flex-wrap:wrap;gap:8px 12px;}" +
+        ".global-task-reminder__foot a{color:#1890ff;font-size:12px;text-decoration:none;}" +
+        ".global-task-reminder__foot a:hover{text-decoration:underline;}";
       document.head.appendChild(st);
     }
+    var role = getCurrentRole();
     var now = new Date();
     var month = now.getMonth() + 1;
     var items = [];
-    if (month === 12) items.push("采购计划填报提醒：请各部门专责于本月完成采购计划填报。");
-    if (month === 10) items.push("报废计划填报提醒：请各部门专责于本月完成报废计划填报。");
+    /* XQ-037 任务弹窗：右下角定期提醒填报采购计划、报废计划等系统级任务（所有用户） */
+    items.push(
+      "右下角任务提醒：系统在约定时间弹出提醒，用于定期填报采购计划、报废计划等系统级任务（关闭后本浏览器不再展示，直至清除站点数据）。"
+    );
+    if (month === 12) items.push("本期示例：12 月可触发采购计划填报提醒（与清单「特定时间弹出」一致）。");
+    if (month === 10 || month === 11) items.push("本期示例：报废计划相关填报节点提醒。");
     if (
-      role.id === "dept_asset_specialist" ||
-      role.id === "dept_material_specialist" ||
-      role.id === "dept_head" ||
-      role.id === "leader_supervisor"
+      role &&
+      (role.id === "dept_asset_specialist" ||
+        role.id === "dept_material_specialist" ||
+        role.id === "dept_head" ||
+        role.id === "leader_supervisor")
     ) {
-      items.push("待办任务提醒：您有待处理流程，请在“我的任务”中及时办理。");
+      items.push("待办补充：您有待处理流程时，可在「我的任务」中办理。");
     }
-    if (!items.length) return;
     var box = document.createElement("aside");
     box.id = "globalTaskReminder";
     box.className = "global-task-reminder";
+    box.setAttribute("role", "dialog");
+    box.setAttribute("aria-label", "系统任务提醒");
     box.innerHTML =
-      '<div class="global-task-reminder__head"><span class="global-task-reminder__title">任务提醒</span><button type="button" class="global-task-reminder__close" aria-label="关闭">×</button></div>' +
+      '<div class="global-task-reminder__head"><span class="global-task-reminder__title">任务弹窗</span><button type="button" class="global-task-reminder__close" aria-label="关闭">×</button></div>' +
       '<div class="global-task-reminder__body">' +
       items.map(function (x) {
         return '<div class="global-task-reminder__item">' + x + "</div>";
       }).join("") +
-      "</div>";
+      '<div class="global-task-reminder__foot">' +
+      '<a href="my-tasks-prototype-list.html?scene=todo">我的任务</a>' +
+      '<a href="purchase-plan-management.html">采购计划</a>' +
+      '<a href="retire-scrap-application.html">退役及报废申请</a>' +
+      "</div></div>";
     document.body.appendChild(box);
     var closeBtn = box.querySelector(".global-task-reminder__close");
     if (closeBtn) {
       closeBtn.addEventListener("click", function () {
         box.classList.add("is-hide");
+        try {
+          localStorage.setItem("mapDemo_taskReminderDismissed_v1", "1");
+        } catch (e2) {}
       });
     }
   }

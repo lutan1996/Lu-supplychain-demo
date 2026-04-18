@@ -189,6 +189,7 @@
   "tool-demo": "demo-all-pages-interactive.html",
   "tool-template": "devtools-prototype-list.html?scene=notFound404",
   "warehouse": "warehouse.html",
+  "warehouse-stock-ledger": "warehouse-stock-ledger.html",
   "warehouse-checkin": "receipt-inbound.html",
   "warehouse-checkout": "inventory-management.html",
   "warehouse-io-ledger": "warehouse-io-ledger.html",

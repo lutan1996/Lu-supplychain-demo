@@ -96,6 +96,7 @@
     maintenance: "warehouse-maintenance.html",
     idle: "idle-materials.html",
     warehouse: "warehouse.html",
+    "warehouse-stock-ledger": "warehouse-stock-ledger.html",
     "warehouse-checkin": "receipt-inbound.html",
     "warehouse-checkout": "inventory-management.html",
     "warehouse-transfer": "inventory-management.html",
