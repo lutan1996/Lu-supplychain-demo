@@ -1,0 +1,17 @@
+# 全局 Brotli 压缩与缓存策略
+/*
+  Cache-Control: public, max-age=3600
+  Content-Encoding: br
+
+# 针对不同类型文件的精细缓存
+*.css
+  Cache-Control: public, max-age=86400
+
+*.js
+  Cache-Control: public, max-age=86400
+
+*.png
+  Cache-Control: public, max-age=604800
+
+*.jpg
+  Cache-Control: public, max-age=604800
